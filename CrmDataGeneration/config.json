@@ -1,0 +1,12 @@
+{
+  "OpenApiSettings": {
+    "AcumaticaBaseUrl": "http://localhost/site",
+    "EndpointName": "default",
+    "EndpointVersion": "17.200.001",
+    "Username": "admin",
+    "Password": "123",
+    "Branch": null,
+    "Locale": null,
+    "Company": null
+  }
+}
