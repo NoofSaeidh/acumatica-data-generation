@@ -51,7 +51,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CrmDataGeneration\CrmDataGeneration.csproj">
-      <Project>{4768BA84-771F-4EDC-8F24-A295230E96A2}</Project>
+      <Project>{4768ba84-771f-4edc-8f24-a295230e96a2}</Project>
       <Name>CrmDataGeneration</Name>
     </ProjectReference>
   </ItemGroup>

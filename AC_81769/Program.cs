@@ -15,10 +15,17 @@ namespace AC_81769
 
             using (var generatorClient = new GeneratorClient(config))
             {
-                await generatorClient.Login();
+                try
+                {
+                    await generatorClient.Login();
 
 
-                await generatorClient.Logout();
+                    await generatorClient.Logout();
+                }
+                catch(Exception e)
+                {
+
+                }
             }
         }
     }

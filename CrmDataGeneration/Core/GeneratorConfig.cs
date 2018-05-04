@@ -1,10 +1,11 @@
-﻿using System;
+﻿using CrmDataGeneration.OpenApi;
+using CrmDataGeneration.Random;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using CrmDataGeneration.OpenApi;
 using Newtonsoft.Json;
 
 namespace CrmDataGeneration.Core
@@ -15,6 +16,7 @@ namespace CrmDataGeneration.Core
         public const string ConfigCredsFileName = "config.creds.json";
 
         public OpenApiSettings OpenApiSettings { get; set; }
+        public RandomizerSettings RandomizerSettings { get; set; }
 
         public void SaveConfig(string path)
         {

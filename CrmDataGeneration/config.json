@@ -7,6 +7,7 @@
     "Password": "123",
     "Branch": null,
     "Locale": null,
-    "Company": null
+    "Company": null,
+    "GenerationSeed": 0
   }
 }

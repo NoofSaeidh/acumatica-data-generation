@@ -12,7 +12,7 @@ namespace CrmDataGeneration.Core
     {
         private readonly OpenApiState _openApiState;
         private readonly OpenApiBaseClient _loginClient;
-        private static readonly ILogger Logger = LogManager.GetCurrentClassLogger();
+        private static readonly ILogger logger = LogManager.GetCurrentClassLogger();
 
         public GeneratorClient(GeneratorConfig config)
         {
@@ -28,7 +28,17 @@ namespace CrmDataGeneration.Core
 
         public T GetApiClient<T>() where T : OpenApiBaseClient
         {
-            return (T)Activator.CreateInstance(typeof(T), _openApiState);
+            try
+            {
+                var result = (T)Activator.CreateInstance(typeof(T), _openApiState);
+                logger.Debug($"Api client created.", result);
+                return result;
+            }
+            catch (Exception e)
+            {
+                logger.Error(e, "Cannot create Api client.");
+                throw;
+            }
         }
 
         public async Task Login() => await _loginClient.Login();
