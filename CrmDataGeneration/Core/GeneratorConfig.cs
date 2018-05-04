@@ -30,6 +30,7 @@ namespace CrmDataGeneration.Core
         ///     Read default config files from current folder.
         /// Read both files, <see cref="ConfigFileName"/> and user's <see cref="ConfigCredsFileName"/>.
         /// First is added to source control while second is not, so you can change second file from the solution.
+        /// Second file by default doesn't exist, but you can create it (it will be automatically added to solution).
         /// </summary>
         /// <returns></returns>
         public static GeneratorConfig ReadConfigDefault()
