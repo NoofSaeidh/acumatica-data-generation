@@ -1,4 +1,5 @@
-﻿using CrmDataGeneration.OpenApi;
+﻿using CrmDataGeneration.Common;
+using CrmDataGeneration.OpenApi;
 using NLog;
 using System;
 using System.Collections.Generic;
@@ -12,7 +13,7 @@ namespace CrmDataGeneration.Core
     {
         private readonly OpenApiState _openApiState;
         private readonly OpenApiBaseClient _loginClient;
-        private static readonly ILogger logger = LogManager.GetCurrentClassLogger();
+        private static readonly ILogger logger = LogSettings.DefaultLogger;
 
         public GeneratorClient(GeneratorConfig config)
         {

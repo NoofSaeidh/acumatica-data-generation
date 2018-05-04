@@ -5,12 +5,13 @@ using System.Threading.Tasks;
 using System.Net.Http.Formatting;
 using Newtonsoft.Json;
 using NLog;
+using CrmDataGeneration.Common;
 
 namespace CrmDataGeneration.OpenApi
 {
     public class OpenApiBaseClient
     {
-        private static readonly ILogger logger = LogManager.GetCurrentClassLogger();
+        private static readonly ILogger logger = LogSettings.DefaultLogger;
 
         public OpenApiBaseClient(OpenApiState state)
         {
@@ -29,7 +30,6 @@ namespace CrmDataGeneration.OpenApi
         {
             try
             {
-                logger.Info($"Log id. Url: {State.Settings.LoginUrl}.");
                 var client = await CreateHttpClientAsync();
                 var result = await client.PostAsJsonAsync(State.Settings.LoginUrl, new
                 {
@@ -40,10 +40,11 @@ namespace CrmDataGeneration.OpenApi
                     locale = State.Settings.Locale
                 });
                 result.EnsureSuccessStatusCode();
+                logger.Info("Log id to Acumatica REST. {@settings}.", State.Settings);
             }
             catch (Exception e)
             {
-                logger.Error(e, $"Couldn't log out. Url: {State.Settings.LoginUrl}");
+                logger.Error(e, "Couldn't log in to Acumatica REST. {@settings}.", State.Settings);
                 throw;
             }
         }
@@ -52,13 +53,13 @@ namespace CrmDataGeneration.OpenApi
         {
             try
             {
-                logger.Info($"Log out. Url: {State.Settings.LoginUrl}.");
                 var client = await CreateHttpClientAsync();
                 var result = await client.PostAsync(State.Settings.LogoutUrl, new ByteArrayContent(new byte[0]));
+                logger.Info("Log out from Acumatica REST. {@settings}.", State.Settings);
             }
             catch (Exception e)
             {
-                logger.Error(e, $"Couldn't log out.  Url: {State.Settings.LoginUrl}");
+                logger.Error(e, "Couldn't log out to Acumatica REST. {@settings}.", State.Settings);
                 throw;
             }
         }
