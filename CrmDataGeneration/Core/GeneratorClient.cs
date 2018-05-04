@@ -31,12 +31,12 @@ namespace CrmDataGeneration.Core
             try
             {
                 var result = (T)Activator.CreateInstance(typeof(T), _openApiState);
-                logger.Debug($"Api client created.", result);
+                logger.Debug($"Api client of type {typeof(T).Name} created.", result);
                 return result;
             }
             catch (Exception e)
             {
-                logger.Error(e, "Cannot create Api client.");
+                logger.Error(e, $"Cannot create Api client of type {typeof(T).Name}.");
                 throw;
             }
         }
