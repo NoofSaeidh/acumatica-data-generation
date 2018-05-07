@@ -37,7 +37,7 @@ namespace CrmDataGeneration.Core
             }
         }
 
-        public async Task<IEnumerable<T>> CreateAll(IEnumerable<T> entities)
+        public async Task<IEnumerable<T>> CreateAllSequentially(IEnumerable<T> entities)
         {
             if (entities == null)
                 throw new ArgumentNullException(nameof(entities));
@@ -58,7 +58,7 @@ namespace CrmDataGeneration.Core
                         throw;
                     }
                 }
-                _logger.Info("Collection of {entityName} was created. Result: {entities}", typeof(T).Name, res);
+                _logger.Info("Collection of {entityName} was created. Result: {entities}", typeof(T).Name, output);
                 return output;
             }
             catch (Exception e)
@@ -68,7 +68,7 @@ namespace CrmDataGeneration.Core
             }
         }
 
-        public async Task<IEnumerable<T>> CreateAllParallel(IEnumerable<T> entities)
+        public async Task<IEnumerable<T>> CreateAllParallel(IEnumerable<T> entities, int threadsCount = 0)
         {
             if (entities == null)
                 throw new ArgumentNullException(nameof(entities));
@@ -77,7 +77,15 @@ namespace CrmDataGeneration.Core
             {
                 var input = entities.ToList();
                 var output = new List<T>(input.Count);
-                var tasks = new List<Task<T>>(input.Count);
+                List<Task<T>> tasks;
+                if (threadsCount == 0)
+                {
+                    tasks = new List<Task<T>>(input.Count);
+                }
+                else
+                {
+                    tasks = new List<Task<T>>(threadsCount);
+                }
                 foreach (var item in input)
                 {
                     tasks.Add(Task.Run(async () =>
@@ -93,10 +101,18 @@ namespace CrmDataGeneration.Core
                             _logger.Error(e, "{entityName} wasn't created. {@entity}", typeof(T).Name, item);
                             throw;
                         }
-                    }));             
+                    }));
+                    if (tasks.Count == tasks.Capacity)
+                    {
+                        // await for special count
+                        await Task.WhenAll(tasks);
+                        tasks.Clear();
+                    }
                 }
-                await Task.WhenAll(tasks);
-                _logger.Info("Collection of {entityName} was created. Result: {entities}", typeof(T).Name, res);
+                // if last count of task a fewer that capacity (threads count)
+                if (tasks.Any())
+                    await Task.WhenAll(tasks);
+                _logger.Info("Collection of {entityName} was created. Result: {entities}", typeof(T).Name, output);
                 return output;
             }
             catch (Exception e)

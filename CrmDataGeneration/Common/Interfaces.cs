@@ -20,10 +20,17 @@ namespace CrmDataGeneration.Common
         Faker<T> GetFaker();
     }
 
+    public interface IGenerationSettings<T> where T : Entity
+    {
+        bool GenerateInParallel { get; set; }
+        int MaxExecutionThreads { get; set; }
+    }
+
     public interface IApiWrappedClient<T> where T : Entity
     {
         Task<T> Create(T entity);
-        Task<IEnumerable<T>> CreateAll(IEnumerable<T> entities);
-        Task<IEnumerable<T>> CreateAllParallel(IEnumerable<T> entities);
+        Task<IEnumerable<T>> CreateAllSequentially(IEnumerable<T> entities);
+        // threadsCount = 0 means unlimited
+        Task<IEnumerable<T>> CreateAllParallel(IEnumerable<T> entities, int threadsCount = 0); 
     }
 }

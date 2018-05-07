@@ -31,7 +31,7 @@ namespace CrmDataGeneration
 
         public int GlobalSeed { get; set; }
         public OpenApiSettings OpenApiSettings { get; set; }
-        public LeadRandomizerSettings LeadRandomizerSettings { get; set; }
+        public LeadGenerationSettings LeadRandomizerSettings { get; set; }
 
         // add all your settings here.
         // it required for generic support methods in GeneratorClient
@@ -45,6 +45,12 @@ namespace CrmDataGeneration
                 default:
                     throw new NotSupportedException($"This type of generator is not supported. Type: {typeof(T).Name}");
             }
+        }
+
+        // now these are the same classes, so just cast
+        public IGenerationSettings<T> GetGenerationSettings<T>() where T : Entity
+        {
+            return (IGenerationSettings<T>)GetRandomizerSettings<T>();
         }
 
         public void SaveConfig(string path)

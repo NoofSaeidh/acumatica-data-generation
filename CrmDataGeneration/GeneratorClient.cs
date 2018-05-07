@@ -46,7 +46,44 @@ namespace CrmDataGeneration
 
         public async Task GenerateAll<T>() where T : OpenApi.Reference.Entity
         {
+            _logger.Debug("Start generating {entity} collection.", typeof(T).Name);
+            IEnumerable<T> entities;
+            IApiWrappedClient<T> apiClient;
+            IGenerationSettings<T> settings;
 
+            try
+            {
+                entities = GetRandomizer<T>().GenerateList();
+            }
+            catch (Exception e)
+            {
+                _logger.Error(e, "Cannot create randomized {entity} collection.", typeof(T).Name);
+                throw;
+            }
+            try
+            {
+                apiClient = GetApiWrappedClient<T>();
+            }
+            catch (Exception e)
+            {
+                _logger.Error(e, "Cannot create api wrapped client {entity}.", typeof(T).Name);
+                throw;
+            }
+            try
+            {
+                settings = Config.GetGenerationSettings<T>();
+            }
+            catch (Exception e)
+            {
+                _logger.Error(e, "Cannot get generation settings for {entity}.", typeof(T).Name);
+                throw;
+            }
+
+            // logger in api client, so without try catch
+            if (settings.GenerateInParallel)
+                await apiClient.CreateAllParallel(entities, settings.MaxExecutionThreads);
+            else
+                await apiClient.CreateAllSequentially(entities);
         }
 
         public async Task GenerateSingle<T>() where T : OpenApi.Reference.Entity
