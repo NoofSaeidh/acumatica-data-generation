@@ -11,7 +11,7 @@ namespace CrmDataGeneration.Core
 {
     public abstract class ApiWrappedClient<T> : IApiWrappedClient<T> where T : OpenApi.Reference.Entity
     {
-        private static ILogger _logger => LogSettings.DefaultLogger;
+        private static ILogger _logger => LogConfiguration.DefaultLogger;
 
         protected ApiWrappedClient(OpenApiState openApiState)
         {
@@ -21,10 +21,13 @@ namespace CrmDataGeneration.Core
 
         public async Task<T> Create(T entity)
         {
+            if (entity == null)
+                throw new ArgumentNullException(nameof(entity));
+
             try
             {
                 var res = await CreateRaw(entity);
-                _logger.Info("{entityName} was created. Result: {@entity}", typeof(T).Name, res);
+                _logger.Info("{entityName} was created. Result: {entity}", typeof(T).Name, res);
                 return res;
             }
             catch (Exception e)
@@ -36,11 +39,65 @@ namespace CrmDataGeneration.Core
 
         public async Task<IEnumerable<T>> CreateAll(IEnumerable<T> entities)
         {
+            if (entities == null)
+                throw new ArgumentNullException(nameof(entities));
+
             try
             {
-                var res = await CreateAllRaw(entities);
+                var input = entities.ToList();
+                var output = new List<T>(input.Count);
+                foreach (var item in input)
+                {
+                    try
+                    {
+                        output.Add(await CreateRaw(item));
+                    }
+                    catch (Exception e)
+                    {
+                        _logger.Error(e, "{entityName} wasn't created. {@entity}", typeof(T).Name, item);
+                        throw;
+                    }
+                }
                 _logger.Info("Collection of {entityName} was created. Result: {entities}", typeof(T).Name, res);
-                return res;
+                return output;
+            }
+            catch (Exception e)
+            {
+                _logger.Error(e, "Collection of {entityName} wasn't created.", typeof(T).Name, entities);
+                throw;
+            }
+        }
+
+        public async Task<IEnumerable<T>> CreateAllParallel(IEnumerable<T> entities)
+        {
+            if (entities == null)
+                throw new ArgumentNullException(nameof(entities));
+
+            try
+            {
+                var input = entities.ToList();
+                var output = new List<T>(input.Count);
+                var tasks = new List<Task<T>>(input.Count);
+                foreach (var item in input)
+                {
+                    tasks.Add(Task.Run(async () =>
+                    {
+                        try
+                        {
+                            var result = await CreateRaw(item);
+                            output.Add(result);
+                            return result;
+                        }
+                        catch (Exception e)
+                        {
+                            _logger.Error(e, "{entityName} wasn't created. {@entity}", typeof(T).Name, item);
+                            throw;
+                        }
+                    }));             
+                }
+                await Task.WhenAll(tasks);
+                _logger.Info("Collection of {entityName} was created. Result: {entities}", typeof(T).Name, res);
+                return output;
             }
             catch (Exception e)
             {
@@ -50,6 +107,5 @@ namespace CrmDataGeneration.Core
         }
 
         protected abstract Task<T> CreateRaw(T entity); //without logging and exceptions
-        protected abstract Task<IEnumerable<T>> CreateAllRaw(IEnumerable<T> entity); //without logging and exceptions
     }
 }

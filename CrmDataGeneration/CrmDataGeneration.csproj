@@ -88,7 +88,7 @@
   <ItemGroup>
     <Compile Include="Common\ApiWrappedClient.cs" />
     <Compile Include="Common\JsonLogSerializer.cs" />
-    <Compile Include="Common\LogSettings.cs" />
+    <Compile Include="Common\LogConfiguration.cs" />
     <Compile Include="Generation\Leads\LeadApiWrappedClient.cs" />
     <Compile Include="GeneratorConfig.cs" />
     <Compile Include="GeneratorClient.cs" />

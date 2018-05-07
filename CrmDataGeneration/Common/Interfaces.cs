@@ -20,9 +20,10 @@ namespace CrmDataGeneration.Common
         Faker<T> GetFaker();
     }
 
-    public interface IApiWrappedClient<T> where T : OpenApi.Reference.Entity
+    public interface IApiWrappedClient<T> where T : Entity
     {
         Task<T> Create(T entity);
         Task<IEnumerable<T>> CreateAll(IEnumerable<T> entities);
+        Task<IEnumerable<T>> CreateAllParallel(IEnumerable<T> entities);
     }
 }

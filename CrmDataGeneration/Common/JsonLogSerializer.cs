@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using NLog;
 using NLog.Common;
 using System;
@@ -22,6 +23,10 @@ namespace CrmDataGeneration.Common
                 Formatting = Formatting.Indented,
                 ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
                 NullValueHandling = NullValueHandling.Ignore,
+                Converters = new JsonConverter[]
+                {
+                    new StringEnumConverter()
+                }
             };
         }
 

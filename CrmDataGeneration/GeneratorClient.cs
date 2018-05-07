@@ -14,7 +14,7 @@ namespace CrmDataGeneration
     {
         private readonly OpenApiState _openApiState;
         private readonly OpenApiBaseClient _loginClient;
-        private static ILogger _logger => LogSettings.DefaultLogger;
+        private static ILogger _logger => LogConfiguration.DefaultLogger;
 
         public GeneratorClient(GeneratorConfig config)
         {
@@ -51,7 +51,7 @@ namespace CrmDataGeneration
 
         public async Task GenerateSingle<T>() where T : OpenApi.Reference.Entity
         {
-            _logger.Debug("Start generating signle {entity}", typeof(T).Name);
+            _logger.Debug("Start generating single {entity}", typeof(T).Name);
             T entity;
             IApiWrappedClient<T> apiClient;
             try

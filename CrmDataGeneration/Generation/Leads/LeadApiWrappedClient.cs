@@ -18,11 +18,6 @@ namespace CrmDataGeneration.Generation.Leads
             _innerClient = new LeadClient(openApiState);
         }
 
-        protected override Task<IEnumerable<Lead>> CreateAllRaw(IEnumerable<Lead> entity)
-        {
-            throw new NotImplementedException();
-        }
-
         protected override async Task<Lead> CreateRaw(Lead entity)
         {
             return await _innerClient.PutEntityAsync(entity);

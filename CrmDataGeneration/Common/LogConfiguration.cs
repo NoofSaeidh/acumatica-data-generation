@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace CrmDataGeneration.Common
 {
-    public static class LogSettings
+    public static class LogConfiguration
     {
         public const string DefaultLoggerName = "Default";
 

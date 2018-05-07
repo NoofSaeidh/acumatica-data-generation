@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using CrmDataGeneration.OpenApi.Reference;
 using CrmDataGeneration.Common;
 using CrmDataGeneration.Generation.Leads;
+using Newtonsoft.Json.Converters;
 
 namespace CrmDataGeneration
 {
@@ -16,6 +17,17 @@ namespace CrmDataGeneration
     {
         public const string ConfigFileName = "config.json";
         public const string ConfigCredsFileName = "config.creds.json";
+
+        private static readonly JsonSerializerSettings _jsonSettings = new JsonSerializerSettings
+        {
+            Formatting = Formatting.Indented,
+            ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+            NullValueHandling = NullValueHandling.Ignore,
+            Converters = new JsonConverter[]
+            {
+                new StringEnumConverter()
+            }
+        };
 
         public int GlobalSeed { get; set; }
         public OpenApiSettings OpenApiSettings { get; set; }
@@ -37,12 +49,12 @@ namespace CrmDataGeneration
 
         public void SaveConfig(string path)
         {
-            File.WriteAllText(path, JsonConvert.SerializeObject(this, Formatting.Indented));
+            File.WriteAllText(path, JsonConvert.SerializeObject(this, _jsonSettings));
         }
 
         public static GeneratorConfig ReadConfig(string path)
         {
-            return JsonConvert.DeserializeObject<GeneratorConfig>(File.ReadAllText(path));
+            return JsonConvert.DeserializeObject<GeneratorConfig>(File.ReadAllText(path), _jsonSettings);
         }
 
         /// <summary>
