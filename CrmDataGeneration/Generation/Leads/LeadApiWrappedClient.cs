@@ -12,8 +12,10 @@ namespace CrmDataGeneration.Generation.Leads
 {
     public class LeadApiWrappedClient : ApiWrappedClient<Lead>
     {
+        private readonly LeadClient _innerClient;
         public LeadApiWrappedClient(OpenApiState openApiState) : base(openApiState)
         {
+            _innerClient = new LeadClient(openApiState);
         }
 
         protected override Task<IEnumerable<Lead>> CreateAllRaw(IEnumerable<Lead> entity)
@@ -21,9 +23,9 @@ namespace CrmDataGeneration.Generation.Leads
             throw new NotImplementedException();
         }
 
-        protected override Task<Lead> CreateRaw(Lead entity)
+        protected override async Task<Lead> CreateRaw(Lead entity)
         {
-            throw new NotImplementedException();
+            return await _innerClient.PutEntityAsync(entity);
         }
     }
 }

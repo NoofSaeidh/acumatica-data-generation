@@ -40,11 +40,11 @@ namespace CrmDataGeneration.OpenApi
                     locale = State.Settings.Locale
                 });
                 result.EnsureSuccessStatusCode();
-                _logger.Info("Log id to Acumatica REST. {@settings}.", State.Settings);
+                _logger.Info("Log id to Acumatica REST. {url} {@settings}.", State.Settings.LoginUrl, State.Settings);
             }
             catch (Exception e)
             {
-                _logger.Error(e, "Couldn't log in to Acumatica REST. {@settings}.", State.Settings);
+                _logger.Error(e, "Couldn't log in to Acumatica REST. {url} {@settings}.", State.Settings.LoginUrl, State.Settings);
                 throw;
             }
         }
@@ -55,11 +55,11 @@ namespace CrmDataGeneration.OpenApi
             {
                 var client = await CreateHttpClientAsync();
                 var result = await client.PostAsync(State.Settings.LogoutUrl, new ByteArrayContent(new byte[0]));
-                _logger.Info("Log out from Acumatica REST. {@settings}.", State.Settings);
+                _logger.Info("Log out from Acumatica REST. {url}.", State.Settings.LogoutUrl);
             }
             catch (Exception e)
             {
-                _logger.Error(e, "Couldn't log out to Acumatica REST. {@settings}.", State.Settings);
+                _logger.Error(e, "Couldn't log out to Acumatica REST. {url}.", State.Settings.LogoutUrl);
                 throw;
             }
         }

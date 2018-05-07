@@ -1,7 +1,6 @@
 ﻿using CrmDataGeneration.Common;
 using CrmDataGeneration.Generation.Leads;
 using CrmDataGeneration.OpenApi;
-using CrmDataGeneration.Randomize;
 using NLog;
 using System;
 using System.Collections.Generic;
@@ -16,7 +15,6 @@ namespace CrmDataGeneration
         private readonly OpenApiState _openApiState;
         private readonly OpenApiBaseClient _loginClient;
         private static ILogger _logger => LogSettings.DefaultLogger;
-        private const string EntityToClientNamePattern = "{0}Client"; // {0} - entity name
 
         public GeneratorClient(GeneratorConfig config)
         {
