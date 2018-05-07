@@ -1,5 +1,4 @@
 ﻿using CrmDataGeneration.Common;
-using CrmDataGeneration.Core;
 using CrmDataGeneration.OpenApi;
 using CrmDataGeneration.OpenApi.Reference;
 using System;

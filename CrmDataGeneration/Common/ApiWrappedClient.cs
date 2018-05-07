@@ -1,5 +1,4 @@
-﻿using CrmDataGeneration.Common;
-using CrmDataGeneration.OpenApi;
+﻿using CrmDataGeneration.OpenApi;
 using NLog;
 using System;
 using System.Collections.Generic;
@@ -8,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CrmDataGeneration.Core
+namespace CrmDataGeneration.Common
 {
     public abstract class ApiWrappedClient<T> : IApiWrappedClient<T> where T : OpenApi.Reference.Entity
     {
