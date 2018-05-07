@@ -12,6 +12,8 @@
   },
   "GlobalSeed": 0,
   "LeadRandomizerSettings": {
-    "Count": 10
+    "Count": 100,
+    "GenerateInParallel": true,
+    "MaxExecutionThreads": 20
   }
 }

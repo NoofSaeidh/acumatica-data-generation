@@ -73,22 +73,11 @@ namespace CrmDataGeneration
                 throw;
             }
 
-            var exType = settings.GenerateInParallel ? "parallel" : "sequentially";
-            _logger.Info("Start generating {entity} collection {type}.", typeof(T).Name, exType);
-            IEnumerable<T> result;
-            var sw = new Stopwatch();
-            sw.Start();
-
             // logger in api client, so without try catch
             if (settings.GenerateInParallel)
-                result =  await apiClient.CreateAllParallel(entities, settings.MaxExecutionThreads);
+                return await apiClient.CreateAllParallel(entities, settings.MaxExecutionThreads);
             else
-                result = await apiClient.CreateAllSequentially(entities);
-
-            sw.Stop();
-            _logger.Info("Generating {entity} collection in {type} took {time}", typeof(T).Name, exType, sw.Elapsed);
-
-            return result;
+                return await apiClient.CreateAllSequentially(entities);
         }
 
         public async Task<T> GenerateSingle<T>() where T : OpenApi.Reference.Entity
@@ -117,17 +106,9 @@ namespace CrmDataGeneration
 
             _logger.Info("Start generating single {entity}.", typeof(T).Name);
 
-            T result;
-            var sw = new Stopwatch();
-            sw.Start();
 
             // logger in api client, so without try catch
-            result =  await apiClient.Create(entity);
-
-            sw.Stop();
-            _logger.Info("Generating {entity} took {time}", typeof(T).Name, sw.Elapsed);
-
-            return result;
+            return await apiClient.Create(entity);
         }
 
         public async Task Login() => await _loginClient.Login();

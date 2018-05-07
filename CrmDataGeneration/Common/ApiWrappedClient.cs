@@ -3,6 +3,7 @@ using CrmDataGeneration.OpenApi;
 using NLog;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,8 +27,11 @@ namespace CrmDataGeneration.Core
 
             try
             {
+                var sw = new Stopwatch();
+                sw.Start();
                 var res = await CreateRaw(entity);
-                _logger.Info("{entityName} was created. Result: {entity}", typeof(T).Name, res);
+                sw.Stop();
+                _logger.Info("{entityName} was created. Time elapsed: {time} Result: {entity}", typeof(T).Name, sw.Elapsed, res);
                 return res;
             }
             catch (Exception e)
@@ -47,6 +51,8 @@ namespace CrmDataGeneration.Core
                 _logger.Info("Start creating {entityName} collection sequentially.", typeof(T).Name);
                 var input = entities.ToList();
                 var output = new List<T>(input.Count);
+                var sw = new Stopwatch();
+                sw.Start();
                 foreach (var item in input)
                 {
                     try
@@ -59,12 +65,13 @@ namespace CrmDataGeneration.Core
                         throw;
                     }
                 }
-                _logger.Info("Collection of {entityName} was created. Result: {entities}", typeof(T).Name, output);
+                sw.Stop();
+                _logger.Info("Collection of {entityName} was created sequentially. Time elapsed {time}. Result: {entities}", typeof(T).Name, sw.Elapsed, output);
                 return output;
             }
             catch (Exception e)
             {
-                _logger.Error(e, "Collection of {entityName} wasn't created.", typeof(T).Name, entities);
+                _logger.Error(e, "Collection of {entityName} wasn't created sequentially.", typeof(T).Name, entities);
                 throw;
             }
         }
@@ -88,6 +95,8 @@ namespace CrmDataGeneration.Core
                 {
                     tasks = new List<Task<T>>(threadsCount);
                 }
+                var sw = new Stopwatch();
+                sw.Start();
                 foreach (var item in input)
                 {
                     tasks.Add(Task.Run(async () =>
@@ -114,12 +123,13 @@ namespace CrmDataGeneration.Core
                 // if last count of task a fewer that capacity (threads count)
                 if (tasks.Any())
                     await Task.WhenAll(tasks);
-                _logger.Info("Collection of {entityName} was created. Result: {entities}", typeof(T).Name, output);
+                sw.Stop();
+                _logger.Info("Collection of {entityName} was created in parallel. Time elapsed: {time}. Result: {entities}", typeof(T).Name, sw.Elapsed, output);
                 return output;
             }
             catch (Exception e)
             {
-                _logger.Error(e, "Collection of {entityName} wasn't created.", typeof(T).Name, entities);
+                _logger.Error(e, "Collection of {entityName} wasn't created in parallel.", typeof(T).Name, entities);
                 throw;
             }
         }

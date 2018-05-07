@@ -20,7 +20,7 @@ namespace CrmDataGeneration.Common
         {
             _settings = new JsonSerializerSettings
             {
-                Formatting = Formatting.Indented,
+                Formatting = Formatting.None,
                 ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
                 NullValueHandling = NullValueHandling.Ignore,
                 Converters = new JsonConverter[]
