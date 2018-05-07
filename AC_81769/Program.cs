@@ -1,4 +1,4 @@
-﻿using CrmDataGeneration.Core;
+﻿using CrmDataGeneration.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;

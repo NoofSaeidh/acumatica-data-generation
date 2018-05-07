@@ -1,5 +1,4 @@
 ﻿using CrmDataGeneration.OpenApi;
-using CrmDataGeneration.Randomize;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -8,8 +7,10 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using CrmDataGeneration.OpenApi.Reference;
+using CrmDataGeneration.Common;
+using CrmDataGeneration.Generation.Leads;
 
-namespace CrmDataGeneration.Core
+namespace CrmDataGeneration
 {
     public class GeneratorConfig
     {

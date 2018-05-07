@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CrmDataGeneration.Randomize
+namespace CrmDataGeneration.Common
 {
     public interface IRandomizer<T> where T : Entity
     {
@@ -18,5 +18,11 @@ namespace CrmDataGeneration.Randomize
     {
         int Count { get; }
         Faker<T> GetFaker();
+    }
+
+    public interface IApiWrappedClient<T> where T : OpenApi.Reference.Entity
+    {
+        Task<T> Create(T entity);
+        Task<IEnumerable<T>> CreateAll(IEnumerable<T> entities);
     }
 }

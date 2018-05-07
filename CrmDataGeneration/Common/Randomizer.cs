@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CrmDataGeneration.Randomize
+namespace CrmDataGeneration.Common
 {
     public class Randomizer<T> : IRandomizer<T> where T : Entity
     {

@@ -11,7 +11,7 @@ namespace CrmDataGeneration.OpenApi
 {
     public class OpenApiBaseClient
     {
-        private static readonly ILogger _logger = LogSettings.DefaultLogger;
+        private static ILogger _logger => LogSettings.DefaultLogger;
 
         public OpenApiBaseClient(OpenApiState state)
         {

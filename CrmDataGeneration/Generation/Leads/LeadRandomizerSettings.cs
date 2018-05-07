@@ -1,4 +1,5 @@
 ﻿using Bogus;
+using CrmDataGeneration.Common;
 using CrmDataGeneration.OpenApi.Reference;
 using System;
 using System.Collections.Generic;
@@ -6,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CrmDataGeneration.Randomize
+namespace CrmDataGeneration.Generation.Leads
 {
     public class LeadRandomizerSettings : IRandomizerSettings<Lead>
     {

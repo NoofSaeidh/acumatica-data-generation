@@ -1,4 +1,5 @@
 ﻿using CrmDataGeneration.Common;
+using CrmDataGeneration.OpenApi;
 using NLog;
 using System;
 using System.Collections.Generic;
@@ -8,14 +9,16 @@ using System.Threading.Tasks;
 
 namespace CrmDataGeneration.Core
 {
-    public interface IGeneratorApiWrappedClient<T> where T : OpenApi.Reference.Entity
+    public abstract class ApiWrappedClient<T> : IApiWrappedClient<T> where T : OpenApi.Reference.Entity
     {
-        Task<T> Create(T entity);
-        Task<IEnumerable<T>> CreateAll(IEnumerable<T> entities);
-    }
-    public abstract class GeneratorApiWrappedClient<T> : IGeneratorApiWrappedClient<T> where T : OpenApi.Reference.Entity
-    {
-        private static readonly ILogger _logger = LogSettings.DefaultLogger;
+        private static ILogger _logger => LogSettings.DefaultLogger;
+
+        protected ApiWrappedClient(OpenApiState openApiState)
+        {
+            OpenApiState = openApiState ?? throw new ArgumentNullException(nameof(openApiState));
+        }
+        protected OpenApiState OpenApiState { get; }
+
         public async Task<T> Create(T entity)
         {
             try
