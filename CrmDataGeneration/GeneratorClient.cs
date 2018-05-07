@@ -49,7 +49,7 @@ namespace CrmDataGeneration
         {
             //todo: add cancellation token
 
-            IEnumerable <T> entities;
+            IEnumerable<T> entities;
             IApiWrappedClient<T> apiClient;
             IGenerationSettings<T> settings;
 
@@ -65,7 +65,7 @@ namespace CrmDataGeneration
             try
             {
                 apiClient = GetApiWrappedClient<T>();
-                settings = Config.GetGenerationSettings<T>();
+                settings = GetGenerationSettings<T>();
             }
             catch (Exception e)
             {
@@ -111,16 +111,26 @@ namespace CrmDataGeneration
             return await apiClient.Create(entity);
         }
 
-        public async Task Login() => await _loginClient.Login();
+        public virtual async Task Login() => await _loginClient.Login();
 
-        public async Task Logout() => await _loginClient.Logout();
+        public virtual async Task Logout() => await _loginClient.Logout();
 
-        protected IRandomizer<T> GetRandomizer<T>() where T : OpenApi.Reference.Entity
+        protected virtual IRandomizer<T> GetRandomizer<T>() where T : OpenApi.Reference.Entity
         {
-            return new Randomizer<T>(Config.GetRandomizerSettings<T>());
+            return new Randomizer<T>(GetRandomizerSettings<T>());
         }
 
-        protected IApiWrappedClient<T> GetApiWrappedClient<T>() where T : OpenApi.Reference.Entity
+        protected virtual IRandomizerSettings<T> GetRandomizerSettings<T>() where T : OpenApi.Reference.Entity
+        {
+            return Config.GetRandomizerSettings<T>();
+        }
+
+        protected virtual IGenerationSettings<T> GetGenerationSettings<T>() where T : OpenApi.Reference.Entity
+        {
+            return Config.GetGenerationSettings<T>();
+        }
+
+        protected virtual IApiWrappedClient<T> GetApiWrappedClient<T>() where T : OpenApi.Reference.Entity
         {
             switch (typeof(T).Name)
             {
