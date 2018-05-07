@@ -9,5 +9,9 @@
     "Locale": null,
     "Company": null,
     "GenerationSeed": 0
+  },
+  "GlobalSeed": 0,
+  "LeadRandomizerSettings": {
+    "Count": 10
   }
 }

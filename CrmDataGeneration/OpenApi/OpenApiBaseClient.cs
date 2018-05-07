@@ -11,7 +11,7 @@ namespace CrmDataGeneration.OpenApi
 {
     public class OpenApiBaseClient
     {
-        private static readonly ILogger logger = LogSettings.DefaultLogger;
+        private static readonly ILogger _logger = LogSettings.DefaultLogger;
 
         public OpenApiBaseClient(OpenApiState state)
         {
@@ -40,11 +40,11 @@ namespace CrmDataGeneration.OpenApi
                     locale = State.Settings.Locale
                 });
                 result.EnsureSuccessStatusCode();
-                logger.Info("Log id to Acumatica REST. {@settings}.", State.Settings);
+                _logger.Info("Log id to Acumatica REST. {@settings}.", State.Settings);
             }
             catch (Exception e)
             {
-                logger.Error(e, "Couldn't log in to Acumatica REST. {@settings}.", State.Settings);
+                _logger.Error(e, "Couldn't log in to Acumatica REST. {@settings}.", State.Settings);
                 throw;
             }
         }
@@ -55,11 +55,11 @@ namespace CrmDataGeneration.OpenApi
             {
                 var client = await CreateHttpClientAsync();
                 var result = await client.PostAsync(State.Settings.LogoutUrl, new ByteArrayContent(new byte[0]));
-                logger.Info("Log out from Acumatica REST. {@settings}.", State.Settings);
+                _logger.Info("Log out from Acumatica REST. {@settings}.", State.Settings);
             }
             catch (Exception e)
             {
-                logger.Error(e, "Couldn't log out to Acumatica REST. {@settings}.", State.Settings);
+                _logger.Error(e, "Couldn't log out to Acumatica REST. {@settings}.", State.Settings);
                 throw;
             }
         }

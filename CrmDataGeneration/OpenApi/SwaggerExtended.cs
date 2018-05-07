@@ -39,7 +39,7 @@ namespace CrmDataGeneration.OpenApi.Reference
             return Value;
         }
 
-        public static explicit operator string(StringValue value) => value.Value;
+        public static implicit operator string(StringValue value) => value.Value;
         public static implicit operator StringValue(string value) => new StringValue(value);
     }
 
@@ -67,7 +67,7 @@ namespace CrmDataGeneration.OpenApi.Reference
             return Value.ToString();
         }
 
-        public static explicit operator bool? (BooleanValue value) => value.Value;
+        public static implicit operator bool? (BooleanValue value) => value.Value;
         public static implicit operator BooleanValue(bool? value) => new BooleanValue(value);
     }
 
@@ -95,7 +95,7 @@ namespace CrmDataGeneration.OpenApi.Reference
             return Value.ToString();
         }
 
-        public static explicit operator DateTime? (DateTimeValue value) => value.Value;
+        public static implicit operator DateTime? (DateTimeValue value) => value.Value;
         public static implicit operator DateTimeValue(DateTime? value) => new DateTimeValue(value);
     }
 
@@ -123,7 +123,7 @@ namespace CrmDataGeneration.OpenApi.Reference
             return Value.ToString();
         }
 
-        public static explicit operator int? (IntValue value) => value.Value;
+        public static implicit operator int? (IntValue value) => value.Value;
         public static implicit operator IntValue(int? value) => new IntValue(value);
     }
 
@@ -151,7 +151,7 @@ namespace CrmDataGeneration.OpenApi.Reference
             return Value.ToString();
         }
 
-        public static explicit operator long? (LongValue value) => value.Value;
+        public static implicit operator long? (LongValue value) => value.Value;
         public static implicit operator LongValue(long? value) => new LongValue(value);
     }
 
@@ -183,7 +183,7 @@ namespace CrmDataGeneration.OpenApi.Reference
             return Value.ToString();
         }
 
-        public static explicit operator decimal? (DecimalValue value) => (decimal)value.Value;
+        public static implicit operator decimal? (DecimalValue value) => (decimal)value.Value;
         public static implicit operator DecimalValue(decimal? value) => new DecimalValue(value);
     }
 
@@ -211,7 +211,7 @@ namespace CrmDataGeneration.OpenApi.Reference
             return Value.ToString();
         }
 
-        public static explicit operator double? (DoubleValue value) => value.Value;
+        public static implicit operator double? (DoubleValue value) => value.Value;
         public static implicit operator DoubleValue(double? value) => new DoubleValue(value);
     }
 
@@ -243,7 +243,7 @@ namespace CrmDataGeneration.OpenApi.Reference
             return Value.ToString();
         }
 
-        public static explicit operator short? (ShortValue value) => (short?)value.Value;
+        public static implicit operator short? (ShortValue value) => (short?)value.Value;
         public static implicit operator ShortValue(short? value) => new ShortValue(value);
     }
 
@@ -271,7 +271,7 @@ namespace CrmDataGeneration.OpenApi.Reference
             return Value.ToString();
         }
 
-        public static explicit operator byte? (ByteValue value) => (byte?)value.Value;
+        public static implicit operator byte? (ByteValue value) => (byte?)value.Value;
         public static implicit operator ByteValue(byte? value) => new ByteValue(value);
     }
 
@@ -299,7 +299,7 @@ namespace CrmDataGeneration.OpenApi.Reference
             return Value.ToString();
         }
 
-        public static explicit operator Guid? (GuidValue value) => value.Value;
+        public static implicit operator Guid? (GuidValue value) => value.Value;
         public static implicit operator GuidValue(Guid? value) => new GuidValue(value);
     }
 
@@ -331,7 +331,7 @@ namespace CrmDataGeneration.OpenApi.Reference
             return Value;
         }
 
-        public static explicit operator string(CustomStringField value) => value.Value;
+        public static implicit operator string(CustomStringField value) => value.Value;
         public static implicit operator CustomStringField(string value) => new CustomStringField(value);
     }
 
@@ -359,7 +359,7 @@ namespace CrmDataGeneration.OpenApi.Reference
             return Value.ToString();
         }
 
-        public static explicit operator bool? (CustomBooleanField value) => value.Value;
+        public static implicit operator bool? (CustomBooleanField value) => value.Value;
         public static implicit operator CustomBooleanField(bool? value) => new CustomBooleanField(value);
     }
 
@@ -387,7 +387,7 @@ namespace CrmDataGeneration.OpenApi.Reference
             return Value.ToString();
         }
 
-        public static explicit operator DateTime? (CustomDateTimeField value) => value.Value;
+        public static implicit operator DateTime? (CustomDateTimeField value) => value.Value;
         public static implicit operator CustomDateTimeField(DateTime? value) => new CustomDateTimeField(value);
     }
 
@@ -415,7 +415,7 @@ namespace CrmDataGeneration.OpenApi.Reference
             return Value.ToString();
         }
 
-        public static explicit operator int? (CustomIntField value) => value.Value;
+        public static implicit operator int? (CustomIntField value) => value.Value;
         public static implicit operator CustomIntField(int? value) => new CustomIntField(value);
     }
 
@@ -443,7 +443,7 @@ namespace CrmDataGeneration.OpenApi.Reference
             return Value.ToString();
         }
 
-        public static explicit operator long? (CustomLongField value) => value.Value;
+        public static implicit operator long? (CustomLongField value) => value.Value;
         public static implicit operator CustomLongField(long? value) => new CustomLongField(value);
     }
 
@@ -475,7 +475,7 @@ namespace CrmDataGeneration.OpenApi.Reference
             return Value.ToString();
         }
 
-        public static explicit operator decimal? (CustomDecimalField value) => (decimal)value.Value;
+        public static implicit operator decimal? (CustomDecimalField value) => (decimal)value.Value;
         public static implicit operator CustomDecimalField(decimal? value) => new CustomDecimalField(value);
     }
 
@@ -503,7 +503,7 @@ namespace CrmDataGeneration.OpenApi.Reference
             return Value.ToString();
         }
 
-        public static explicit operator double? (CustomDoubleField value) => value.Value;
+        public static implicit operator double? (CustomDoubleField value) => value.Value;
         public static implicit operator CustomDoubleField(double? value) => new CustomDoubleField(value);
     }
 
@@ -535,7 +535,7 @@ namespace CrmDataGeneration.OpenApi.Reference
             return Value.ToString();
         }
 
-        public static explicit operator short? (CustomShortField value) => (short?)value.Value;
+        public static implicit operator short? (CustomShortField value) => (short?)value.Value;
         public static implicit operator CustomShortField(short? value) => new CustomShortField(value);
     }
 
@@ -563,7 +563,7 @@ namespace CrmDataGeneration.OpenApi.Reference
             return Value.ToString();
         }
 
-        public static explicit operator byte? (CustomByteField value) => (byte?)value.Value;
+        public static implicit operator byte? (CustomByteField value) => (byte?)value.Value;
         public static implicit operator CustomByteField(byte? value) => new CustomByteField(value);
     }
 
@@ -591,7 +591,7 @@ namespace CrmDataGeneration.OpenApi.Reference
             return Value.ToString();
         }
 
-        public static explicit operator Guid? (CustomGuidField value) => value.Value;
+        public static implicit operator Guid? (CustomGuidField value) => value.Value;
         public static implicit operator CustomGuidField(Guid? value) => new CustomGuidField(value);
     }
 

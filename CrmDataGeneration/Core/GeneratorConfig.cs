@@ -1,5 +1,5 @@
 ﻿using CrmDataGeneration.OpenApi;
-using CrmDataGeneration.Random;
+using CrmDataGeneration.Randomize;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using CrmDataGeneration.OpenApi.Reference;
 
 namespace CrmDataGeneration.Core
 {
@@ -15,8 +16,23 @@ namespace CrmDataGeneration.Core
         public const string ConfigFileName = "config.json";
         public const string ConfigCredsFileName = "config.creds.json";
 
+        public int GlobalSeed { get; set; }
         public OpenApiSettings OpenApiSettings { get; set; }
-        public RandomizerSettings RandomizerSettings { get; set; }
+        public LeadRandomizerSettings LeadRandomizerSettings { get; set; }
+
+        // add all your settings here.
+        // it required for generic support methods in GeneratorClient
+        public IRandomizerSettings<T> GetRandomizerSettings<T>() where T : Entity
+        {
+            switch (typeof(T).Name)
+            {
+                // typeof cannot be used in switch clause
+                case nameof(Lead):
+                    return (IRandomizerSettings<T>)LeadRandomizerSettings;
+                default:
+                    throw new NotSupportedException($"This type of generator is not supported. Type: {typeof(T).Name}");
+            }
+        }
 
         public void SaveConfig(string path)
         {

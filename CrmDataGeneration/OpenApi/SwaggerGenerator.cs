@@ -15,8 +15,8 @@ namespace CrmDataGeneration.OpenApi
     public class SwaggerGenerator
     {
 
-        public const string SwaggerReferenceClientsPath = "..\\..\\OpenApi\\Reference\\SwaggerReferenceClients.cs";
-        public const string SwaggerReferenceEntitiesPath = "..\\..\\OpenApi\\Reference\\SwaggerReferenceEntities.cs";
+        public const string SwaggerReferenceClientsPath = "..\\..\\..\\CrmDataGeneration\\OpenApi\\Reference\\SwaggerReferenceClients.cs";
+        public const string SwaggerReferenceEntitiesPath = "..\\..\\..\\CrmDataGeneration\\OpenApi\\Reference\\SwaggerReferenceEntities.cs";
         public static SwaggerToCSharpClientGeneratorSettings GenerationSettings => new SwaggerToCSharpClientGeneratorSettings
         {
             ExceptionClass = "AcumaticaSwaggerException",

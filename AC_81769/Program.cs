@@ -11,6 +11,8 @@ namespace AC_81769
     {
         static async Task Main(string[] args)
         {
+            //CrmDataGeneration.OpenApi.SwaggerGenerator.GenerateClient("http://msk-ws-89.int.acumatica.com/r103/entity/Default/17.200.001/swagger.json");
+
             var config = GeneratorConfig.ReadConfigDefault();
 
             using (var generatorClient = new GeneratorClient(config))
@@ -19,12 +21,13 @@ namespace AC_81769
                 {
                     await generatorClient.Login();
 
+                    await generatorClient.GenerateSingle<CrmDataGeneration.OpenApi.Reference.Lead>();
 
                     await generatorClient.Logout();
                 }
                 catch(Exception e)
                 {
-
+                    throw;
                 }
             }
         }
