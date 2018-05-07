@@ -44,6 +44,7 @@ namespace CrmDataGeneration.Core
 
             try
             {
+                _logger.Info("Start creating {entityName} collection sequentially.", typeof(T).Name);
                 var input = entities.ToList();
                 var output = new List<T>(input.Count);
                 foreach (var item in input)
@@ -75,6 +76,7 @@ namespace CrmDataGeneration.Core
 
             try
             {
+                _logger.Info("Start creating {entityName} collection parallel.", typeof(T).Name);
                 var input = entities.ToList();
                 var output = new List<T>(input.Count);
                 List<Task<T>> tasks;
