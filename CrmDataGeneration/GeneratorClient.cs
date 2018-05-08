@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace CrmDataGeneration
@@ -45,7 +46,7 @@ namespace CrmDataGeneration
             }
         }
 
-        public async Task<IEnumerable<T>> GenerateAll<T>() where T : OpenApi.Reference.Entity
+        public async Task<IEnumerable<T>> GenerateAll<T>(CancellationToken cancellationToken = default) where T : OpenApi.Reference.Entity
         {
             //todo: add cancellation token
 
@@ -75,12 +76,12 @@ namespace CrmDataGeneration
 
             // logger in api client, so without try catch
             if (settings.GenerateInParallel)
-                return await apiClient.CreateAllParallel(entities, settings.MaxExecutionThreads);
+                return await apiClient.CreateAllInParallel(entities, settings.MaxExecutionThreadsParallel, cancellationToken);
             else
-                return await apiClient.CreateAllSequentially(entities);
+                return await apiClient.CreateAllSequentially(entities, settings.SkipErrorsSequent, cancellationToken);
         }
 
-        public async Task<T> GenerateSingle<T>() where T : OpenApi.Reference.Entity
+        public async Task<T> GenerateSingle<T>(CancellationToken cancellationToken = default) where T : OpenApi.Reference.Entity
         {
             _logger.Debug("Start generating single {entity}", typeof(T).Name);
             T entity;
@@ -108,7 +109,7 @@ namespace CrmDataGeneration
 
 
             // logger in api client, so without try catch
-            return await apiClient.Create(entity);
+            return await apiClient.Create(entity, cancellationToken);
         }
 
         public async Task Login() => await _loginClient.Login();
