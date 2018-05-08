@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace CrmDataGeneration.Common
@@ -19,7 +20,7 @@ namespace CrmDataGeneration.Common
         }
         protected OpenApiState OpenApiState { get; }
 
-        public async Task<T> Create(T entity)
+        public async Task<T> Create(T entity, CancellationToken cancellationToken = default)
         {
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
@@ -28,7 +29,7 @@ namespace CrmDataGeneration.Common
             {
                 var sw = new Stopwatch();
                 sw.Start();
-                var res = await CreateRaw(entity);
+                var res = await CreateRaw(entity, cancellationToken);
                 sw.Stop();
                 _logger.Info("{entityName} was created. Time elapsed: {time} Result: {entity}", typeof(T).Name, sw.Elapsed, res);
                 return res;
@@ -40,7 +41,7 @@ namespace CrmDataGeneration.Common
             }
         }
 
-        public async Task<IEnumerable<T>> CreateAllSequentially(IEnumerable<T> entities)
+        public async Task<IEnumerable<T>> CreateAllSequentially(IEnumerable<T> entities, bool skipErrors = false, CancellationToken cancellationToken = default)
         {
             if (entities == null)
                 throw new ArgumentNullException(nameof(entities));
@@ -54,14 +55,16 @@ namespace CrmDataGeneration.Common
                 sw.Start();
                 foreach (var item in input)
                 {
+                    cancellationToken.ThrowIfCancellationRequested();
                     try
                     {
-                        output.Add(await CreateRaw(item));
+                        output.Add(await CreateRaw(item, cancellationToken));
                     }
                     catch (Exception e)
                     {
                         _logger.Error(e, "{entityName} wasn't created. {@entity}", typeof(T).Name, item);
-                        throw;
+                        if(!skipErrors)
+                            throw;
                     }
                 }
                 sw.Stop();
@@ -75,7 +78,9 @@ namespace CrmDataGeneration.Common
             }
         }
 
-        public async Task<IEnumerable<T>> CreateAllParallel(IEnumerable<T> entities, int threadsCount = 0)
+        public async Task<IEnumerable<T>> CreateAllInParallel(IEnumerable<T> entities, 
+            int threadsCount = 0, 
+            CancellationToken cancellationToken = default)
         {
             if (entities == null)
                 throw new ArgumentNullException(nameof(entities));
@@ -98,11 +103,12 @@ namespace CrmDataGeneration.Common
                 sw.Start();
                 foreach (var item in input)
                 {
+                    cancellationToken.ThrowIfCancellationRequested();
                     tasks.Add(Task.Run(async () =>
                     {
                         try
                         {
-                            var result = await CreateRaw(item);
+                            var result = await CreateRaw(item, cancellationToken);
                             output.Add(result);
                             return result;
                         }
@@ -133,6 +139,6 @@ namespace CrmDataGeneration.Common
             }
         }
 
-        protected abstract Task<T> CreateRaw(T entity); //without logging and exceptions
+        protected abstract Task<T> CreateRaw(T entity, CancellationToken cancellationToken = default); //without logging and exceptions
     }
 }

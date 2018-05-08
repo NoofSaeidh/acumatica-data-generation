@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace CrmDataGeneration.Generation.Leads
@@ -17,9 +18,9 @@ namespace CrmDataGeneration.Generation.Leads
             _innerClient = new LeadClient(openApiState);
         }
 
-        protected override async Task<Lead> CreateRaw(Lead entity)
+        protected override async Task<Lead> CreateRaw(Lead entity, CancellationToken cancellationToken = default)
         {
-            return await _innerClient.PutEntityAsync(entity);
+            return await _innerClient.PutEntityAsync(entity, cancellationToken: cancellationToken);
         }
     }
 }

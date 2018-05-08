@@ -13,7 +13,8 @@ namespace CrmDataGeneration.Generation.Leads
     {
         public int Count { get; set; }
         public bool GenerateInParallel { get; set; }
-        public int MaxExecutionThreads { get; set; }
+        public int MaxExecutionThreadsParallel { get; set; }
+        public bool SkipErrorsSequent { get; set; }
 
         public Faker<Lead> GetFaker() => new Faker<Lead>()
             .RuleFor(l => l.FirstName, f => (StringValue) f.Name.FirstName())
