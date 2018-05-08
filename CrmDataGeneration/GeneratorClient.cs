@@ -46,17 +46,30 @@ namespace CrmDataGeneration
             }
         }
 
-        public async Task<IEnumerable<T>> GenerateAll<T>(CancellationToken cancellationToken = default) where T : OpenApi.Reference.Entity
+        public async Task GenerateAllOptions(CancellationToken cancellationToken = default)
         {
-            //todo: add cancellation token
+            if (Config.GenerationOptions == null)
+                throw new InvalidOperationException($"{nameof(Config.GenerationOptions)} options is not specified for {nameof(Config)}.");
+            _logger.Info("Start generation for all options. {@options}", Config.GenerationOptions);
+            foreach (var option in Config.GenerationOptions)
+            {
+                _logger.Info("Start generation for option: {@option}", option);
+                cancellationToken.ThrowIfCancellationRequested();
+                await option.RunGeneration(this, cancellationToken);
+            }
+        }
+
+        public async Task<IEnumerable<T>> GenerateAll<T>(GenerationOption<T> option, CancellationToken cancellationToken = default) where T : OpenApi.Reference.Entity
+        {
+            if (option == null)
+                throw new ArgumentNullException(nameof(option));
 
             IEnumerable<T> entities;
             IApiWrappedClient<T> apiClient;
-            IGenerationSettings<T> settings;
 
             try
             {
-                entities = GetRandomizer<T>().GenerateList();
+                entities = GetRandomizer<T>(option.RandomizerSettings).GenerateList(option.Count);
             }
             catch (Exception e)
             {
@@ -66,7 +79,6 @@ namespace CrmDataGeneration
             try
             {
                 apiClient = GetApiWrappedClient<T>();
-                settings = GetGenerationSettings<T>();
             }
             catch (Exception e)
             {
@@ -75,20 +87,20 @@ namespace CrmDataGeneration
             }
 
             // logger in api client, so without try catch
-            if (settings.GenerateInParallel)
-                return await apiClient.CreateAllInParallel(entities, settings.MaxExecutionThreadsParallel, cancellationToken);
+            if (option.GenerateInParallel)
+                return await apiClient.CreateAllInParallel(entities, option.MaxExecutionThreadsParallel, cancellationToken);
             else
-                return await apiClient.CreateAllSequentially(entities, settings.SkipErrorsSequent, cancellationToken);
+                return await apiClient.CreateAllSequentially(entities, option.SkipErrorsSequent, cancellationToken);
         }
 
-        public async Task<T> GenerateSingle<T>(CancellationToken cancellationToken = default) where T : OpenApi.Reference.Entity
+        public async Task<T> GenerateSingle<T>(IRandomizerSettings<T> randomizerSettings, CancellationToken cancellationToken = default) where T : OpenApi.Reference.Entity
         {
             _logger.Debug("Start generating single {entity}", typeof(T).Name);
             T entity;
             IApiWrappedClient<T> apiClient;
             try
             {
-                entity = GetRandomizer<T>().Generate();
+                entity = GetRandomizer<T>(randomizerSettings).Generate();
             }
             catch (Exception e)
             {
@@ -116,19 +128,9 @@ namespace CrmDataGeneration
 
         public virtual async Task Logout() => await _loginClient.Logout();
 
-        protected virtual IRandomizer<T> GetRandomizer<T>() where T : OpenApi.Reference.Entity
+        protected virtual IRandomizer<T> GetRandomizer<T>(IRandomizerSettings<T> randomizerSettings) where T : OpenApi.Reference.Entity
         {
-            return new Randomizer<T>(GetRandomizerSettings<T>());
-        }
-
-        protected virtual IRandomizerSettings<T> GetRandomizerSettings<T>() where T : OpenApi.Reference.Entity
-        {
-            return Config.GetRandomizerSettings<T>();
-        }
-
-        protected virtual IGenerationSettings<T> GetGenerationSettings<T>() where T : OpenApi.Reference.Entity
-        {
-            return Config.GetGenerationSettings<T>();
+            return new Randomizer<T>(randomizerSettings);
         }
 
         protected virtual IApiWrappedClient<T> GetApiWrappedClient<T>() where T : OpenApi.Reference.Entity

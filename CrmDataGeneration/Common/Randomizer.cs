@@ -20,9 +20,9 @@ namespace CrmDataGeneration.Common
         {
             return Settings.GetFaker().Generate();
         }
-        public virtual IEnumerable<T> GenerateList()
+        public virtual IEnumerable<T> GenerateList(int count)
         {
-            return Settings.GetFaker().Generate(Settings.Count);
+            return Settings.GetFaker().Generate(count);
         }
     }
 }

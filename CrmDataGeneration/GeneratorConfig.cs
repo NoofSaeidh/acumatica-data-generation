@@ -15,6 +15,8 @@ namespace CrmDataGeneration
 {
     public class GeneratorConfig
     {
+        #region Static fields
+
         public const string ConfigFileName = "config.json";
         public const string ConfigCredsFileName = "config.creds.json";
 
@@ -29,29 +31,18 @@ namespace CrmDataGeneration
             }
         };
 
+        #endregion
+
         public int GlobalSeed { get; set; }
         public OpenApiSettings OpenApiSettings { get; set; }
-        public LeadGenerationSettings LeadRandomizerSettings { get; set; }
+        public ICollection<GenerationOption> GenerationOptions { get; set; }
 
-        // add all your settings here.
-        // it required for generic support methods in GeneratorClient
-        public IRandomizerSettings<T> GetRandomizerSettings<T>() where T : Entity
-        {
-            switch (typeof(T).Name)
-            {
-                // typeof cannot be used in switch clause
-                case nameof(Lead):
-                    return (IRandomizerSettings<T>)LeadRandomizerSettings;
-                default:
-                    throw new NotSupportedException($"This type of generator is not supported. Type: {typeof(T).Name}");
-            }
-        }
+        #region Common methods
 
-        // now these are the same classes, so just cast
-        public IGenerationSettings<T> GetGenerationSettings<T>() where T : Entity
-        {
-            return (IGenerationSettings<T>)GetRandomizerSettings<T>();
-        }
+        //public GenerationOption<T> GetGenerationOption<T>() where T : Entity
+        //{
+        //    return GenerationOptions.OfType<GenerationOption<T>>().First();
+        //}
 
         public void SaveConfig(string path)
         {
@@ -79,5 +70,7 @@ namespace CrmDataGeneration
             JsonConvert.PopulateObject(File.ReadAllText(ConfigCredsFileName), config);
             return config;
         }
+
+        #endregion
     }
 }

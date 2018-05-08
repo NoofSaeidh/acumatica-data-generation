@@ -19,13 +19,25 @@ namespace AC_81769
 
             var config = GeneratorConfig.ReadConfigDefault();
 
+            var leadOption = new LeadGenerationOption
+            {
+                Count = 5,
+                RandomizerSettings = new LeadRandomizerSettings
+                {
+
+                }
+            };
+
+            config.GenerationOptions = new List<GenerationOption> { leadOption };
+            config.SaveConfig("config");
+
             using (var generatorClient = new GeneratorClient(config))
             {
                 try
                 {
                     await generatorClient.Login();
 
-                    var s = await generatorClient.GenerateAll<Lead>();
+                    await generatorClient.GenerateAllOptions();
 
                     await generatorClient.Logout();
                 }

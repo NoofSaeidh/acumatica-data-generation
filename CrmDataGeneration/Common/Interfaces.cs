@@ -12,20 +12,12 @@ namespace CrmDataGeneration.Common
     public interface IRandomizer<T> where T : Entity
     {
         T Generate();
-        IEnumerable<T> GenerateList();
+        IEnumerable<T> GenerateList(int count);
     }
 
     public interface IRandomizerSettings<T> where T : Entity
     {
-        int Count { get; }
         Faker<T> GetFaker();
-    }
-
-    public interface IGenerationSettings<T> where T : Entity
-    {
-        bool GenerateInParallel { get; }
-        int MaxExecutionThreadsParallel { get; } // For parallel
-        bool SkipErrorsSequent { get; } // For sequent
     }
 
     public interface IApiWrappedClient<T> where T : Entity
