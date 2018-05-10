@@ -12,6 +12,7 @@ namespace CrmDataGeneration.Common
 {
     public abstract class ApiWrappedClient<T> : IApiWrappedClient<T> where T : OpenApi.Reference.Entity
     {
+        private const string _wrappedAction = "Wrapped action";
         private static ILogger _logger => LogConfiguration.DefaultLogger;
 
         protected ApiWrappedClient(OpenApiState openApiState)
@@ -63,7 +64,7 @@ namespace CrmDataGeneration.Common
                     catch (Exception e)
                     {
                         _logger.Error(e, "{entityName} wasn't created. {@entity}", typeof(T).Name, item);
-                        if(!skipErrors)
+                        if (!skipErrors)
                             throw;
                     }
                 }
@@ -78,8 +79,8 @@ namespace CrmDataGeneration.Common
             }
         }
 
-        public async Task<IEnumerable<T>> CreateAllInParallel(IEnumerable<T> entities, 
-            int threadsCount = 0, 
+        public async Task<IEnumerable<T>> CreateAllInParallel(IEnumerable<T> entities,
+            int threadsCount = 0,
             CancellationToken cancellationToken = default)
         {
             if (entities == null)
@@ -140,5 +141,58 @@ namespace CrmDataGeneration.Common
         }
 
         protected abstract Task<T> CreateRaw(T entity, CancellationToken cancellationToken = default); //without logging and exceptions
+
+        public async Task WrapAction(Task action)
+        {
+            await WrapAction(_wrappedAction, action);
+        }
+        public async Task WrapAction(string actionName, Task action)
+        {
+            if (action == null)
+                throw new ArgumentNullException(nameof(action));
+            if (actionName == null)
+                actionName = _wrappedAction;
+
+            try
+            {
+                var sw = new Stopwatch();
+                sw.Start();
+                await action;
+                sw.Stop();
+                _logger.Info("{action} performed. Entity: {entity}. Time elapsed: {time}.", actionName, typeof(T).Name, sw.Elapsed);
+            }
+            catch (Exception e)
+            {
+                _logger.Error(e, "{action} wasn't performed. Entity {entity}.", actionName, typeof(T).Name);
+                throw;
+            }
+        }
+
+        public async Task<T> WrapAction(Task<T> action)
+        {
+            return await WrapAction(_wrappedAction, action);
+        }
+        public async Task<T> WrapAction(string actionName, Task<T> action)
+        {
+            if (action == null)
+                throw new ArgumentNullException(nameof(action));
+            if (actionName == null)
+                actionName = _wrappedAction;
+
+            try
+            {
+                var sw = new Stopwatch();
+                sw.Start();
+                var res = await action;
+                sw.Stop();
+                _logger.Info("{action} performed. Entity: {entity}. Time elapsed: {time}.", actionName, typeof(T).Name, sw.Elapsed);
+                return res;
+            }
+            catch (Exception e)
+            {
+                _logger.Error(e, "{action} wasn't performed. Entity {entity}.", actionName, typeof(T).Name);
+                throw;
+            }
+        }
     }
 }

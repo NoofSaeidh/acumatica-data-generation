@@ -12,7 +12,7 @@ namespace CrmDataGeneration.Common
 {
     [JsonConverter(typeof(ProbabilityCollectionJsonConverter))]
     [DebuggerTypeProxy(typeof(ProbabilityCollection<>.DebuggerProxyView))]
-    public class ProbabilityCollection<T> : Collection<T>, ICollection<T>, IDictionary<T, double>
+    public class ProbabilityCollection<T> : Collection<T>, IEnumerable<KeyValuePair<T, double>>, IEnumerable<T>, ICollection<T>, IDictionary<T, double>
     {
         public ProbabilityCollection()
         {
@@ -77,6 +77,10 @@ namespace CrmDataGeneration.Common
         public ICollection<double> Values => new ReadOnlyCollection<double>(Probabilities);
 
         public bool IsReadOnly => false;
+
+        // because linq doesn't when both interfaces defined
+        public IEnumerable<T> AsEnumerable => this;
+        public IDictionary<T, double> AsDictionary => this;
 
         protected double ProbabilityPerItem
         {

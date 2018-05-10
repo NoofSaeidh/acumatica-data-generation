@@ -20,27 +20,26 @@ namespace AC_81769
             try
             {
                 config = GeneratorConfig.ReadConfigDefault();
-                config.SaveConfig(GeneratorConfig.ConfigCredsFileName);
+                //config.SaveConfig(GeneratorConfig.ConfigCredsFileName);
             }
             catch(Exception e)
             {
                 throw;
             }
-            var leadOption = new LeadGenerationOption
-            {
-                Count = 5,
-                RandomizerSettings = new LeadRandomizerSettings
-                {
-                    CountryCodes = new ProbabilityCollection<string>
-                    {
-                        "US",
-                        "AU"
-                    }
-                }
-            };
 
-            config.GenerationOptions = new List<GenerationOption> { leadOption };
-            config.SaveConfig("config.json");
+            //var leadOption = new LeadGenerationOption
+            //{
+            //    Count = 10,
+            //    GenerateInParallel = true,
+            //    MaxExecutionThreadsParallel = 10,
+            //    RandomizerSettings = new LeadRandomizerSettings
+            //    {
+
+            //    }
+            //};
+
+            //config.GenerationOptions = new List<GenerationOption> { leadOption };
+            //config.SaveConfig(GeneratorConfig.ConfigCredsFileName);
 
             using (var generatorClient = new GeneratorClient(config))
             {

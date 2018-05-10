@@ -10,7 +10,7 @@ namespace CrmDataGeneration.OpenApi.Reference
 
     public partial class Entity
     {
-        public override string ToString() => $"{GetType().Name}: {nameof(RowNumber)} = {RowNumber}, {nameof(Id)} = {Id}";
+        public override string ToString() => $"{GetType().Name}, {nameof(Id)} = {Id}";
     }
 
     #region Values Extended

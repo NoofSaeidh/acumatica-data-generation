@@ -31,7 +31,7 @@ namespace CrmDataGeneration
 
         public GeneratorConfig Config { get; }
 
-        public T GetApiClient<T>() where T : OpenApiBaseClient
+        public T GetRawApiClient<T>() where T : OpenApiBaseClient
         {
             try
             {
@@ -43,6 +43,18 @@ namespace CrmDataGeneration
             {
                 _logger.Error(e, $"Cannot create Api client of type {typeof(T).Name}.");
                 throw;
+            }
+        }
+
+        public IApiWrappedClient<T> GetApiWrappedClient<T>() where T : OpenApi.Reference.Entity
+        {
+            switch (typeof(T).Name)
+            {
+                // typeof cannot be used in switch clause
+                case nameof(OpenApi.Reference.Lead):
+                    return (IApiWrappedClient<T>)new LeadApiWrappedClient(_openApiState);
+                default:
+                    throw new NotSupportedException($"This type of entity is not supported. Type: {typeof(T).Name}");
             }
         }
 
@@ -131,18 +143,6 @@ namespace CrmDataGeneration
         protected virtual IRandomizer<T> GetRandomizer<T>(IRandomizerSettings<T> randomizerSettings) where T : OpenApi.Reference.Entity
         {
             return new Randomizer<T>(randomizerSettings);
-        }
-
-        protected virtual IApiWrappedClient<T> GetApiWrappedClient<T>() where T : OpenApi.Reference.Entity
-        {
-            switch (typeof(T).Name)
-            {
-                // typeof cannot be used in switch clause
-                case nameof(OpenApi.Reference.Lead):
-                    return (IApiWrappedClient<T>) new LeadApiWrappedClient(_openApiState);
-                default:
-                    throw new NotSupportedException($"This type of entity is not supported. Type: {typeof(T).Name}");
-            }
         }
 
         void IDisposable.Dispose()

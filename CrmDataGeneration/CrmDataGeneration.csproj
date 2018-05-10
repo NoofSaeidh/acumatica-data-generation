@@ -87,11 +87,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common\ApiWrappedClient.cs" />
+    <Compile Include="Common\Extensions.cs" />
     <Compile Include="Common\GenerationOption.cs" />
     <Compile Include="Common\JsonLogSerializer.cs" />
     <Compile Include="Common\LogConfiguration.cs" />
     <Compile Include="Common\ProbabilityCollection.cs" />
     <Compile Include="Common\ProbabilityCollectionJsonConverter.cs" />
+    <Compile Include="Common\RandomizerSettings.cs" />
     <Compile Include="Generation\Activities\ActivityRandomizerSettings.cs" />
     <Compile Include="Generation\Leads\LeadApiWrappedClient.cs" />
     <Compile Include="Generation\Leads\LeadGenerationOption.cs" />

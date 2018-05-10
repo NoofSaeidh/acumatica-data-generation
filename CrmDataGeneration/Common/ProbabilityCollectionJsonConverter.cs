@@ -53,14 +53,14 @@ namespace CrmDataGeneration.Common
             if (hasProbabilities)
             {
                 var pairs = type
-                    .GetMethod(nameof(ProbabilityCollection<object>.GetEnumerator))
-                    .Invoke(value, null);
+                    .GetProperty(nameof(ProbabilityCollection<object>.AsDictionary))
+                    .GetValue(value);
                 serializer.Serialize(writer, pairs);
             }
             else
             {
                 var keys = type
-                    .GetProperty(nameof(ProbabilityCollection<object>.Keys))
+                    .GetProperty(nameof(ProbabilityCollection<object>.AsEnumerable))
                     .GetValue(value);
                 serializer.Serialize(writer, keys);
             }
