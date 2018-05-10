@@ -21,7 +21,7 @@
           "LEADBUS": 0.15,
           "LEADBUSSVC": 0.15
         },
-        "Status": {
+        "Statuses": {
           "New": 0.2,
           "Open": 0.5,
           "Suspended": 0.1,
@@ -32,7 +32,15 @@
       "Count": 10,
       "GenerateInParallel": true,
       "MaxExecutionThreadsParallel": 10,
-      "SkipErrorsSequent": false
+      "SkipErrorsSequent": false,
+      "ConvertByStatuses": {
+        "New": {
+          "ToOpportunity": 0.5
+        },
+        "Open": {
+          "ToOpportunity": 0.5
+        }
+      }
     }
   ]
 }

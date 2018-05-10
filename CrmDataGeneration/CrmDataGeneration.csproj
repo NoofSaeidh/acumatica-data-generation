@@ -95,6 +95,7 @@
     <Compile Include="Common\ProbabilityCollectionJsonConverter.cs" />
     <Compile Include="Common\RandomizerSettings.cs" />
     <Compile Include="Generation\Activities\ActivityRandomizerSettings.cs" />
+    <Compile Include="Generation\Leads\Enums.cs" />
     <Compile Include="Generation\Leads\LeadApiWrappedClient.cs" />
     <Compile Include="Generation\Leads\LeadGenerationOption.cs" />
     <Compile Include="GeneratorConfig.cs" />
