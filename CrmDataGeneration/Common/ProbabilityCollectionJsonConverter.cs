@@ -31,7 +31,7 @@ namespace CrmDataGeneration.Common
                 case JObject jObject:
                 {
                     var dictType = typeof(IDictionary<,>)
-                        .MakeGenericType(objectType.GenericTypeArguments[0], typeof(double));
+                        .MakeGenericType(objectType.GenericTypeArguments[0], typeof(decimal));
                     return Activator.CreateInstance(objectType, jObject.ToObject(dictType, serializer));
                 }
                 case JArray jArray:
@@ -55,7 +55,7 @@ namespace CrmDataGeneration.Common
             if (hasProbabilities)
             {
                 serializer.Serialize(writer, value, 
-                    typeof(IDictionary<,>).MakeGenericType(type.GenericTypeArguments[0], typeof(double)));
+                    typeof(IDictionary<,>).MakeGenericType(type.GenericTypeArguments[0], typeof(decimal)));
             }
             else
             {

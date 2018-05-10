@@ -13,37 +13,37 @@ namespace CrmDataGeneration.Common
     [JsonConverter(typeof(ProbabilityCollectionJsonConverter))]
     [DebuggerTypeProxy(typeof(ProbabilityCollection<>.DebuggerProxyView))]
     [DebuggerDisplay("{ToString()}")]
-    public class ProbabilityCollection<T> : Collection<T>, IEnumerable<KeyValuePair<T, double>>, IEnumerable<T>, ICollection<T>, IDictionary<T, double>
+    public class ProbabilityCollection<T> : Collection<T>, IEnumerable<KeyValuePair<T, decimal>>, IEnumerable<T>, ICollection<T>, IDictionary<T, decimal>
     {
         private readonly List<int> _definedProbabilitiesIndexes;
         public ProbabilityCollection()
         {
-            Probabilities = new List<double>();
+            Probabilities = new List<decimal>();
             _definedProbabilitiesIndexes = new List<int>();
             FreeProbability = 1;
         }
 
         public ProbabilityCollection(IList<T> list) : base(list)
         {
-            Probabilities = Enumerable.Repeat(-1.0, list.Count).ToList();
+            Probabilities = Enumerable.Repeat(-1.0m, list.Count).ToList();
             _definedProbabilitiesIndexes = new List<int>();
             FreeProbability = 1;
         }
 
-        public ProbabilityCollection(IDictionary<T, double> list) : this()
+        public ProbabilityCollection(IDictionary<T, decimal> list) : this()
         {
             foreach (var item in list)
             {
                 Add(item);
             }
         }
-        public double FreeProbability { get; private set; }
+        public decimal FreeProbability { get; private set; }
         public bool HasDefinedProbabilities => FreeProbability < 1;
         // if probability == -1 - it means need to take free probability
-        protected IList<double> Probabilities { get; }
+        protected IList<decimal> Probabilities { get; }
 
         // if set <0 will be used default probability per item
-        public double this[T key]
+        public decimal this[T key]
         {
             get
             {
@@ -82,22 +82,22 @@ namespace CrmDataGeneration.Common
             }
         }
 
-        public new KeyValuePair<T, double> this[int index]
+        public new KeyValuePair<T, decimal> this[int index]
         {
             get
             {
                 var item = base[index];
-                return new KeyValuePair<T, double>(item, this[item]);
+                return new KeyValuePair<T, decimal>(item, this[item]);
             }
         }
 
-        ICollection<T> IDictionary<T, double>.Keys => AsList.ToList();
+        ICollection<T> IDictionary<T, decimal>.Keys => AsList.ToList();
 
-        ICollection<double> IDictionary<T, double>.Values => RawProbabilities.ToList();
+        ICollection<decimal> IDictionary<T, decimal>.Values => RawProbabilities.ToList();
 
-        public IEnumerable<double> RawProbabilities => new ReadOnlyCollection<double>(Probabilities);
+        public IEnumerable<decimal> RawProbabilities => new ReadOnlyCollection<decimal>(Probabilities);
 
-        public IEnumerable<double> CalculatedProbabilities
+        public IEnumerable<decimal> CalculatedProbabilities
         {
             get
             {
@@ -110,9 +110,9 @@ namespace CrmDataGeneration.Common
 
         // because linq doesn't when both interfaces defined
         public IList<T> AsList => this;
-        public IDictionary<T, double> AsDictionary => this;
+        public IDictionary<T, decimal> AsDictionary => this;
 
-        protected double ProbabilityPerItem
+        protected decimal ProbabilityPerItem
         {
             get
             {
@@ -121,7 +121,7 @@ namespace CrmDataGeneration.Common
             }
         }
 
-        public void Add(T key, double value)
+        public void Add(T key, decimal value)
         {
             if (key == null)
                 throw new ArgumentNullException(nameof(key));
@@ -136,12 +136,12 @@ namespace CrmDataGeneration.Common
             AddProbability(value);
         }
 
-        public void Add(KeyValuePair<T, double> item)
+        public void Add(KeyValuePair<T, decimal> item)
         {
             Add(item.Key, item.Value);
         }
 
-        public bool Contains(KeyValuePair<T, double> item)
+        public bool Contains(KeyValuePair<T, decimal> item)
         {
             return ContainsKey(item.Key);
         }
@@ -151,20 +151,20 @@ namespace CrmDataGeneration.Common
             return base.Contains(key);
         }
 
-        public void CopyTo(KeyValuePair<T, double>[] array, int arrayIndex)
+        public void CopyTo(KeyValuePair<T, decimal>[] array, int arrayIndex)
         {
             for (int i = 0; i < Count; i++)
             {
-                array[i + arrayIndex] = new KeyValuePair<T, double>(Items[i], this[Items[i]]);
+                array[i + arrayIndex] = new KeyValuePair<T, decimal>(Items[i], this[Items[i]]);
             }
         }
 
-        public bool Remove(KeyValuePair<T, double> item)
+        public bool Remove(KeyValuePair<T, decimal> item)
         {
             return base.Remove(item.Key);
         }
 
-        public bool TryGetValue(T key, out double value)
+        public bool TryGetValue(T key, out decimal value)
         {
             var index = Items.IndexOf(key);
             if (index < 0)
@@ -181,15 +181,15 @@ namespace CrmDataGeneration.Common
             return $"Count: {Count}, Free Probability: {FreeProbability}";
         }
 
-        private IEnumerable<KeyValuePair<T, double>> EnumerateProbabilities()
+        private IEnumerable<KeyValuePair<T, decimal>> EnumerateProbabilities()
         {
             for (int i = 0; i < Count; i++)
             {
-                yield return new KeyValuePair<T, double>(Items[i], this[Items[i]]);
+                yield return new KeyValuePair<T, decimal>(Items[i], this[Items[i]]);
             }
         }
 
-        public new IEnumerator<KeyValuePair<T, double>> GetEnumerator() 
+        public new IEnumerator<KeyValuePair<T, decimal>> GetEnumerator() 
             => EnumerateProbabilities().GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
@@ -222,13 +222,13 @@ namespace CrmDataGeneration.Common
             base.SetItem(index, item);
         }
 
-        protected void ThrowIfProbilityWillExceed(double toAddValue)
+        protected void ThrowIfProbilityWillExceed(decimal toAddValue)
         {
             if (toAddValue > FreeProbability)
                 throw new InvalidOperationException("Cannot add probability. Total probability cannot exceed 1.");
         }
 
-        protected void DecreaseFreeProbability(double value)
+        protected void DecreaseFreeProbability(decimal value)
         {
             if (value <= 0)
                 return;
@@ -236,7 +236,7 @@ namespace CrmDataGeneration.Common
             FreeProbability -= value;
         }
 
-        protected void IncreaseFreeProbability(double value)
+        protected void IncreaseFreeProbability(decimal value)
         {
             if (value <= 0)
                 return;
@@ -252,7 +252,7 @@ namespace CrmDataGeneration.Common
             Probabilities.Clear();
         }
 
-        protected void AddProbability(double value)
+        protected void AddProbability(decimal value)
         {
             if (value < 0)
             {
@@ -266,7 +266,7 @@ namespace CrmDataGeneration.Common
             }
         }
 
-        protected void InsertProbability(int index, double value)
+        protected void InsertProbability(int index, decimal value)
         {
             if (index == Probabilities.Count)
             {
@@ -296,7 +296,7 @@ namespace CrmDataGeneration.Common
             }
         }
 
-        protected void SetProbability(int index, double value)
+        protected void SetProbability(int index, decimal value)
         {
             if (index < 0 || index >= Probabilities.Count)
                 throw new ArgumentOutOfRangeException(nameof(index), index, "An index was out of range.");
@@ -342,19 +342,19 @@ namespace CrmDataGeneration.Common
             }
 
             [DebuggerBrowsable(DebuggerBrowsableState.RootHidden)]
-            public DisplayPair[] Items => ((IDictionary<T, double>)_collection)
+            public DisplayPair[] Items => ((IDictionary<T, decimal>)_collection)
                         .Select(p => new DisplayPair(p.Key, p.Value))
                         .ToArray();
         }
         private class DisplayPair
         {  
-            public DisplayPair(object key, double probability)
+            public DisplayPair(object key, decimal probability)
             {
                 Key = key;
                 Probability = probability;
             }
             public object Key { get; }
-            public double Probability { get; }
+            public decimal Probability { get; }
 
             public override string ToString() => $"\"{Key}\", {Probability * 100}%";
         }

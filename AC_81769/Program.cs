@@ -28,10 +28,12 @@ namespace AC_81769
                 var probs = new ProbabilityCollection<string>
                 {
                     "haha",
-                    {"hah", 0.4 }
+                    {"hah", 0.4m }
                 };
                 probs.Add("hey");
-                probs.Add("they", 0.9);
+                probs.Add("they", 0.1m);
+                probs.Add("aaa", 0.48m);
+
                 var tmp = probs.AsList.ToList();
 
                 config = GeneratorConfig.ReadConfigDefault();
