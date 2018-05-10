@@ -12,6 +12,7 @@ namespace CrmDataGeneration.Common
 {
     [JsonConverter(typeof(ProbabilityCollectionJsonConverter))]
     [DebuggerTypeProxy(typeof(ProbabilityCollection<>.DebuggerProxyView))]
+    [DebuggerDisplay("{ToString()}")]
     public class ProbabilityCollection<T> : Collection<T>, IEnumerable<KeyValuePair<T, double>>, IEnumerable<T>, ICollection<T>, IDictionary<T, double>
     {
         private readonly List<int> _definedProbabilitiesIndexes;
@@ -173,6 +174,11 @@ namespace CrmDataGeneration.Common
             }
             value = Probabilities[index];
             return true;
+        }
+
+        public override string ToString()
+        {
+            return $"Count: {Count}, Free Probability: {FreeProbability}";
         }
 
         private IEnumerable<KeyValuePair<T, double>> EnumerateProbabilities()
@@ -350,7 +356,7 @@ namespace CrmDataGeneration.Common
             public object Key { get; }
             public double Probability { get; }
 
-            public override string ToString() => $"\"{Key}\" ({Probability * 100}%)";
+            public override string ToString() => $"\"{Key}\", {Probability * 100}%";
         }
         #endregion
 
