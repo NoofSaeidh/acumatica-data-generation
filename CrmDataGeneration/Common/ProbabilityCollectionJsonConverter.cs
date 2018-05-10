@@ -54,13 +54,21 @@ namespace CrmDataGeneration.Common
                 .GetValue(value);
             if (hasProbabilities)
             {
-                serializer.Serialize(writer, value, 
-                    typeof(IDictionary<,>).MakeGenericType(type.GenericTypeArguments[0], typeof(decimal)));
+                // here self reference exceptions, so create new instance of different types
+                var dict = Activator.CreateInstance(
+                    typeof(Dictionary<,>)
+                        .MakeGenericType(type.GenericTypeArguments[0], typeof(decimal)),
+                    value);
+                serializer.Serialize(writer, dict);
             }
             else
             {
-                serializer.Serialize(writer, value,
-                    typeof(IEnumerable<>).MakeGenericType(type.GenericTypeArguments[0]));
+                // here self reference exceptions, so create new instance of different types
+                var list = Activator.CreateInstance(
+                    typeof(List<>)
+                        .MakeGenericType(type.GenericTypeArguments[0]),
+                    value);
+                serializer.Serialize(writer, list);
             }
         }
     }
