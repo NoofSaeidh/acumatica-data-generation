@@ -25,6 +25,8 @@ namespace CrmDataGeneration
             Formatting = Formatting.Indented,
             ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
             NullValueHandling = NullValueHandling.Ignore,
+            TypeNameAssemblyFormatHandling = TypeNameAssemblyFormatHandling.Simple,
+            TypeNameHandling = TypeNameHandling.Auto,
             Converters = new JsonConverter[]
             {
                 new StringEnumConverter()
@@ -67,7 +69,7 @@ namespace CrmDataGeneration
             if (!File.Exists(ConfigCredsFileName))
                 return config;
 
-            JsonConvert.PopulateObject(File.ReadAllText(ConfigCredsFileName), config);
+            JsonConvert.PopulateObject(File.ReadAllText(ConfigCredsFileName), config, _jsonSettings);
             return config;
         }
 

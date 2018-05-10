@@ -1,35 +1,40 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace CrmDataGeneration.Common
 {
+    [JsonConverter(typeof(ProbabilityCollectionJsonConverter))]
+    [DebuggerTypeProxy(typeof(ProbabilityCollection<>.DebuggerProxyView))]
     public class ProbabilityCollection<T> : Collection<T>, ICollection<T>, IDictionary<T, double>
     {
-        private double _freeProbability;
-
         public ProbabilityCollection()
         {
             Probabilities = new List<double>();
+            FreeProbability = 100;
         }
 
         public ProbabilityCollection(IList<T> list) : base(list)
         {
             Probabilities = Enumerable.Repeat(-1.0, list.Count).ToList();
+            FreeProbability = 100;
         }
 
-        public ProbabilityCollection(IDictionary<T, double> list)
+        public ProbabilityCollection(IDictionary<T, double> list) : this()
         {
-            Probabilities = new List<double>();
             foreach (var item in list)
             {
                 Add(item);
             }
         }
-
+        public double FreeProbability { get; private set; }
+        public bool HasDefinedProbabilities => FreeProbability < 100;
         // if probability == -1 - it means need to take free probability
         protected IList<double> Probabilities { get; }
 
@@ -77,8 +82,8 @@ namespace CrmDataGeneration.Common
         {
             get
             {
-                if (_freeProbability <= 0) return 0;
-                return _freeProbability / Items.Count;
+                if (FreeProbability <= 0) return 0;
+                return FreeProbability / Items.Count;
             }
         }
 
@@ -94,7 +99,7 @@ namespace CrmDataGeneration.Common
                 throw new ArgumentException("An item with the same key has already been added.", nameof(key));
             }
 
-            Add(key);
+            Items.Add(key);
             Probabilities.Add(value);
             DecreaseFreeProbability(value);
         }
@@ -118,7 +123,7 @@ namespace CrmDataGeneration.Common
         {
             for (int i = 0; i < Count; i++)
             {
-                array[i + arrayIndex] = new KeyValuePair<T, double>(Items[i], Probabilities[i]);
+                array[i + arrayIndex] = new KeyValuePair<T, double>(Items[i], this[Items[i]]);
             }
         }
 
@@ -130,7 +135,7 @@ namespace CrmDataGeneration.Common
         public bool TryGetValue(T key, out double value)
         {
             var index = Items.IndexOf(key);
-            if(index < 0)
+            if (index < 0)
             {
                 value = default;
                 return false;
@@ -141,24 +146,96 @@ namespace CrmDataGeneration.Common
 
         protected void ThrowIfProbilityExceeded(double value)
         {
-            if (value > _freeProbability)
+            if (value > FreeProbability)
                 throw new InvalidOperationException("Cannot add probability. Total probability cannot exceed 100%.");
         }
 
-        private void DecreaseFreeProbability(double value)
+        protected void DecreaseFreeProbability(double value)
         {
             if (value <= 0) return;
-            _freeProbability -= value;
+            FreeProbability -= value;
+            if (FreeProbability < 0) FreeProbability = 0;
         }
 
-        private IEnumerable<KeyValuePair<T, double>> Enumerate()
+        protected void IncreaseFreeProbability(double value)
+        {
+            if (value <= 0) return;
+            FreeProbability += value;
+            if (FreeProbability > 100) FreeProbability = 100;
+        }
+
+        private IEnumerable<KeyValuePair<T, double>> EnumerateProbabilities()
         {
             for (int i = 0; i < Count; i++)
             {
-                yield return new KeyValuePair<T, double>(Items[i], Probabilities[i]);
+                yield return new KeyValuePair<T, double>(Items[i], this[Items[i]]);
             }
         }
 
-        IEnumerator<KeyValuePair<T, double>> IEnumerable<KeyValuePair<T, double>>.GetEnumerator() => Enumerate().GetEnumerator();
+        public new IEnumerator<KeyValuePair<T, double>> GetEnumerator() 
+            => EnumerateProbabilities().GetEnumerator();
+
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+        protected override void ClearItems()
+        {
+            base.ClearItems();
+            Probabilities.Clear();
+            FreeProbability = 100;
+        }
+
+        protected override void InsertItem(int index, T item)
+        {
+            if (Items.Contains(item))
+                throw new ArgumentException("An item with the same key has already been added.");
+
+            base.InsertItem(index, item);
+            Probabilities.Insert(index, -1);
+        }
+
+        protected override void RemoveItem(int index)
+        {
+            base.RemoveItem(index);
+            var prob = Probabilities[index];
+            IncreaseFreeProbability(prob);
+            Probabilities.RemoveAt(index);
+        }
+
+        protected override void SetItem(int index, T item)
+        {
+            if (Items.Contains(item))
+                throw new ArgumentException("An item with the same key has already been added.");
+
+            base.SetItem(index, item);
+        }
+
+        #region Debugger display
+        private class DebuggerProxyView
+        {
+            private readonly ProbabilityCollection<T> _collection;
+            public DebuggerProxyView(ProbabilityCollection<T> collection)
+            {
+                _collection = collection;
+            }
+
+            [DebuggerBrowsable(DebuggerBrowsableState.RootHidden)]
+            public DisplayPair[] Items => ((IDictionary<T, double>)_collection)
+                        .Select(p => new DisplayPair(p.Key, p.Value))
+                        .ToArray();
+        }
+        private class DisplayPair
+        {  
+            public DisplayPair(object key, double probability)
+            {
+                Key = key;
+                Probability = probability;
+            }
+            public object Key { get; }
+            public double Probability { get; }
+
+            public override string ToString() => $"\"{Key}\" ({Probability}%)";
+        }
+        #endregion
+
     }
 }

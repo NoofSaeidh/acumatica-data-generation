@@ -16,20 +16,31 @@ namespace AC_81769
         static async VoidTask Main(string[] args)
         {
             //CrmDataGeneration.OpenApi.SwaggerGenerator.GenerateClient("http://msk-ws-89.int.acumatica.com/r103/entity/Default/17.200.001/swagger.json");
-
-            var config = GeneratorConfig.ReadConfigDefault();
-
+            GeneratorConfig config;
+            try
+            {
+                config = GeneratorConfig.ReadConfigDefault();
+                config.SaveConfig(GeneratorConfig.ConfigCredsFileName);
+            }
+            catch(Exception e)
+            {
+                throw;
+            }
             var leadOption = new LeadGenerationOption
             {
                 Count = 5,
                 RandomizerSettings = new LeadRandomizerSettings
                 {
-
+                    CountryCodes = new ProbabilityCollection<string>
+                    {
+                        "US",
+                        "AU"
+                    }
                 }
             };
 
             config.GenerationOptions = new List<GenerationOption> { leadOption };
-            config.SaveConfig("config");
+            config.SaveConfig("config.json");
 
             using (var generatorClient = new GeneratorClient(config))
             {

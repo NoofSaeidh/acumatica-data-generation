@@ -24,10 +24,14 @@ namespace CrmDataGeneration.Common
         public override string GenerateEntity => typeof(T).Name;
         public override async Task RunGeneration(GeneratorClient client, CancellationToken cancellationToken = default)
         {
+            CheckSettings();
+            await client.GenerateAll(this, cancellationToken);
+        }
+
+        protected virtual void CheckSettings()
+        {
             if (RandomizerSettings == null)
                 throw new InvalidOperationException($"{nameof(RandomizerSettings)} cannot be null.");
-
-            await client.GenerateAll(this, cancellationToken);
         }
     }
 }

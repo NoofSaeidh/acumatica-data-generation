@@ -10,10 +10,5 @@
     "Company": null,
     "GenerationSeed": 0
   },
-  "GlobalSeed": 0,
-  "LeadRandomizerSettings": {
-    "Count": 100,
-    "GenerateInParallel": true,
-    "MaxExecutionThreads": 20
-  }
+  "GlobalSeed": 0
 }

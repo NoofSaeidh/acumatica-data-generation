@@ -91,6 +91,7 @@
     <Compile Include="Common\JsonLogSerializer.cs" />
     <Compile Include="Common\LogConfiguration.cs" />
     <Compile Include="Common\ProbabilityCollection.cs" />
+    <Compile Include="Common\ProbabilityCollectionJsonConverter.cs" />
     <Compile Include="Generation\Activities\ActivityRandomizerSettings.cs" />
     <Compile Include="Generation\Leads\LeadApiWrappedClient.cs" />
     <Compile Include="Generation\Leads\LeadGenerationOption.cs" />
