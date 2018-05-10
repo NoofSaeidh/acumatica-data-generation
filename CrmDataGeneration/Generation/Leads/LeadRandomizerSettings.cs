@@ -36,7 +36,6 @@ namespace CrmDataGeneration.Generation.Leads
                     l.LeadClass = f.Random.ProbabilityRandom(LeadClasses);
                 if (!Statuses.IsNullOrEmpty())
                     l.Status = f.Random.ProbabilityRandom(Statuses);
-
             });
     }
 }

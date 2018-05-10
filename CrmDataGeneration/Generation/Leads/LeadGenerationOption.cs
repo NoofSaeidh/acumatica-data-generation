@@ -19,25 +19,29 @@ namespace CrmDataGeneration.Generation.Leads
             CheckSettings();
             var leads = await client.GenerateAll(this, cancellationToken);
 
-
+            await ConvertLeadsToOpportunities(client, leads, cancellationToken);
         }
 
         protected async System.Threading.Tasks.Task ConvertLeadsToOpportunities(GeneratorClient client, IEnumerable<Lead> leads, CancellationToken cancellationToken = default)
         {
-            if (ConvertToOpportunityByStatus.AsEnumerable.IsNullOrEmpty())
+            if (ConvertToOpportunityByStatus.IsNullOrEmpty())
                 return;
+
+            // convert depending on Probability defined in ConvertToOpportunityByStatus
 
             var rand = new Randomizer(RandomizerSettings.Seed ?? client.Config.GlobalSeed);
             var wrappedClient = client.GetApiWrappedClient<Lead>();
             var actionClient = client.GetRawApiClient<InvokeActionClient>();
             foreach (var lead in leads)
             {
-                if (!ConvertToOpportunityByStatus.Contains(lead.Status))
+                var indexOfStatus = ConvertToOpportunityByStatus.IndexOf(lead.Status);
+                if (indexOfStatus < 0)
                     continue;
 
                 var invocation = new ConvertLeadToOpportunity { Entity = lead };
-                //rand.Bool()
-                await wrappedClient.WrapAction(actionClient.ConvertLeadToOpportunityAsync(invocation, cancellationToken));
+                var shouldConvert = rand.Bool((float)ConvertToOpportunityByStatus[indexOfStatus].Value);
+                if(shouldConvert)
+                    await wrappedClient.WrapAction(actionClient.ConvertLeadToOpportunityAsync(invocation, cancellationToken));
             }
         }
     }

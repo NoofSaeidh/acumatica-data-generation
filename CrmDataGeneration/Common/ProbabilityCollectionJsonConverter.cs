@@ -1,7 +1,9 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -52,17 +54,13 @@ namespace CrmDataGeneration.Common
                 .GetValue(value);
             if (hasProbabilities)
             {
-                var pairs = type
-                    .GetProperty(nameof(ProbabilityCollection<object>.AsDictionary))
-                    .GetValue(value);
-                serializer.Serialize(writer, pairs);
+                serializer.Serialize(writer, value, 
+                    typeof(IDictionary<,>).MakeGenericType(type.GenericTypeArguments[0], typeof(double)));
             }
             else
             {
-                var keys = type
-                    .GetProperty(nameof(ProbabilityCollection<object>.AsEnumerable))
-                    .GetValue(value);
-                serializer.Serialize(writer, keys);
+                serializer.Serialize(writer, value,
+                    typeof(IEnumerable<>).MakeGenericType(type.GenericTypeArguments[0]));
             }
         }
     }

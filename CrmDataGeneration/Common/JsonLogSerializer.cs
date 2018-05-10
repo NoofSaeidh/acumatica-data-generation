@@ -49,7 +49,6 @@ namespace CrmDataGeneration.Common
             {
                 InternalLogger.Error(e, "Error when custom JSON serialization");
                 return false;
-                throw;
             }
         }
     }

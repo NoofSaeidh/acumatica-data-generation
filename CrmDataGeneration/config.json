@@ -13,17 +13,25 @@
   "GlobalSeed": 0,
   "GenerationOptions": [
     {
-      "$comment": " It is just an example! This is an array, so it will not be merged. Change file in destination.",
       "$type": "CrmDataGeneration.Generation.Leads.LeadGenerationOption, CrmDataGeneration",
       "RandomizerSettings": {
         "$type": "CrmDataGeneration.Generation.Leads.LeadRandomizerSettings, CrmDataGeneration",
-        "LeadClasses": {},
-        "Statuses": {}
+        "LeadClasses": {
+          "LEAD": 0.7,
+          "LEADBUS": 0.15,
+          "LEADBUSSVC": 0.15
+        },
+        "Status": {
+          "New": 0.2,
+          "Open": 0.5,
+          "Suspended": 0.1,
+          "Lost": 0.2
+        }
       },
       "GenerateEntity": "Lead",
-      "Count": 0,
+      "Count": 10,
       "GenerateInParallel": true,
-      "MaxExecutionThreadsParallel": 32,
+      "MaxExecutionThreadsParallel": 10,
       "SkipErrorsSequent": false
     }
   ]

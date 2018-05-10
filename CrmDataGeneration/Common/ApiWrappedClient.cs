@@ -47,6 +47,12 @@ namespace CrmDataGeneration.Common
             if (entities == null)
                 throw new ArgumentNullException(nameof(entities));
 
+            if (!entities.Any())
+            {
+                _logger.Warn("Creation of empty collection {entityName} was requested.", typeof(T).Name);
+                return entities;
+            }
+
             try
             {
                 _logger.Info("Start creating {entityName} collection sequentially.", typeof(T).Name);
@@ -85,6 +91,12 @@ namespace CrmDataGeneration.Common
         {
             if (entities == null)
                 throw new ArgumentNullException(nameof(entities));
+
+            if(!entities.Any())
+            {
+                _logger.Warn("Creation of empty collection {entityName} was requested.", typeof(T).Name);
+                return entities;
+            }
 
             try
             {

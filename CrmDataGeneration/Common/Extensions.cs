@@ -13,9 +13,9 @@ namespace CrmDataGeneration.Common
     {
         public static bool IsNullOrEmpty(this IEnumerable enumerable)
         {
-            if (enumerable == null) return false;
-            if (!enumerable.OfType<object>().Any()) return false;
-            return true;
+            if (enumerable == null) return true;
+            if (!enumerable.OfType<object>().Any()) return true;
+            return false;
         }
     }
 
@@ -27,8 +27,8 @@ namespace CrmDataGeneration.Common
             // need null checks??
 
             if (!probabilities.HasDefinedProbabilities)
-                return randomizer.ListItem(probabilities.AsEnumerable.ToList());
-            return randomizer.WeightedRandom(probabilities.Keys.ToArray(), probabilities.Values.Select(x=>(float)x).ToArray());
+                return randomizer.ListItem(probabilities.AsList.ToList());
+            return randomizer.WeightedRandom(probabilities.AsList.ToArray(), probabilities.CalculatedProbabilities.Select(x=>(float)x).ToArray());
         }
     }
 }

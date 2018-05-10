@@ -14,16 +14,19 @@ namespace CrmDataGeneration.Common
     [DebuggerTypeProxy(typeof(ProbabilityCollection<>.DebuggerProxyView))]
     public class ProbabilityCollection<T> : Collection<T>, IEnumerable<KeyValuePair<T, double>>, IEnumerable<T>, ICollection<T>, IDictionary<T, double>
     {
+        private readonly List<int> _definedProbabilitiesIndexes;
         public ProbabilityCollection()
         {
             Probabilities = new List<double>();
-            FreeProbability = 100;
+            _definedProbabilitiesIndexes = new List<int>();
+            FreeProbability = 1;
         }
 
         public ProbabilityCollection(IList<T> list) : base(list)
         {
             Probabilities = Enumerable.Repeat(-1.0, list.Count).ToList();
-            FreeProbability = 100;
+            _definedProbabilitiesIndexes = new List<int>();
+            FreeProbability = 1;
         }
 
         public ProbabilityCollection(IDictionary<T, double> list) : this()
@@ -34,7 +37,7 @@ namespace CrmDataGeneration.Common
             }
         }
         public double FreeProbability { get; private set; }
-        public bool HasDefinedProbabilities => FreeProbability < 100;
+        public bool HasDefinedProbabilities => FreeProbability < 1;
         // if probability == -1 - it means need to take free probability
         protected IList<double> Probabilities { get; }
 
@@ -57,12 +60,18 @@ namespace CrmDataGeneration.Common
             }
             set
             {
-                ThrowIfProbilityExceeded(value);
+                ThrowIfProbilityWillExceed(value);
                 var index = IndexOf(key);
                 if (index < 0)
                 {
                     Add(key);
-                    Probabilities.Add(value);
+                    if (value < 0)
+                        Probabilities.Add(-1);
+                    else
+                    {
+                        Probabilities.Add(value);
+                        _definedProbabilitiesIndexes.Add(Items.Count - 1);
+                    }
                 }
                 else
                 {
@@ -72,14 +81,34 @@ namespace CrmDataGeneration.Common
             }
         }
 
-        public ICollection<T> Keys => new ReadOnlyCollection<T>(Items);
+        public new KeyValuePair<T, double> this[int index]
+        {
+            get
+            {
+                var item = base[index];
+                return new KeyValuePair<T, double>(item, this[item]);
+            }
+        }
 
-        public ICollection<double> Values => new ReadOnlyCollection<double>(Probabilities);
+        ICollection<T> IDictionary<T, double>.Keys => AsList.ToList();
+
+        ICollection<double> IDictionary<T, double>.Values => RawProbabilities.ToList();
+
+        public IEnumerable<double> RawProbabilities => new ReadOnlyCollection<double>(Probabilities);
+
+        public IEnumerable<double> CalculatedProbabilities
+        {
+            get
+            {
+                var probPerItem = ProbabilityPerItem;
+                return Probabilities.Select(x => x >= 0 ? x : probPerItem).ToList();
+            }
+        }
 
         public bool IsReadOnly => false;
 
         // because linq doesn't when both interfaces defined
-        public IEnumerable<T> AsEnumerable => this;
+        public IList<T> AsList => this;
         public IDictionary<T, double> AsDictionary => this;
 
         protected double ProbabilityPerItem
@@ -87,7 +116,7 @@ namespace CrmDataGeneration.Common
             get
             {
                 if (FreeProbability <= 0) return 0;
-                return FreeProbability / Items.Count;
+                return FreeProbability / (Items.Count - _definedProbabilitiesIndexes.Count);
             }
         }
 
@@ -96,7 +125,6 @@ namespace CrmDataGeneration.Common
             if (key == null)
                 throw new ArgumentNullException(nameof(key));
 
-            ThrowIfProbilityExceeded(value);
             var index = IndexOf(key);
             if (index >= 0)
             {
@@ -104,8 +132,7 @@ namespace CrmDataGeneration.Common
             }
 
             Items.Add(key);
-            Probabilities.Add(value);
-            DecreaseFreeProbability(value);
+            AddProbability(value);
         }
 
         public void Add(KeyValuePair<T, double> item)
@@ -120,7 +147,7 @@ namespace CrmDataGeneration.Common
 
         public bool ContainsKey(T key)
         {
-            return Contains(key);
+            return base.Contains(key);
         }
 
         public void CopyTo(KeyValuePair<T, double>[] array, int arrayIndex)
@@ -133,7 +160,7 @@ namespace CrmDataGeneration.Common
 
         public bool Remove(KeyValuePair<T, double> item)
         {
-            return Remove(item.Key);
+            return base.Remove(item.Key);
         }
 
         public bool TryGetValue(T key, out double value)
@@ -146,26 +173,6 @@ namespace CrmDataGeneration.Common
             }
             value = Probabilities[index];
             return true;
-        }
-
-        protected void ThrowIfProbilityExceeded(double value)
-        {
-            if (value > FreeProbability)
-                throw new InvalidOperationException("Cannot add probability. Total probability cannot exceed 100%.");
-        }
-
-        protected void DecreaseFreeProbability(double value)
-        {
-            if (value <= 0) return;
-            FreeProbability -= value;
-            if (FreeProbability < 0) FreeProbability = 0;
-        }
-
-        protected void IncreaseFreeProbability(double value)
-        {
-            if (value <= 0) return;
-            FreeProbability += value;
-            if (FreeProbability > 100) FreeProbability = 100;
         }
 
         private IEnumerable<KeyValuePair<T, double>> EnumerateProbabilities()
@@ -184,25 +191,21 @@ namespace CrmDataGeneration.Common
         protected override void ClearItems()
         {
             base.ClearItems();
-            Probabilities.Clear();
-            FreeProbability = 100;
+            ClearProbabilities();
         }
 
         protected override void InsertItem(int index, T item)
         {
             if (Items.Contains(item))
                 throw new ArgumentException("An item with the same key has already been added.");
-
             base.InsertItem(index, item);
-            Probabilities.Insert(index, -1);
+            InsertProbability(index, -1);
         }
 
         protected override void RemoveItem(int index)
         {
             base.RemoveItem(index);
-            var prob = Probabilities[index];
-            IncreaseFreeProbability(prob);
-            Probabilities.RemoveAt(index);
+            RemoveProbability(index);
         }
 
         protected override void SetItem(int index, T item)
@@ -211,6 +214,116 @@ namespace CrmDataGeneration.Common
                 throw new ArgumentException("An item with the same key has already been added.");
 
             base.SetItem(index, item);
+        }
+
+        protected void ThrowIfProbilityWillExceed(double toAddValue)
+        {
+            if (toAddValue > FreeProbability)
+                throw new InvalidOperationException("Cannot add probability. Total probability cannot exceed 1.");
+        }
+
+        protected void DecreaseFreeProbability(double value)
+        {
+            if (value <= 0)
+                return;
+            ThrowIfProbilityWillExceed(value);
+            FreeProbability -= value;
+        }
+
+        protected void IncreaseFreeProbability(double value)
+        {
+            if (value <= 0)
+                return;
+            FreeProbability += value;
+            if (FreeProbability > 1)
+                FreeProbability = 1;
+        }
+
+        protected void ClearProbabilities()
+        {
+            FreeProbability = 1;
+            _definedProbabilitiesIndexes.Clear();
+            Probabilities.Clear();
+        }
+
+        protected void AddProbability(double value)
+        {
+            if (value < 0)
+            {
+                Probabilities.Add(-1);
+            }
+            else
+            {
+                DecreaseFreeProbability(value);
+                Probabilities.Add(value);
+                _definedProbabilitiesIndexes.Add(Probabilities.Count - 1);
+            }
+        }
+
+        protected void InsertProbability(int index, double value)
+        {
+            if (index == Probabilities.Count)
+            {
+                AddProbability(value);
+                return;
+            }
+
+            if (index < 0 || index >= Probabilities.Count)
+                throw new ArgumentOutOfRangeException(nameof(index), index, "An index was out of range.");
+
+            for (int i = 0; i < _definedProbabilitiesIndexes.Count; i++)
+            {
+                if (_definedProbabilitiesIndexes[i] >= index)
+                    _definedProbabilitiesIndexes[i]++;
+            }
+
+            if (value < 0)
+            {
+                IncreaseFreeProbability(Probabilities[index]);
+                Probabilities.Insert(index, value);
+            }
+            else
+            {
+                DecreaseFreeProbability(value - Probabilities[index]);
+                Probabilities.Insert(index, value);
+                _definedProbabilitiesIndexes.Add(Probabilities.Count - 1);
+            }
+        }
+
+        protected void SetProbability(int index, double value)
+        {
+            if (index < 0 || index >= Probabilities.Count)
+                throw new ArgumentOutOfRangeException(nameof(index), index, "An index was out of range.");
+
+            var defIndex = _definedProbabilitiesIndexes.IndexOf(index);
+            if (defIndex >= 0)
+                _definedProbabilitiesIndexes.RemoveAt(defIndex);
+
+
+            if (value < 0)
+            {
+                IncreaseFreeProbability(Probabilities[index]);
+                Probabilities[index] = -1;
+            }
+            else
+            {
+                DecreaseFreeProbability(value - Probabilities[index]);
+                Probabilities[index] = value;
+                _definedProbabilitiesIndexes.Add(Probabilities.Count - 1);
+            }
+        }
+
+        protected void RemoveProbability(int index)
+        {
+            if (index < 0 || index >= Probabilities.Count)
+                throw new ArgumentOutOfRangeException(nameof(index), index, "An index was out of range.");
+
+            var defIndex = _definedProbabilitiesIndexes.IndexOf(index);
+            if (defIndex >= 0)
+                _definedProbabilitiesIndexes.RemoveAt(defIndex);
+
+            IncreaseFreeProbability(Probabilities[index]);
+            Probabilities.RemoveAt(index);
         }
 
         #region Debugger display
@@ -237,7 +350,7 @@ namespace CrmDataGeneration.Common
             public object Key { get; }
             public double Probability { get; }
 
-            public override string ToString() => $"\"{Key}\" ({Probability}%)";
+            public override string ToString() => $"\"{Key}\" ({Probability * 100}%)";
         }
         #endregion
 

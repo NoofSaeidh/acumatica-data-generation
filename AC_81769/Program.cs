@@ -15,10 +15,25 @@ namespace AC_81769
     {
         static async VoidTask Main(string[] args)
         {
+
+
+
+
+
+
             //CrmDataGeneration.OpenApi.SwaggerGenerator.GenerateClient("http://msk-ws-89.int.acumatica.com/r103/entity/Default/17.200.001/swagger.json");
             GeneratorConfig config;
             try
             {
+                var probs = new ProbabilityCollection<string>
+                {
+                    "haha",
+                    {"hah", 0.4 }
+                };
+                probs.Add("hey");
+                probs.Add("they", 0.9);
+                var tmp = probs.AsList.ToList();
+
                 config = GeneratorConfig.ReadConfigDefault();
                 //config.SaveConfig(GeneratorConfig.ConfigCredsFileName);
             }
