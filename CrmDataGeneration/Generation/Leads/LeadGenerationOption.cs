@@ -17,36 +17,55 @@ namespace CrmDataGeneration.Generation.Leads
         public override async System.Threading.Tasks.Task RunGeneration(GeneratorClient client, CancellationToken cancellationToken = default)
         {
             CheckSettings();
-            var leads = (await client.GenerateAll(this, cancellationToken)).ToList();
+            var leads = (await client.GenerateAll(this, cancellationToken));
 
             if (ConvertByStatuses.IsNullOrEmpty())
                 return;
 
+            var seed = RandomizerSettings.Seed ?? client.Config.GlobalSeed;
+
+            var toConvertLeads = PrepareLeadsForConvertionByStatuses(seed, leads);
+
+            if (toConvertLeads.Any())
+            {
+                // convert to opportunities
+                await ConvertLeadsToOpportunities(client, 
+                    GetLeadsByConvertFlag(toConvertLeads, ConvertLead.ToOpportunity),
+                    cancellationToken);
+            }
+        }
+
+        protected IEnumerable<Lead> GetLeadsByConvertFlag(IEnumerable<KeyValuePair<ConvertLead, IEnumerable<Lead>>> leads, ConvertLead flag)
+        {
+            return leads
+                .Where(x => x.Key.HasFlag(flag))
+                .SelectMany(x => x.Value);
+        }
+
+        protected IEnumerable<KeyValuePair<ConvertLead, IEnumerable<Lead>>> PrepareLeadsForConvertionByStatuses(int seed, IEnumerable<Lead> leads)
+        {
             // convert depending on Probability defined in ConvertToOpportunityByStatus
 
-            var rand = new Randomizer(RandomizerSettings.Seed ?? client.Config.GlobalSeed);
+            var leadsList = leads.ToArray();
 
-            var convertToOpportunity = new List<Lead>(leads.Count);
+            var rand = new Randomizer(seed);
 
-            foreach (var lead in leads)
+            var convertToOpportunity = new List<Lead>(leadsList.Length);
+
+            var byConversion = ConvertByStatuses
+                .SelectMany(x => x.Value.AsDictionary,
+                    (x, y) => new { conversion = y.Key, status = x.Key, probability = y.Value })
+                .ToDictionary(x => x.conversion, x => new { x.status, x.probability });
+
+            foreach (var conversion in byConversion)
             {
-                // define should convert (to anything) current lead by status
-                if(!ConvertByStatuses.TryGetValue(lead.Status, out var probabilities))
-                    continue;
-
-                // convert to Opportunities
-                var indexOfStatus = probabilities.IndexOf(ConvertLead.ToOpportunity);
-                if (indexOfStatus >= 0)
-                {
-                    var shouldConvert = rand.Bool((float)probabilities[indexOfStatus].Value);
-                    if (shouldConvert)
-                        convertToOpportunity.Add(lead);
-                }
-
+                yield return new KeyValuePair<ConvertLead, IEnumerable<Lead>>(
+                    conversion.Key,
+                    leadsList
+                        .Where(l => l.Status == conversion.Value.status
+                                 && rand.Bool((float)conversion.Value.probability))
+                );
             }
-
-            if(convertToOpportunity.Any())
-                await ConvertLeadsToOpportunities(client, convertToOpportunity, cancellationToken);
         }
 
         protected async System.Threading.Tasks.Task ConvertLeadsToOpportunities(GeneratorClient client, IEnumerable<Lead> leads, CancellationToken cancellationToken = default)
