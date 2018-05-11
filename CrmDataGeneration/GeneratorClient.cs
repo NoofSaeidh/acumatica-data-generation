@@ -67,7 +67,15 @@ namespace CrmDataGeneration
             {
                 _logger.Info("Start generation for option: {@option}", option);
                 cancellationToken.ThrowIfCancellationRequested();
-                await option.RunGeneration(this, cancellationToken);
+                try
+                {
+                    await option.RunGeneration(this, cancellationToken);
+
+                }
+                catch (Exception e)
+                {
+                    _logger.Error(e, "Generation failed. {@option}", option);
+                }
             }
         }
 

@@ -1,5 +1,6 @@
 ﻿using Bogus;
 using CrmDataGeneration.Common;
+using CrmDataGeneration.Generation.Activities;
 using CrmDataGeneration.OpenApi.Reference;
 using System;
 using System.Collections.Generic;
@@ -7,17 +8,22 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using VoidTask = System.Threading.Tasks.Task;
 
 namespace CrmDataGeneration.Generation.Leads
 {
     public class LeadGenerationOption : GenerationOption<Lead>
     {
         public IDictionary<string, ProbabilityCollection<ConvertLead>> ConvertByStatuses { get; set; }
+        public ProbabilityCollection<(string Email, string DisplayName)> SystemAccounts { get; set; }
+        public ActivityGenerationOption IncomingActivities { get; set; }
+        public ActivityGenerationOption OutgoingActivities { get; set; }
 
-        public override async System.Threading.Tasks.Task RunGeneration(GeneratorClient client, CancellationToken cancellationToken = default)
+        #region Methods
+        public override async VoidTask RunGeneration(GeneratorClient client, CancellationToken cancellationToken = default)
         {
             CheckSettings();
-            var leads = (await client.GenerateAll(this, cancellationToken));
+            var leads = await client.GenerateAll(this, cancellationToken);
 
             if (ConvertByStatuses.IsNullOrEmpty())
                 return;
@@ -33,6 +39,8 @@ namespace CrmDataGeneration.Generation.Leads
                     GetLeadsByConvertFlag(toConvertLeads, ConvertLead.ToOpportunity),
                     cancellationToken);
             }
+
+            await GenerateEmails(client, leads, cancellationToken);
         }
 
         protected IEnumerable<Lead> GetLeadsByConvertFlag(IEnumerable<KeyValuePair<ConvertLead, IEnumerable<Lead>>> leads, ConvertLead flag)
@@ -76,7 +84,7 @@ namespace CrmDataGeneration.Generation.Leads
             }
         }
 
-        protected async System.Threading.Tasks.Task ConvertLeadsToOpportunities(GeneratorClient client, IEnumerable<Lead> leads, CancellationToken cancellationToken = default)
+        protected async VoidTask ConvertLeadsToOpportunities(GeneratorClient client, IEnumerable<Lead> leads, CancellationToken cancellationToken = default)
         {
             var wrappedClient = client.GetApiWrappedClient<Lead>();
             var actionClient = client.GetRawApiClient<InvokeActionClient>();
@@ -91,5 +99,51 @@ namespace CrmDataGeneration.Generation.Leads
                 return leads;
             }));
         }
+
+        protected async Task<IEnumerable<Email>> GenerateEmails(GeneratorClient client, IEnumerable<Lead> leads, CancellationToken cancellationToken = default)
+        {
+            var result = Enumerable.Empty<Email>();
+            var rand = new Randomizer(RandomizerSettings.Seed ?? client.Config.GlobalSeed);
+            if (IncomingActivities != null)
+            {
+                foreach (var lead in leads)
+                {
+                    var emailsCount = rand.ProbabilityRandomIfAny(IncomingActivities.EmailsCount);
+                    if (emailsCount == 0)
+                        continue;
+                    var emails = IncomingActivities.RandomizerSettings.GetRandomizer().GenerateList(emailsCount);
+                    foreach (var item in emails)
+                    {
+                        item.Incoming = true;
+                        item.From = lead.Email;
+                        item.To = rand.ProbabilityRandomIfAny(SystemAccounts).Email;
+                    }
+                    // todo: thread maintain (and log) here
+                    result.Union(await IncomingActivities.GenerateEmails(client, emails, cancellationToken));
+                }
+            }
+            if (OutgoingActivities != null)
+            {
+                foreach (var lead in leads)
+                {
+                    var emailsCount = rand.ProbabilityRandomIfAny(OutgoingActivities.EmailsCount);
+                    if (emailsCount == 0)
+                        continue;
+                    var emails = OutgoingActivities.RandomizerSettings.GetRandomizer().GenerateList(emailsCount);
+                    foreach (var item in emails)
+                    {
+                        item.Incoming = false;
+                        item.To = lead.Email;
+                        //todo: from system account
+                        item.FromEmailAccountDisplayName = rand.ProbabilityRandomIfAny(SystemAccounts).DisplayName;
+                        item.From = rand.ProbabilityRandomIfAny(SystemAccounts).Email;
+                    }
+                    result.Union(await OutgoingActivities.GenerateEmails(client, emails, cancellationToken));
+                }
+            }
+            return result;
+        }
+
+        #endregion
     }
 }

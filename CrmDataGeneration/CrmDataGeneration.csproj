@@ -94,7 +94,10 @@
     <Compile Include="Common\ProbabilityCollection.cs" />
     <Compile Include="Common\ProbabilityCollectionJsonConverter.cs" />
     <Compile Include="Common\RandomizerSettings.cs" />
+    <Compile Include="Generation\Activities\ActivityGenerationOption.cs" />
     <Compile Include="Generation\Activities\ActivityRandomizerSettings.cs" />
+    <Compile Include="Generation\Activities\EmailApiWrappedClient.cs" />
+    <Compile Include="Generation\Activities\Enums.cs" />
     <Compile Include="Generation\Leads\Enums.cs" />
     <Compile Include="Generation\Leads\LeadApiWrappedClient.cs" />
     <Compile Include="Generation\Leads\LeadGenerationOption.cs" />
@@ -115,12 +118,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="config.*.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="config.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="NLog.config">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

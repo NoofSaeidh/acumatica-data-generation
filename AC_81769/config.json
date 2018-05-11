@@ -1,6 +1,6 @@
 {
   "OpenApiSettings": {
-    "AcumaticaBaseUrl": "http://localhost/site",
+    "AcumaticaBaseUrl": "http://localhost/dbdata",
     "EndpointName": "default",
     "EndpointVersion": "17.200.001",
     "Username": "admin",
@@ -40,6 +40,31 @@
         "Open": {
           "ToOpportunity": 0.5
         }
+      },
+      "IncomingActivities": {
+        "$type": "CrmDataGeneration.Generation.Activities.ActivityGenerationOption, CrmDataGeneration",
+        "RandomizerSettings": {
+          "$type": "CrmDataGeneration.Generation.Activities.ActivityRandomizerSettings, CrmDataGeneration",
+          "DateRanges": [
+            {
+              "StartDate": "01/01/2017",
+              "EndDate": "05/01/2018"
+            }
+          ]
+        },
+        "GenerateEntity": "Email",
+        "EmailsCount": {
+          "0": 0.3,
+          "1": 0.175,
+          "2": 0.175,
+          "3": 0.175,
+          "4": 0.175,
+          "5": 0.175
+        },
+        "Count": 10,
+        "GenerateInParallel": true,
+        "MaxExecutionThreadsParallel": 10,
+        "SkipErrorsSequent": false
       }
     }
   ]

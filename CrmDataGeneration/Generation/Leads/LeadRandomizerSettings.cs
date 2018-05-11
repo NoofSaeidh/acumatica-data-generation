@@ -24,7 +24,7 @@ namespace CrmDataGeneration.Generation.Leads
             {
                 l.FirstName = f.Name.FirstName();
                 l.LastName = f.Name.LastName();
-                // replace all possible provider to *.con
+                // replace all possible providers to *.con
                 var email = f.Internet.Email(l.FirstName, l.LastName).Split('.');
                 email[email.Length - 1] = "con";
                 l.Email = string.Join(".", email);
@@ -32,10 +32,10 @@ namespace CrmDataGeneration.Generation.Leads
                 {
                     Country = f.Address.CountryCode(Bogus.DataSets.Iso3166Format.Alpha2)
                 };
-                if (!LeadClasses.IsNullOrEmpty())
-                    l.LeadClass = f.Random.ProbabilityRandom(LeadClasses);
-                if (!Statuses.IsNullOrEmpty())
-                    l.Status = f.Random.ProbabilityRandom(Statuses);
+                l.CompanyName = f.Company.CompanyName();
+
+                l.LeadClass = f.Random.ProbabilityRandomIfAny(LeadClasses);
+                l.Status = f.Random.ProbabilityRandomIfAny(Statuses);
             });
     }
 }
