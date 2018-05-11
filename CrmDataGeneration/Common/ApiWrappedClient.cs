@@ -75,7 +75,7 @@ namespace CrmDataGeneration.Common
                     }
                 }
                 sw.Stop();
-                _logger.Info("Collection of {entityName} was created sequentially. Time elapsed {time}. Result: {entities}", typeof(T).Name, sw.Elapsed, output);
+                _logger.Info("Collection of {entityName} was created sequentially. Time elapsed {time}. Result: {$entities}", typeof(T).Name, sw.Elapsed, output);
                 return output;
             }
             catch (Exception e)
@@ -142,7 +142,7 @@ namespace CrmDataGeneration.Common
                 if (tasks.Any())
                     await Task.WhenAll(tasks);
                 sw.Stop();
-                _logger.Info("Collection of {entityName} was created in parallel. Time elapsed: {time}. Result: {entities}", typeof(T).Name, sw.Elapsed, output);
+                _logger.Info("Collection of {entityName} was created in parallel. Time elapsed: {time}. Result: {$entities}", typeof(T).Name, sw.Elapsed, output);
                 return output;
             }
             catch (Exception e)
@@ -224,7 +224,7 @@ namespace CrmDataGeneration.Common
                 sw.Start();
                 var res = await action;
                 sw.Stop();
-                _logger.Info("{action} performed. Entity: {entity}. Time elapsed: {time}. Result {result}", actionName, typeof(T).Name, sw.Elapsed, res);
+                _logger.Info("{action} performed. Entity: {entity}. Time elapsed: {time}. Result {$result}", actionName, typeof(T).Name, sw.Elapsed, res);
                 return res;
             }
             catch (Exception e)
