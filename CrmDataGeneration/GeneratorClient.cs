@@ -81,7 +81,7 @@ namespace CrmDataGeneration
 
             try
             {
-                entities = GetRandomizer<T>(option.RandomizerSettings).GenerateList(option.Count);
+                entities = option.RandomizerSettings.GetRandomizer().GenerateList(option.Count);
             }
             catch (Exception e)
             {
@@ -112,7 +112,7 @@ namespace CrmDataGeneration
             IApiWrappedClient<T> apiClient;
             try
             {
-                entity = GetRandomizer<T>(randomizerSettings).Generate();
+                entity = randomizerSettings.GetRandomizer().Generate();
             }
             catch (Exception e)
             {
@@ -139,11 +139,6 @@ namespace CrmDataGeneration
         public virtual async Task Login() => await _loginClient.Login();
 
         public virtual async Task Logout() => await _loginClient.Logout();
-
-        protected virtual IRandomizer<T> GetRandomizer<T>(IRandomizerSettings<T> randomizerSettings) where T : OpenApi.Reference.Entity
-        {
-            return new Randomizer<T>(randomizerSettings);
-        }
 
         void IDisposable.Dispose()
         {

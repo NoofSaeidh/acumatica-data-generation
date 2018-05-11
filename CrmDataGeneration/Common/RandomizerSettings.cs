@@ -12,6 +12,11 @@ namespace CrmDataGeneration.Common
 {
     public abstract class RandomizerSettings<T> : IRandomizerSettings<T> where T : Entity
     {
+        public int? Seed { get; set; }
+
+
+        public IRandomizer<T> GetRandomizer() => new Randomizer<T>(this);
+
         public virtual Faker<T> GetFaker()
         {
             ThrowIfSettingsNotSpecified();
@@ -20,9 +25,9 @@ namespace CrmDataGeneration.Common
                 faker.UseSeed((int)Seed);
             return faker;
         }
+
         [JsonIgnore]
         public virtual bool RequiredSettingsSpecified => true;
-        public int? Seed { get; set; }
 
         protected virtual void ThrowIfSettingsNotSpecified()
         {

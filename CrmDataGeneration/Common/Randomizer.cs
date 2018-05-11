@@ -9,12 +9,12 @@ namespace CrmDataGeneration.Common
 {
     public class Randomizer<T> : IRandomizer<T> where T : Entity
     {
-        public Randomizer(IRandomizerSettings<T> settings)
+        public Randomizer(RandomizerSettings<T> settings)
         {
             Settings = settings ?? throw new ArgumentNullException(nameof(settings));
         }
 
-        protected IRandomizerSettings<T> Settings { get; }
+        protected RandomizerSettings<T> Settings { get; }
 
         public virtual T Generate()
         {

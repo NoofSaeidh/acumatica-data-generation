@@ -22,14 +22,14 @@ namespace CrmDataGeneration.Common
 
     /// <summary>
     ///     Settings for randomization.
-    /// Implement this interface, define all needed properties and write <see cref="GetFaker()"/>
-    /// to return configured faker that generate entities depending on class properties.
+    /// Implement this interface, define all needed properties and write <see cref="GetRandomizer()"/>
+    /// to return configured randomizer that generate entities depending on class properties.
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public interface IRandomizerSettings<T> where T : Entity
     {
         int? Seed { get; }
-        Faker<T> GetFaker();
+        IRandomizer<T> GetRandomizer();
     }
 
     /// <summary>
