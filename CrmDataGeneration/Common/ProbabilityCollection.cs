@@ -5,16 +5,25 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CrmDataGeneration.Common
 {
+    /// <summary>
+    ///     Collection taht provided to define items and theirs probabilities.
+    /// It wraps common <see cref="IList(T)"/> and <see cref="IDictionary(T, decimal)"/> at ones.
+    /// If you add items with negative probabilities (or without probabilities)
+    /// will be used default probability that depends on <see cref="FreeProbability"/>.
+    /// If you want use this collection as common list call <see cref="AsList"/>,
+    /// this will return collection itself but you could use LINQ.
+    /// The same for dictionary can be used by <see cref="AsDictionary"/>.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     [JsonConverter(typeof(ProbabilityCollectionJsonConverter))]
     [DebuggerTypeProxy(typeof(ProbabilityCollection<>.DebuggerProxyView))]
     [DebuggerDisplay("{ToString()}")]
     public class ProbabilityCollection<T> : Collection<T>, IEnumerable<KeyValuePair<T, decimal>>, IEnumerable<T>, ICollection<T>, IDictionary<T, decimal>
     {
+        // indexed defined probabilities to calculate Probability per item faster
         private readonly List<int> _definedProbabilitiesIndexes;
         public ProbabilityCollection()
         {
@@ -37,8 +46,11 @@ namespace CrmDataGeneration.Common
                 Add(item);
             }
         }
+
         public decimal FreeProbability { get; private set; }
+
         public bool HasDefinedProbabilities => FreeProbability < 1;
+
         // if probability == -1 - it means need to take free probability
         protected IList<decimal> Probabilities { get; }
 
@@ -110,6 +122,7 @@ namespace CrmDataGeneration.Common
 
         // because linq doesn't when both interfaces defined
         public IList<T> AsList => this;
+
         public IDictionary<T, decimal> AsDictionary => this;
 
         protected decimal ProbabilityPerItem
@@ -117,7 +130,9 @@ namespace CrmDataGeneration.Common
             get
             {
                 if (FreeProbability <= 0) return 0;
-                return FreeProbability / (Items.Count - _definedProbabilitiesIndexes.Count);
+                var devider = Items.Count - _definedProbabilitiesIndexes.Count;
+                if (devider == 0) devider = 1;
+                return FreeProbability / devider;
             }
         }
 
@@ -189,7 +204,7 @@ namespace CrmDataGeneration.Common
             }
         }
 
-        public new IEnumerator<KeyValuePair<T, decimal>> GetEnumerator() 
+        public new IEnumerator<KeyValuePair<T, decimal>> GetEnumerator()
             => EnumerateProbabilities().GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
@@ -305,7 +320,6 @@ namespace CrmDataGeneration.Common
             if (defIndex >= 0)
                 _definedProbabilitiesIndexes.RemoveAt(defIndex);
 
-
             if (value < 0)
             {
                 IncreaseFreeProbability(Probabilities[index]);
@@ -333,9 +347,11 @@ namespace CrmDataGeneration.Common
         }
 
         #region Debugger display
+
         private class DebuggerProxyView
         {
             private readonly ProbabilityCollection<T> _collection;
+
             public DebuggerProxyView(ProbabilityCollection<T> collection)
             {
                 _collection = collection;
@@ -346,13 +362,15 @@ namespace CrmDataGeneration.Common
                         .Select(p => new DisplayPair(p.Key, p.Value))
                         .ToArray();
         }
+
         private class DisplayPair
-        {  
+        {
             public DisplayPair(object key, decimal probability)
             {
                 Key = key;
                 Probability = probability;
             }
+
             public object Key { get; }
             public decimal Probability { get; }
 

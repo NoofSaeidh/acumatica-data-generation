@@ -7,6 +7,11 @@ using System.Threading.Tasks;
 
 namespace CrmDataGeneration.Common
 {
+    /// <summary>
+    ///     Options for generation. 
+    /// Contains all required info for start generation 
+    /// and method for start generation that can contain customized logic.
+    /// </summary>
     public abstract class GenerationOption
     {
         public int Count { get; set; }
