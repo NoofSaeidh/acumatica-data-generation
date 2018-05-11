@@ -50,5 +50,7 @@ namespace CrmDataGeneration.Common
         VoidTask WrapAction(string actionName, VoidTask action);
         Task<T> WrapAction(Task<T> action);
         Task<T> WrapAction(string actionName, Task<T> action);
+        Task<IEnumerable<T>> WrapAction(Task<IEnumerable<T>> action);
+        Task<IEnumerable<T>> WrapAction(string actionName, Task<IEnumerable<T>> action);
     }
 }

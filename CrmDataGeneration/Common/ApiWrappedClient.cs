@@ -197,7 +197,34 @@ namespace CrmDataGeneration.Common
                 sw.Start();
                 var res = await action;
                 sw.Stop();
-                _logger.Info("{action} performed. Entity: {entity}. Time elapsed: {time}.", actionName, typeof(T).Name, sw.Elapsed);
+                _logger.Info("{action} performed. Entity: {entity}. Time elapsed: {time}. Result: {result}", actionName, typeof(T).Name, sw.Elapsed, res);
+                return res;
+            }
+            catch (Exception e)
+            {
+                _logger.Error(e, "{action} wasn't performed. Entity {entity}.", actionName, typeof(T).Name);
+                throw;
+            }
+        }
+
+        public async Task<IEnumerable<T>> WrapAction(Task<IEnumerable<T>> action)
+        {
+            return await WrapAction(_wrappedAction, action);
+        }
+        public async Task<IEnumerable<T>> WrapAction(string actionName, Task<IEnumerable<T>> action)
+        {
+            if (action == null)
+                throw new ArgumentNullException(nameof(action));
+            if (actionName == null)
+                actionName = _wrappedAction;
+
+            try
+            {
+                var sw = new Stopwatch();
+                sw.Start();
+                var res = await action;
+                sw.Stop();
+                _logger.Info("{action} performed. Entity: {entity}. Time elapsed: {time}. Result {result}", actionName, typeof(T).Name, sw.Elapsed, res);
                 return res;
             }
             catch (Exception e)

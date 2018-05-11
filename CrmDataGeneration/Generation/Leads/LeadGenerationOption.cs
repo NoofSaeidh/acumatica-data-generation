@@ -24,12 +24,12 @@ namespace CrmDataGeneration.Generation.Leads
 
             var seed = RandomizerSettings.Seed ?? client.Config.GlobalSeed;
 
-            var toConvertLeads = PrepareLeadsForConvertionByStatuses(seed, leads);
+            var toConvertLeads = PrepareLeadsForConvertionByStatuses(seed, leads).ToArray();
 
             if (toConvertLeads.Any())
             {
                 // convert to opportunities
-                await ConvertLeadsToOpportunities(client, 
+                await ConvertLeadsToOpportunities(client,
                     GetLeadsByConvertFlag(toConvertLeads, ConvertLead.ToOpportunity),
                     cancellationToken);
             }
@@ -55,15 +55,23 @@ namespace CrmDataGeneration.Generation.Leads
             var byConversion = ConvertByStatuses
                 .SelectMany(x => x.Value.AsDictionary,
                     (x, y) => new { conversion = y.Key, status = x.Key, probability = y.Value })
-                .ToDictionary(x => x.conversion, x => new { x.status, x.probability });
+                .GroupBy(x => x.conversion);
+            //.ToDictionary(x => x.conversion, x => new { x.status, x.probability });
 
             foreach (var conversion in byConversion)
             {
                 yield return new KeyValuePair<ConvertLead, IEnumerable<Lead>>(
                     conversion.Key,
                     leadsList
-                        .Where(l => l.Status == conversion.Value.status
-                                 && rand.Bool((float)conversion.Value.probability))
+                        .Where(l =>
+                        {
+                            var conv = conversion.FirstOrDefault(c => c.status == l.Status);
+                            if (conv == null)
+                                return false;
+                            if (rand.Bool((float)conv.probability))
+                                return true;
+                            return false;
+                        })
                 );
             }
         }
@@ -72,12 +80,16 @@ namespace CrmDataGeneration.Generation.Leads
         {
             var wrappedClient = client.GetApiWrappedClient<Lead>();
             var actionClient = client.GetRawApiClient<InvokeActionClient>();
-            foreach (var lead in leads)
+            await wrappedClient.WrapAction("Convert leads to opportunity", System.Threading.Tasks.Task.Run(async () =>
             {
-                var invocation = new ConvertLeadToOpportunity { Entity = lead };
+                foreach (var lead in leads)
+                {
+                    var invocation = new ConvertLeadToOpportunity { Entity = lead };
 
-                await wrappedClient.WrapAction(actionClient.ConvertLeadToOpportunityAsync(invocation, cancellationToken));
-            }
+                    await actionClient.ConvertLeadToOpportunityAsync(invocation, cancellationToken);
+                }
+                return leads;
+            }));
         }
     }
 }
