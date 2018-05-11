@@ -15,27 +15,10 @@ namespace AC_81769
     {
         static async VoidTask Main(string[] args)
         {
-
-
-
-
-
-
             //CrmDataGeneration.OpenApi.SwaggerGenerator.GenerateClient("http://msk-ws-89.int.acumatica.com/r103/entity/Default/17.200.001/swagger.json");
             GeneratorConfig config;
             try
             {
-                var probs = new ProbabilityCollection<string>
-                {
-                    "haha",
-                    {"hah", 0.4m }
-                };
-                probs.Add("hey");
-                probs.Add("they", 0.1m);
-                probs.Add("aaa", 0.48m);
-
-                var tmp = probs.AsList.ToList();
-
                 config = GeneratorConfig.ReadConfigDefault();
                 //config.SaveConfig(GeneratorConfig.ConfigCredsFileName);
             }
@@ -43,21 +26,6 @@ namespace AC_81769
             {
                 throw;
             }
-
-            //var leadOption = new LeadGenerationOption
-            //{
-            //    Count = 10,
-            //    GenerateInParallel = true,
-            //    MaxExecutionThreadsParallel = 10,
-            //    RandomizerSettings = new LeadRandomizerSettings
-            //    {
-
-            //    }
-            //};
-
-            //config.GenerationOptions = new List<GenerationOption> { leadOption };
-            //config.SaveConfig(GeneratorConfig.ConfigCredsFileName);
-
             using (var generatorClient = new GeneratorClient(config))
             {
                 try

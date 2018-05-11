@@ -110,7 +110,6 @@
     <Compile Include="OpenApi\Reference\SwaggerReferenceEntities.cs" />
     <Compile Include="OpenApi\SwaggerExtended.cs" />
     <Compile Include="OpenApi\SwaggerGenerator.cs" />
-    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Common\Interfaces.cs" />
     <Compile Include="Generation\Leads\LeadRandomizerSettings.cs" />
