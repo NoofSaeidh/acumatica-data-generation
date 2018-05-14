@@ -13,9 +13,9 @@
   "GlobalSeed": 0,
   "GenerationOptions": [
     {
-      "$type": "CrmDataGeneration.Generation.Leads.LeadGenerationOption, CrmDataGeneration",
+      "$type": "CrmDataGeneration.Entities.Leads.LeadGenerationOption, CrmDataGeneration",
       "RandomizerSettings": {
-        "$type": "CrmDataGeneration.Generation.Leads.LeadRandomizerSettings, CrmDataGeneration",
+        "$type": "CrmDataGeneration.Entities.Leads.LeadRandomizerSettings, CrmDataGeneration",
         "LeadClasses": {
           "LEAD": 0.7,
           "LEADBUS": 0.15,
@@ -30,9 +30,12 @@
       },
       "GenerateEntity": "Lead",
       "Count": 10,
-      "GenerateInParallel": true,
-      "MaxExecutionThreadsParallel": 10,
-      "SkipErrorsSequent": false,
+      "ExecutionTypeSettings": {
+        "ExecutionType": "Sequent",
+        "ParallelThreads": 10,
+        "IgnoreErrorsForEntities": false,
+        "IgnoreErrorsForExecution": false,
+      },
       "ConvertByStatuses": {
         "New": {
           "ToOpportunity": 0.5
@@ -41,10 +44,16 @@
           "ToOpportunity": 0.5
         }
       },
-      "IncomingActivities": {
-        "$type": "CrmDataGeneration.Generation.Emails.EmailGenerationOption, CrmDataGeneration",
+      "SystemAccounts": [
+        {
+          "Email": "testadmin@acumatica.con",
+          "DisplayName": "System Email Account"
+        }
+      ],
+      "IncomingEmails": {
+        "$type": "CrmDataGeneration.Entities.Emails.EmailGenerationOption, CrmDataGeneration",
         "RandomizerSettings": {
-          "$type": "CrmDataGeneration.Generation.Emails.EmailRandomizerSettings, CrmDataGeneration",
+          "$type": "CrmDataGeneration.Entities.Emails.EmailRandomizerSettings, CrmDataGeneration",
           "DateRanges": [
             {
               "StartDate": "01/01/2017",

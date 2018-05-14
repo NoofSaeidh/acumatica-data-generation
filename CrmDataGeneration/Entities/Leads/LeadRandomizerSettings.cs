@@ -1,6 +1,6 @@
 ﻿using Bogus;
 using CrmDataGeneration.Common;
-using CrmDataGeneration.Generation.Emails;
+using CrmDataGeneration.Entities.Emails;
 using CrmDataGeneration.OpenApi.Reference;
 using System;
 using System.Collections;
@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CrmDataGeneration.Generation.Leads
+namespace CrmDataGeneration.Entities.Leads
 {
     public class LeadRandomizerSettings : RandomizerSettings<Lead>
     {

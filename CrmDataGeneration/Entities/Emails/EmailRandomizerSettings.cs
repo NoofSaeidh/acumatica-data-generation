@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CrmDataGeneration.Generation.Emails
+namespace CrmDataGeneration.Entities.Emails
 {
     public class EmailRandomizerSettings : RandomizerSettings<Email>
     {

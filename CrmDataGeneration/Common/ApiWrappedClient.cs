@@ -10,228 +10,208 @@ using System.Threading.Tasks;
 
 namespace CrmDataGeneration.Common
 {
-    public abstract class ApiWrappedClient<T> : IApiWrappedClient<T> where T : OpenApi.Reference.Entity
+    public abstract class ApiWrappedClient
     {
-        private const string _wrappedAction = "Wrapped action";
-        private static ILogger _logger => LogConfiguration.DefaultLogger;
-
         protected ApiWrappedClient(OpenApiState openApiState)
         {
             OpenApiState = openApiState ?? throw new ArgumentNullException(nameof(openApiState));
         }
         protected OpenApiState OpenApiState { get; }
 
-        public async Task<T> Create(T entity, CancellationToken cancellationToken = default)
-        {
-            if (entity == null)
-                throw new ArgumentNullException(nameof(entity));
+        protected static ILogger Logger => LogConfiguration.DefaultLogger;
 
-            try
-            {
-                var sw = new Stopwatch();
-                sw.Start();
-                var res = await CreateRaw(entity, cancellationToken);
-                sw.Stop();
-                _logger.Info("{entityName} was created. Time elapsed: {time} Result: {entity}", typeof(T).Name, sw.Elapsed, res);
-                return res;
-            }
-            catch (Exception e)
-            {
-                _logger.Error(e, "{entityName} wasn't created. {@entity}", typeof(T).Name, entity);
-                throw;
-            }
+    }
+
+    public abstract class ApiWrappedClient<T> : ApiWrappedClient, IApiWrappedClient<T> where T : OpenApi.Reference.Entity
+    {
+        private const string _wrappedAction = "Wrapped action";
+
+        protected ApiWrappedClient(OpenApiState openApiState) : base(openApiState)
+        {
         }
 
-        public async Task<IEnumerable<T>> CreateAllSequentially(IEnumerable<T> entities, bool skipErrors = false, CancellationToken cancellationToken = default)
+        public async Task<T> CreateSingle(T entity, CancellationToken cancellationToken = default)
         {
-            if (entities == null)
-                throw new ArgumentNullException(nameof(entities));
-
-            if (!entities.Any())
-            {
-                _logger.Warn("Creation of empty collection {entityName} was requested.", typeof(T).Name);
-                return entities;
-            }
-
-            try
-            {
-                _logger.Info("Start creating {entityName} collection sequentially.", typeof(T).Name);
-                var input = entities.ToList();
-                var output = new List<T>(input.Count);
-                var sw = new Stopwatch();
-                sw.Start();
-                foreach (var item in input)
-                {
-                    cancellationToken.ThrowIfCancellationRequested();
-                    try
-                    {
-                        output.Add(await CreateRaw(item, cancellationToken));
-                    }
-                    catch (Exception e)
-                    {
-                        _logger.Error(e, "{entityName} wasn't created. {@entity}", typeof(T).Name, item);
-                        if (!skipErrors)
-                            throw;
-                    }
-                }
-                sw.Stop();
-                _logger.Info("Collection of {entityName} was created sequentially. Time elapsed {time}. Result: {$entities}", typeof(T).Name, sw.Elapsed, output);
-                return output;
-            }
-            catch (Exception e)
-            {
-                _logger.Error(e, "Collection of {entityName} wasn't created sequentially.", typeof(T).Name, entities);
-                throw;
-            }
+            return await ProcessSingle("Create single", entity, async (e, t) => await CreateRaw(e, cancellationToken), cancellationToken);
         }
 
-        public async Task<IEnumerable<T>> CreateAllInParallel(IEnumerable<T> entities,
-            int threadsCount = 0,
+        public async Task<IEnumerable<T>> CreateAll(IEnumerable<T> entities, ExecutionTypeSettings executionTypeSettings, CancellationToken cancellationToken = default)
+        {
+            return await ProcessAll("Create all", entities, executionTypeSettings, (e, t) => CreateRaw(e, t), cancellationToken);
+        }
+
+        //without logging and exceptions
+        protected abstract Task<T> CreateRaw(T entity, CancellationToken cancellationToken = default);
+
+        protected async Task<IEnumerable<TResult>> ProcessAll<TInput, TResult>(string actionName,
+            IEnumerable<TInput> input,
+            ExecutionTypeSettings executionTypeSettings,
+            Func<TInput, CancellationToken, Task<TResult>> action,
             CancellationToken cancellationToken = default)
         {
-            if (entities == null)
-                throw new ArgumentNullException(nameof(entities));
+            if (action == null)
+                throw new ArgumentNullException(nameof(action));
+            if (input == null)
+                throw new ArgumentNullException(nameof(input));
 
-            if(!entities.Any())
-            {
-                _logger.Warn("Creation of empty collection {entityName} was requested.", typeof(T).Name);
-                return entities;
-            }
-
+            var inputArray = input.ToArray();
+            var output = new TResult[inputArray.Length];
+            var executionType = executionTypeSettings.ExecutionType == ExecutionType.Parallel ? "In Parallel" : "Sequentially";
+            var stopwatch = new Stopwatch();
             try
             {
-                _logger.Info("Start creating {entityName} collection parallel.", typeof(T).Name);
-                var input = entities.ToList();
-                var output = new List<T>(input.Count);
-                List<Task<T>> tasks;
-                if (threadsCount == 0)
+                Logger.Info("Start processing {action} for {entityName} collection {executionType}.",
+                    actionName, typeof(T).Name, executionType);
+
+                stopwatch.Start();
+
+                switch (executionTypeSettings.ExecutionType)
                 {
-                    tasks = new List<Task<T>>(input.Count);
-                }
-                else
-                {
-                    tasks = new List<Task<T>>(threadsCount);
-                }
-                var sw = new Stopwatch();
-                sw.Start();
-                foreach (var item in input)
-                {
-                    cancellationToken.ThrowIfCancellationRequested();
-                    tasks.Add(Task.Run(async () =>
-                    {
-                        try
+                    case ExecutionType.Sequent:
                         {
-                            var result = await CreateRaw(item, cancellationToken);
-                            output.Add(result);
-                            return result;
+                            for (int i = 0; i < inputArray.Length; i++)
+                            {
+                                cancellationToken.ThrowIfCancellationRequested();
+                                try
+                                {
+                                    output[i] = await action(inputArray[i], cancellationToken);
+                                }
+                                catch (Exception e)
+                                {
+                                    Logger.Error(e, "Processing {action} for {entityName} {executionType} failed. {@entity}",
+                                        actionName, typeof(T).Name, executionType, inputArray[i]);
+
+                                    if (!executionTypeSettings.IgnoreErrorsForEntities)
+                                        throw;
+                                }
+                            }
+                            break;
                         }
-                        catch (Exception e)
+                    case ExecutionType.Parallel:
                         {
-                            _logger.Error(e, "{entityName} wasn't created. {@entity}", typeof(T).Name, item);
-                            throw;
+                            // or should throw exception if fewer than 0
+                            var threadsCount = executionTypeSettings.ParallelThreads <= 0
+                                ? inputArray.Length
+                                : executionTypeSettings.ParallelThreads;
+
+                            var tasks = new Task[threadsCount];
+
+                            int k = 0;
+                            for (int i = 0; i < inputArray.Length; i++)
+                            {
+                                // multi threads issue
+                                var tmpI = i;
+                                cancellationToken.ThrowIfCancellationRequested();
+                                tasks[k] = Task.Run(async () =>
+                                {
+                                    try
+                                    {
+                                        output[tmpI] = await action(inputArray[i], cancellationToken);
+                                    }
+                                    catch (Exception e)
+                                    {
+                                        Logger.Error(e, "Processing {action} for {entityName} {executionType} failed. {@entity}",
+                                            actionName, typeof(T).Name, executionType, inputArray[i]);
+
+                                        if (!executionTypeSettings.IgnoreErrorsForEntities)
+                                            throw;
+                                    }
+                                });
+                                if (k == tasks.Length - 1)
+                                {
+                                    // await for special count
+                                    await Task.WhenAll(tasks);
+                                    Array.Clear(tasks, 0, tasks.Length);
+                                    k = 0;
+                                }
+                                k++;
+                            }
+                            // if last count of task a fewer that capacity (threads count)
+                            if (k != 0)
+                                await Task.WhenAll(tasks);
+                            break;
                         }
-                    }));
-                    if (tasks.Count == tasks.Capacity)
-                    {
-                        // await for special count
-                        await Task.WhenAll(tasks);
-                        tasks.Clear();
-                    }
+                    default:
+                        throw new NotSupportedException();
                 }
-                // if last count of task a fewer that capacity (threads count)
-                if (tasks.Any())
-                    await Task.WhenAll(tasks);
-                sw.Stop();
-                _logger.Info("Collection of {entityName} was created in parallel. Time elapsed: {time}. Result: {$entities}", typeof(T).Name, sw.Elapsed, output);
+
+                stopwatch.Stop();
+
+                Logger.Info("Processing {action} for {entityName} {executionType} performed. Time elapsed {time}. Result: {$entities}",
+                    actionName, typeof(T).Name, executionType, stopwatch.Elapsed, output);
+
                 return output;
+
             }
             catch (Exception e)
             {
-                _logger.Error(e, "Collection of {entityName} wasn't created in parallel.", typeof(T).Name, entities);
-                throw;
+                stopwatch.Stop();
+                Logger.Error(e, "Processing {action} for {entityName} {executionType} failed. Time elapsed: {time}. Result: {$result}",
+                    actionName, typeof(T).Name, executionType, stopwatch.Elapsed, output);
+                if (!executionTypeSettings.IgnoreErrorsForExecution)
+                    throw;
+                return default;
             }
         }
 
-        protected abstract Task<T> CreateRaw(T entity, CancellationToken cancellationToken = default); //without logging and exceptions
-
-        public async Task WrapAction(Task action)
+        protected async Task ProcessAll<TInput>(string actionName,
+            IEnumerable<TInput> input,
+            ExecutionTypeSettings executionTypeSettings,
+            Func<TInput, CancellationToken, Task> action,
+            CancellationToken cancellationToken = default)
         {
-            await WrapAction(_wrappedAction, action);
+            if (action == null) throw new ArgumentNullException(nameof(action));
+            await ProcessAll(actionName, input, executionTypeSettings, async (e, t) =>
+            {
+                await action(e, t);
+                return e;
+            }, cancellationToken);
         }
-        public async Task WrapAction(string actionName, Task action)
+
+        protected async Task<TResult> ProcessSingle<TInput, TResult>(string actionName,
+            TInput input,
+            Func<TInput, CancellationToken, Task<TResult>> action,
+            CancellationToken cancellationToken = default)
         {
             if (action == null)
                 throw new ArgumentNullException(nameof(action));
-            if (actionName == null)
-                actionName = _wrappedAction;
+            if (input == null)
+                throw new ArgumentNullException(nameof(input));
 
+            var stopwatch = new Stopwatch();
             try
             {
-                var sw = new Stopwatch();
-                sw.Start();
-                await action;
-                sw.Stop();
-                _logger.Info("{action} performed. Entity: {entity}. Time elapsed: {time}.", actionName, typeof(T).Name, sw.Elapsed);
-            }
-            catch (Exception e)
-            {
-                _logger.Error(e, "{action} wasn't performed. Entity {entity}.", actionName, typeof(T).Name);
-                throw;
-            }
-        }
+                Logger.Info("Start processing {action} for {entityName}.", actionName, typeof(T).Name);
 
-        public async Task<T> WrapAction(Task<T> action)
-        {
-            return await WrapAction(_wrappedAction, action);
-        }
-        public async Task<T> WrapAction(string actionName, Task<T> action)
-        {
-            if (action == null)
-                throw new ArgumentNullException(nameof(action));
-            if (actionName == null)
-                actionName = _wrappedAction;
+                stopwatch.Start();
+                var res = await action(input, cancellationToken);
+                stopwatch.Stop();
 
-            try
-            {
-                var sw = new Stopwatch();
-                sw.Start();
-                var res = await action;
-                sw.Stop();
-                _logger.Info("{action} performed. Entity: {entity}. Time elapsed: {time}. Result: {result}", actionName, typeof(T).Name, sw.Elapsed, res);
+                Logger.Info("Processing {action} for {entityName} performed. Time elapsed: {time}. Result: {@entity}",
+                    actionName, typeof(T).Name, stopwatch.Elapsed, res);
+
                 return res;
             }
             catch (Exception e)
             {
-                _logger.Error(e, "{action} wasn't performed. Entity {entity}.", actionName, typeof(T).Name);
+                stopwatch.Stop();
+                Logger.Error(e, "Processing {action} for {entityName} failed. Time elapsed: {time}. {@entity}",
+                    actionName, typeof(T).Name, stopwatch.Elapsed, input);
                 throw;
             }
         }
 
-        public async Task<IEnumerable<T>> WrapAction(Task<IEnumerable<T>> action)
+        protected async Task ProcessSingle<TInput>(string actionName,
+            TInput input,
+            Func<TInput, CancellationToken, Task> action,
+            CancellationToken cancellationToken = default)
         {
-            return await WrapAction(_wrappedAction, action);
-        }
-        public async Task<IEnumerable<T>> WrapAction(string actionName, Task<IEnumerable<T>> action)
-        {
-            if (action == null)
-                throw new ArgumentNullException(nameof(action));
-            if (actionName == null)
-                actionName = _wrappedAction;
-
-            try
+            if (action == null) throw new ArgumentNullException(nameof(action));
+            await ProcessSingle(actionName, input,  async (e, t) =>
             {
-                var sw = new Stopwatch();
-                sw.Start();
-                var res = await action;
-                sw.Stop();
-                _logger.Info("{action} performed. Entity: {entity}. Time elapsed: {time}. Result {$result}", actionName, typeof(T).Name, sw.Elapsed, res);
-                return res;
-            }
-            catch (Exception e)
-            {
-                _logger.Error(e, "{action} wasn't performed. Entity {entity}.", actionName, typeof(T).Name);
-                throw;
-            }
+                await action(e, t);
+                return e;
+            }, cancellationToken);
         }
     }
 }

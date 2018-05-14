@@ -1,6 +1,6 @@
 ﻿using CrmDataGeneration.Common;
-using CrmDataGeneration.Generation.Emails;
-using CrmDataGeneration.Generation.Leads;
+using CrmDataGeneration.Entities.Emails;
+using CrmDataGeneration.Entities.Leads;
 using CrmDataGeneration.OpenApi;
 using NLog;
 using System;
@@ -37,27 +37,43 @@ namespace CrmDataGeneration
             try
             {
                 var result = (T)Activator.CreateInstance(typeof(T), _openApiState);
-                _logger.Debug($"Api client of type {typeof(T).Name} created.", result);
+                _logger.Debug($"API client of type {typeof(T).Name} created.", result);
                 return result;
             }
             catch (Exception e)
             {
-                _logger.Error(e, $"Cannot create Api client of type {typeof(T).Name}.");
+                _logger.Error(e, $"Cannot create API client of type {typeof(T).Name}.");
                 throw;
             }
         }
 
-        public IApiWrappedClient<T> GetApiWrappedClient<T>() where T : OpenApi.Reference.Entity
+        public T GetApiWrappedClient<T>() where T : ApiWrappedClient
+        {
+            try
+            {
+                var result = (T)Activator.CreateInstance(typeof(T), _openApiState);
+                _logger.Debug($"Wrapped API client of type {typeof(T).Name} created.", result);
+                return result;
+            }
+            catch (Exception e)
+            {
+                _logger.Error(e, $"Cannot create wrapped API client of type {typeof(T).Name}.");
+                throw;
+            }
+        }
+
+        public IApiWrappedClient<T> GetApiWrappedClientForEntity<T>() where T : OpenApi.Reference.Entity
         {
             switch (typeof(T).Name)
             {
-                // typeof cannot be used in switch clause
                 case nameof(OpenApi.Reference.Lead):
-                    return (IApiWrappedClient<T>)new LeadApiWrappedClient(_openApiState);
+                    return (IApiWrappedClient<T>)GetApiWrappedClient<LeadApiWrappedClient>();
                 case nameof(OpenApi.Reference.Email):
-                    return (IApiWrappedClient<T>)new EmailApiWrappedClient(_openApiState);
+                    return (IApiWrappedClient<T>)GetApiWrappedClient<EmailApiWrappedClient>();
                 default:
-                    throw new NotSupportedException($"This type of entity is not supported. Type: {typeof(T).Name}");
+                    var exception = new NotSupportedException($"There are predefined API wrapped client for {typeof(T).Name}.");
+                    _logger.Error(exception);
+                    throw exception;
             }
         }
 
@@ -101,7 +117,7 @@ namespace CrmDataGeneration
             }
             try
             {
-                apiClient = GetApiWrappedClient<T>();
+                apiClient = GetApiWrappedClientForEntity<T>();
             }
             catch (Exception e)
             {
@@ -109,11 +125,8 @@ namespace CrmDataGeneration
                 throw;
             }
 
-            // logger in api client, so without try catch
-            if (option.GenerateInParallel)
-                return await apiClient.CreateAllInParallel(entities, option.MaxExecutionThreadsParallel, cancellationToken);
-            else
-                return await apiClient.CreateAllSequentially(entities, option.SkipErrorsSequent, cancellationToken);
+            // logger in api client, so without try catch and logger
+            return await apiClient.CreateAll(entities, option.ExecutionTypeSettings, cancellationToken);
         }
 
         public async Task<T> GenerateSingle<T>(IRandomizerSettings<T> randomizerSettings, CancellationToken cancellationToken = default) where T : OpenApi.Reference.Entity
@@ -132,7 +145,7 @@ namespace CrmDataGeneration
             }
             try
             {
-                apiClient = GetApiWrappedClient<T>();
+                apiClient = GetApiWrappedClientForEntity<T>();
             }
             catch (Exception e)
             {
@@ -144,7 +157,7 @@ namespace CrmDataGeneration
 
 
             // logger in api client, so without try catch
-            return await apiClient.Create(entity, cancellationToken);
+            return await apiClient.CreateSingle(entity, cancellationToken);
         }
 
         public virtual async Task Login() => await _loginClient.Login();

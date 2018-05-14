@@ -39,18 +39,7 @@ namespace CrmDataGeneration.Common
     /// <typeparam name="T"></typeparam>
     public interface IApiWrappedClient<T> where T : Entity
     {
-        Task<T> Create(T entity, CancellationToken cancellationToken = default);
-        // skipErrors if true exception will be thrown if any entity will not be processed
-        // if false every entity will be processed (or tried to be processed)
-        Task<IEnumerable<T>> CreateAllSequentially(IEnumerable<T> entities, bool skipErrors = false, CancellationToken cancellationToken = default);
-        // threadsCount = 0 means unlimited
-        Task<IEnumerable<T>> CreateAllInParallel(IEnumerable<T> entities, int threadsCount = 0, CancellationToken cancellationToken = default);
-        // wrap with logger
-        VoidTask WrapAction(VoidTask action);
-        VoidTask WrapAction(string actionName, VoidTask action);
-        Task<T> WrapAction(Task<T> action);
-        Task<T> WrapAction(string actionName, Task<T> action);
-        Task<IEnumerable<T>> WrapAction(Task<IEnumerable<T>> action);
-        Task<IEnumerable<T>> WrapAction(string actionName, Task<IEnumerable<T>> action);
+        Task<T> CreateSingle(T entity, CancellationToken cancellationToken = default);
+        Task<IEnumerable<T>> CreateAll(IEnumerable<T> entities, ExecutionTypeSettings executionTypeSettings, CancellationToken cancellationToken = default);
     }
 }

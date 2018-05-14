@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CrmDataGeneration.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,17 +15,27 @@ namespace CrmDataGeneration.Common
     /// </summary>
     public abstract class GenerationOption
     {
-        public int Count { get; set; }
         public abstract string GenerateEntity { get; }
-        public bool GenerateInParallel { get; set; }
-        public int MaxExecutionThreadsParallel { get; set; } // For parallel
-        public bool SkipErrorsSequent { get; set; } // For sequent
+        public int Count { get; set; }
+        public ExecutionTypeSettings ExecutionTypeSettings { get; set; }
         public abstract Task RunGeneration(GeneratorClient client, CancellationToken cancellationToken = default);
     }
     // it may be helpful further (now just mark entity)
     public abstract class GenerationOption<T> : GenerationOption
         where T : OpenApi.Reference.Entity
     {
+        private string _pxTypeName;
+
+        protected string PxTypeName
+        {
+            get
+            {
+                if (_pxTypeName != null)
+                    return _pxTypeName;
+                return _pxTypeName = PxObjectsTypes.GetEntityPxTypeName<T>();
+            }
+        }
+
         public virtual IRandomizerSettings<T> RandomizerSettings { get; set; }
         public override string GenerateEntity => typeof(T).Name;
         public override async Task RunGeneration(GeneratorClient client, CancellationToken cancellationToken = default)

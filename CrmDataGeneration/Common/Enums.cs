@@ -4,12 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CrmDataGeneration.Generation.Leads
+namespace CrmDataGeneration.Common
 {
-    [Flags]
-    public enum ConvertLead
+    public enum ExecutionType
     {
-        DontConvert = 0,
-        ToOpportunity = 1
+        Sequent,
+        Parallel
     }
 }

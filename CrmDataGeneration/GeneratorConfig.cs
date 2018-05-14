@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using CrmDataGeneration.OpenApi.Reference;
 using CrmDataGeneration.Common;
-using CrmDataGeneration.Generation.Leads;
+using CrmDataGeneration.Entities.Leads;
 using Newtonsoft.Json.Converters;
 
 namespace CrmDataGeneration
