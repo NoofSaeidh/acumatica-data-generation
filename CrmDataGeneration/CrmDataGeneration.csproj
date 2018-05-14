@@ -94,6 +94,7 @@
     <Compile Include="Common\ProbabilityCollection.cs" />
     <Compile Include="Common\ProbabilityCollectionJsonConverter.cs" />
     <Compile Include="Common\RandomizerSettings.cs" />
+    <Compile Include="Common\ValueTupleJsonConverter.cs" />
     <Compile Include="Generation\Activities\ActivityGenerationOption.cs" />
     <Compile Include="Generation\Activities\ActivityRandomizerSettings.cs" />
     <Compile Include="Generation\Activities\EmailApiWrappedClient.cs" />

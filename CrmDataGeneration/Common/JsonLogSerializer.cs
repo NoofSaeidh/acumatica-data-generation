@@ -25,7 +25,8 @@ namespace CrmDataGeneration.Common
                 NullValueHandling = NullValueHandling.Ignore,
                 Converters = new JsonConverter[]
                 {
-                    new StringEnumConverter()
+                    new StringEnumConverter(),
+                    new ValueTupleJsonConverter()
                 }
             };
         }

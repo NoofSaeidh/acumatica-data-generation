@@ -29,7 +29,8 @@ namespace CrmDataGeneration
             TypeNameHandling = TypeNameHandling.Auto,
             Converters = new JsonConverter[]
             {
-                new StringEnumConverter()
+                new StringEnumConverter(),
+                new ValueTupleJsonConverter()
             }
         };
 
