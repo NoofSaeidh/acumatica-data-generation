@@ -95,10 +95,10 @@
     <Compile Include="Common\ProbabilityCollectionJsonConverter.cs" />
     <Compile Include="Common\RandomizerSettings.cs" />
     <Compile Include="Common\ValueTupleJsonConverter.cs" />
-    <Compile Include="Generation\Activities\ActivityGenerationOption.cs" />
-    <Compile Include="Generation\Activities\ActivityRandomizerSettings.cs" />
-    <Compile Include="Generation\Activities\EmailApiWrappedClient.cs" />
-    <Compile Include="Generation\Activities\Enums.cs" />
+    <Compile Include="Generation\Emails\EmailGenerationOption.cs" />
+    <Compile Include="Generation\Emails\EmailRandomizerSettings.cs" />
+    <Compile Include="Generation\Emails\EmailApiWrappedClient.cs" />
+    <Compile Include="Generation\Emails\Enums.cs" />
     <Compile Include="Generation\Leads\Enums.cs" />
     <Compile Include="Generation\Leads\LeadApiWrappedClient.cs" />
     <Compile Include="Generation\Leads\LeadGenerationOption.cs" />

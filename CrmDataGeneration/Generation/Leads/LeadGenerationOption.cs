@@ -1,6 +1,6 @@
 ﻿using Bogus;
 using CrmDataGeneration.Common;
-using CrmDataGeneration.Generation.Activities;
+using CrmDataGeneration.Generation.Emails;
 using CrmDataGeneration.OpenApi.Reference;
 using System;
 using System.Collections.Generic;
@@ -16,8 +16,8 @@ namespace CrmDataGeneration.Generation.Leads
     {
         public IDictionary<string, ProbabilityCollection<ConvertLead>> ConvertByStatuses { get; set; }
         public ProbabilityCollection<(string Email, string DisplayName)> SystemAccounts { get; set; }
-        public ActivityGenerationOption IncomingActivities { get; set; }
-        public ActivityGenerationOption OutgoingActivities { get; set; }
+        public EmailGenerationOption IncomingActivities { get; set; }
+        public EmailGenerationOption OutgoingActivities { get; set; }
 
         #region Methods
         public override async VoidTask RunGeneration(GeneratorClient client, CancellationToken cancellationToken = default)

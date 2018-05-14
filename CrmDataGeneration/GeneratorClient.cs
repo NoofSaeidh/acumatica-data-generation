@@ -1,4 +1,5 @@
 ﻿using CrmDataGeneration.Common;
+using CrmDataGeneration.Generation.Emails;
 using CrmDataGeneration.Generation.Leads;
 using CrmDataGeneration.OpenApi;
 using NLog;
@@ -53,6 +54,8 @@ namespace CrmDataGeneration
                 // typeof cannot be used in switch clause
                 case nameof(OpenApi.Reference.Lead):
                     return (IApiWrappedClient<T>)new LeadApiWrappedClient(_openApiState);
+                case nameof(OpenApi.Reference.Email):
+                    return (IApiWrappedClient<T>)new EmailApiWrappedClient(_openApiState);
                 default:
                     throw new NotSupportedException($"This type of entity is not supported. Type: {typeof(T).Name}");
             }

@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CrmDataGeneration.Generation.Activities
+namespace CrmDataGeneration.Generation.Emails
 {
-    public class ActivityRandomizerSettings : RandomizerSettings<Email>
+    public class EmailRandomizerSettings : RandomizerSettings<Email>
     {
         // todo: ensure tuple parsed
         public ProbabilityCollection<(DateTime StartDate, DateTime EndDate)?> DateRanges { get; set; }

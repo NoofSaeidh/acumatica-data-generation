@@ -7,9 +7,9 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace CrmDataGeneration.Generation.Activities
+namespace CrmDataGeneration.Generation.Emails
 {
-    public class ActivityGenerationOption : GenerationOption<Email>
+    public class EmailGenerationOption : GenerationOption<Email>
     {
         public ProbabilityCollection<int> EmailsCount { get; set; }
 

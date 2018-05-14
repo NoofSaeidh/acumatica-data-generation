@@ -42,9 +42,9 @@
         }
       },
       "IncomingActivities": {
-        "$type": "CrmDataGeneration.Generation.Activities.ActivityGenerationOption, CrmDataGeneration",
+        "$type": "CrmDataGeneration.Generation.Emails.EmailGenerationOption, CrmDataGeneration",
         "RandomizerSettings": {
-          "$type": "CrmDataGeneration.Generation.Activities.ActivityRandomizerSettings, CrmDataGeneration",
+          "$type": "CrmDataGeneration.Generation.Emails.EmailRandomizerSettings, CrmDataGeneration",
           "DateRanges": [
             {
               "StartDate": "01/01/2017",
