@@ -34,7 +34,7 @@
         "ExecutionType": "Sequent",
         "ParallelThreads": 10,
         "IgnoreErrorsForEntities": false,
-        "IgnoreErrorsForExecution": false,
+        "IgnoreErrorsForExecution": false
       },
       "ConvertByStatuses": {
         "New": {
