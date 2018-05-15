@@ -46,7 +46,8 @@ namespace CrmDataGeneration.Common
         {
             SubstituteNullableType(ref objectType);
 
-            return objectType.GetTypeInfo().IsGenericType 
+            return objectType.IsValueType
+                && objectType.GetTypeInfo().IsGenericType 
                 && ValueTupleTypes.Contains(objectType.GetGenericTypeDefinition());
         }
 

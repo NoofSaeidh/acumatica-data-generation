@@ -33,30 +33,6 @@ namespace AC_81769
                 {
                     await generatorClient.Login();
 
-                    var lc = generatorClient.GetRawApiClient<LeadClient>();
-                    var ac = generatorClient.GetRawApiClient<InvokeActionClient>();
-                    var ec = generatorClient.GetRawApiClient<EmailClient>();
-                    var lead = (await lc.GetListAsync()).First();
-                    var newEmail = new Email
-                    {
-                        Incoming = true,
-                        From = lead.Email,
-                        To = "acumatica@acumatica.com",
-                        Parent = lead.Id,
-                        Subject = "hihihi",
-                        Description = "uhuhu"
-                    };
-                    var resEmail = await ec.PutEntityAsync(newEmail);
-                    var invocation = new SelectRelatedEntityEmail
-                    {
-                        Entity = resEmail,
-                        Parameters = new Parameters4
-                        {
-                            RelatedEntity = lead.LeadDisplayName,
-                            Type = "PX.Objects.CR.Contact"
-                        }
-                    };
-                    await ac.SelectRelatedEntityEmailAsync(invocation);
                     await generatorClient.GenerateAllOptions();
 
                     await generatorClient.Logout();

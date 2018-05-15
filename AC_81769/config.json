@@ -50,7 +50,7 @@
           "DisplayName": "System Email Account"
         }
       ],
-      "IncomingEmails": {
+      "Emails": {
         "$type": "CrmDataGeneration.Entities.Emails.EmailGenerationOption, CrmDataGeneration",
         "RandomizerSettings": {
           "$type": "CrmDataGeneration.Entities.Emails.EmailRandomizerSettings, CrmDataGeneration",

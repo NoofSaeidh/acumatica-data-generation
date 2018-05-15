@@ -137,7 +137,7 @@ namespace CrmDataGeneration.Common
 
                 stopwatch.Stop();
 
-                Logger.Info("Processing {action} for {entityName} {executionType} performed. Time elapsed {time}. Result: {$entities}",
+                Logger.Info("Processing {action} for {entityName} {executionType} performed. Time elapsed {time}.",
                     actionName, typeof(T).Name, executionType, stopwatch.Elapsed, output);
 
                 return output;
@@ -146,7 +146,7 @@ namespace CrmDataGeneration.Common
             catch (Exception e)
             {
                 stopwatch.Stop();
-                Logger.Error(e, "Processing {action} for {entityName} {executionType} failed. Time elapsed: {time}. Result: {$result}",
+                Logger.Error(e, "Processing {action} for {entityName} {executionType} failed. Time elapsed: {time}.",
                     actionName, typeof(T).Name, executionType, stopwatch.Elapsed, output);
                 if (!executionTypeSettings.IgnoreErrorsForExecution)
                     throw;
@@ -187,7 +187,7 @@ namespace CrmDataGeneration.Common
                 var res = await action(input, cancellationToken);
                 stopwatch.Stop();
 
-                Logger.Info("Processing {action} for {entityName} performed. Time elapsed: {time}. Result: {@entity}",
+                Logger.Info("Processing {action} for {entityName} performed. Time elapsed: {time}.",
                     actionName, typeof(T).Name, stopwatch.Elapsed, res);
 
                 return res;

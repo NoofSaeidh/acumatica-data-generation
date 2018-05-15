@@ -16,8 +16,8 @@ namespace CrmDataGeneration.Entities.Leads
     {
         public IDictionary<string, ProbabilityCollection<ConvertLead>> ConvertByStatuses { get; set; }
         public ProbabilityCollection<(string Email, string DisplayName)> SystemAccounts { get; set; }
-        public EmailGenerationOption IncomingEmails { get; set; }
-        public EmailGenerationOption OutgoingEmails { get; set; }
+        // perhaps may be required to split to 2 option further, but now one option more common
+        public EmailGenerationOption Emails { get; set; }
 
         #region Methods
 
@@ -96,14 +96,14 @@ namespace CrmDataGeneration.Entities.Leads
         protected IEnumerable<SelectRelatedEntityEmail> PrepareEmailsForCreation(int seed, IEnumerable<Lead> leads)
         {
             var rand = new Randomizer(seed);
-            if (IncomingEmails != null)
+            if (Emails != null)
             {
                 foreach (var lead in leads)
                 {
-                    var emailsCount = rand.ProbabilityRandomIfAny(IncomingEmails.EmailsCount);
+                    var emailsCount = rand.ProbabilityRandomIfAny(Emails.EmailsCount);
                     if (emailsCount == 0)
                         continue;
-                    var emails = IncomingEmails.RandomizerSettings.GetRandomizer().GenerateList(emailsCount);
+                    var emails = Emails.RandomizerSettings.GetRandomizer().GenerateList(emailsCount);
                     foreach (var email in emails)
                     {
                         email.Incoming = true;
@@ -118,27 +118,23 @@ namespace CrmDataGeneration.Entities.Leads
                                 Type = PxTypeName
                             }
                         };
+
+                        var outEmail = Emails.RandomizerSettings.GetRandomizer().Generate();
+                        outEmail.Incoming = false;
+                        outEmail.From = rand.ProbabilityRandomIfAny(SystemAccounts).Email;
+                        outEmail.To = lead.Email;
+                        // todo: some another fields? SystemEmail or smth like that
+                        yield return new SelectRelatedEntityEmail
+                        {
+                            Entity = outEmail,
+                            Parameters = new Parameters4
+                            {
+                                RelatedEntity = lead.GetKeyFieldValue(),
+                                Type = PxTypeName
+                            }
+                        };
                     }
                 }
-            }
-            if (OutgoingEmails != null)
-            {
-                //todo: !!!
-                //foreach (var lead in leads)
-                //{
-                //    var emailsCount = rand.ProbabilityRandomIfAny(OutgoingActivities.EmailsCount);
-                //    if (emailsCount == 0)
-                //        continue;
-                //    var emails = OutgoingActivities.RandomizerSettings.GetRandomizer().GenerateList(emailsCount);
-                //    foreach (var item in emails)
-                //    {
-                //        item.Incoming = false;
-                //        item.To = lead.Email;
-                //        //todo: from system account
-                //        item.FromEmailAccountDisplayName = rand.ProbabilityRandomIfAny(SystemAccounts).DisplayName;
-                //        item.From = rand.ProbabilityRandomIfAny(SystemAccounts).Email;
-                //    }
-                //}
             }
         }
 
