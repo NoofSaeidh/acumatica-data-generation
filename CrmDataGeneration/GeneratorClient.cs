@@ -94,6 +94,8 @@ namespace CrmDataGeneration
                 catch (Exception e)
                 {
                     _logger.Error(e, "Generation failed. {@option}", option);
+                    if (Config.StopProccesingOnExeception)
+                        throw;
                 }
             }
         }
