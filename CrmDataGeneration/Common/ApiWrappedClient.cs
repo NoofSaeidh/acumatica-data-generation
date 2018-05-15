@@ -96,8 +96,7 @@ namespace CrmDataGeneration.Common
 
                             var tasks = new Task[threadsCount];
 
-                            int k = 0;
-                            for (int i = 0; i < inputArray.Length; i++)
+                            for (int i = 0, k = 0; i < inputArray.Length; i++, k++)
                             {
                                 // multi threads issue
                                 var tmpI = i;
@@ -106,7 +105,7 @@ namespace CrmDataGeneration.Common
                                 {
                                     try
                                     {
-                                        output[tmpI] = await action(inputArray[i], cancellationToken);
+                                        output[tmpI] = await action(inputArray[tmpI], cancellationToken);
                                     }
                                     catch (Exception e)
                                     {
@@ -122,13 +121,15 @@ namespace CrmDataGeneration.Common
                                     // await for special count
                                     await Task.WhenAll(tasks);
                                     Array.Clear(tasks, 0, tasks.Length);
-                                    k = 0;
+                                    // on new iteration it became 0
+                                    k = -1;
                                 }
-                                k++;
                             }
                             // if last count of task a fewer that capacity (threads count)
-                            if (k != 0)
-                                await Task.WhenAll(tasks);
+                            if (tasks[0] != null)
+                            {
+                                await Task.WhenAll(tasks.TakeWhile(t => t != null));
+                            }
                             break;
                         }
                     default:

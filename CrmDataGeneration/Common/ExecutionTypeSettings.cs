@@ -33,5 +33,15 @@ namespace CrmDataGeneration.Common
 
         // don't throw never
         public bool IgnoreErrorsForExecution { get; }
+
+        public static ExecutionTypeSettings Sequent(bool ignoreErrorsForEntities = false, bool ignoreErrorsForExecution = false)
+        {
+            return new ExecutionTypeSettings(ExecutionType.Sequent, 0, ignoreErrorsForEntities, ignoreErrorsForExecution);
+        }
+
+        public static ExecutionTypeSettings Parallel(int parallelThreads, bool ignoreErrorsForEntities = false, bool ignoreErrorsForExecution = false)
+        {
+            return new ExecutionTypeSettings(ExecutionType.Parallel, parallelThreads, ignoreErrorsForEntities, ignoreErrorsForExecution);
+        }
     }
 }
