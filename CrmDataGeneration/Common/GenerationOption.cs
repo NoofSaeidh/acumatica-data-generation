@@ -1,4 +1,5 @@
 ﻿using CrmDataGeneration.Entities;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,6 +27,7 @@ namespace CrmDataGeneration.Common
     {
         private string _pxTypeName;
 
+        [JsonIgnore]
         protected string PxTypeName
         {
             get
