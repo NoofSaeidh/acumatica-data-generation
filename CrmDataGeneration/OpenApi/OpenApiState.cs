@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CrmDataGeneration.Common;
+using System;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -9,12 +10,12 @@ namespace CrmDataGeneration.OpenApi
     {
         private HttpClient _httpClient;
 
-        public OpenApiState(OpenApiSettings settings)
+        public OpenApiState(ApiSessionConfig settings)
         {
-            Settings = settings ?? throw new ArgumentNullException(nameof(OpenApiSettings));
+            SessionConfig = settings ?? throw new ArgumentNullException(nameof(ApiSessionConfig));
         }
 
-        public OpenApiSettings Settings { get; }
+        public ApiSessionConfig SessionConfig { get; }
 
         public HttpClient HttpClient
         {
@@ -28,7 +29,7 @@ namespace CrmDataGeneration.OpenApi
                     CookieContainer = new CookieContainer(),
                 })
                 {
-                    BaseAddress = Settings.EndpointUrl,
+                    BaseAddress = SessionConfig.EndpointSettings.EndpointUrl,
                     DefaultRequestHeaders =
                     {
                         Accept = {MediaTypeWithQualityHeaderValue.Parse("text/json")}

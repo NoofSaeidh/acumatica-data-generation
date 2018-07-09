@@ -19,6 +19,12 @@ namespace CrmDataGeneration
         private readonly OpenApiBaseClient _loginClient;
         private static ILogger _logger => LogConfiguration.DefaultLogger;
 
+        static GeneratorClient()
+        {
+            // hack: set it not much bigger that count of used threads
+            System.Net.ServicePointManager.DefaultConnectionLimit = 42;
+        }
+
         public GeneratorClient(GeneratorConfig config)
         {
             Config = config ?? throw new ArgumentNullException(nameof(config));

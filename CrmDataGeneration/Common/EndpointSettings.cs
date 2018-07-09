@@ -1,9 +1,9 @@
 ﻿using Newtonsoft.Json;
 using System;
 
-namespace CrmDataGeneration.OpenApi
+namespace CrmDataGeneration.Common
 {
-    public class OpenApiSettings
+    public class EndpointSettings
     {
         public const string OpenApiEnpointPart = "entity";
         public const string LoginEndpointPart = "auth/login";
@@ -12,11 +12,6 @@ namespace CrmDataGeneration.OpenApi
         public string AcumaticaBaseUrl { get; set; }
         public string EndpointName { get; set; }
         public string EndpointVersion { get; set; }
-        public string Username { get; set; }
-        public string Password { get; set; }
-        public string Branch { get; set; }
-        public string Locale { get; set; }
-        public string Company { get; set; }
 
         [JsonIgnore]
         public Uri EndpointUrl => new Uri(AcumaticaBaseUrl.TrimEnd('/') + $"/{OpenApiEnpointPart}/{EndpointName}/{EndpointVersion}/");

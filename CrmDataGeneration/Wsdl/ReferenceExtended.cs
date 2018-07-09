@@ -1,12 +1,14 @@
 ﻿using CrmDataGeneration.Common;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading.Tasks;
 
-namespace CrmDataGeneration.OpenApi.Reference
+namespace CrmDataGeneration.Wsdl
 {
     #region Common
 
@@ -14,9 +16,24 @@ namespace CrmDataGeneration.OpenApi.Reference
     [DebuggerTypeProxy(typeof(EntityDebuggerProxy))]
     public partial class Entity : IEntity
     {
-        public override string ToString() => $"{GetType().Name}, {nameof(Id)} = {Id}";
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Guid? IEntity.Id { get => ID; set => ID = value; }
+
+        public override string ToString() => $"{GetType().Name}, {nameof(ID)} = {ID}";
     }
 
+    #endregion
+
+    #region Client Extended
+    public partial class DefaultSoapClient
+    {
+        public T Get<T>(T value) where T : Entity => (T)Get((Entity)value);
+        public T[] GetList<T>(T value) where T : Entity => GetList((Entity)value).Cast<T>().ToArray();
+        public T Put<T>(T value) where T : Entity => (T)Put((Entity)value);
+        public async Task<T> GetAsync<T>(T value) where T : Entity => (T)await GetAsync((Entity)value);
+        public async Task<T> PutAsync<T>(T value) where T : Entity => (T)await PutAsync((Entity)value);
+        public async Task<T[]> GetListAsync<T>(T value) where T : Entity => (await GetListAsync((Entity)value)).Cast<T>().ToArray();
+    }
     #endregion
 
     #region Values Extended
@@ -92,12 +109,11 @@ namespace CrmDataGeneration.OpenApi.Reference
         {
             Value = value;
         }
-        short? IValueWrapper<short?>.Value { get => (short?)Value; set => Value = value; }
-        public override bool Equals(object obj) => ValueComparer<int?>.Equals(Value, obj);
-        public override int GetHashCode() => ValueComparer<int?>.GetHashCode(Value);
-        public override string ToString() => ValueComparer<int?>.ToString(Value);
-        public static bool operator ==(ShortValue left, ShortValue right) => ValueComparer<int?>.Equals(left, right);
-        public static bool operator !=(ShortValue left, ShortValue right) => !ValueComparer<int?>.Equals(left, right);
+        public override bool Equals(object obj) => ValueComparer<short?>.Equals(Value, obj);
+        public override int GetHashCode() => ValueComparer<short?>.GetHashCode(Value);
+        public override string ToString() => ValueComparer<short?>.ToString(Value);
+        public static bool operator ==(ShortValue left, ShortValue right) => ValueComparer<short?>.Equals(left, right);
+        public static bool operator !=(ShortValue left, ShortValue right) => !ValueComparer<short?>.Equals(left, right);
         public static implicit operator short? (ShortValue value) => (short?)value.Value;
         public static implicit operator ShortValue(short? value) => new ShortValue(value);
     }
@@ -109,12 +125,11 @@ namespace CrmDataGeneration.OpenApi.Reference
         {
             Value = value;
         }
-        byte? IValueWrapper<byte?>.Value { get => (byte?)Value; set => Value = value; }
-        public override bool Equals(object obj) => ValueComparer<int?>.Equals(Value, obj);
-        public override int GetHashCode() => ValueComparer<int?>.GetHashCode(Value);
-        public override string ToString() => ValueComparer<int?>.ToString(Value);
-        public static bool operator ==(ByteValue left, ByteValue right) => ValueComparer<int?>.Equals(left, right);
-        public static bool operator !=(ByteValue left, ByteValue right) => !ValueComparer<int?>.Equals(left, right);
+        public override bool Equals(object obj) => ValueComparer<Byte?>.Equals(Value, obj);
+        public override int GetHashCode() => ValueComparer<Byte?>.GetHashCode(Value);
+        public override string ToString() => ValueComparer<Byte?>.ToString(Value);
+        public static bool operator ==(ByteValue left, ByteValue right) => ValueComparer<Byte?>.Equals(left, right);
+        public static bool operator !=(ByteValue left, ByteValue right) => !ValueComparer<Byte?>.Equals(left, right);
         public static implicit operator byte? (ByteValue value) => (byte?)value.Value;
         public static implicit operator ByteValue(byte? value) => new ByteValue(value);
     }
@@ -151,22 +166,18 @@ namespace CrmDataGeneration.OpenApi.Reference
         public static implicit operator DoubleValue(double? value) => new DoubleValue(value);
     }
     [DebuggerDisplay("{Value}")]
-    public partial class DecimalValue : IValueWrapper<decimal?>, IValueWrapper<double?>
+    public partial class DecimalValue : IValueWrapper<decimal?>
     {
         public DecimalValue() { }
-        public DecimalValue(decimal? value) : this((double?)value)
-        {
-        }
-        public DecimalValue(double? value)
+        public DecimalValue(decimal? value)
         {
             Value = value;
         }
-        decimal? IValueWrapper<decimal?>.Value { get => (decimal?)Value; set => Value = (double?)value; }
-        public override bool Equals(object obj) => ValueComparer<double?>.Equals(Value, obj);
-        public override int GetHashCode() => ValueComparer<double?>.GetHashCode(Value);
-        public override string ToString() => ValueComparer<double?>.ToString(Value);
-        public static bool operator ==(DecimalValue left, DecimalValue right) => ValueComparer<double?>.Equals(left, right);
-        public static bool operator !=(DecimalValue left, DecimalValue right) => !ValueComparer<double?>.Equals(left, right);
+        public override bool Equals(object obj) => ValueComparer<Decimal?>.Equals(Value, obj);
+        public override int GetHashCode() => ValueComparer<Decimal?>.GetHashCode(Value);
+        public override string ToString() => ValueComparer<Decimal?>.ToString(Value);
+        public static bool operator ==(DecimalValue left, DecimalValue right) => ValueComparer<Decimal?>.Equals(left, right);
+        public static bool operator !=(DecimalValue left, DecimalValue right) => !ValueComparer<Decimal?>.Equals(left, right);
         public static implicit operator decimal? (DecimalValue value) => (decimal)value.Value;
         public static implicit operator DecimalValue(decimal? value) => new DecimalValue(value);
     }
@@ -186,6 +197,75 @@ namespace CrmDataGeneration.OpenApi.Reference
         public static implicit operator Guid? (GuidValue value) => value?.Value;
         public static implicit operator GuidValue(Guid? value) => new GuidValue(value);
     }
+
+    #endregion
+
+    #region Additional values Extended
+
+    public partial class StringSearch
+    {
+        public StringSearch() { }
+        public StringSearch(string value, StringCondition condition = StringCondition.Equal, string value2 = null) : base(value)
+        {
+            Condition = condition;
+            Value2 = value2;
+        }
+        public StringSearch(StringValue value) : this(value?.Value)
+        {
+
+        }
+        public static explicit operator StringSearch(string value) => new StringSearch(value);
+    }
+
+    public partial class GuidSearch
+    {
+        public GuidSearch() { }
+        public GuidSearch(Guid? value, GuidCondition condition = GuidCondition.Equal, Guid value2 = default(Guid)) : base(value)
+        {
+            Condition = condition;
+            // for some reason second value generated not as nullable
+            // perhaps some bug?
+            Value2 = value2;
+        }
+        public GuidSearch(GuidValue value) : this(value?.Value)
+        {
+
+        }
+        public static explicit operator GuidSearch(Guid? value) => new GuidSearch(value);
+    }
+
+    public partial class IntSearch
+    {
+        public IntSearch() { }
+        public IntSearch(int? value, IntCondition condition = IntCondition.Equal, int? value2 = null) : base(value)
+        {
+            Condition = condition;
+            Value2 = value2;
+        }
+        public IntSearch(IntValue value) : this(value?.Value)
+        {
+
+        }
+        public static explicit operator IntSearch(int? value) => new IntSearch(value);
+    }
+
+
+    public partial class DateTimeSearch
+    {
+        public DateTimeSearch() { }
+        public DateTimeSearch(DateTime? value, DateTimeCondition condition = DateTimeCondition.Equal, DateTime? value2 = null) : base(value)
+        {
+            Condition = condition;
+            Value2 = value2;
+        }
+        public DateTimeSearch(DateTimeValue value) : this(value?.Value)
+        {
+
+        }
+        public static explicit operator DateTimeSearch(DateTime? value) => new DateTimeSearch(value);
+    }
+
+    // there some other fields. add it if required
 
     #endregion
 
@@ -305,17 +385,17 @@ namespace CrmDataGeneration.OpenApi.Reference
         public override bool Equals(object obj)
         {
             if (obj is CustomShortField v)
-                return ValueComparer<int?>.Equals(Value, v.Value);
+                return ValueComparer<short?>.Equals(Value, v.Value);
 
-            return ValueComparer<int?>.Equals(Value, obj);
+            return ValueComparer<short?>.Equals(Value, obj);
         }
         public override int GetHashCode()
         {
-            return ValueComparer<int?>.GetHashCode(Value);
+            return ValueComparer<short?>.GetHashCode(Value);
         }
         public override string ToString()
         {
-            return ValueComparer<int?>.ToString(Value);
+            return ValueComparer<short?>.ToString(Value);
         }
         public static implicit operator short? (CustomShortField value) => (short?)value.Value;
         public static implicit operator CustomShortField(short? value) => new CustomShortField(value);
@@ -331,17 +411,17 @@ namespace CrmDataGeneration.OpenApi.Reference
         public override bool Equals(object obj)
         {
             if (obj is CustomByteField v)
-                return ValueComparer<int?>.Equals(Value, v.Value);
+                return ValueComparer<byte?>.Equals(Value, v.Value);
 
-            return ValueComparer<int?>.Equals(Value, obj);
+            return ValueComparer<byte?>.Equals(Value, obj);
         }
         public override int GetHashCode()
         {
-            return ValueComparer<int?>.GetHashCode(Value);
+            return ValueComparer<byte?>.GetHashCode(Value);
         }
         public override string ToString()
         {
-            return ValueComparer<int?>.ToString(Value);
+            return ValueComparer<byte?>.ToString(Value);
         }
         public static implicit operator byte? (CustomByteField value) => (byte?)value.Value;
         public static implicit operator CustomByteField(byte? value) => new CustomByteField(value);
@@ -402,27 +482,24 @@ namespace CrmDataGeneration.OpenApi.Reference
     public partial class CustomDecimalField
     {
         public CustomDecimalField() { }
-        public CustomDecimalField(decimal? value) : this((double?)value)
-        {
-        }
-        public CustomDecimalField(double? value)
+        public CustomDecimalField(decimal? value)
         {
             Value = value;
         }
         public override bool Equals(object obj)
         {
             if (obj is CustomDecimalField v)
-                return ValueComparer<double?>.Equals(Value, v.Value);
+                return ValueComparer<decimal?>.Equals(Value, v.Value);
 
-            return ValueComparer<double?>.Equals(Value, obj);
+            return ValueComparer<decimal?>.Equals(Value, obj);
         }
         public override int GetHashCode()
         {
-            return ValueComparer<double?>.GetHashCode(Value);
+            return ValueComparer<decimal?>.GetHashCode(Value);
         }
         public override string ToString()
         {
-            return ValueComparer<double?>.ToString(Value);
+            return ValueComparer<decimal?>.ToString(Value);
         }
         public static implicit operator decimal? (CustomDecimalField value) => (decimal)value.Value;
         public static implicit operator CustomDecimalField(decimal? value) => new CustomDecimalField(value);

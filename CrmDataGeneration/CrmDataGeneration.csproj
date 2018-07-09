@@ -86,12 +86,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Common\ApiSessionConfig.cs" />
     <Compile Include="Common\ApiWrappedClient.cs" />
     <Compile Include="Common\Enums.cs" />
     <Compile Include="Common\ExecutionTypeSettings.cs" />
     <Compile Include="Common\Extensions.cs" />
     <Compile Include="Common\GenerationOption.cs" />
     <Compile Include="Common\JsonLogSerializer.cs" />
+    <Compile Include="Common\LoginInfo.cs" />
+    <Compile Include="Connected Services\Wsdl\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
     <Compile Include="Entities\KeyFields.cs" />
     <Compile Include="Common\LogConfiguration.cs" />
     <Compile Include="Common\ProbabilityCollection.cs" />
@@ -109,7 +116,7 @@
     <Compile Include="GeneratorConfig.cs" />
     <Compile Include="GeneratorClient.cs" />
     <Compile Include="OpenApi\OpenApiBaseClient.cs" />
-    <Compile Include="OpenApi\OpenApiSettings.cs" />
+    <Compile Include="Common\EndpointSettings.cs" />
     <Compile Include="OpenApi\OpenApiState.cs" />
     <Compile Include="OpenApi\Reference\SwaggerReferenceClients.cs" />
     <Compile Include="OpenApi\Reference\SwaggerReferenceEntities.cs" />
@@ -119,9 +126,26 @@
     <Compile Include="Common\Interfaces.cs" />
     <Compile Include="Entities\Leads\LeadRandomizerSettings.cs" />
     <Compile Include="Common\Randomizer.cs" />
+    <Compile Include="Wsdl\AcumaticaClient.cs" />
+    <Compile Include="Wsdl\AcumaticaException.cs" />
+    <Compile Include="Wsdl\ReferenceExtended.cs" />
+    <Compile Include="Common\ValueComparer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="Connected Services\Wsdl\18.wsdl" />
+    <None Include="Connected Services\Wsdl\CrmDataGeneration.Wsdl.Entity.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\Wsdl\CrmDataGeneration.Wsdl.File.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\Wsdl\CrmDataGeneration.Wsdl.InvokeResult.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\Wsdl\CrmDataGeneration.Wsdl.ProcessResult.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
     <None Include="NLog.config">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -131,6 +155,23 @@
     </None>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadataStorage Include="Connected Services\Wsdl\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\Wsdl\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\Wsdl\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\Wsdl\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -37,7 +37,7 @@ namespace CrmDataGeneration
         #endregion
 
         public int GlobalSeed { get; set; }
-        public OpenApiSettings OpenApiSettings { get; set; }
+        public ApiSessionConfig OpenApiSettings { get; set; }
         public ICollection<GenerationOption> GenerationOptions { get; set; }
         // if true processing will continue even if some of options will fail.
         public bool StopProccesingOnExeception { get; set; }

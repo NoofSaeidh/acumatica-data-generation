@@ -31,20 +31,20 @@ namespace CrmDataGeneration.OpenApi
             try
             {
                 var client = await CreateHttpClientAsync();
-                var result = await client.PostAsJsonAsync(State.Settings.LoginUrl, new
+                var result = await client.PostAsJsonAsync(State.SessionConfig.EndpointSettings.LoginUrl, new
                 {
-                    name = State.Settings.Username,
-                    password = State.Settings.Password,
-                    company = State.Settings.Company,
-                    branch = State.Settings.Branch,
-                    locale = State.Settings.Locale
+                    name = State.SessionConfig.LoginInfo.Username,
+                    password = State.SessionConfig.LoginInfo.Password,
+                    company = State.SessionConfig.LoginInfo.Company,
+                    branch = State.SessionConfig.LoginInfo.Branch,
+                    locale = State.SessionConfig.LoginInfo.Locale
                 });
                 result.EnsureSuccessStatusCode();
-                _logger.Info("Log id to Acumatica REST. {url} {@settings}.", State.Settings.LoginUrl, State.Settings);
+                _logger.Info("Log id to Acumatica REST. {url} {@settings}.", State.SessionConfig.EndpointSettings.LoginUrl, State.SessionConfig);
             }
             catch (Exception e)
             {
-                _logger.Error(e, "Couldn't log in to Acumatica REST. {url} {@settings}.", State.Settings.LoginUrl, State.Settings);
+                _logger.Error(e, "Couldn't log in to Acumatica REST. {url} {@settings}.", State.SessionConfig.EndpointSettings.LoginUrl, State.SessionConfig);
                 throw;
             }
         }
@@ -54,12 +54,12 @@ namespace CrmDataGeneration.OpenApi
             try
             {
                 var client = await CreateHttpClientAsync();
-                var result = await client.PostAsync(State.Settings.LogoutUrl, new ByteArrayContent(new byte[0]));
-                _logger.Info("Log out from Acumatica REST. {url}.", State.Settings.LogoutUrl);
+                var result = await client.PostAsync(State.SessionConfig.EndpointSettings.LogoutUrl, new ByteArrayContent(new byte[0]));
+                _logger.Info("Log out from Acumatica REST. {url}.", State.SessionConfig.EndpointSettings.LogoutUrl);
             }
             catch (Exception e)
             {
-                _logger.Error(e, "Couldn't log out to Acumatica REST. {url}.", State.Settings.LogoutUrl);
+                _logger.Error(e, "Couldn't log out to Acumatica REST. {url}.", State.SessionConfig.EndpointSettings.LogoutUrl);
                 throw;
             }
         }

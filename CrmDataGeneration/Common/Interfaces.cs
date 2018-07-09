@@ -42,4 +42,14 @@ namespace CrmDataGeneration.Common
         Task<T> CreateSingle(T entity, CancellationToken cancellationToken = default);
         Task<IEnumerable<T>> CreateAll(IEnumerable<T> entities, ExecutionTypeSettings executionTypeSettings, CancellationToken cancellationToken = default);
     }
+
+    public interface IValueWrapper<T>
+    {
+        T Value { get; set; }
+    }
+
+    public interface IEntity
+    {
+        Guid? Id { get; set; }
+    }
 }
