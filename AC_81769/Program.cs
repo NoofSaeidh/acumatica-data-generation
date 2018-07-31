@@ -1,9 +1,10 @@
 ﻿using CrmDataGeneration;
 using CrmDataGeneration.Common;
+using CrmDataGeneration.Entities.Emails;
 using CrmDataGeneration.Entities.Leads;
-using CrmDataGeneration.OpenApi.Reference;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -16,31 +17,25 @@ namespace AC_81769
     {
         static async VoidTask Main(string[] args)
         {
-            //CrmDataGeneration.OpenApi.SwaggerGenerator.GenerateClient("http://msk-ws-89.int.acumatica.com/r103/entity/Default/17.200.001/swagger.json");
+
             GeneratorConfig config;
             try
             {
-                config = GeneratorConfig.ReadConfigDefault();
-                //config.SaveConfig(GeneratorConfig.ConfigCredsFileName);
+                config = GetExampleConfig();
             }
             catch (Exception e)
             {
                 throw;
             }
-            using (var generatorClient = new GeneratorClient(config))
+            try
             {
-                try
-                {
-                    await generatorClient.Login();
+                var generator = new GeneratorClient(config);
 
-                    await generatorClient.GenerateAllOptions();
+                await generator.GenerateAllOptions();
+            }
+            catch (Exception e)
+            {
 
-                    await generatorClient.Logout();
-                }
-                catch (Exception e)
-                {
-                    throw;
-                }
             }
         }
         static async VoidTask LogActionTime(string actionName, VoidTask action)
@@ -53,6 +48,86 @@ namespace AC_81769
                 watch.Stop();
                 sw.WriteLine(actionName + " Time Elapsed: " + watch.Elapsed);
             }
+        }
+
+        public static GeneratorConfig GetExampleConfig()
+        {
+            var config = new GeneratorConfig
+            {
+                ApiConnectionConfig = new ApiConnectionConfig(
+                    new EndpointSettings
+                    {
+                        AcumaticaBaseUrl = "http://lcoalhost/endpoint",
+                        EndpointName = "default",
+                        EndpointVersion = "18.200.001"
+                    },
+                    new LoginInfo
+                    {
+                        Username = "admin",
+                        Password = "123",
+                    }
+                ),
+                StopProccesingOnExeception = true,
+                GenerationSettingsCollection = new IGenerationSettings[]
+                {
+                    new LeadGenerationSettings
+                    {
+                        Count = 10,
+                        ExecutionTypeSettings = ExecutionTypeSettings.Parallel(2),
+                        RandomizerSettings = new LeadRandomizerSettings
+                        {
+                            LeadClasses = new ProbabilityCollection<string>
+                            {
+                                ["LEAD"] = 0.7m,
+                                ["LEADBUS"] = 0.15m,
+                                ["LEADBUSSVC"] = 0.15m
+                            },
+                            Statuses = new ProbabilityCollection<string>
+                            {
+                                ["New"] = 0.2m,
+                                ["Open"] = 0.5m,
+                                ["Suspended"] = 0.1m,
+                                ["Lost"] = 0.2m
+                            }
+                        },
+                        ConvertByStatuses = new Dictionary<string, ProbabilityCollection<ConvertLead>>
+                        {
+                            ["New"] = new ProbabilityCollection<ConvertLead>
+                            {
+                                [ConvertLead.ToOpportunity] = 0.5m
+                            },
+                            ["Open"] = new ProbabilityCollection<ConvertLead>
+                            {
+                                [ConvertLead.ToOpportunity] = 0.5m
+                            },
+                        },
+                        EmailsGenerationSettings = new LeadGenerationSettings.EmailsForLeadGenerationSettings
+                        {
+                            EmailRandomizerSettings = new EmailRandomizerSettings
+                            {
+                                DateRanges = new ProbabilityCollection<(DateTime StartDate, DateTime EndDate)>
+                                {
+                                    (DateTime.Parse("01/01/2017"), DateTime.Parse("05/01/2018"))
+                                },
+                            },
+                            EmailsForSingleLeadCounts = new ProbabilityCollection<int>
+                            {
+                                {0, 0.3m },
+                                {1, -1 },
+                                {2, -1 },
+                                {3, -1 },
+                                {4, -1 },
+                                {5, -1 }
+                            },
+                            SystemAccounts = new ProbabilityCollection<(string Email, string DisplayName)>
+                            {
+                                (Email: "testadmin@acumatica.con", DisplayName: "System Email Account")
+                            }
+                        }
+                    }
+                }
+            };
+            return config;
         }
     }
 }

@@ -86,15 +86,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Common\ApiSessionConfig.cs" />
-    <Compile Include="Common\ApiWrappedClient.cs" />
+    <Compile Include="Common\ApiConnectionConfig.cs" />
     <Compile Include="Common\Enums.cs" />
     <Compile Include="Common\ExecutionTypeSettings.cs" />
     <Compile Include="Common\Extensions.cs" />
-    <Compile Include="Common\GenerationOption.cs" />
+    <Compile Include="Common\GenerationSettings.cs" />
+    <Compile Include="Common\GenerationRunner.cs" />
     <Compile Include="Common\JsonLogSerializer.cs" />
     <Compile Include="Common\LoginInfo.cs" />
-    <Compile Include="Connected Services\Wsdl\Reference.cs">
+    <Compile Include="Common\ValidateHelper.cs" />
+    <Compile Include="Connected Services\Soap\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
@@ -103,47 +104,39 @@
     <Compile Include="Common\LogConfiguration.cs" />
     <Compile Include="Common\ProbabilityCollection.cs" />
     <Compile Include="Common\ProbabilityCollectionJsonConverter.cs" />
+    <Compile Include="Entities\Leads\LeadGenerationRunner.cs" />
+    <Compile Include="Entities\Leads\LeadGenerationSettings.cs" />
     <Compile Include="Entities\PxObjectsTypes.cs" />
     <Compile Include="Common\RandomizerSettings.cs" />
     <Compile Include="Common\ValueTupleJsonConverter.cs" />
-    <Compile Include="Entities\Emails\EmailGenerationOption.cs" />
     <Compile Include="Entities\Emails\EmailRandomizerSettings.cs" />
-    <Compile Include="Entities\Emails\EmailApiWrappedClient.cs" />
     <Compile Include="Entities\Emails\Enums.cs" />
     <Compile Include="Entities\Leads\Enums.cs" />
-    <Compile Include="Entities\Leads\LeadApiWrappedClient.cs" />
-    <Compile Include="Entities\Leads\LeadGenerationOption.cs" />
     <Compile Include="GeneratorConfig.cs" />
     <Compile Include="GeneratorClient.cs" />
-    <Compile Include="OpenApi\OpenApiBaseClient.cs" />
     <Compile Include="Common\EndpointSettings.cs" />
-    <Compile Include="OpenApi\OpenApiState.cs" />
-    <Compile Include="OpenApi\Reference\SwaggerReferenceClients.cs" />
-    <Compile Include="OpenApi\Reference\SwaggerReferenceEntities.cs" />
-    <Compile Include="OpenApi\SwaggerExtended.cs" />
-    <Compile Include="OpenApi\SwaggerGenerator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Common\Interfaces.cs" />
     <Compile Include="Entities\Leads\LeadRandomizerSettings.cs" />
     <Compile Include="Common\Randomizer.cs" />
-    <Compile Include="Wsdl\AcumaticaClient.cs" />
-    <Compile Include="Wsdl\AcumaticaException.cs" />
-    <Compile Include="Wsdl\ReferenceExtended.cs" />
+    <Compile Include="Soap\AcumaticaSoapClient.cs" />
+    <Compile Include="Soap\AcumaticaException.cs" />
+    <Compile Include="Soap\ReferenceExtended.cs" />
     <Compile Include="Common\ValueComparer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="Connected Services\Wsdl\18.wsdl" />
-    <None Include="Connected Services\Wsdl\CrmDataGeneration.Wsdl.Entity.datasource">
+    <None Include="Connected Services\Soap\18.wsdl" />
+    <None Include="Connected Services\Soap\CrmDataGeneration.Soap.Entity.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
-    <None Include="Connected Services\Wsdl\CrmDataGeneration.Wsdl.File.datasource">
+    <None Include="Connected Services\Soap\CrmDataGeneration.Soap.File.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
-    <None Include="Connected Services\Wsdl\CrmDataGeneration.Wsdl.InvokeResult.datasource">
+    <None Include="Connected Services\Soap\CrmDataGeneration.Soap.InvokeResult.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
-    <None Include="Connected Services\Wsdl\CrmDataGeneration.Wsdl.ProcessResult.datasource">
+    <None Include="Connected Services\Soap\CrmDataGeneration.Soap.ProcessResult.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="NLog.config">
@@ -159,16 +152,16 @@
     <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <ItemGroup>
-    <WCFMetadataStorage Include="Connected Services\Wsdl\" />
+    <WCFMetadataStorage Include="Connected Services\Soap\" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Connected Services\Wsdl\configuration91.svcinfo" />
+    <None Include="Connected Services\Soap\configuration91.svcinfo" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Connected Services\Wsdl\configuration.svcinfo" />
+    <None Include="Connected Services\Soap\configuration.svcinfo" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Connected Services\Wsdl\Reference.svcmap">
+    <None Include="Connected Services\Soap\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>

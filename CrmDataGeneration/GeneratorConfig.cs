@@ -1,12 +1,10 @@
-﻿using CrmDataGeneration.OpenApi;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-using CrmDataGeneration.OpenApi.Reference;
 using CrmDataGeneration.Common;
 using CrmDataGeneration.Entities.Leads;
 using Newtonsoft.Json.Converters;
@@ -35,19 +33,12 @@ namespace CrmDataGeneration
         };
 
         #endregion
-
-        public int GlobalSeed { get; set; }
-        public ApiSessionConfig OpenApiSettings { get; set; }
-        public ICollection<GenerationOption> GenerationOptions { get; set; }
-        // if true processing will continue even if some of options will fail.
+        public ApiConnectionConfig ApiConnectionConfig { get; set; }
+        public ICollection<IGenerationSettings> GenerationSettingsCollection { get; set; }
+        // if true processing will be stopped if any generation option will fail
         public bool StopProccesingOnExeception { get; set; }
 
         #region Common methods
-
-        //public GenerationOption<T> GetGenerationOption<T>() where T : Entity
-        //{
-        //    return GenerationOptions.OfType<GenerationOption<T>>().First();
-        //}
 
         public void SaveConfig(string path)
         {

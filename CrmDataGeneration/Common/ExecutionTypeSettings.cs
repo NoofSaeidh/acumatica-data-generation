@@ -13,13 +13,11 @@ namespace CrmDataGeneration.Common
         public ExecutionTypeSettings(
             ExecutionType executionType,
             int parallelThreads,
-            bool ignoreErrorsForEntities,
-            bool ignoreErrorsForExecution)
+            bool ignoreProcessingErrors)
         {
             ExecutionType = executionType;
             ParallelThreads = parallelThreads;
-            IgnoreErrorsForEntities = ignoreErrorsForEntities;
-            IgnoreErrorsForExecution = ignoreErrorsForExecution;
+            IgnoreProcessingErrors = ignoreProcessingErrors;
         }
 
         public ExecutionType ExecutionType { get; }
@@ -29,19 +27,16 @@ namespace CrmDataGeneration.Common
 
         // ignore error for single entity.
         // process all entities even if one failed.
-        public bool IgnoreErrorsForEntities { get; }
+        public bool IgnoreProcessingErrors { get; }
 
-        // don't throw never
-        public bool IgnoreErrorsForExecution { get; }
-
-        public static ExecutionTypeSettings Sequent(bool ignoreErrorsForEntities = false, bool ignoreErrorsForExecution = false)
+        public static ExecutionTypeSettings Sequent(bool ignoreErrorsForEntities = false)
         {
-            return new ExecutionTypeSettings(ExecutionType.Sequent, 0, ignoreErrorsForEntities, ignoreErrorsForExecution);
+            return new ExecutionTypeSettings(ExecutionType.Sequent, 0, ignoreErrorsForEntities);
         }
 
-        public static ExecutionTypeSettings Parallel(int parallelThreads, bool ignoreErrorsForEntities = false, bool ignoreErrorsForExecution = false)
+        public static ExecutionTypeSettings Parallel(int parallelThreads, bool ignoreErrorsForEntities = false)
         {
-            return new ExecutionTypeSettings(ExecutionType.Parallel, parallelThreads, ignoreErrorsForEntities, ignoreErrorsForExecution);
+            return new ExecutionTypeSettings(ExecutionType.Parallel, parallelThreads, ignoreErrorsForEntities);
         }
     }
 }

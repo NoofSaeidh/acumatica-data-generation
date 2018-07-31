@@ -1,5 +1,5 @@
 ﻿using Bogus;
-using CrmDataGeneration.OpenApi.Reference;
+using CrmDataGeneration.Soap;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,10 +14,10 @@ namespace CrmDataGeneration.Common
     ///     Randomizer that can generate entities.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public interface IRandomizer<T> where T : Entity
+    public interface IRandomizer<T> where T : IEntity
     {
         T Generate();
-        IEnumerable<T> GenerateList(int count);
+        IList<T> GenerateList(int count);
     }
 
     /// <summary>
@@ -26,21 +26,10 @@ namespace CrmDataGeneration.Common
     /// to return configured randomizer that generate entities depending on class properties.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public interface IRandomizerSettings<T> where T : Entity
+    public interface IRandomizerSettings<T>: IValidatable where T : IEntity
     {
-        int? Seed { get; }
-        IRandomizer<T> GetRandomizer();
-    }
-
-    /// <summary>
-    ///     Wrapped client on clients defined in <see cref="OpenApi.Reference"/>.
-    /// Contains common methods needed in generation, that wrap actions from api client with log.
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    public interface IApiWrappedClient<T> where T : Entity
-    {
-        Task<T> CreateSingle(T entity, CancellationToken cancellationToken = default);
-        Task<IEnumerable<T>> CreateAll(IEnumerable<T> entities, ExecutionTypeSettings executionTypeSettings, CancellationToken cancellationToken = default);
+        int Seed { get; }
+        IRandomizer<T> Randomizer { get; }
     }
 
     public interface IValueWrapper<T>
@@ -51,5 +40,24 @@ namespace CrmDataGeneration.Common
     public interface IEntity
     {
         Guid? Id { get; set; }
+    }
+
+    public interface IGenerationSettings
+    {
+        int Count { get; }
+        string GenerationEntity { get; }
+        ExecutionTypeSettings ExecutionTypeSettings { get; }
+
+        GenerationRunner GetGenerationRunner(ApiConnectionConfig apiConnectionConfig);
+    }
+
+    public interface IGenerationSettings<T> : IGenerationSettings, IValidatable where T : IEntity
+    {
+        IRandomizerSettings<T> RandomizerSettings { get; }
+    }
+
+    public interface IValidatable
+    {
+        void Validate();
     }
 }

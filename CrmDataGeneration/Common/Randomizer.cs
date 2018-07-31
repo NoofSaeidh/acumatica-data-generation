@@ -1,5 +1,4 @@
-﻿using CrmDataGeneration.OpenApi.Reference;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CrmDataGeneration.Common
 {
-    public class Randomizer<T> : IRandomizer<T> where T : Entity
+    public class Randomizer<T> : IRandomizer<T> where T : Soap.Entity
     {
         public Randomizer(RandomizerSettings<T> settings)
         {
@@ -20,7 +19,7 @@ namespace CrmDataGeneration.Common
         {
             return Settings.GetFaker().Generate();
         }
-        public virtual IEnumerable<T> GenerateList(int count)
+        public virtual IList<T> GenerateList(int count)
         {
             return Settings.GetFaker().Generate(count);
         }

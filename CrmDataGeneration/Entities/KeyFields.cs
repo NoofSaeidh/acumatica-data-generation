@@ -1,4 +1,4 @@
-﻿using CrmDataGeneration.OpenApi.Reference;
+﻿using CrmDataGeneration.Soap;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

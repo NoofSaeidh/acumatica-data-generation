@@ -1,5 +1,5 @@
 ﻿using Bogus;
-using CrmDataGeneration.OpenApi.Reference;
+using CrmDataGeneration.Soap;
 using Newtonsoft.Json;
 using System;
 using System.Collections;
@@ -10,47 +10,28 @@ using System.Threading.Tasks;
 
 namespace CrmDataGeneration.Common
 {
-    public abstract class RandomizerSettings<T> : IRandomizerSettings<T> where T : Entity
+    public abstract class BaseRandomizerSettings
     {
-        public int? Seed { get; set; }
-
-
-        public IRandomizer<T> GetRandomizer() => new Randomizer<T>(this);
+        private int? _seed;
+        // if not initialized manually - use random seed.
+        public int Seed
+        {
+            get => _seed ?? (int)(_seed = new Random().Next());
+            set => _seed = value;
+        }
+    }
+    public abstract class RandomizerSettings<T> : BaseRandomizerSettings, IRandomizerSettings<T> where T : Entity
+    {
+        public IRandomizer<T> Randomizer => new Randomizer<T>(this);
 
         public virtual Faker<T> GetFaker()
         {
-            ThrowIfSettingsNotSpecified();
+            ValidateHelper.ValidateObject(this);
             var faker = new Faker<T>();
-            if (Seed != null)
-                faker.UseSeed((int)Seed);
+            faker.UseSeed(Seed);
             return faker;
         }
 
-        [JsonIgnore]
-        public virtual bool RequiredSettingsSpecified => true;
-
-        protected virtual void ThrowIfSettingsNotSpecified()
-        {
-            if (!RequiredSettingsSpecified)
-                throw new InvalidOperationException("Some required settings are not specified.");
-        }
-
-        protected bool IsAllCollectionsDefined(params IEnumerable[] enumerations)
-        {
-            if (enumerations == null) return true;
-            foreach (var enumer in enumerations)
-            {
-                if (enumer.IsNullOrEmpty())
-                    return false;
-            }
-            return true;
-        }
-
-        protected bool IsAllObjectsDefined(params object[] objects)
-        {
-            if (objects == null) return true;
-            if (objects.Any(o => o == null)) return false;
-            return true;
-        }
+        public void Validate() => ValidateHelper.ValidateObject(this);
     }
 }
