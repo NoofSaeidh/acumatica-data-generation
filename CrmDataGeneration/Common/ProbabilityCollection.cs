@@ -21,40 +21,97 @@ namespace CrmDataGeneration.Common
     [JsonConverter(typeof(ProbabilityCollectionJsonConverter))]
     [DebuggerTypeProxy(typeof(ProbabilityCollection<>.DebuggerProxyView))]
     [DebuggerDisplay("{ToString()}")]
-    public class ProbabilityCollection<T> : Collection<T>, IEnumerable<KeyValuePair<T, decimal>>, IEnumerable<T>, ICollection<T>, IDictionary<T, decimal>
+    public class ProbabilityCollection<T> : IList<T>, IDictionary<T, decimal>, IDictionary<T, decimal?>
     {
         // indexed defined probabilities to calculate Probability per item faster
         private readonly List<int> _definedProbabilitiesIndexes;
+
+        private readonly List<T> _items;
+        private readonly List<decimal?> _probabilities;
+
         public ProbabilityCollection()
         {
-            Probabilities = new List<decimal>();
+            _items = new List<T>();
+            _probabilities = new List<decimal?>();
             _definedProbabilitiesIndexes = new List<int>();
             FreeProbability = 1;
         }
 
-        public ProbabilityCollection(IList<T> list) : base(list)
+        public ProbabilityCollection(IList<T> list)
         {
-            Probabilities = Enumerable.Repeat(-1.0m, list.Count).ToList();
+            _items = list.ToList();
+            _probabilities = Enumerable.Repeat<decimal?>(null, list.Count).ToList();
             _definedProbabilitiesIndexes = new List<int>();
             FreeProbability = 1;
         }
 
-        public ProbabilityCollection(IDictionary<T, decimal> list) : this()
+        public ProbabilityCollection(IDictionary<T, decimal> dictionary) : this()
         {
-            foreach (var item in list)
+            foreach (var item in dictionary)
             {
                 Add(item);
             }
         }
 
+        public ProbabilityCollection(IDictionary<T, decimal?> dictionary) : this()
+        {
+            foreach (var item in dictionary)
+            {
+                Add(item);
+            }
+        }
+
+        protected decimal ProbabilityPerItem
+        {
+            get
+            {
+                if (FreeProbability <= 0) return 0;
+                var devider = _items.Count - _definedProbabilitiesIndexes.Count;
+                if (devider == 0) devider = 1;
+                return FreeProbability / devider;
+            }
+        }
+
+        public IDictionary<T, decimal> AsDictionary => this;
+
+        // because linq doesn't when both interfaces defined
+        public IList<T> AsList => this;
+
         public decimal FreeProbability { get; private set; }
 
         public bool HasDefinedProbabilities => FreeProbability < 1;
 
-        // if probability == -1 - it means need to take free probability
-        protected IList<decimal> Probabilities { get; }
+        public bool IsReadOnly => false;
 
-        // if set <0 will be used default probability per item
+        public IList<decimal> Probabilities
+        {
+            get
+            {
+                var probPerItem = ProbabilityPerItem;
+                return _probabilities.Select(x => x == null ? probPerItem : (decimal)x).ToList();
+            }
+        }
+
+        public IList<decimal?> RawProbabilities => new ReadOnlyCollection<decimal?>(_probabilities);
+
+        public int Count => _items.Count;
+
+        ICollection<T> IDictionary<T, decimal>.Keys => _items.ToList();
+        ICollection<T> IDictionary<T, decimal?>.Keys => _items.ToList();
+        ICollection<decimal> IDictionary<T, decimal>.Values => Probabilities.ToList();
+        ICollection<decimal?> IDictionary<T, decimal?>.Values => RawProbabilities;
+
+        public KeyValuePair<T, decimal> this[int index]
+        {
+            get
+            {
+                if (index < 0 || index >= Count)
+                    throw new ArgumentOutOfRangeException(nameof(index));
+                return new KeyValuePair<T, decimal>(_items[index], _probabilities[index] ?? FreeProbability);
+            }
+        }
+
+        // if raw probability is null - will return calculated probability
         public decimal this[T key]
         {
             get
@@ -64,75 +121,63 @@ namespace CrmDataGeneration.Common
                 {
                     throw new KeyNotFoundException();
                 }
-                var prob = Probabilities[index];
-                if (prob < 0)
+                var prob = _probabilities[index];
+                if (prob == null)
                 {
                     return ProbabilityPerItem;
                 }
-                return prob;
+                return (decimal)prob;
             }
             set
             {
-                ThrowIfProbilityWillExceed(value);
                 var index = IndexOf(key);
                 if (index < 0)
                 {
-                    Add(key);
-                    if (value < 0)
-                        Probabilities.Add(-1);
-                    else
-                    {
-                        Probabilities.Add(value);
-                        _definedProbabilitiesIndexes.Add(Items.Count - 1);
-                    }
+                    Add(key, value);
                 }
                 else
                 {
-                    Probabilities[index] = value;
+                    SetRawProbability(index, value);
                 }
-                DecreaseFreeProbability(value);
             }
         }
 
-        public new KeyValuePair<T, decimal> this[int index]
+        decimal? IDictionary<T, decimal?>.this[T key]
         {
-            get
+            get => GetRawProbability(key);
+            set => SetRawProbability(key, value);
+        }
+
+        T IList<T>.this[int index] { get => _items[index]; set => _items[index] = value; }
+
+        // adjust free probability depending on new probability value
+        // reduce free probability if new value is bigger that zero
+        // enlarge - if less
+        private void AdjustFreeProbability(decimal? value)
+        {
+            if (value == null || value == 0)
+                return;
+
+            var newProb = FreeProbability - (decimal)value;
+            if (newProb < 0 || newProb > 1)
+                throw new InvalidOperationException($"Cannot adjust {nameof(FreeProbability)}. Adjusting value is outside of acceptable range. Resulted {nameof(FreeProbability)} must be in the range of 0 and 1.");
+
+            FreeProbability = newProb;
+        }
+
+        private IEnumerable<KeyValuePair<T, decimal>> EnumerateProbabilities()
+        {
+            for (int i = 0; i < Count; i++)
             {
-                var item = base[index];
-                return new KeyValuePair<T, decimal>(item, this[item]);
+                yield return new KeyValuePair<T, decimal>(_items[i], _probabilities[i] ?? ProbabilityPerItem);
             }
         }
 
-        ICollection<T> IDictionary<T, decimal>.Keys => AsList.ToList();
-
-        ICollection<decimal> IDictionary<T, decimal>.Values => RawProbabilities.ToList();
-
-        public IEnumerable<decimal> RawProbabilities => new ReadOnlyCollection<decimal>(Probabilities);
-
-        public IEnumerable<decimal> CalculatedProbabilities
+        private IEnumerable<KeyValuePair<T, decimal?>> EnumerateRawProbabilities()
         {
-            get
+            for (int i = 0; i < Count; i++)
             {
-                var probPerItem = ProbabilityPerItem;
-                return Probabilities.Select(x => x >= 0 ? x : probPerItem).ToList();
-            }
-        }
-
-        public bool IsReadOnly => false;
-
-        // because linq doesn't when both interfaces defined
-        public IList<T> AsList => this;
-
-        public IDictionary<T, decimal> AsDictionary => this;
-
-        protected decimal ProbabilityPerItem
-        {
-            get
-            {
-                if (FreeProbability <= 0) return 0;
-                var devider = Items.Count - _definedProbabilitiesIndexes.Count;
-                if (devider == 0) devider = 1;
-                return FreeProbability / devider;
+                yield return new KeyValuePair<T, decimal?>(_items[i], _probabilities[i]);
             }
         }
 
@@ -141,14 +186,26 @@ namespace CrmDataGeneration.Common
             if (key == null)
                 throw new ArgumentNullException(nameof(key));
 
-            var index = IndexOf(key);
-            if (index >= 0)
+            if (value < 0)
+                throw new ArgumentOutOfRangeException(nameof(value), "The value must be non negative.");
+
+            if (Contains(key))
             {
                 throw new ArgumentException("An item with the same key has already been added.", nameof(key));
             }
 
-            Items.Add(key);
-            AddProbability(value);
+            AdjustFreeProbability(value);
+            _items.Add(key);
+            _probabilities.Add(value);
+            _definedProbabilitiesIndexes.Add(Count - 1);
+        }
+
+        public void Add(T key, decimal? value)
+        {
+            if (value == null)
+                Add(key);
+            else
+                Add(key, (decimal)value);
         }
 
         public void Add(KeyValuePair<T, decimal> item)
@@ -156,39 +213,126 @@ namespace CrmDataGeneration.Common
             Add(item.Key, item.Value);
         }
 
-        public bool Contains(KeyValuePair<T, decimal> item)
+        public void Add(KeyValuePair<T, decimal?> item)
         {
-            return ContainsKey(item.Key);
+            Add(item.Key, item.Value);
         }
 
-        public bool ContainsKey(T key)
+        public void Add(T item)
         {
-            return base.Contains(key);
-        }
-
-        public void CopyTo(KeyValuePair<T, decimal>[] array, int arrayIndex)
-        {
-            for (int i = 0; i < Count; i++)
+            if (Contains(item))
             {
-                array[i + arrayIndex] = new KeyValuePair<T, decimal>(Items[i], this[Items[i]]);
+                throw new ArgumentException("An item with the same key has already been added.", nameof(item));
             }
+
+            _items.Add(item);
+            _probabilities.Add(null);
         }
 
-        public bool Remove(KeyValuePair<T, decimal> item)
+        public void Clear()
         {
-            return base.Remove(item.Key);
+            _items.Clear();
+            ClearProbabilities();
         }
 
-        public bool TryGetValue(T key, out decimal value)
+        public void ClearProbabilities()
         {
-            var index = Items.IndexOf(key);
+            FreeProbability = 1;
+            _definedProbabilitiesIndexes.Clear();
+            _probabilities.Clear();
+        }
+
+        public bool Contains(T item)
+        {
+            return _items.Contains(item);
+        }
+
+        public void CopyTo(T[] array, int arrayIndex)
+        {
+            _items.CopyTo(array, arrayIndex);
+        }
+
+        public IEnumerator<KeyValuePair<T, decimal>> GetEnumerator()
+            => EnumerateProbabilities().GetEnumerator();
+
+        public decimal? GetRawProbability(T key)
+        {
+            var index = IndexOf(key);
             if (index < 0)
-            {
-                value = default;
+                throw new KeyNotFoundException();
+            return GetRawProbability(index);
+        }
+
+        public decimal? GetRawProbability(int index)
+        {
+            return _probabilities[index];
+        }
+
+        public int IndexOf(T item)
+        {
+            return _items.IndexOf(item);
+        }
+
+        public void Insert(int index, T item)
+        {
+            _items.Insert(index, item);
+            _probabilities.Insert(index, null);
+        }
+
+        public bool Remove(T item)
+        {
+            var index = _items.IndexOf(item);
+            if (index < 0)
                 return false;
-            }
-            value = Probabilities[index];
+            RemoveAt(index);
             return true;
+        }
+
+        public void RemoveAt(int index)
+        {
+            _items.RemoveAt(index);
+            var prob = _probabilities[index];
+            if (prob != null)
+            {
+                AdjustFreeProbability(-prob);
+                _definedProbabilitiesIndexes.Remove(index);
+            }
+            _probabilities.RemoveAt(index);
+        }
+
+        public void SetRawProbability(int index, decimal? value)
+        {
+            if (index < 0 || index >= _probabilities.Count)
+                throw new ArgumentOutOfRangeException(nameof(index), index, "An index was out of range.");
+
+            if (value != null && value < 0)
+                throw new ArgumentOutOfRangeException(nameof(value), "Value cannot be less than zero.");
+
+            var defIndex = _definedProbabilitiesIndexes.IndexOf(index);
+            if (defIndex >= 0)
+            {
+                AdjustFreeProbability(-_probabilities[index]);
+                _definedProbabilitiesIndexes.Remove(defIndex);
+            }
+
+            if (value == null)
+            {
+                _probabilities[index] = null;
+            }
+            else
+            {
+                AdjustFreeProbability(value);
+                _probabilities[index] = value;
+                _definedProbabilitiesIndexes.Add(index);
+            }
+        }
+
+        public void SetRawProbability(T key, decimal? value)
+        {
+            var index = IndexOf(key);
+            if (index < 0)
+                throw new KeyNotFoundException();
+            SetRawProbability(index, value);
         }
 
         public override string ToString()
@@ -196,155 +340,65 @@ namespace CrmDataGeneration.Common
             return $"Count: {Count}, Free Probability: {FreeProbability}";
         }
 
-        private IEnumerable<KeyValuePair<T, decimal>> EnumerateProbabilities()
+        public bool TryGetValue(T key, out decimal value)
+        {
+            var index = _items.IndexOf(key);
+            if (index < 0)
+            {
+                value = default;
+                return false;
+            }
+            value = _probabilities[index] ?? ProbabilityPerItem;
+            return true;
+        }
+
+        void ICollection<KeyValuePair<T, decimal?>>.Clear() => Clear();
+
+        public bool Contains(KeyValuePair<T, decimal> item) => Contains(item.Key);
+
+        bool IDictionary<T, decimal>.ContainsKey(T key) => Contains(key);
+
+        bool IDictionary<T, decimal?>.ContainsKey(T key) => Contains(key);
+
+        void ICollection<KeyValuePair<T, decimal>>.CopyTo(KeyValuePair<T, decimal>[] array, int arrayIndex)
         {
             for (int i = 0; i < Count; i++)
             {
-                yield return new KeyValuePair<T, decimal>(Items[i], this[Items[i]]);
+                array[i + arrayIndex] = new KeyValuePair<T, decimal>(_items[i], _probabilities[i] ?? FreeProbability);
             }
         }
 
-        public new IEnumerator<KeyValuePair<T, decimal>> GetEnumerator()
-            => EnumerateProbabilities().GetEnumerator();
+        void ICollection<KeyValuePair<T, decimal?>>.CopyTo(KeyValuePair<T, decimal?>[] array, int arrayIndex)
+        {
+            for (int i = 0; i < Count; i++)
+            {
+                array[i + arrayIndex] = new KeyValuePair<T, decimal?>(_items[i], _probabilities[i] ?? FreeProbability);
+            }
+        }
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-        protected override void ClearItems()
-        {
-            base.ClearItems();
-            ClearProbabilities();
-        }
+        IEnumerator<T> IEnumerable<T>.GetEnumerator() => ((IList<T>)_items).GetEnumerator();
 
-        protected override void InsertItem(int index, T item)
-        {
-            if (Items.Contains(item))
-                throw new ArgumentException("An item with the same key has already been added.");
-            base.InsertItem(index, item);
-            InsertProbability(index, -1);
-        }
+        IEnumerator<KeyValuePair<T, decimal?>> IEnumerable<KeyValuePair<T, decimal?>>.GetEnumerator() => EnumerateRawProbabilities().GetEnumerator();
 
-        protected override void RemoveItem(int index)
-        {
-            base.RemoveItem(index);
-            RemoveProbability(index);
-        }
+        bool ICollection<KeyValuePair<T, decimal>>.Remove(KeyValuePair<T, decimal> item) => Remove(item.Key);
 
-        protected override void SetItem(int index, T item)
-        {
-            if (Items.Contains(item))
-                throw new ArgumentException("An item with the same key has already been added.");
+        bool ICollection<KeyValuePair<T, decimal?>>.Remove(KeyValuePair<T, decimal?> item) => Remove(item.Key);
 
-            base.SetItem(index, item);
-        }
-
-        protected void ThrowIfProbilityWillExceed(decimal toAddValue)
+        bool IDictionary<T, decimal?>.TryGetValue(T key, out decimal? value)
         {
-            if (toAddValue > FreeProbability)
-                throw new InvalidOperationException("Cannot add probability. Total probability cannot exceed 1.");
-        }
-
-        protected void DecreaseFreeProbability(decimal value)
-        {
-            if (value <= 0)
-                return;
-            ThrowIfProbilityWillExceed(value);
-            FreeProbability -= value;
-        }
-
-        protected void IncreaseFreeProbability(decimal value)
-        {
-            if (value <= 0)
-                return;
-            FreeProbability += value;
-            if (FreeProbability > 1)
-                FreeProbability = 1;
-        }
-
-        protected void ClearProbabilities()
-        {
-            FreeProbability = 1;
-            _definedProbabilitiesIndexes.Clear();
-            Probabilities.Clear();
-        }
-
-        protected void AddProbability(decimal value)
-        {
-            if (value < 0)
+            var index = _items.IndexOf(key);
+            if (index < 0)
             {
-                Probabilities.Add(-1);
+                value = default;
+                return false;
             }
-            else
-            {
-                DecreaseFreeProbability(value);
-                Probabilities.Add(value);
-                _definedProbabilitiesIndexes.Add(Probabilities.Count - 1);
-            }
+            value = _probabilities[index];
+            return true;
         }
 
-        protected void InsertProbability(int index, decimal value)
-        {
-            if (index == Probabilities.Count)
-            {
-                AddProbability(value);
-                return;
-            }
-
-            if (index < 0 || index >= Probabilities.Count)
-                throw new ArgumentOutOfRangeException(nameof(index), index, "An index was out of range.");
-
-            for (int i = 0; i < _definedProbabilitiesIndexes.Count; i++)
-            {
-                if (_definedProbabilitiesIndexes[i] >= index)
-                    _definedProbabilitiesIndexes[i]++;
-            }
-
-            if (value < 0)
-            {
-                IncreaseFreeProbability(Probabilities[index]);
-                Probabilities.Insert(index, value);
-            }
-            else
-            {
-                DecreaseFreeProbability(value - Probabilities[index]);
-                Probabilities.Insert(index, value);
-                _definedProbabilitiesIndexes.Add(Probabilities.Count - 1);
-            }
-        }
-
-        protected void SetProbability(int index, decimal value)
-        {
-            if (index < 0 || index >= Probabilities.Count)
-                throw new ArgumentOutOfRangeException(nameof(index), index, "An index was out of range.");
-
-            var defIndex = _definedProbabilitiesIndexes.IndexOf(index);
-            if (defIndex >= 0)
-                _definedProbabilitiesIndexes.RemoveAt(defIndex);
-
-            if (value < 0)
-            {
-                IncreaseFreeProbability(Probabilities[index]);
-                Probabilities[index] = -1;
-            }
-            else
-            {
-                DecreaseFreeProbability(value - Probabilities[index]);
-                Probabilities[index] = value;
-                _definedProbabilitiesIndexes.Add(Probabilities.Count - 1);
-            }
-        }
-
-        protected void RemoveProbability(int index)
-        {
-            if (index < 0 || index >= Probabilities.Count)
-                throw new ArgumentOutOfRangeException(nameof(index), index, "An index was out of range.");
-
-            var defIndex = _definedProbabilitiesIndexes.IndexOf(index);
-            if (defIndex >= 0)
-                _definedProbabilitiesIndexes.RemoveAt(defIndex);
-
-            IncreaseFreeProbability(Probabilities[index]);
-            Probabilities.RemoveAt(index);
-        }
+        bool ICollection<KeyValuePair<T, decimal?>>.Contains(KeyValuePair<T, decimal?> item) => Contains(item.Key);
 
         #region Debugger display
 
@@ -376,7 +430,7 @@ namespace CrmDataGeneration.Common
 
             public override string ToString() => $"\"{Key}\", {Probability * 100}%";
         }
-        #endregion
 
+        #endregion
     }
 }

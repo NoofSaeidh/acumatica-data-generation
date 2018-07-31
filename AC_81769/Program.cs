@@ -2,6 +2,7 @@
 using CrmDataGeneration.Common;
 using CrmDataGeneration.Entities.Emails;
 using CrmDataGeneration.Entities.Leads;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -113,11 +114,11 @@ namespace AC_81769
                             EmailsForSingleLeadCounts = new ProbabilityCollection<int>
                             {
                                 {0, 0.3m },
-                                {1, -1 },
-                                {2, -1 },
-                                {3, -1 },
-                                {4, -1 },
-                                {5, -1 }
+                                {1},
+                                {2},
+                                {3},
+                                {4},
+                                {5}
                             },
                             SystemAccounts = new ProbabilityCollection<(string Email, string DisplayName)>
                             {

@@ -39,7 +39,7 @@ namespace CrmDataGeneration.Common
 
             if (!probabilities.HasDefinedProbabilities)
                 return randomizer.ListItem(probabilities.AsList.ToList());
-            return randomizer.WeightedRandom(probabilities.AsList.ToArray(), probabilities.CalculatedProbabilities.Select(x => (float)x).ToArray());
+            return randomizer.WeightedRandom(probabilities.AsList.ToArray(), probabilities.Probabilities.Select(x => (float)x).ToArray());
         }
 
         public static T ProbabilityRandomIfAny<T>(this Bogus.Randomizer randomizer, ProbabilityCollection<T> probabilities)
