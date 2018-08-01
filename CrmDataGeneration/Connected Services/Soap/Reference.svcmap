@@ -19,10 +19,10 @@
     <ServiceContractMappings />
   </ClientOptions>
   <MetadataSources>
-    <MetadataSource Address="http://localhost/endpoint/entity/Default/18.200.001?wsdl" Protocol="http" SourceId="1" />
+    <MetadataSource Address="http://localhost:444/entity/Default/18.200.001?wsdl" Protocol="http" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="18.wsdl" MetadataType="Wsdl" ID="a609e727-68cb-41bc-b8a1-d45fad62381f" SourceId="1" SourceUrl="http://localhost/endpoint/entity/Default/18.200.001?wsdl" />
+    <MetadataFile FileName="18.wsdl" MetadataType="Wsdl" ID="68cd0659-67ff-4e8d-864e-9d212e1d7cda" SourceId="1" SourceUrl="http://localhost:444/entity/Default/18.200.001?wsdl" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />

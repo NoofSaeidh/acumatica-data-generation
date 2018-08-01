@@ -48,7 +48,7 @@ namespace CrmDataGeneration.Soap
                 new BasicHttpBinding
                 {
                     AllowCookies = true,
-                    MaxReceivedMessageSize = long.MaxValue,
+                    MaxReceivedMessageSize = int.MaxValue,
                     SendTimeout = TimeSpan.FromHours(1)
                 },
                 new EndpointAddress(endpointSettings.EndpointUrl)

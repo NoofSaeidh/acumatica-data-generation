@@ -22,6 +22,7 @@ namespace CrmDataGeneration.Common
     }
     public abstract class RandomizerSettings<T> : BaseRandomizerSettings, IRandomizerSettings<T> where T : Entity
     {
+        [JsonIgnore]
         public IRandomizer<T> Randomizer => new Randomizer<T>(this);
 
         public virtual Faker<T> GetFaker()

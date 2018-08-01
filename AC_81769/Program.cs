@@ -2,6 +2,7 @@
 using CrmDataGeneration.Common;
 using CrmDataGeneration.Entities.Emails;
 using CrmDataGeneration.Entities.Leads;
+using CrmDataGeneration.Soap;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -9,6 +10,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.ServiceModel;
 using System.Text;
 using VoidTask = System.Threading.Tasks.Task; // Task in generated Api Client also exists
 
@@ -22,7 +24,7 @@ namespace AC_81769
             GeneratorConfig config;
             try
             {
-                config = GetExampleConfig();
+                config = GeneratorConfig.ReadConfigDefault();
             }
             catch (Exception e)
             {
@@ -58,8 +60,8 @@ namespace AC_81769
                 ApiConnectionConfig = new ApiConnectionConfig(
                     new EndpointSettings
                     {
-                        AcumaticaBaseUrl = "http://lcoalhost/endpoint",
-                        EndpointName = "default",
+                        AcumaticaBaseUrl = "http://localhost/endpoint",
+                        EndpointName = "Default",
                         EndpointVersion = "18.200.001"
                     },
                     new LoginInfo

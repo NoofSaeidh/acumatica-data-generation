@@ -1,19 +1,52 @@
 {
-  "OpenApiSettings": {
-    "AcumaticaBaseUrl": "http://localhost/dbdata",
-    "EndpointName": "default",
-    "EndpointVersion": "17.200.001",
-    "Username": "admin",
-    "Password": "123",
-    "Branch": null,
-    "Locale": null,
-    "Company": null,
-    "GenerationSeed": 0
+  "ApiConnectionConfig": {
+    "EndpointSettings": {
+      "AcumaticaBaseUrl": "http://localhost:444",
+      "EndpointName": "Default",
+      "EndpointVersion": "18.200.001"
+    },
+    "LoginInfo": {
+      "Username": "admin",
+      "Password": "123"
+    }
   },
-  "GlobalSeed": 0,
-  "GenerationOptions": [
+  "GenerationSettingsCollection": [
     {
-      "$type": "CrmDataGeneration.Entities.Leads.LeadGenerationOption, CrmDataGeneration",
+      "$type": "CrmDataGeneration.Entities.Leads.LeadGenerationSettings, CrmDataGeneration",
+      "ConvertByStatuses": {
+        "New": {
+          "ToOpportunity": 0.5
+        },
+        "Open": {
+          "ToOpportunity": 0.5
+        }
+      },
+      "EmailsGenerationSettings": {
+        "EmailsForSingleLeadCounts": {
+          "0": 0.3,
+          "1": 0.14,
+          "2": 0.14,
+          "3": 0.14,
+          "4": 0.14,
+          "5": 0.14
+        },
+        "SystemAccounts": [
+          [
+            "testadmin@acumatica.con",
+            "System Email Account"
+          ]
+        ],
+        "EmailRandomizerSettings": {
+          "DateRanges": [
+            {
+              "StartDate": "2017-01-01T00:00:00",
+              "EndDate": "2018-05-01T00:00:00"
+            }
+          ],
+          "Seed": 599591827
+        }
+      },
+      "GenerationEntity": "Lead",
       "RandomizerSettings": {
         "$type": "CrmDataGeneration.Entities.Leads.LeadRandomizerSettings, CrmDataGeneration",
         "LeadClasses": {
@@ -26,55 +59,16 @@
           "Open": 0.5,
           "Suspended": 0.1,
           "Lost": 0.2
-        }
+        },
+        "Seed": 1370119755
       },
-      "GenerateEntity": "Lead",
       "Count": 10,
       "ExecutionTypeSettings": {
-        "ExecutionType": "Sequent",
-        "ParallelThreads": 10,
-        "IgnoreErrorsForEntities": false,
-        "IgnoreErrorsForExecution": false
-      },
-      "ConvertByStatuses": {
-        "New": {
-          "ToOpportunity": 0.5
-        },
-        "Open": {
-          "ToOpportunity": 0.5
-        }
-      },
-      "SystemAccounts": [
-        {
-          "Email": "testadmin@acumatica.con",
-          "DisplayName": "System Email Account"
-        }
-      ],
-      "Emails": {
-        "$type": "CrmDataGeneration.Entities.Emails.EmailGenerationOption, CrmDataGeneration",
-        "RandomizerSettings": {
-          "$type": "CrmDataGeneration.Entities.Emails.EmailRandomizerSettings, CrmDataGeneration",
-          "DateRanges": [
-            {
-              "StartDate": "01/01/2017",
-              "EndDate": "05/01/2018"
-            }
-          ]
-        },
-        "GenerateEntity": "Email",
-        "EmailsCount": {
-          "0": 0.3,
-          "1": -1,
-          "2": -1,
-          "3": -1,
-          "4": -1,
-          "5": -1
-        },
-        "Count": 10,
-        "GenerateInParallel": true,
-        "MaxExecutionThreadsParallel": 10,
-        "SkipErrorsSequent": false
+        "ExecutionType": "Parallel",
+        "ParallelThreads": 2,
+        "IgnoreProcessingErrors": false
       }
     }
-  ]
+  ],
+  "StopProccesingOnExeception": true
 }

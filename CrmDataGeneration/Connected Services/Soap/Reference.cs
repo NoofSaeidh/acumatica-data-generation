@@ -40,7 +40,6 @@ namespace CrmDataGeneration.Soap {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(OpportunityDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(RelationDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ContactRoles[]))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(BusinessAccountClassAttributeDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ProjectActivity[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(Approval[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ProjectBalance[]))]
@@ -49,6 +48,8 @@ namespace CrmDataGeneration.Soap {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(DefaultTaskForGLAccount[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ProjectProFormaDetails[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ProjectUnionLocal[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(BusinessAccountClassAttributeDetail[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(FinancialPeriodDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(NonStockItemAttribute[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(NonStockItemSalesCategory[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(NonStockItemVendorDetail[]))]
@@ -66,6 +67,7 @@ namespace CrmDataGeneration.Soap {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(BusinessAccountOpportunityDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(BusinessAccountOrder[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(VendorPriceDetail[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ManageFinancialPeriodsDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(TrialBalanceDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ItemSalesCategoryMember[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(SalesPersonDetail[]))]
@@ -81,11 +83,11 @@ namespace CrmDataGeneration.Soap {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(OpportunityDiscount[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(OpportunityProduct[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(OpportunityTaxDetail[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(FinancialYearPeriodDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(EmployeeDelegate[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(EmploymentHistoryRecord[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(TransferOrderDetailAllocation[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(TransferOrderDetail[]))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(FinancialYearPeriodDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InvoiceApplicationsCreditMemo[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InvoiceApplicationsDefault[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InvoiceDetail[]))]
@@ -95,19 +97,19 @@ namespace CrmDataGeneration.Soap {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ExpenseClaimTaxDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(SalesPricesWorksheetDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ShippingTermDetail[]))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(AccountByPeriodRow[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(DiscountCustomerPriceClassesDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(DiscountCustomerDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(DiscountBreakpointDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(DiscountItemPriceClassesDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(DiscountItemDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(DiscountWarehouseDetail[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(AccountByPeriodRow[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InterBranchAccountMappingTransactionInDestinationBranchDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InterBranchAccountMappingTransactionInSourceBranchDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(WarehouseLocation[]))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ExpenseReceiptTaxDetails[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(EventAttendee[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(EventRelatedActivity[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ExpenseReceiptTaxDetails[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ShipViaFreightRate[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ShippingBox[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(JournalTransactionDetail[]))]
@@ -116,22 +118,21 @@ namespace CrmDataGeneration.Soap {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(CaseRelatedCase[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InventoryReceiptDetailAllocation[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(EmailProcessingRow[]))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(KitAssemblyStockComponentAllocation[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(JournalVoucherDetailAPDocumentToApply[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(JournalVoucherDetailARDocumentToApply[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(JournalVoucherDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(JournalVoucherGLTransaction[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(KitAssemblyStockComponentAllocation[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(LotSerialClassSegment[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ReportingGroup[]))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(TaxZoneApplicableTaxDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(PurchaseReceiptDetailAllocation[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(TaxZoneApplicableTaxDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(TaxScheduleDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(TaxZoneDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(PurchaseReceiptDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(PurchaseOrderDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InventorySummaryRow[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(PhysicalInventoryReviewDetail[]))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(FinancialPeriodDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ShipmentDetailAllocation[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InventoryReceiptDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(CheckDetail[]))]
@@ -202,7 +203,6 @@ namespace CrmDataGeneration.Soap {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(OpportunityDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(RelationDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ContactRoles[]))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(BusinessAccountClassAttributeDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ProjectActivity[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(Approval[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ProjectBalance[]))]
@@ -211,6 +211,8 @@ namespace CrmDataGeneration.Soap {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(DefaultTaskForGLAccount[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ProjectProFormaDetails[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ProjectUnionLocal[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(BusinessAccountClassAttributeDetail[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(FinancialPeriodDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(NonStockItemAttribute[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(NonStockItemSalesCategory[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(NonStockItemVendorDetail[]))]
@@ -228,6 +230,7 @@ namespace CrmDataGeneration.Soap {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(BusinessAccountOpportunityDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(BusinessAccountOrder[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(VendorPriceDetail[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ManageFinancialPeriodsDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(TrialBalanceDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ItemSalesCategoryMember[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(SalesPersonDetail[]))]
@@ -243,11 +246,11 @@ namespace CrmDataGeneration.Soap {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(OpportunityDiscount[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(OpportunityProduct[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(OpportunityTaxDetail[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(FinancialYearPeriodDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(EmployeeDelegate[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(EmploymentHistoryRecord[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(TransferOrderDetailAllocation[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(TransferOrderDetail[]))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(FinancialYearPeriodDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InvoiceApplicationsCreditMemo[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InvoiceApplicationsDefault[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InvoiceDetail[]))]
@@ -257,19 +260,19 @@ namespace CrmDataGeneration.Soap {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ExpenseClaimTaxDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(SalesPricesWorksheetDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ShippingTermDetail[]))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(AccountByPeriodRow[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(DiscountCustomerPriceClassesDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(DiscountCustomerDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(DiscountBreakpointDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(DiscountItemPriceClassesDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(DiscountItemDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(DiscountWarehouseDetail[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(AccountByPeriodRow[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InterBranchAccountMappingTransactionInDestinationBranchDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InterBranchAccountMappingTransactionInSourceBranchDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(WarehouseLocation[]))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ExpenseReceiptTaxDetails[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(EventAttendee[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(EventRelatedActivity[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ExpenseReceiptTaxDetails[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ShipViaFreightRate[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ShippingBox[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(JournalTransactionDetail[]))]
@@ -278,22 +281,21 @@ namespace CrmDataGeneration.Soap {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(CaseRelatedCase[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InventoryReceiptDetailAllocation[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(EmailProcessingRow[]))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(KitAssemblyStockComponentAllocation[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(JournalVoucherDetailAPDocumentToApply[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(JournalVoucherDetailARDocumentToApply[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(JournalVoucherDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(JournalVoucherGLTransaction[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(KitAssemblyStockComponentAllocation[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(LotSerialClassSegment[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ReportingGroup[]))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(TaxZoneApplicableTaxDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(PurchaseReceiptDetailAllocation[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(TaxZoneApplicableTaxDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(TaxScheduleDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(TaxZoneDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(PurchaseReceiptDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(PurchaseOrderDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InventorySummaryRow[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(PhysicalInventoryReviewDetail[]))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(FinancialPeriodDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ShipmentDetailAllocation[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InventoryReceiptDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(CheckDetail[]))]
@@ -364,7 +366,6 @@ namespace CrmDataGeneration.Soap {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(OpportunityDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(RelationDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ContactRoles[]))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(BusinessAccountClassAttributeDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ProjectActivity[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(Approval[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ProjectBalance[]))]
@@ -373,6 +374,8 @@ namespace CrmDataGeneration.Soap {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(DefaultTaskForGLAccount[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ProjectProFormaDetails[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ProjectUnionLocal[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(BusinessAccountClassAttributeDetail[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(FinancialPeriodDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(NonStockItemAttribute[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(NonStockItemSalesCategory[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(NonStockItemVendorDetail[]))]
@@ -390,6 +393,7 @@ namespace CrmDataGeneration.Soap {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(BusinessAccountOpportunityDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(BusinessAccountOrder[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(VendorPriceDetail[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ManageFinancialPeriodsDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(TrialBalanceDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ItemSalesCategoryMember[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(SalesPersonDetail[]))]
@@ -405,11 +409,11 @@ namespace CrmDataGeneration.Soap {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(OpportunityDiscount[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(OpportunityProduct[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(OpportunityTaxDetail[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(FinancialYearPeriodDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(EmployeeDelegate[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(EmploymentHistoryRecord[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(TransferOrderDetailAllocation[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(TransferOrderDetail[]))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(FinancialYearPeriodDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InvoiceApplicationsCreditMemo[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InvoiceApplicationsDefault[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InvoiceDetail[]))]
@@ -419,19 +423,19 @@ namespace CrmDataGeneration.Soap {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ExpenseClaimTaxDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(SalesPricesWorksheetDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ShippingTermDetail[]))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(AccountByPeriodRow[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(DiscountCustomerPriceClassesDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(DiscountCustomerDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(DiscountBreakpointDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(DiscountItemPriceClassesDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(DiscountItemDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(DiscountWarehouseDetail[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(AccountByPeriodRow[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InterBranchAccountMappingTransactionInDestinationBranchDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InterBranchAccountMappingTransactionInSourceBranchDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(WarehouseLocation[]))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ExpenseReceiptTaxDetails[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(EventAttendee[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(EventRelatedActivity[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ExpenseReceiptTaxDetails[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ShipViaFreightRate[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ShippingBox[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(JournalTransactionDetail[]))]
@@ -440,22 +444,21 @@ namespace CrmDataGeneration.Soap {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(CaseRelatedCase[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InventoryReceiptDetailAllocation[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(EmailProcessingRow[]))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(KitAssemblyStockComponentAllocation[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(JournalVoucherDetailAPDocumentToApply[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(JournalVoucherDetailARDocumentToApply[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(JournalVoucherDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(JournalVoucherGLTransaction[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(KitAssemblyStockComponentAllocation[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(LotSerialClassSegment[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ReportingGroup[]))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(TaxZoneApplicableTaxDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(PurchaseReceiptDetailAllocation[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(TaxZoneApplicableTaxDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(TaxScheduleDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(TaxZoneDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(PurchaseReceiptDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(PurchaseOrderDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InventorySummaryRow[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(PhysicalInventoryReviewDetail[]))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(FinancialPeriodDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ShipmentDetailAllocation[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InventoryReceiptDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(CheckDetail[]))]
@@ -526,7 +529,6 @@ namespace CrmDataGeneration.Soap {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(OpportunityDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(RelationDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ContactRoles[]))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(BusinessAccountClassAttributeDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ProjectActivity[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(Approval[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ProjectBalance[]))]
@@ -535,6 +537,8 @@ namespace CrmDataGeneration.Soap {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(DefaultTaskForGLAccount[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ProjectProFormaDetails[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ProjectUnionLocal[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(BusinessAccountClassAttributeDetail[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(FinancialPeriodDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(NonStockItemAttribute[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(NonStockItemSalesCategory[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(NonStockItemVendorDetail[]))]
@@ -552,6 +556,7 @@ namespace CrmDataGeneration.Soap {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(BusinessAccountOpportunityDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(BusinessAccountOrder[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(VendorPriceDetail[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ManageFinancialPeriodsDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(TrialBalanceDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ItemSalesCategoryMember[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(SalesPersonDetail[]))]
@@ -567,11 +572,11 @@ namespace CrmDataGeneration.Soap {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(OpportunityDiscount[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(OpportunityProduct[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(OpportunityTaxDetail[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(FinancialYearPeriodDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(EmployeeDelegate[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(EmploymentHistoryRecord[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(TransferOrderDetailAllocation[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(TransferOrderDetail[]))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(FinancialYearPeriodDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InvoiceApplicationsCreditMemo[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InvoiceApplicationsDefault[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InvoiceDetail[]))]
@@ -581,19 +586,19 @@ namespace CrmDataGeneration.Soap {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ExpenseClaimTaxDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(SalesPricesWorksheetDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ShippingTermDetail[]))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(AccountByPeriodRow[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(DiscountCustomerPriceClassesDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(DiscountCustomerDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(DiscountBreakpointDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(DiscountItemPriceClassesDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(DiscountItemDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(DiscountWarehouseDetail[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(AccountByPeriodRow[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InterBranchAccountMappingTransactionInDestinationBranchDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InterBranchAccountMappingTransactionInSourceBranchDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(WarehouseLocation[]))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ExpenseReceiptTaxDetails[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(EventAttendee[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(EventRelatedActivity[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ExpenseReceiptTaxDetails[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ShipViaFreightRate[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ShippingBox[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(JournalTransactionDetail[]))]
@@ -602,22 +607,21 @@ namespace CrmDataGeneration.Soap {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(CaseRelatedCase[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InventoryReceiptDetailAllocation[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(EmailProcessingRow[]))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(KitAssemblyStockComponentAllocation[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(JournalVoucherDetailAPDocumentToApply[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(JournalVoucherDetailARDocumentToApply[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(JournalVoucherDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(JournalVoucherGLTransaction[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(KitAssemblyStockComponentAllocation[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(LotSerialClassSegment[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ReportingGroup[]))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(TaxZoneApplicableTaxDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(PurchaseReceiptDetailAllocation[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(TaxZoneApplicableTaxDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(TaxScheduleDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(TaxZoneDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(PurchaseReceiptDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(PurchaseOrderDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InventorySummaryRow[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(PhysicalInventoryReviewDetail[]))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(FinancialPeriodDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ShipmentDetailAllocation[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InventoryReceiptDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(CheckDetail[]))]
@@ -688,7 +692,6 @@ namespace CrmDataGeneration.Soap {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(OpportunityDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(RelationDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ContactRoles[]))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(BusinessAccountClassAttributeDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ProjectActivity[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(Approval[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ProjectBalance[]))]
@@ -697,6 +700,8 @@ namespace CrmDataGeneration.Soap {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(DefaultTaskForGLAccount[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ProjectProFormaDetails[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ProjectUnionLocal[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(BusinessAccountClassAttributeDetail[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(FinancialPeriodDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(NonStockItemAttribute[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(NonStockItemSalesCategory[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(NonStockItemVendorDetail[]))]
@@ -714,6 +719,7 @@ namespace CrmDataGeneration.Soap {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(BusinessAccountOpportunityDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(BusinessAccountOrder[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(VendorPriceDetail[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ManageFinancialPeriodsDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(TrialBalanceDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ItemSalesCategoryMember[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(SalesPersonDetail[]))]
@@ -729,11 +735,11 @@ namespace CrmDataGeneration.Soap {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(OpportunityDiscount[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(OpportunityProduct[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(OpportunityTaxDetail[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(FinancialYearPeriodDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(EmployeeDelegate[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(EmploymentHistoryRecord[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(TransferOrderDetailAllocation[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(TransferOrderDetail[]))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(FinancialYearPeriodDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InvoiceApplicationsCreditMemo[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InvoiceApplicationsDefault[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InvoiceDetail[]))]
@@ -743,19 +749,19 @@ namespace CrmDataGeneration.Soap {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ExpenseClaimTaxDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(SalesPricesWorksheetDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ShippingTermDetail[]))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(AccountByPeriodRow[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(DiscountCustomerPriceClassesDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(DiscountCustomerDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(DiscountBreakpointDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(DiscountItemPriceClassesDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(DiscountItemDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(DiscountWarehouseDetail[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(AccountByPeriodRow[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InterBranchAccountMappingTransactionInDestinationBranchDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InterBranchAccountMappingTransactionInSourceBranchDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(WarehouseLocation[]))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ExpenseReceiptTaxDetails[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(EventAttendee[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(EventRelatedActivity[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ExpenseReceiptTaxDetails[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ShipViaFreightRate[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ShippingBox[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(JournalTransactionDetail[]))]
@@ -764,22 +770,21 @@ namespace CrmDataGeneration.Soap {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(CaseRelatedCase[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InventoryReceiptDetailAllocation[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(EmailProcessingRow[]))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(KitAssemblyStockComponentAllocation[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(JournalVoucherDetailAPDocumentToApply[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(JournalVoucherDetailARDocumentToApply[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(JournalVoucherDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(JournalVoucherGLTransaction[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(KitAssemblyStockComponentAllocation[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(LotSerialClassSegment[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ReportingGroup[]))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(TaxZoneApplicableTaxDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(PurchaseReceiptDetailAllocation[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(TaxZoneApplicableTaxDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(TaxScheduleDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(TaxZoneDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(PurchaseReceiptDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(PurchaseOrderDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InventorySummaryRow[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(PhysicalInventoryReviewDetail[]))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(FinancialPeriodDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ShipmentDetailAllocation[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InventoryReceiptDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(CheckDetail[]))]
@@ -850,7 +855,6 @@ namespace CrmDataGeneration.Soap {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(OpportunityDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(RelationDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ContactRoles[]))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(BusinessAccountClassAttributeDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ProjectActivity[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(Approval[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ProjectBalance[]))]
@@ -859,6 +863,8 @@ namespace CrmDataGeneration.Soap {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(DefaultTaskForGLAccount[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ProjectProFormaDetails[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ProjectUnionLocal[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(BusinessAccountClassAttributeDetail[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(FinancialPeriodDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(NonStockItemAttribute[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(NonStockItemSalesCategory[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(NonStockItemVendorDetail[]))]
@@ -876,6 +882,7 @@ namespace CrmDataGeneration.Soap {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(BusinessAccountOpportunityDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(BusinessAccountOrder[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(VendorPriceDetail[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ManageFinancialPeriodsDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(TrialBalanceDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ItemSalesCategoryMember[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(SalesPersonDetail[]))]
@@ -891,11 +898,11 @@ namespace CrmDataGeneration.Soap {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(OpportunityDiscount[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(OpportunityProduct[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(OpportunityTaxDetail[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(FinancialYearPeriodDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(EmployeeDelegate[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(EmploymentHistoryRecord[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(TransferOrderDetailAllocation[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(TransferOrderDetail[]))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(FinancialYearPeriodDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InvoiceApplicationsCreditMemo[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InvoiceApplicationsDefault[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InvoiceDetail[]))]
@@ -905,19 +912,19 @@ namespace CrmDataGeneration.Soap {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ExpenseClaimTaxDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(SalesPricesWorksheetDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ShippingTermDetail[]))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(AccountByPeriodRow[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(DiscountCustomerPriceClassesDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(DiscountCustomerDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(DiscountBreakpointDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(DiscountItemPriceClassesDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(DiscountItemDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(DiscountWarehouseDetail[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(AccountByPeriodRow[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InterBranchAccountMappingTransactionInDestinationBranchDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InterBranchAccountMappingTransactionInSourceBranchDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(WarehouseLocation[]))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ExpenseReceiptTaxDetails[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(EventAttendee[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(EventRelatedActivity[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ExpenseReceiptTaxDetails[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ShipViaFreightRate[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ShippingBox[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(JournalTransactionDetail[]))]
@@ -926,22 +933,21 @@ namespace CrmDataGeneration.Soap {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(CaseRelatedCase[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InventoryReceiptDetailAllocation[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(EmailProcessingRow[]))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(KitAssemblyStockComponentAllocation[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(JournalVoucherDetailAPDocumentToApply[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(JournalVoucherDetailARDocumentToApply[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(JournalVoucherDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(JournalVoucherGLTransaction[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(KitAssemblyStockComponentAllocation[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(LotSerialClassSegment[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ReportingGroup[]))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(TaxZoneApplicableTaxDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(PurchaseReceiptDetailAllocation[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(TaxZoneApplicableTaxDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(TaxScheduleDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(TaxZoneDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(PurchaseReceiptDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(PurchaseOrderDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InventorySummaryRow[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(PhysicalInventoryReviewDetail[]))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(FinancialPeriodDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ShipmentDetailAllocation[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InventoryReceiptDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(CheckDetail[]))]
@@ -1012,7 +1018,6 @@ namespace CrmDataGeneration.Soap {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(OpportunityDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(RelationDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ContactRoles[]))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(BusinessAccountClassAttributeDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ProjectActivity[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(Approval[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ProjectBalance[]))]
@@ -1021,6 +1026,8 @@ namespace CrmDataGeneration.Soap {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(DefaultTaskForGLAccount[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ProjectProFormaDetails[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ProjectUnionLocal[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(BusinessAccountClassAttributeDetail[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(FinancialPeriodDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(NonStockItemAttribute[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(NonStockItemSalesCategory[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(NonStockItemVendorDetail[]))]
@@ -1038,6 +1045,7 @@ namespace CrmDataGeneration.Soap {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(BusinessAccountOpportunityDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(BusinessAccountOrder[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(VendorPriceDetail[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ManageFinancialPeriodsDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(TrialBalanceDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ItemSalesCategoryMember[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(SalesPersonDetail[]))]
@@ -1053,11 +1061,11 @@ namespace CrmDataGeneration.Soap {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(OpportunityDiscount[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(OpportunityProduct[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(OpportunityTaxDetail[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(FinancialYearPeriodDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(EmployeeDelegate[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(EmploymentHistoryRecord[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(TransferOrderDetailAllocation[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(TransferOrderDetail[]))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(FinancialYearPeriodDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InvoiceApplicationsCreditMemo[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InvoiceApplicationsDefault[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InvoiceDetail[]))]
@@ -1067,19 +1075,19 @@ namespace CrmDataGeneration.Soap {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ExpenseClaimTaxDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(SalesPricesWorksheetDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ShippingTermDetail[]))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(AccountByPeriodRow[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(DiscountCustomerPriceClassesDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(DiscountCustomerDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(DiscountBreakpointDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(DiscountItemPriceClassesDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(DiscountItemDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(DiscountWarehouseDetail[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(AccountByPeriodRow[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InterBranchAccountMappingTransactionInDestinationBranchDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InterBranchAccountMappingTransactionInSourceBranchDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(WarehouseLocation[]))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ExpenseReceiptTaxDetails[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(EventAttendee[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(EventRelatedActivity[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ExpenseReceiptTaxDetails[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ShipViaFreightRate[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ShippingBox[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(JournalTransactionDetail[]))]
@@ -1088,22 +1096,21 @@ namespace CrmDataGeneration.Soap {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(CaseRelatedCase[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InventoryReceiptDetailAllocation[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(EmailProcessingRow[]))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(KitAssemblyStockComponentAllocation[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(JournalVoucherDetailAPDocumentToApply[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(JournalVoucherDetailARDocumentToApply[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(JournalVoucherDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(JournalVoucherGLTransaction[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(KitAssemblyStockComponentAllocation[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(LotSerialClassSegment[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ReportingGroup[]))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(TaxZoneApplicableTaxDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(PurchaseReceiptDetailAllocation[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(TaxZoneApplicableTaxDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(TaxScheduleDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(TaxZoneDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(PurchaseReceiptDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(PurchaseOrderDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InventorySummaryRow[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(PhysicalInventoryReviewDetail[]))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(FinancialPeriodDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ShipmentDetailAllocation[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InventoryReceiptDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(CheckDetail[]))]
@@ -1174,7 +1181,6 @@ namespace CrmDataGeneration.Soap {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(OpportunityDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(RelationDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ContactRoles[]))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(BusinessAccountClassAttributeDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ProjectActivity[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(Approval[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ProjectBalance[]))]
@@ -1183,6 +1189,8 @@ namespace CrmDataGeneration.Soap {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(DefaultTaskForGLAccount[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ProjectProFormaDetails[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ProjectUnionLocal[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(BusinessAccountClassAttributeDetail[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(FinancialPeriodDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(NonStockItemAttribute[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(NonStockItemSalesCategory[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(NonStockItemVendorDetail[]))]
@@ -1200,6 +1208,7 @@ namespace CrmDataGeneration.Soap {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(BusinessAccountOpportunityDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(BusinessAccountOrder[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(VendorPriceDetail[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ManageFinancialPeriodsDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(TrialBalanceDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ItemSalesCategoryMember[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(SalesPersonDetail[]))]
@@ -1215,11 +1224,11 @@ namespace CrmDataGeneration.Soap {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(OpportunityDiscount[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(OpportunityProduct[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(OpportunityTaxDetail[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(FinancialYearPeriodDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(EmployeeDelegate[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(EmploymentHistoryRecord[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(TransferOrderDetailAllocation[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(TransferOrderDetail[]))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(FinancialYearPeriodDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InvoiceApplicationsCreditMemo[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InvoiceApplicationsDefault[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InvoiceDetail[]))]
@@ -1229,19 +1238,19 @@ namespace CrmDataGeneration.Soap {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ExpenseClaimTaxDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(SalesPricesWorksheetDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ShippingTermDetail[]))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(AccountByPeriodRow[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(DiscountCustomerPriceClassesDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(DiscountCustomerDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(DiscountBreakpointDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(DiscountItemPriceClassesDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(DiscountItemDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(DiscountWarehouseDetail[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(AccountByPeriodRow[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InterBranchAccountMappingTransactionInDestinationBranchDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InterBranchAccountMappingTransactionInSourceBranchDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(WarehouseLocation[]))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ExpenseReceiptTaxDetails[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(EventAttendee[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(EventRelatedActivity[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ExpenseReceiptTaxDetails[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ShipViaFreightRate[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ShippingBox[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(JournalTransactionDetail[]))]
@@ -1250,22 +1259,21 @@ namespace CrmDataGeneration.Soap {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(CaseRelatedCase[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InventoryReceiptDetailAllocation[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(EmailProcessingRow[]))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(KitAssemblyStockComponentAllocation[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(JournalVoucherDetailAPDocumentToApply[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(JournalVoucherDetailARDocumentToApply[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(JournalVoucherDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(JournalVoucherGLTransaction[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(KitAssemblyStockComponentAllocation[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(LotSerialClassSegment[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ReportingGroup[]))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(TaxZoneApplicableTaxDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(PurchaseReceiptDetailAllocation[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(TaxZoneApplicableTaxDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(TaxScheduleDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(TaxZoneDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(PurchaseReceiptDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(PurchaseOrderDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InventorySummaryRow[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(PhysicalInventoryReviewDetail[]))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(FinancialPeriodDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ShipmentDetailAllocation[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InventoryReceiptDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(CheckDetail[]))]
@@ -1336,7 +1344,6 @@ namespace CrmDataGeneration.Soap {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(OpportunityDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(RelationDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ContactRoles[]))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(BusinessAccountClassAttributeDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ProjectActivity[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(Approval[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ProjectBalance[]))]
@@ -1345,6 +1352,8 @@ namespace CrmDataGeneration.Soap {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(DefaultTaskForGLAccount[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ProjectProFormaDetails[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ProjectUnionLocal[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(BusinessAccountClassAttributeDetail[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(FinancialPeriodDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(NonStockItemAttribute[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(NonStockItemSalesCategory[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(NonStockItemVendorDetail[]))]
@@ -1362,6 +1371,7 @@ namespace CrmDataGeneration.Soap {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(BusinessAccountOpportunityDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(BusinessAccountOrder[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(VendorPriceDetail[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ManageFinancialPeriodsDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(TrialBalanceDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ItemSalesCategoryMember[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(SalesPersonDetail[]))]
@@ -1377,11 +1387,11 @@ namespace CrmDataGeneration.Soap {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(OpportunityDiscount[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(OpportunityProduct[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(OpportunityTaxDetail[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(FinancialYearPeriodDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(EmployeeDelegate[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(EmploymentHistoryRecord[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(TransferOrderDetailAllocation[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(TransferOrderDetail[]))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(FinancialYearPeriodDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InvoiceApplicationsCreditMemo[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InvoiceApplicationsDefault[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InvoiceDetail[]))]
@@ -1391,19 +1401,19 @@ namespace CrmDataGeneration.Soap {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ExpenseClaimTaxDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(SalesPricesWorksheetDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ShippingTermDetail[]))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(AccountByPeriodRow[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(DiscountCustomerPriceClassesDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(DiscountCustomerDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(DiscountBreakpointDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(DiscountItemPriceClassesDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(DiscountItemDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(DiscountWarehouseDetail[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(AccountByPeriodRow[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InterBranchAccountMappingTransactionInDestinationBranchDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InterBranchAccountMappingTransactionInSourceBranchDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(WarehouseLocation[]))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ExpenseReceiptTaxDetails[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(EventAttendee[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(EventRelatedActivity[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ExpenseReceiptTaxDetails[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ShipViaFreightRate[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ShippingBox[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(JournalTransactionDetail[]))]
@@ -1412,22 +1422,21 @@ namespace CrmDataGeneration.Soap {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(CaseRelatedCase[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InventoryReceiptDetailAllocation[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(EmailProcessingRow[]))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(KitAssemblyStockComponentAllocation[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(JournalVoucherDetailAPDocumentToApply[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(JournalVoucherDetailARDocumentToApply[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(JournalVoucherDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(JournalVoucherGLTransaction[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(KitAssemblyStockComponentAllocation[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(LotSerialClassSegment[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ReportingGroup[]))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(TaxZoneApplicableTaxDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(PurchaseReceiptDetailAllocation[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(TaxZoneApplicableTaxDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(TaxScheduleDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(TaxZoneDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(PurchaseReceiptDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(PurchaseOrderDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InventorySummaryRow[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(PhysicalInventoryReviewDetail[]))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(FinancialPeriodDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ShipmentDetailAllocation[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InventoryReceiptDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(CheckDetail[]))]
@@ -1498,7 +1507,6 @@ namespace CrmDataGeneration.Soap {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(OpportunityDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(RelationDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ContactRoles[]))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(BusinessAccountClassAttributeDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ProjectActivity[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(Approval[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ProjectBalance[]))]
@@ -1507,6 +1515,8 @@ namespace CrmDataGeneration.Soap {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(DefaultTaskForGLAccount[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ProjectProFormaDetails[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ProjectUnionLocal[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(BusinessAccountClassAttributeDetail[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(FinancialPeriodDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(NonStockItemAttribute[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(NonStockItemSalesCategory[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(NonStockItemVendorDetail[]))]
@@ -1524,6 +1534,7 @@ namespace CrmDataGeneration.Soap {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(BusinessAccountOpportunityDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(BusinessAccountOrder[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(VendorPriceDetail[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ManageFinancialPeriodsDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(TrialBalanceDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ItemSalesCategoryMember[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(SalesPersonDetail[]))]
@@ -1539,11 +1550,11 @@ namespace CrmDataGeneration.Soap {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(OpportunityDiscount[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(OpportunityProduct[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(OpportunityTaxDetail[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(FinancialYearPeriodDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(EmployeeDelegate[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(EmploymentHistoryRecord[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(TransferOrderDetailAllocation[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(TransferOrderDetail[]))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(FinancialYearPeriodDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InvoiceApplicationsCreditMemo[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InvoiceApplicationsDefault[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InvoiceDetail[]))]
@@ -1553,19 +1564,19 @@ namespace CrmDataGeneration.Soap {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ExpenseClaimTaxDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(SalesPricesWorksheetDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ShippingTermDetail[]))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(AccountByPeriodRow[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(DiscountCustomerPriceClassesDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(DiscountCustomerDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(DiscountBreakpointDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(DiscountItemPriceClassesDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(DiscountItemDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(DiscountWarehouseDetail[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(AccountByPeriodRow[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InterBranchAccountMappingTransactionInDestinationBranchDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InterBranchAccountMappingTransactionInSourceBranchDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(WarehouseLocation[]))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ExpenseReceiptTaxDetails[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(EventAttendee[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(EventRelatedActivity[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ExpenseReceiptTaxDetails[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ShipViaFreightRate[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ShippingBox[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(JournalTransactionDetail[]))]
@@ -1574,22 +1585,21 @@ namespace CrmDataGeneration.Soap {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(CaseRelatedCase[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InventoryReceiptDetailAllocation[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(EmailProcessingRow[]))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(KitAssemblyStockComponentAllocation[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(JournalVoucherDetailAPDocumentToApply[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(JournalVoucherDetailARDocumentToApply[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(JournalVoucherDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(JournalVoucherGLTransaction[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(KitAssemblyStockComponentAllocation[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(LotSerialClassSegment[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ReportingGroup[]))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(TaxZoneApplicableTaxDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(PurchaseReceiptDetailAllocation[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(TaxZoneApplicableTaxDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(TaxScheduleDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(TaxZoneDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(PurchaseReceiptDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(PurchaseOrderDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InventorySummaryRow[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(PhysicalInventoryReviewDetail[]))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(FinancialPeriodDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ShipmentDetailAllocation[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InventoryReceiptDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(CheckDetail[]))]
@@ -1660,7 +1670,6 @@ namespace CrmDataGeneration.Soap {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(OpportunityDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(RelationDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ContactRoles[]))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(BusinessAccountClassAttributeDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ProjectActivity[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(Approval[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ProjectBalance[]))]
@@ -1669,6 +1678,8 @@ namespace CrmDataGeneration.Soap {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(DefaultTaskForGLAccount[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ProjectProFormaDetails[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ProjectUnionLocal[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(BusinessAccountClassAttributeDetail[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(FinancialPeriodDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(NonStockItemAttribute[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(NonStockItemSalesCategory[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(NonStockItemVendorDetail[]))]
@@ -1686,6 +1697,7 @@ namespace CrmDataGeneration.Soap {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(BusinessAccountOpportunityDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(BusinessAccountOrder[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(VendorPriceDetail[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ManageFinancialPeriodsDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(TrialBalanceDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ItemSalesCategoryMember[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(SalesPersonDetail[]))]
@@ -1701,11 +1713,11 @@ namespace CrmDataGeneration.Soap {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(OpportunityDiscount[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(OpportunityProduct[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(OpportunityTaxDetail[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(FinancialYearPeriodDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(EmployeeDelegate[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(EmploymentHistoryRecord[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(TransferOrderDetailAllocation[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(TransferOrderDetail[]))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(FinancialYearPeriodDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InvoiceApplicationsCreditMemo[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InvoiceApplicationsDefault[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InvoiceDetail[]))]
@@ -1715,19 +1727,19 @@ namespace CrmDataGeneration.Soap {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ExpenseClaimTaxDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(SalesPricesWorksheetDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ShippingTermDetail[]))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(AccountByPeriodRow[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(DiscountCustomerPriceClassesDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(DiscountCustomerDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(DiscountBreakpointDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(DiscountItemPriceClassesDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(DiscountItemDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(DiscountWarehouseDetail[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(AccountByPeriodRow[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InterBranchAccountMappingTransactionInDestinationBranchDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InterBranchAccountMappingTransactionInSourceBranchDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(WarehouseLocation[]))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ExpenseReceiptTaxDetails[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(EventAttendee[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(EventRelatedActivity[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ExpenseReceiptTaxDetails[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ShipViaFreightRate[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ShippingBox[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(JournalTransactionDetail[]))]
@@ -1736,22 +1748,21 @@ namespace CrmDataGeneration.Soap {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(CaseRelatedCase[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InventoryReceiptDetailAllocation[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(EmailProcessingRow[]))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(KitAssemblyStockComponentAllocation[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(JournalVoucherDetailAPDocumentToApply[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(JournalVoucherDetailARDocumentToApply[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(JournalVoucherDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(JournalVoucherGLTransaction[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(KitAssemblyStockComponentAllocation[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(LotSerialClassSegment[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ReportingGroup[]))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(TaxZoneApplicableTaxDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(PurchaseReceiptDetailAllocation[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(TaxZoneApplicableTaxDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(TaxScheduleDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(TaxZoneDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(PurchaseReceiptDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(PurchaseOrderDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InventorySummaryRow[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(PhysicalInventoryReviewDetail[]))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(FinancialPeriodDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ShipmentDetailAllocation[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InventoryReceiptDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(CheckDetail[]))]
@@ -1822,7 +1833,6 @@ namespace CrmDataGeneration.Soap {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(OpportunityDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(RelationDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ContactRoles[]))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(BusinessAccountClassAttributeDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ProjectActivity[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(Approval[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ProjectBalance[]))]
@@ -1831,6 +1841,8 @@ namespace CrmDataGeneration.Soap {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(DefaultTaskForGLAccount[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ProjectProFormaDetails[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ProjectUnionLocal[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(BusinessAccountClassAttributeDetail[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(FinancialPeriodDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(NonStockItemAttribute[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(NonStockItemSalesCategory[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(NonStockItemVendorDetail[]))]
@@ -1848,6 +1860,7 @@ namespace CrmDataGeneration.Soap {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(BusinessAccountOpportunityDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(BusinessAccountOrder[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(VendorPriceDetail[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ManageFinancialPeriodsDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(TrialBalanceDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ItemSalesCategoryMember[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(SalesPersonDetail[]))]
@@ -1863,11 +1876,11 @@ namespace CrmDataGeneration.Soap {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(OpportunityDiscount[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(OpportunityProduct[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(OpportunityTaxDetail[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(FinancialYearPeriodDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(EmployeeDelegate[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(EmploymentHistoryRecord[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(TransferOrderDetailAllocation[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(TransferOrderDetail[]))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(FinancialYearPeriodDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InvoiceApplicationsCreditMemo[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InvoiceApplicationsDefault[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InvoiceDetail[]))]
@@ -1877,19 +1890,19 @@ namespace CrmDataGeneration.Soap {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ExpenseClaimTaxDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(SalesPricesWorksheetDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ShippingTermDetail[]))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(AccountByPeriodRow[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(DiscountCustomerPriceClassesDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(DiscountCustomerDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(DiscountBreakpointDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(DiscountItemPriceClassesDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(DiscountItemDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(DiscountWarehouseDetail[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(AccountByPeriodRow[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InterBranchAccountMappingTransactionInDestinationBranchDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InterBranchAccountMappingTransactionInSourceBranchDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(WarehouseLocation[]))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ExpenseReceiptTaxDetails[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(EventAttendee[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(EventRelatedActivity[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ExpenseReceiptTaxDetails[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ShipViaFreightRate[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ShippingBox[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(JournalTransactionDetail[]))]
@@ -1898,22 +1911,21 @@ namespace CrmDataGeneration.Soap {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(CaseRelatedCase[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InventoryReceiptDetailAllocation[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(EmailProcessingRow[]))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(KitAssemblyStockComponentAllocation[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(JournalVoucherDetailAPDocumentToApply[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(JournalVoucherDetailARDocumentToApply[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(JournalVoucherDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(JournalVoucherGLTransaction[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(KitAssemblyStockComponentAllocation[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(LotSerialClassSegment[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ReportingGroup[]))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(TaxZoneApplicableTaxDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(PurchaseReceiptDetailAllocation[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(TaxZoneApplicableTaxDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(TaxScheduleDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(TaxZoneDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(PurchaseReceiptDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(PurchaseOrderDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InventorySummaryRow[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(PhysicalInventoryReviewDetail[]))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(FinancialPeriodDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ShipmentDetailAllocation[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InventoryReceiptDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(CheckDetail[]))]
@@ -1984,7 +1996,6 @@ namespace CrmDataGeneration.Soap {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(OpportunityDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(RelationDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ContactRoles[]))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(BusinessAccountClassAttributeDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ProjectActivity[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(Approval[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ProjectBalance[]))]
@@ -1993,6 +2004,8 @@ namespace CrmDataGeneration.Soap {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(DefaultTaskForGLAccount[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ProjectProFormaDetails[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ProjectUnionLocal[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(BusinessAccountClassAttributeDetail[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(FinancialPeriodDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(NonStockItemAttribute[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(NonStockItemSalesCategory[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(NonStockItemVendorDetail[]))]
@@ -2010,6 +2023,7 @@ namespace CrmDataGeneration.Soap {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(BusinessAccountOpportunityDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(BusinessAccountOrder[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(VendorPriceDetail[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ManageFinancialPeriodsDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(TrialBalanceDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ItemSalesCategoryMember[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(SalesPersonDetail[]))]
@@ -2025,11 +2039,11 @@ namespace CrmDataGeneration.Soap {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(OpportunityDiscount[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(OpportunityProduct[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(OpportunityTaxDetail[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(FinancialYearPeriodDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(EmployeeDelegate[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(EmploymentHistoryRecord[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(TransferOrderDetailAllocation[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(TransferOrderDetail[]))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(FinancialYearPeriodDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InvoiceApplicationsCreditMemo[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InvoiceApplicationsDefault[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InvoiceDetail[]))]
@@ -2039,19 +2053,19 @@ namespace CrmDataGeneration.Soap {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ExpenseClaimTaxDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(SalesPricesWorksheetDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ShippingTermDetail[]))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(AccountByPeriodRow[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(DiscountCustomerPriceClassesDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(DiscountCustomerDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(DiscountBreakpointDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(DiscountItemPriceClassesDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(DiscountItemDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(DiscountWarehouseDetail[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(AccountByPeriodRow[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InterBranchAccountMappingTransactionInDestinationBranchDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InterBranchAccountMappingTransactionInSourceBranchDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(WarehouseLocation[]))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ExpenseReceiptTaxDetails[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(EventAttendee[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(EventRelatedActivity[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ExpenseReceiptTaxDetails[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ShipViaFreightRate[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ShippingBox[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(JournalTransactionDetail[]))]
@@ -2060,22 +2074,21 @@ namespace CrmDataGeneration.Soap {
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(CaseRelatedCase[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InventoryReceiptDetailAllocation[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(EmailProcessingRow[]))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(KitAssemblyStockComponentAllocation[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(JournalVoucherDetailAPDocumentToApply[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(JournalVoucherDetailARDocumentToApply[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(JournalVoucherDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(JournalVoucherGLTransaction[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(KitAssemblyStockComponentAllocation[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(LotSerialClassSegment[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ReportingGroup[]))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(TaxZoneApplicableTaxDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(PurchaseReceiptDetailAllocation[]))]
+        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(TaxZoneApplicableTaxDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(TaxScheduleDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(TaxZoneDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(PurchaseReceiptDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(PurchaseOrderDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InventorySummaryRow[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(PhysicalInventoryReviewDetail[]))]
-        [System.ServiceModel.ServiceKnownTypeAttribute(typeof(FinancialPeriodDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(ShipmentDetailAllocation[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(InventoryReceiptDetail[]))]
         [System.ServiceModel.ServiceKnownTypeAttribute(typeof(CheckDetail[]))]
@@ -2194,27 +2207,27 @@ namespace CrmDataGeneration.Soap {
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(ShipmentPackage))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(Currency))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(Tax))]
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(PurchaseReceiptDetailAllocation))]
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(PurchaseReceiptDetail))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(TaxZoneApplicableTaxDetail))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(TaxZone))]
+    [System.Xml.Serialization.XmlIncludeAttribute(typeof(PurchaseReceiptDetailAllocation))]
+    [System.Xml.Serialization.XmlIncludeAttribute(typeof(PurchaseReceiptDetail))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(Activity))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(ReportingSettings))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(TimeActivity))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(LotSerialClass))]
+    [System.Xml.Serialization.XmlIncludeAttribute(typeof(KitAssemblyStockComponent))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(JournalVoucherGLTransaction))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(JournalVoucherDetailAPDocumentToApply))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(JournalVoucherDetail))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(JournalVoucher))]
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(KitAssemblyStockComponent))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(ProFormaFinancialDetails))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(Lead))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(TaskTimeActivity))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(Subaccount))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(SalesInvoiceDetail))]
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(Salesperson))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(EmailProcessingRow))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(EmailProcessing))]
+    [System.Xml.Serialization.XmlIncludeAttribute(typeof(Salesperson))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(StatementCycle))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(InventoryReceiptDetail))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(CaseRelatedCase))]
@@ -2231,12 +2244,12 @@ namespace CrmDataGeneration.Soap {
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(ShippingBox))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(ShipViaFreightRate))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(ShipVia))]
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(EventTimeActivity))]
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(EventRelatedActivity))]
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(Event))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(ExpenseReceiptTaxDetails))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(ExpenseReceiptDetails))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(ExpenseReceipt))]
+    [System.Xml.Serialization.XmlIncludeAttribute(typeof(EventTimeActivity))]
+    [System.Xml.Serialization.XmlIncludeAttribute(typeof(EventRelatedActivity))]
+    [System.Xml.Serialization.XmlIncludeAttribute(typeof(Event))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(WarehouseLocation))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(Warehouse))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(AllocationRule))]
@@ -2247,7 +2260,7 @@ namespace CrmDataGeneration.Soap {
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(PaymentMethodAllowedCashAccountDetail))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(ShipmentOrderDetail))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(TaxZoneDetail))]
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(ProgressBilling))]
+    [System.Xml.Serialization.XmlIncludeAttribute(typeof(AccountByPeriodInquiry))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(DiscountWarehouseDetail))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(DiscountItemDetail))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(DiscountItemPriceClassesDetail))]
@@ -2255,7 +2268,7 @@ namespace CrmDataGeneration.Soap {
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(DiscountCustomerDetail))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(DiscountCustomerPriceClassesDetail))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(Discount))]
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(AccountByPeriodInquiry))]
+    [System.Xml.Serialization.XmlIncludeAttribute(typeof(ProgressBilling))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(EventAttendee))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(ShippingTermDetail))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(ShippingTerm))]
@@ -2266,23 +2279,22 @@ namespace CrmDataGeneration.Soap {
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(CustomerPriceClass))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(AttributeDefinitionValue))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(KitAssemblyStockComponentAllocation))]
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(SalesPriceWorksheet))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(InterBranchAccountMappingTransactionInDestinationBranchDetail))]
+    [System.Xml.Serialization.XmlIncludeAttribute(typeof(SalesPriceWorksheet))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(ExpenseClaimTaxDetail))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(ExpenseClaimAPDocument))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(ExpenseClaimFinancialDetail))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(ExpenseClaim))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(AccountByPeriodRow))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(ProjectTemplate))]
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(AccountBySubaccountRow))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(InvoiceDetail))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(InvoiceApplicationsDefault))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(InvoiceApplicationsCreditMemo))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(Invoice))]
+    [System.Xml.Serialization.XmlIncludeAttribute(typeof(AccountBySubaccountRow))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(JournalVoucherDetailARDocumentToApply))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(UnionLocal))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(VoucherEntryCode))]
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(FinancialYear))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(TransferOrderDetailAllocation))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(TransferOrderDetail))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(TransferOrder))]
@@ -2290,8 +2302,9 @@ namespace CrmDataGeneration.Soap {
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(EmployeeSettings))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(EmployeeDelegate))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(Employee))]
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(InventoryReceiptDetailAllocation))]
+    [System.Xml.Serialization.XmlIncludeAttribute(typeof(FinancialYear))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(ItemClassAtrribute))]
+    [System.Xml.Serialization.XmlIncludeAttribute(typeof(InventoryReceiptDetailAllocation))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(SalesPriceDetail))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(OpportunityTaxDetail))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(OpportunityProduct))]
@@ -2324,6 +2337,8 @@ namespace CrmDataGeneration.Soap {
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(ItemSalesCategoryMember))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(ItemSalesCategory))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(TrialBalance))]
+    [System.Xml.Serialization.XmlIncludeAttribute(typeof(ManageFinancialPeriodsDetail))]
+    [System.Xml.Serialization.XmlIncludeAttribute(typeof(ManageFinancialPeriods))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(VendorPriceDetail))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(VendorPricesInquiry))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(OpportunityDiscount))]
@@ -2339,17 +2354,16 @@ namespace CrmDataGeneration.Soap {
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(BusinessAccountCaseDetail))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(BusinessAccountActivityDetail))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(BusinessAccount))]
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(SalesPricesWorksheetDetail))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(ShippingZones))]
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(CommonTask))]
+    [System.Xml.Serialization.XmlIncludeAttribute(typeof(SalesPricesWorksheetDetail))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(CarrierPluginParameter))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(Carrier))]
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(InventoryAllocationRow))]
+    [System.Xml.Serialization.XmlIncludeAttribute(typeof(CommonTask))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(ProjectBillingDetails))]
+    [System.Xml.Serialization.XmlIncludeAttribute(typeof(InventoryAllocationRow))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(CashSale))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(ProjectTransactionDetail))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(CheckDetail))]
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(FinancialPeriodDetail))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(ProjectTaskProperties))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(ProjectTaskDefaultValues))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(ProjectTaskToCRMLink))]
@@ -2360,11 +2374,14 @@ namespace CrmDataGeneration.Soap {
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(AdjustmentDetail))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(Adjustment))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(BusinessAccountOrder))]
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(BillTaxDetail))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(NonStockItemVendorDetail))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(NonStockItemSalesCategory))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(NonStockItemAttribute))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(NonStockItem))]
+    [System.Xml.Serialization.XmlIncludeAttribute(typeof(BillTaxDetail))]
+    [System.Xml.Serialization.XmlIncludeAttribute(typeof(FinancialPeriodDetail))]
+    [System.Xml.Serialization.XmlIncludeAttribute(typeof(CompanyFinancialPeriod))]
+    [System.Xml.Serialization.XmlIncludeAttribute(typeof(CustomerClass))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(VisibilitySettings))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(ProjectUnionLocal))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(ProjectProperties))]
@@ -2380,7 +2397,6 @@ namespace CrmDataGeneration.Soap {
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(Approval))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(ProjectActivity))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(Project))]
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(CustomerClass))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(Account))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(PurchaseSettings))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(TrialBalanceDetail))]
@@ -2669,6 +2685,11 @@ namespace CrmDataGeneration.Soap {
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(TakeCase))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(ReleaseCase))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(ReleaseJournalTransaction))]
+    [System.Xml.Serialization.XmlIncludeAttribute(typeof(ClaimExpenseReceipt))]
+    [System.Xml.Serialization.XmlIncludeAttribute(typeof(PutOnHoldExpenseReceipt))]
+    [System.Xml.Serialization.XmlIncludeAttribute(typeof(RejectExpenseReceipt))]
+    [System.Xml.Serialization.XmlIncludeAttribute(typeof(ApproveExpenseReceipt))]
+    [System.Xml.Serialization.XmlIncludeAttribute(typeof(SubmitExpenseReceipt))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(LinkEntityToEvent))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(InviteEvent))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(InviteAllEvent))]
@@ -2678,11 +2699,6 @@ namespace CrmDataGeneration.Soap {
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(CompleteEvent))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(CancelActivityEvent))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(AcceptInvitationEvent))]
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(ClaimExpenseReceipt))]
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(PutOnHoldExpenseReceipt))]
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(RejectExpenseReceipt))]
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(ApproveExpenseReceipt))]
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(SubmitExpenseReceipt))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(UpdateDiscounts))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(ReleaseSalesPriceWorksheet))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(PutOnHoldExpenseClaim))]
@@ -2705,6 +2721,8 @@ namespace CrmDataGeneration.Soap {
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(ReleaseTrialBalance))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(TrialBalanceProcessAll))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(TrialBalanceProcess))]
+    [System.Xml.Serialization.XmlIncludeAttribute(typeof(ProcessAllManageFinancialPeriods))]
+    [System.Xml.Serialization.XmlIncludeAttribute(typeof(ProcessManageFinancialPeriods))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(CheckForBusinessAccountDuplicates))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(ChangeBusinessAccountID))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(ValidateBusinessAccountAddresses))]
@@ -3683,6 +3701,51 @@ namespace CrmDataGeneration.Soap {
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.acumatica.com/entity/3/Default/18.200.001/")]
+    public partial class ClaimExpenseReceipt : Action {
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.acumatica.com/entity/3/Default/18.200.001/")]
+    public partial class PutOnHoldExpenseReceipt : Action {
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.acumatica.com/entity/3/Default/18.200.001/")]
+    public partial class RejectExpenseReceipt : Action {
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.acumatica.com/entity/3/Default/18.200.001/")]
+    public partial class ApproveExpenseReceipt : Action {
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.acumatica.com/entity/3/Default/18.200.001/")]
+    public partial class SubmitExpenseReceipt : Action {
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.acumatica.com/entity/3/Default/18.200.001/")]
     public partial class LinkEntityToEvent : Action {
         
         private StringValue relatedEntityField;
@@ -3784,51 +3847,6 @@ namespace CrmDataGeneration.Soap {
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.acumatica.com/entity/3/Default/18.200.001/")]
     public partial class AcceptInvitationEvent : Action {
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.acumatica.com/entity/3/Default/18.200.001/")]
-    public partial class ClaimExpenseReceipt : Action {
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.acumatica.com/entity/3/Default/18.200.001/")]
-    public partial class PutOnHoldExpenseReceipt : Action {
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.acumatica.com/entity/3/Default/18.200.001/")]
-    public partial class RejectExpenseReceipt : Action {
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.acumatica.com/entity/3/Default/18.200.001/")]
-    public partial class ApproveExpenseReceipt : Action {
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.acumatica.com/entity/3/Default/18.200.001/")]
-    public partial class SubmitExpenseReceipt : Action {
     }
     
     /// <remarks/>
@@ -4373,6 +4391,24 @@ namespace CrmDataGeneration.Soap {
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.acumatica.com/entity/3/Default/18.200.001/")]
     public partial class TrialBalanceProcess : Action {
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.acumatica.com/entity/3/Default/18.200.001/")]
+    public partial class ProcessAllManageFinancialPeriods : Action {
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.acumatica.com/entity/3/Default/18.200.001/")]
+    public partial class ProcessManageFinancialPeriods : Action {
     }
     
     /// <remarks/>
@@ -8879,99 +8915,6 @@ namespace CrmDataGeneration.Soap {
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.acumatica.com/entity/3/Default/18.200.001/")]
-    public partial class BusinessAccountClassAttributeDetail : Entity {
-        
-        private BooleanValue activeField;
-        
-        private StringValue attributeIDField;
-        
-        private StringValue defaultValueField;
-        
-        private StringValue descriptionField;
-        
-        private BooleanValue requiredField;
-        
-        private ShortValue sortOrderField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=0)]
-        public BooleanValue Active {
-            get {
-                return this.activeField;
-            }
-            set {
-                this.activeField = value;
-                this.RaisePropertyChanged("Active");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=1)]
-        public StringValue AttributeID {
-            get {
-                return this.attributeIDField;
-            }
-            set {
-                this.attributeIDField = value;
-                this.RaisePropertyChanged("AttributeID");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=2)]
-        public StringValue DefaultValue {
-            get {
-                return this.defaultValueField;
-            }
-            set {
-                this.defaultValueField = value;
-                this.RaisePropertyChanged("DefaultValue");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=3)]
-        public StringValue Description {
-            get {
-                return this.descriptionField;
-            }
-            set {
-                this.descriptionField = value;
-                this.RaisePropertyChanged("Description");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=4)]
-        public BooleanValue Required {
-            get {
-                return this.requiredField;
-            }
-            set {
-                this.requiredField = value;
-                this.RaisePropertyChanged("Required");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=5)]
-        public ShortValue SortOrder {
-            get {
-                return this.sortOrderField;
-            }
-            set {
-                this.sortOrderField = value;
-                this.RaisePropertyChanged("SortOrder");
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.acumatica.com/entity/3/Default/18.200.001/")]
     public partial class ProjectActivity : Entity {
         
         private BooleanValue billableField;
@@ -10000,6 +9943,290 @@ namespace CrmDataGeneration.Soap {
             set {
                 this.unionLocalIDField = value;
                 this.RaisePropertyChanged("UnionLocalID");
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.acumatica.com/entity/3/Default/18.200.001/")]
+    public partial class BusinessAccountClassAttributeDetail : Entity {
+        
+        private BooleanValue activeField;
+        
+        private StringValue attributeIDField;
+        
+        private StringValue defaultValueField;
+        
+        private StringValue descriptionField;
+        
+        private BooleanValue requiredField;
+        
+        private ShortValue sortOrderField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=0)]
+        public BooleanValue Active {
+            get {
+                return this.activeField;
+            }
+            set {
+                this.activeField = value;
+                this.RaisePropertyChanged("Active");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=1)]
+        public StringValue AttributeID {
+            get {
+                return this.attributeIDField;
+            }
+            set {
+                this.attributeIDField = value;
+                this.RaisePropertyChanged("AttributeID");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=2)]
+        public StringValue DefaultValue {
+            get {
+                return this.defaultValueField;
+            }
+            set {
+                this.defaultValueField = value;
+                this.RaisePropertyChanged("DefaultValue");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=3)]
+        public StringValue Description {
+            get {
+                return this.descriptionField;
+            }
+            set {
+                this.descriptionField = value;
+                this.RaisePropertyChanged("Description");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=4)]
+        public BooleanValue Required {
+            get {
+                return this.requiredField;
+            }
+            set {
+                this.requiredField = value;
+                this.RaisePropertyChanged("Required");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=5)]
+        public ShortValue SortOrder {
+            get {
+                return this.sortOrderField;
+            }
+            set {
+                this.sortOrderField = value;
+                this.RaisePropertyChanged("SortOrder");
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.acumatica.com/entity/3/Default/18.200.001/")]
+    public partial class FinancialPeriodDetail : Entity {
+        
+        private BooleanValue adjustmentPeriodField;
+        
+        private BooleanValue closedInAPField;
+        
+        private BooleanValue closedInARField;
+        
+        private BooleanValue closedInCAField;
+        
+        private BooleanValue closedInFAField;
+        
+        private BooleanValue closedInINField;
+        
+        private StringValue descriptionField;
+        
+        private DateTimeValue endDateField;
+        
+        private StringValue financialPeriodIDField;
+        
+        private IntValue lengthInDaysField;
+        
+        private StringValue periodNbrField;
+        
+        private DateTimeValue startDateField;
+        
+        private StringValue statusField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=0)]
+        public BooleanValue AdjustmentPeriod {
+            get {
+                return this.adjustmentPeriodField;
+            }
+            set {
+                this.adjustmentPeriodField = value;
+                this.RaisePropertyChanged("AdjustmentPeriod");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=1)]
+        public BooleanValue ClosedInAP {
+            get {
+                return this.closedInAPField;
+            }
+            set {
+                this.closedInAPField = value;
+                this.RaisePropertyChanged("ClosedInAP");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=2)]
+        public BooleanValue ClosedInAR {
+            get {
+                return this.closedInARField;
+            }
+            set {
+                this.closedInARField = value;
+                this.RaisePropertyChanged("ClosedInAR");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=3)]
+        public BooleanValue ClosedInCA {
+            get {
+                return this.closedInCAField;
+            }
+            set {
+                this.closedInCAField = value;
+                this.RaisePropertyChanged("ClosedInCA");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=4)]
+        public BooleanValue ClosedInFA {
+            get {
+                return this.closedInFAField;
+            }
+            set {
+                this.closedInFAField = value;
+                this.RaisePropertyChanged("ClosedInFA");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=5)]
+        public BooleanValue ClosedInIN {
+            get {
+                return this.closedInINField;
+            }
+            set {
+                this.closedInINField = value;
+                this.RaisePropertyChanged("ClosedInIN");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=6)]
+        public StringValue Description {
+            get {
+                return this.descriptionField;
+            }
+            set {
+                this.descriptionField = value;
+                this.RaisePropertyChanged("Description");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=7)]
+        public DateTimeValue EndDate {
+            get {
+                return this.endDateField;
+            }
+            set {
+                this.endDateField = value;
+                this.RaisePropertyChanged("EndDate");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=8)]
+        public StringValue FinancialPeriodID {
+            get {
+                return this.financialPeriodIDField;
+            }
+            set {
+                this.financialPeriodIDField = value;
+                this.RaisePropertyChanged("FinancialPeriodID");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=9)]
+        public IntValue LengthInDays {
+            get {
+                return this.lengthInDaysField;
+            }
+            set {
+                this.lengthInDaysField = value;
+                this.RaisePropertyChanged("LengthInDays");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=10)]
+        public StringValue PeriodNbr {
+            get {
+                return this.periodNbrField;
+            }
+            set {
+                this.periodNbrField = value;
+                this.RaisePropertyChanged("PeriodNbr");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=11)]
+        public DateTimeValue StartDate {
+            get {
+                return this.startDateField;
+            }
+            set {
+                this.startDateField = value;
+                this.RaisePropertyChanged("StartDate");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=12)]
+        public StringValue Status {
+            get {
+                return this.statusField;
+            }
+            set {
+                this.statusField = value;
+                this.RaisePropertyChanged("Status");
             }
         }
     }
@@ -12421,6 +12648,141 @@ namespace CrmDataGeneration.Soap {
             set {
                 this.vendorNameField = value;
                 this.RaisePropertyChanged("VendorName");
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.acumatica.com/entity/3/Default/18.200.001/")]
+    public partial class ManageFinancialPeriodsDetail : Entity {
+        
+        private BooleanValue closedinAPField;
+        
+        private BooleanValue closedinARField;
+        
+        private BooleanValue closedinCAField;
+        
+        private BooleanValue closedinFAField;
+        
+        private BooleanValue closedinINField;
+        
+        private StringValue descriptionDescriptionField;
+        
+        private StringValue financialPeriodIDField;
+        
+        private BooleanValue selectedField;
+        
+        private StringValue statusField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=0)]
+        public BooleanValue ClosedinAP {
+            get {
+                return this.closedinAPField;
+            }
+            set {
+                this.closedinAPField = value;
+                this.RaisePropertyChanged("ClosedinAP");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=1)]
+        public BooleanValue ClosedinAR {
+            get {
+                return this.closedinARField;
+            }
+            set {
+                this.closedinARField = value;
+                this.RaisePropertyChanged("ClosedinAR");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=2)]
+        public BooleanValue ClosedinCA {
+            get {
+                return this.closedinCAField;
+            }
+            set {
+                this.closedinCAField = value;
+                this.RaisePropertyChanged("ClosedinCA");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=3)]
+        public BooleanValue ClosedinFA {
+            get {
+                return this.closedinFAField;
+            }
+            set {
+                this.closedinFAField = value;
+                this.RaisePropertyChanged("ClosedinFA");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=4)]
+        public BooleanValue ClosedinIN {
+            get {
+                return this.closedinINField;
+            }
+            set {
+                this.closedinINField = value;
+                this.RaisePropertyChanged("ClosedinIN");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=5)]
+        public StringValue DescriptionDescription {
+            get {
+                return this.descriptionDescriptionField;
+            }
+            set {
+                this.descriptionDescriptionField = value;
+                this.RaisePropertyChanged("DescriptionDescription");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=6)]
+        public StringValue FinancialPeriodID {
+            get {
+                return this.financialPeriodIDField;
+            }
+            set {
+                this.financialPeriodIDField = value;
+                this.RaisePropertyChanged("FinancialPeriodID");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=7)]
+        public BooleanValue Selected {
+            get {
+                return this.selectedField;
+            }
+            set {
+                this.selectedField = value;
+                this.RaisePropertyChanged("Selected");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=8)]
+        public StringValue Status {
+            get {
+                return this.statusField;
+            }
+            set {
+                this.statusField = value;
+                this.RaisePropertyChanged("Status");
             }
         }
     }
@@ -15655,6 +16017,71 @@ namespace CrmDataGeneration.Soap {
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.acumatica.com/entity/3/Default/18.200.001/")]
+    public partial class FinancialYearPeriodDetail : Entity {
+        
+        private StringValue descriptionField;
+        
+        private DateTimeValue endDateField;
+        
+        private StringValue periodNbrField;
+        
+        private DateTimeValue startDateField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=0)]
+        public StringValue Description {
+            get {
+                return this.descriptionField;
+            }
+            set {
+                this.descriptionField = value;
+                this.RaisePropertyChanged("Description");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=1)]
+        public DateTimeValue EndDate {
+            get {
+                return this.endDateField;
+            }
+            set {
+                this.endDateField = value;
+                this.RaisePropertyChanged("EndDate");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=2)]
+        public StringValue PeriodNbr {
+            get {
+                return this.periodNbrField;
+            }
+            set {
+                this.periodNbrField = value;
+                this.RaisePropertyChanged("PeriodNbr");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=3)]
+        public DateTimeValue StartDate {
+            get {
+                return this.startDateField;
+            }
+            set {
+                this.startDateField = value;
+                this.RaisePropertyChanged("StartDate");
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.acumatica.com/entity/3/Default/18.200.001/")]
     public partial class EmployeeDelegate : Entity {
         
         private StringValue delegateField;
@@ -16073,71 +16500,6 @@ namespace CrmDataGeneration.Soap {
             set {
                 this.uOMField = value;
                 this.RaisePropertyChanged("UOM");
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.acumatica.com/entity/3/Default/18.200.001/")]
-    public partial class FinancialYearPeriodDetail : Entity {
-        
-        private StringValue descriptionField;
-        
-        private DateTimeValue endDateField;
-        
-        private StringValue periodNbrField;
-        
-        private DateTimeValue startDateField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=0)]
-        public StringValue Description {
-            get {
-                return this.descriptionField;
-            }
-            set {
-                this.descriptionField = value;
-                this.RaisePropertyChanged("Description");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=1)]
-        public DateTimeValue EndDate {
-            get {
-                return this.endDateField;
-            }
-            set {
-                this.endDateField = value;
-                this.RaisePropertyChanged("EndDate");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=2)]
-        public StringValue PeriodNbr {
-            get {
-                return this.periodNbrField;
-            }
-            set {
-                this.periodNbrField = value;
-                this.RaisePropertyChanged("PeriodNbr");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=3)]
-        public DateTimeValue StartDate {
-            get {
-                return this.startDateField;
-            }
-            set {
-                this.startDateField = value;
-                this.RaisePropertyChanged("StartDate");
             }
         }
     }
@@ -17643,197 +18005,6 @@ namespace CrmDataGeneration.Soap {
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.acumatica.com/entity/3/Default/18.200.001/")]
-    public partial class AccountByPeriodRow : Entity {
-        
-        private DecimalValue beginingBalanceField;
-        
-        private DecimalValue creditTotalField;
-        
-        private DecimalValue currencyBeginingBalanceField;
-        
-        private DecimalValue currencyCreditTotalField;
-        
-        private DecimalValue currencyDebitTotalField;
-        
-        private DecimalValue currencyEndingBalanceField;
-        
-        private StringValue currencyIDField;
-        
-        private DecimalValue currencyPtdTotalField;
-        
-        private DecimalValue debitTotalField;
-        
-        private DecimalValue endingBalanceField;
-        
-        private IntValue ledgerIDField;
-        
-        private StringValue periodField;
-        
-        private DecimalValue ptdTotalField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=0)]
-        public DecimalValue BeginingBalance {
-            get {
-                return this.beginingBalanceField;
-            }
-            set {
-                this.beginingBalanceField = value;
-                this.RaisePropertyChanged("BeginingBalance");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=1)]
-        public DecimalValue CreditTotal {
-            get {
-                return this.creditTotalField;
-            }
-            set {
-                this.creditTotalField = value;
-                this.RaisePropertyChanged("CreditTotal");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=2)]
-        public DecimalValue CurrencyBeginingBalance {
-            get {
-                return this.currencyBeginingBalanceField;
-            }
-            set {
-                this.currencyBeginingBalanceField = value;
-                this.RaisePropertyChanged("CurrencyBeginingBalance");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=3)]
-        public DecimalValue CurrencyCreditTotal {
-            get {
-                return this.currencyCreditTotalField;
-            }
-            set {
-                this.currencyCreditTotalField = value;
-                this.RaisePropertyChanged("CurrencyCreditTotal");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=4)]
-        public DecimalValue CurrencyDebitTotal {
-            get {
-                return this.currencyDebitTotalField;
-            }
-            set {
-                this.currencyDebitTotalField = value;
-                this.RaisePropertyChanged("CurrencyDebitTotal");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=5)]
-        public DecimalValue CurrencyEndingBalance {
-            get {
-                return this.currencyEndingBalanceField;
-            }
-            set {
-                this.currencyEndingBalanceField = value;
-                this.RaisePropertyChanged("CurrencyEndingBalance");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=6)]
-        public StringValue CurrencyID {
-            get {
-                return this.currencyIDField;
-            }
-            set {
-                this.currencyIDField = value;
-                this.RaisePropertyChanged("CurrencyID");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=7)]
-        public DecimalValue CurrencyPtdTotal {
-            get {
-                return this.currencyPtdTotalField;
-            }
-            set {
-                this.currencyPtdTotalField = value;
-                this.RaisePropertyChanged("CurrencyPtdTotal");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=8)]
-        public DecimalValue DebitTotal {
-            get {
-                return this.debitTotalField;
-            }
-            set {
-                this.debitTotalField = value;
-                this.RaisePropertyChanged("DebitTotal");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=9)]
-        public DecimalValue EndingBalance {
-            get {
-                return this.endingBalanceField;
-            }
-            set {
-                this.endingBalanceField = value;
-                this.RaisePropertyChanged("EndingBalance");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=10)]
-        public IntValue LedgerID {
-            get {
-                return this.ledgerIDField;
-            }
-            set {
-                this.ledgerIDField = value;
-                this.RaisePropertyChanged("LedgerID");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=11)]
-        public StringValue Period {
-            get {
-                return this.periodField;
-            }
-            set {
-                this.periodField = value;
-                this.RaisePropertyChanged("Period");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=12)]
-        public DecimalValue PtdTotal {
-            get {
-                return this.ptdTotalField;
-            }
-            set {
-                this.ptdTotalField = value;
-                this.RaisePropertyChanged("PtdTotal");
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.acumatica.com/entity/3/Default/18.200.001/")]
     public partial class DiscountCustomerPriceClassesDetail : Entity {
         
         private StringValue priceClassIDField;
@@ -18238,6 +18409,197 @@ namespace CrmDataGeneration.Soap {
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.acumatica.com/entity/3/Default/18.200.001/")]
+    public partial class AccountByPeriodRow : Entity {
+        
+        private DecimalValue beginingBalanceField;
+        
+        private DecimalValue creditTotalField;
+        
+        private DecimalValue currencyBeginingBalanceField;
+        
+        private DecimalValue currencyCreditTotalField;
+        
+        private DecimalValue currencyDebitTotalField;
+        
+        private DecimalValue currencyEndingBalanceField;
+        
+        private StringValue currencyIDField;
+        
+        private DecimalValue currencyPtdTotalField;
+        
+        private DecimalValue debitTotalField;
+        
+        private DecimalValue endingBalanceField;
+        
+        private IntValue ledgerIDField;
+        
+        private StringValue periodField;
+        
+        private DecimalValue ptdTotalField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=0)]
+        public DecimalValue BeginingBalance {
+            get {
+                return this.beginingBalanceField;
+            }
+            set {
+                this.beginingBalanceField = value;
+                this.RaisePropertyChanged("BeginingBalance");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=1)]
+        public DecimalValue CreditTotal {
+            get {
+                return this.creditTotalField;
+            }
+            set {
+                this.creditTotalField = value;
+                this.RaisePropertyChanged("CreditTotal");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=2)]
+        public DecimalValue CurrencyBeginingBalance {
+            get {
+                return this.currencyBeginingBalanceField;
+            }
+            set {
+                this.currencyBeginingBalanceField = value;
+                this.RaisePropertyChanged("CurrencyBeginingBalance");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=3)]
+        public DecimalValue CurrencyCreditTotal {
+            get {
+                return this.currencyCreditTotalField;
+            }
+            set {
+                this.currencyCreditTotalField = value;
+                this.RaisePropertyChanged("CurrencyCreditTotal");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=4)]
+        public DecimalValue CurrencyDebitTotal {
+            get {
+                return this.currencyDebitTotalField;
+            }
+            set {
+                this.currencyDebitTotalField = value;
+                this.RaisePropertyChanged("CurrencyDebitTotal");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=5)]
+        public DecimalValue CurrencyEndingBalance {
+            get {
+                return this.currencyEndingBalanceField;
+            }
+            set {
+                this.currencyEndingBalanceField = value;
+                this.RaisePropertyChanged("CurrencyEndingBalance");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=6)]
+        public StringValue CurrencyID {
+            get {
+                return this.currencyIDField;
+            }
+            set {
+                this.currencyIDField = value;
+                this.RaisePropertyChanged("CurrencyID");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=7)]
+        public DecimalValue CurrencyPtdTotal {
+            get {
+                return this.currencyPtdTotalField;
+            }
+            set {
+                this.currencyPtdTotalField = value;
+                this.RaisePropertyChanged("CurrencyPtdTotal");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=8)]
+        public DecimalValue DebitTotal {
+            get {
+                return this.debitTotalField;
+            }
+            set {
+                this.debitTotalField = value;
+                this.RaisePropertyChanged("DebitTotal");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=9)]
+        public DecimalValue EndingBalance {
+            get {
+                return this.endingBalanceField;
+            }
+            set {
+                this.endingBalanceField = value;
+                this.RaisePropertyChanged("EndingBalance");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=10)]
+        public IntValue LedgerID {
+            get {
+                return this.ledgerIDField;
+            }
+            set {
+                this.ledgerIDField = value;
+                this.RaisePropertyChanged("LedgerID");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=11)]
+        public StringValue Period {
+            get {
+                return this.periodField;
+            }
+            set {
+                this.periodField = value;
+                this.RaisePropertyChanged("Period");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=12)]
+        public DecimalValue PtdTotal {
+            get {
+                return this.ptdTotalField;
+            }
+            set {
+                this.ptdTotalField = value;
+                this.RaisePropertyChanged("PtdTotal");
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.acumatica.com/entity/3/Default/18.200.001/")]
     public partial class InterBranchAccountMappingTransactionInDestinationBranchDetail : Entity {
         
         private StringValue accountFromField;
@@ -18573,169 +18935,6 @@ namespace CrmDataGeneration.Soap {
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.acumatica.com/entity/3/Default/18.200.001/")]
-    public partial class ExpenseReceiptTaxDetails : Entity {
-        
-        private DecimalValue deductibleTaxRateField;
-        
-        private DecimalValue expenseAmountField;
-        
-        private BooleanValue includeInVATExemptTotalField;
-        
-        private BooleanValue pendingVATField;
-        
-        private BooleanValue reverseVATField;
-        
-        private BooleanValue statisticalVATField;
-        
-        private DecimalValue taxableAmountField;
-        
-        private DecimalValue taxAmountField;
-        
-        private StringValue taxIDField;
-        
-        private DecimalValue taxRateField;
-        
-        private StringValue taxTypeField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=0)]
-        public DecimalValue DeductibleTaxRate {
-            get {
-                return this.deductibleTaxRateField;
-            }
-            set {
-                this.deductibleTaxRateField = value;
-                this.RaisePropertyChanged("DeductibleTaxRate");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=1)]
-        public DecimalValue ExpenseAmount {
-            get {
-                return this.expenseAmountField;
-            }
-            set {
-                this.expenseAmountField = value;
-                this.RaisePropertyChanged("ExpenseAmount");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=2)]
-        public BooleanValue IncludeInVATExemptTotal {
-            get {
-                return this.includeInVATExemptTotalField;
-            }
-            set {
-                this.includeInVATExemptTotalField = value;
-                this.RaisePropertyChanged("IncludeInVATExemptTotal");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=3)]
-        public BooleanValue PendingVAT {
-            get {
-                return this.pendingVATField;
-            }
-            set {
-                this.pendingVATField = value;
-                this.RaisePropertyChanged("PendingVAT");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=4)]
-        public BooleanValue ReverseVAT {
-            get {
-                return this.reverseVATField;
-            }
-            set {
-                this.reverseVATField = value;
-                this.RaisePropertyChanged("ReverseVAT");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=5)]
-        public BooleanValue StatisticalVAT {
-            get {
-                return this.statisticalVATField;
-            }
-            set {
-                this.statisticalVATField = value;
-                this.RaisePropertyChanged("StatisticalVAT");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=6)]
-        public DecimalValue TaxableAmount {
-            get {
-                return this.taxableAmountField;
-            }
-            set {
-                this.taxableAmountField = value;
-                this.RaisePropertyChanged("TaxableAmount");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=7)]
-        public DecimalValue TaxAmount {
-            get {
-                return this.taxAmountField;
-            }
-            set {
-                this.taxAmountField = value;
-                this.RaisePropertyChanged("TaxAmount");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=8)]
-        public StringValue TaxID {
-            get {
-                return this.taxIDField;
-            }
-            set {
-                this.taxIDField = value;
-                this.RaisePropertyChanged("TaxID");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=9)]
-        public DecimalValue TaxRate {
-            get {
-                return this.taxRateField;
-            }
-            set {
-                this.taxRateField = value;
-                this.RaisePropertyChanged("TaxRate");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=10)]
-        public StringValue TaxType {
-            get {
-                return this.taxTypeField;
-            }
-            set {
-                this.taxTypeField = value;
-                this.RaisePropertyChanged("TaxType");
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.acumatica.com/entity/3/Default/18.200.001/")]
     public partial class EventAttendee : Entity {
         
         private StringValue commentField;
@@ -18982,6 +19181,169 @@ namespace CrmDataGeneration.Soap {
             set {
                 this.typeField = value;
                 this.RaisePropertyChanged("Type");
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.acumatica.com/entity/3/Default/18.200.001/")]
+    public partial class ExpenseReceiptTaxDetails : Entity {
+        
+        private DecimalValue deductibleTaxRateField;
+        
+        private DecimalValue expenseAmountField;
+        
+        private BooleanValue includeInVATExemptTotalField;
+        
+        private BooleanValue pendingVATField;
+        
+        private BooleanValue reverseVATField;
+        
+        private BooleanValue statisticalVATField;
+        
+        private DecimalValue taxableAmountField;
+        
+        private DecimalValue taxAmountField;
+        
+        private StringValue taxIDField;
+        
+        private DecimalValue taxRateField;
+        
+        private StringValue taxTypeField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=0)]
+        public DecimalValue DeductibleTaxRate {
+            get {
+                return this.deductibleTaxRateField;
+            }
+            set {
+                this.deductibleTaxRateField = value;
+                this.RaisePropertyChanged("DeductibleTaxRate");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=1)]
+        public DecimalValue ExpenseAmount {
+            get {
+                return this.expenseAmountField;
+            }
+            set {
+                this.expenseAmountField = value;
+                this.RaisePropertyChanged("ExpenseAmount");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=2)]
+        public BooleanValue IncludeInVATExemptTotal {
+            get {
+                return this.includeInVATExemptTotalField;
+            }
+            set {
+                this.includeInVATExemptTotalField = value;
+                this.RaisePropertyChanged("IncludeInVATExemptTotal");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=3)]
+        public BooleanValue PendingVAT {
+            get {
+                return this.pendingVATField;
+            }
+            set {
+                this.pendingVATField = value;
+                this.RaisePropertyChanged("PendingVAT");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=4)]
+        public BooleanValue ReverseVAT {
+            get {
+                return this.reverseVATField;
+            }
+            set {
+                this.reverseVATField = value;
+                this.RaisePropertyChanged("ReverseVAT");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=5)]
+        public BooleanValue StatisticalVAT {
+            get {
+                return this.statisticalVATField;
+            }
+            set {
+                this.statisticalVATField = value;
+                this.RaisePropertyChanged("StatisticalVAT");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=6)]
+        public DecimalValue TaxableAmount {
+            get {
+                return this.taxableAmountField;
+            }
+            set {
+                this.taxableAmountField = value;
+                this.RaisePropertyChanged("TaxableAmount");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=7)]
+        public DecimalValue TaxAmount {
+            get {
+                return this.taxAmountField;
+            }
+            set {
+                this.taxAmountField = value;
+                this.RaisePropertyChanged("TaxAmount");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=8)]
+        public StringValue TaxID {
+            get {
+                return this.taxIDField;
+            }
+            set {
+                this.taxIDField = value;
+                this.RaisePropertyChanged("TaxID");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=9)]
+        public DecimalValue TaxRate {
+            get {
+                return this.taxRateField;
+            }
+            set {
+                this.taxRateField = value;
+                this.RaisePropertyChanged("TaxRate");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=10)]
+        public StringValue TaxType {
+            get {
+                return this.taxTypeField;
+            }
+            set {
+                this.taxTypeField = value;
+                this.RaisePropertyChanged("TaxType");
             }
         }
     }
@@ -20394,169 +20756,6 @@ namespace CrmDataGeneration.Soap {
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.acumatica.com/entity/3/Default/18.200.001/")]
-    public partial class KitAssemblyStockComponentAllocation : Entity {
-        
-        private StringValue docTypeField;
-        
-        private DateTimeValue expirationDateField;
-        
-        private StringValue inventoryIDField;
-        
-        private IntValue lineNbrField;
-        
-        private StringValue locationIDField;
-        
-        private StringValue lotSerialNbrField;
-        
-        private DecimalValue qtyField;
-        
-        private StringValue referenceNbrField;
-        
-        private IntValue splitLineNbrField;
-        
-        private StringValue subitemField;
-        
-        private StringValue uOMField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=0)]
-        public StringValue DocType {
-            get {
-                return this.docTypeField;
-            }
-            set {
-                this.docTypeField = value;
-                this.RaisePropertyChanged("DocType");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=1)]
-        public DateTimeValue ExpirationDate {
-            get {
-                return this.expirationDateField;
-            }
-            set {
-                this.expirationDateField = value;
-                this.RaisePropertyChanged("ExpirationDate");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=2)]
-        public StringValue InventoryID {
-            get {
-                return this.inventoryIDField;
-            }
-            set {
-                this.inventoryIDField = value;
-                this.RaisePropertyChanged("InventoryID");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=3)]
-        public IntValue LineNbr {
-            get {
-                return this.lineNbrField;
-            }
-            set {
-                this.lineNbrField = value;
-                this.RaisePropertyChanged("LineNbr");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=4)]
-        public StringValue LocationID {
-            get {
-                return this.locationIDField;
-            }
-            set {
-                this.locationIDField = value;
-                this.RaisePropertyChanged("LocationID");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=5)]
-        public StringValue LotSerialNbr {
-            get {
-                return this.lotSerialNbrField;
-            }
-            set {
-                this.lotSerialNbrField = value;
-                this.RaisePropertyChanged("LotSerialNbr");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=6)]
-        public DecimalValue Qty {
-            get {
-                return this.qtyField;
-            }
-            set {
-                this.qtyField = value;
-                this.RaisePropertyChanged("Qty");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=7)]
-        public StringValue ReferenceNbr {
-            get {
-                return this.referenceNbrField;
-            }
-            set {
-                this.referenceNbrField = value;
-                this.RaisePropertyChanged("ReferenceNbr");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=8)]
-        public IntValue SplitLineNbr {
-            get {
-                return this.splitLineNbrField;
-            }
-            set {
-                this.splitLineNbrField = value;
-                this.RaisePropertyChanged("SplitLineNbr");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=9)]
-        public StringValue Subitem {
-            get {
-                return this.subitemField;
-            }
-            set {
-                this.subitemField = value;
-                this.RaisePropertyChanged("Subitem");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=10)]
-        public StringValue UOM {
-            get {
-                return this.uOMField;
-            }
-            set {
-                this.uOMField = value;
-                this.RaisePropertyChanged("UOM");
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.acumatica.com/entity/3/Default/18.200.001/")]
     public partial class JournalVoucherDetailAPDocumentToApply : Entity {
         
         private StringValue docTypeField;
@@ -21433,6 +21632,169 @@ namespace CrmDataGeneration.Soap {
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.acumatica.com/entity/3/Default/18.200.001/")]
+    public partial class KitAssemblyStockComponentAllocation : Entity {
+        
+        private StringValue docTypeField;
+        
+        private DateTimeValue expirationDateField;
+        
+        private StringValue inventoryIDField;
+        
+        private IntValue lineNbrField;
+        
+        private StringValue locationIDField;
+        
+        private StringValue lotSerialNbrField;
+        
+        private DecimalValue qtyField;
+        
+        private StringValue referenceNbrField;
+        
+        private IntValue splitLineNbrField;
+        
+        private StringValue subitemField;
+        
+        private StringValue uOMField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=0)]
+        public StringValue DocType {
+            get {
+                return this.docTypeField;
+            }
+            set {
+                this.docTypeField = value;
+                this.RaisePropertyChanged("DocType");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=1)]
+        public DateTimeValue ExpirationDate {
+            get {
+                return this.expirationDateField;
+            }
+            set {
+                this.expirationDateField = value;
+                this.RaisePropertyChanged("ExpirationDate");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=2)]
+        public StringValue InventoryID {
+            get {
+                return this.inventoryIDField;
+            }
+            set {
+                this.inventoryIDField = value;
+                this.RaisePropertyChanged("InventoryID");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=3)]
+        public IntValue LineNbr {
+            get {
+                return this.lineNbrField;
+            }
+            set {
+                this.lineNbrField = value;
+                this.RaisePropertyChanged("LineNbr");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=4)]
+        public StringValue LocationID {
+            get {
+                return this.locationIDField;
+            }
+            set {
+                this.locationIDField = value;
+                this.RaisePropertyChanged("LocationID");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=5)]
+        public StringValue LotSerialNbr {
+            get {
+                return this.lotSerialNbrField;
+            }
+            set {
+                this.lotSerialNbrField = value;
+                this.RaisePropertyChanged("LotSerialNbr");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=6)]
+        public DecimalValue Qty {
+            get {
+                return this.qtyField;
+            }
+            set {
+                this.qtyField = value;
+                this.RaisePropertyChanged("Qty");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=7)]
+        public StringValue ReferenceNbr {
+            get {
+                return this.referenceNbrField;
+            }
+            set {
+                this.referenceNbrField = value;
+                this.RaisePropertyChanged("ReferenceNbr");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=8)]
+        public IntValue SplitLineNbr {
+            get {
+                return this.splitLineNbrField;
+            }
+            set {
+                this.splitLineNbrField = value;
+                this.RaisePropertyChanged("SplitLineNbr");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=9)]
+        public StringValue Subitem {
+            get {
+                return this.subitemField;
+            }
+            set {
+                this.subitemField = value;
+                this.RaisePropertyChanged("Subitem");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=10)]
+        public StringValue UOM {
+            get {
+                return this.uOMField;
+            }
+            set {
+                this.uOMField = value;
+                this.RaisePropertyChanged("UOM");
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.acumatica.com/entity/3/Default/18.200.001/")]
     public partial class LotSerialClassSegment : Entity {
         
         private ShortValue segmentNbrField;
@@ -21535,29 +21897,6 @@ namespace CrmDataGeneration.Soap {
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.acumatica.com/entity/3/Default/18.200.001/")]
-    public partial class TaxZoneApplicableTaxDetail : Entity {
-        
-        private StringValue taxIDField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=0)]
-        public StringValue TaxID {
-            get {
-                return this.taxIDField;
-            }
-            set {
-                this.taxIDField = value;
-                this.RaisePropertyChanged("TaxID");
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.acumatica.com/entity/3/Default/18.200.001/")]
     public partial class PurchaseReceiptDetailAllocation : Entity {
         
         private IntValue lineNbrField;
@@ -21641,6 +21980,29 @@ namespace CrmDataGeneration.Soap {
             set {
                 this.splitLineNbrField = value;
                 this.RaisePropertyChanged("SplitLineNbr");
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.acumatica.com/entity/3/Default/18.200.001/")]
+    public partial class TaxZoneApplicableTaxDetail : Entity {
+        
+        private StringValue taxIDField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=0)]
+        public StringValue TaxID {
+            get {
+                return this.taxIDField;
+            }
+            set {
+                this.taxIDField = value;
+                this.RaisePropertyChanged("TaxID");
             }
         }
     }
@@ -23039,225 +23401,6 @@ namespace CrmDataGeneration.Soap {
             set {
                 this.varianceQtyField = value;
                 this.RaisePropertyChanged("VarianceQty");
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.acumatica.com/entity/3/Default/18.200.001/")]
-    public partial class FinancialPeriodDetail : Entity {
-        
-        private BooleanValue activeField;
-        
-        private BooleanValue adjustmentPeriodField;
-        
-        private BooleanValue closedInAPField;
-        
-        private BooleanValue closedInARField;
-        
-        private BooleanValue closedInCAField;
-        
-        private BooleanValue closedInFAField;
-        
-        private BooleanValue closedInGLField;
-        
-        private BooleanValue closedInINField;
-        
-        private BooleanValue closedInPRField;
-        
-        private StringValue descriptionField;
-        
-        private DateTimeValue endDateField;
-        
-        private StringValue financialPeriodIDField;
-        
-        private IntValue lengthInDaysField;
-        
-        private StringValue periodNbrField;
-        
-        private DateTimeValue startDateField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=0)]
-        public BooleanValue Active {
-            get {
-                return this.activeField;
-            }
-            set {
-                this.activeField = value;
-                this.RaisePropertyChanged("Active");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=1)]
-        public BooleanValue AdjustmentPeriod {
-            get {
-                return this.adjustmentPeriodField;
-            }
-            set {
-                this.adjustmentPeriodField = value;
-                this.RaisePropertyChanged("AdjustmentPeriod");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=2)]
-        public BooleanValue ClosedInAP {
-            get {
-                return this.closedInAPField;
-            }
-            set {
-                this.closedInAPField = value;
-                this.RaisePropertyChanged("ClosedInAP");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=3)]
-        public BooleanValue ClosedInAR {
-            get {
-                return this.closedInARField;
-            }
-            set {
-                this.closedInARField = value;
-                this.RaisePropertyChanged("ClosedInAR");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=4)]
-        public BooleanValue ClosedInCA {
-            get {
-                return this.closedInCAField;
-            }
-            set {
-                this.closedInCAField = value;
-                this.RaisePropertyChanged("ClosedInCA");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=5)]
-        public BooleanValue ClosedInFA {
-            get {
-                return this.closedInFAField;
-            }
-            set {
-                this.closedInFAField = value;
-                this.RaisePropertyChanged("ClosedInFA");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=6)]
-        public BooleanValue ClosedInGL {
-            get {
-                return this.closedInGLField;
-            }
-            set {
-                this.closedInGLField = value;
-                this.RaisePropertyChanged("ClosedInGL");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=7)]
-        public BooleanValue ClosedInIN {
-            get {
-                return this.closedInINField;
-            }
-            set {
-                this.closedInINField = value;
-                this.RaisePropertyChanged("ClosedInIN");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=8)]
-        public BooleanValue ClosedInPR {
-            get {
-                return this.closedInPRField;
-            }
-            set {
-                this.closedInPRField = value;
-                this.RaisePropertyChanged("ClosedInPR");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=9)]
-        public StringValue Description {
-            get {
-                return this.descriptionField;
-            }
-            set {
-                this.descriptionField = value;
-                this.RaisePropertyChanged("Description");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=10)]
-        public DateTimeValue EndDate {
-            get {
-                return this.endDateField;
-            }
-            set {
-                this.endDateField = value;
-                this.RaisePropertyChanged("EndDate");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=11)]
-        public StringValue FinancialPeriodID {
-            get {
-                return this.financialPeriodIDField;
-            }
-            set {
-                this.financialPeriodIDField = value;
-                this.RaisePropertyChanged("FinancialPeriodID");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=12)]
-        public IntValue LengthInDays {
-            get {
-                return this.lengthInDaysField;
-            }
-            set {
-                this.lengthInDaysField = value;
-                this.RaisePropertyChanged("LengthInDays");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=13)]
-        public StringValue PeriodNbr {
-            get {
-                return this.periodNbrField;
-            }
-            set {
-                this.periodNbrField = value;
-                this.RaisePropertyChanged("PeriodNbr");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=14)]
-        public DateTimeValue StartDate {
-            get {
-                return this.startDateField;
-            }
-            set {
-                this.startDateField = value;
-                this.RaisePropertyChanged("StartDate");
             }
         }
     }
@@ -24971,7 +25114,7 @@ namespace CrmDataGeneration.Soap {
         
         private DecimalValue billedQtyField;
         
-        private StringValue branchIDField;
+        private StringValue branchField;
         
         private StringValue costCodeField;
         
@@ -24993,7 +25136,7 @@ namespace CrmDataGeneration.Soap {
         
         private StringValue projectTaskIDField;
         
-        private DecimalValue quantityToInvoiceField;
+        private DecimalValue qtyToInvoiceField;
         
         private DecimalValue retainageField;
         
@@ -25051,13 +25194,13 @@ namespace CrmDataGeneration.Soap {
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=3)]
-        public StringValue BranchID {
+        public StringValue Branch {
             get {
-                return this.branchIDField;
+                return this.branchField;
             }
             set {
-                this.branchIDField = value;
-                this.RaisePropertyChanged("BranchID");
+                this.branchField = value;
+                this.RaisePropertyChanged("Branch");
             }
         }
         
@@ -25183,13 +25326,13 @@ namespace CrmDataGeneration.Soap {
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=14)]
-        public DecimalValue QuantityToInvoice {
+        public DecimalValue QtyToInvoice {
             get {
-                return this.quantityToInvoiceField;
+                return this.qtyToInvoiceField;
             }
             set {
-                this.quantityToInvoiceField = value;
-                this.RaisePropertyChanged("QuantityToInvoice");
+                this.qtyToInvoiceField = value;
+                this.RaisePropertyChanged("QtyToInvoice");
             }
         }
         
@@ -44548,113 +44691,6 @@ namespace CrmDataGeneration.Soap {
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.acumatica.com/entity/3/Default/18.200.001/")]
-    public partial class Salesperson : Entity {
-        
-        private DateTimeValue createdDateTimeField;
-        
-        private DecimalValue defaultCommissionField;
-        
-        private BooleanValue isActiveField;
-        
-        private DateTimeValue lastModifiedDateTimeField;
-        
-        private StringValue nameField;
-        
-        private StringValue salespersonIDField;
-        
-        private StringValue salesSubaccountField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=0)]
-        public DateTimeValue CreatedDateTime {
-            get {
-                return this.createdDateTimeField;
-            }
-            set {
-                this.createdDateTimeField = value;
-                this.RaisePropertyChanged("CreatedDateTime");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=1)]
-        public DecimalValue DefaultCommission {
-            get {
-                return this.defaultCommissionField;
-            }
-            set {
-                this.defaultCommissionField = value;
-                this.RaisePropertyChanged("DefaultCommission");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=2)]
-        public BooleanValue IsActive {
-            get {
-                return this.isActiveField;
-            }
-            set {
-                this.isActiveField = value;
-                this.RaisePropertyChanged("IsActive");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=3)]
-        public DateTimeValue LastModifiedDateTime {
-            get {
-                return this.lastModifiedDateTimeField;
-            }
-            set {
-                this.lastModifiedDateTimeField = value;
-                this.RaisePropertyChanged("LastModifiedDateTime");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=4)]
-        public StringValue Name {
-            get {
-                return this.nameField;
-            }
-            set {
-                this.nameField = value;
-                this.RaisePropertyChanged("Name");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=5)]
-        public StringValue SalespersonID {
-            get {
-                return this.salespersonIDField;
-            }
-            set {
-                this.salespersonIDField = value;
-                this.RaisePropertyChanged("SalespersonID");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=6)]
-        public StringValue SalesSubaccount {
-            get {
-                return this.salesSubaccountField;
-            }
-            set {
-                this.salesSubaccountField = value;
-                this.RaisePropertyChanged("SalesSubaccount");
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.acumatica.com/entity/3/Default/18.200.001/")]
     public partial class EmailProcessing : Entity {
         
         private IntValue accountField;
@@ -44752,6 +44788,113 @@ namespace CrmDataGeneration.Soap {
             set {
                 this.typeField = value;
                 this.RaisePropertyChanged("Type");
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.acumatica.com/entity/3/Default/18.200.001/")]
+    public partial class Salesperson : Entity {
+        
+        private DateTimeValue createdDateTimeField;
+        
+        private DecimalValue defaultCommissionField;
+        
+        private BooleanValue isActiveField;
+        
+        private DateTimeValue lastModifiedDateTimeField;
+        
+        private StringValue nameField;
+        
+        private StringValue salespersonIDField;
+        
+        private StringValue salesSubaccountField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=0)]
+        public DateTimeValue CreatedDateTime {
+            get {
+                return this.createdDateTimeField;
+            }
+            set {
+                this.createdDateTimeField = value;
+                this.RaisePropertyChanged("CreatedDateTime");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=1)]
+        public DecimalValue DefaultCommission {
+            get {
+                return this.defaultCommissionField;
+            }
+            set {
+                this.defaultCommissionField = value;
+                this.RaisePropertyChanged("DefaultCommission");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=2)]
+        public BooleanValue IsActive {
+            get {
+                return this.isActiveField;
+            }
+            set {
+                this.isActiveField = value;
+                this.RaisePropertyChanged("IsActive");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=3)]
+        public DateTimeValue LastModifiedDateTime {
+            get {
+                return this.lastModifiedDateTimeField;
+            }
+            set {
+                this.lastModifiedDateTimeField = value;
+                this.RaisePropertyChanged("LastModifiedDateTime");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=4)]
+        public StringValue Name {
+            get {
+                return this.nameField;
+            }
+            set {
+                this.nameField = value;
+                this.RaisePropertyChanged("Name");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=5)]
+        public StringValue SalespersonID {
+            get {
+                return this.salespersonIDField;
+            }
+            set {
+                this.salespersonIDField = value;
+                this.RaisePropertyChanged("SalespersonID");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=6)]
+        public StringValue SalesSubaccount {
+            get {
+                return this.salesSubaccountField;
+            }
+            set {
+                this.salesSubaccountField = value;
+                this.RaisePropertyChanged("SalesSubaccount");
             }
         }
     }
@@ -45983,346 +46126,6 @@ namespace CrmDataGeneration.Soap {
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.acumatica.com/entity/3/Default/18.200.001/")]
-    public partial class EventTimeActivity : Entity {
-        
-        private StringValue billableOvertimeField;
-        
-        private StringValue billableTimeField;
-        
-        private StringValue overtimeField;
-        
-        private StringValue timeSpentField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=0)]
-        public StringValue BillableOvertime {
-            get {
-                return this.billableOvertimeField;
-            }
-            set {
-                this.billableOvertimeField = value;
-                this.RaisePropertyChanged("BillableOvertime");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=1)]
-        public StringValue BillableTime {
-            get {
-                return this.billableTimeField;
-            }
-            set {
-                this.billableTimeField = value;
-                this.RaisePropertyChanged("BillableTime");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=2)]
-        public StringValue Overtime {
-            get {
-                return this.overtimeField;
-            }
-            set {
-                this.overtimeField = value;
-                this.RaisePropertyChanged("Overtime");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=3)]
-        public StringValue TimeSpent {
-            get {
-                return this.timeSpentField;
-            }
-            set {
-                this.timeSpentField = value;
-                this.RaisePropertyChanged("TimeSpent");
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.acumatica.com/entity/3/Default/18.200.001/")]
-    public partial class Event : Entity {
-        
-        private BooleanValue allDayField;
-        
-        private EventAttendee[] attendeesField;
-        
-        private StringValue bodyField;
-        
-        private StringValue categoryField;
-        
-        private DateTimeValue endDateField;
-        
-        private DateTimeValue endTimeField;
-        
-        private BooleanValue internalField;
-        
-        private StringValue locationField;
-        
-        private GuidValue noteIDField;
-        
-        private StringValue priorityField;
-        
-        private EventRelatedActivity[] relatedActivitiesField;
-        
-        private StringValue relatedEntityDescriptionField;
-        
-        private ReminderDetail reminderField;
-        
-        private StringValue showAsField;
-        
-        private DateTimeValue startDateField;
-        
-        private DateTimeValue startTimeField;
-        
-        private StringValue statusField;
-        
-        private StringValue summaryField;
-        
-        private EventTimeActivity timeActivityField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=0)]
-        public BooleanValue AllDay {
-            get {
-                return this.allDayField;
-            }
-            set {
-                this.allDayField = value;
-                this.RaisePropertyChanged("AllDay");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlArrayAttribute(IsNullable=true, Order=1)]
-        public EventAttendee[] Attendees {
-            get {
-                return this.attendeesField;
-            }
-            set {
-                this.attendeesField = value;
-                this.RaisePropertyChanged("Attendees");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=2)]
-        public StringValue Body {
-            get {
-                return this.bodyField;
-            }
-            set {
-                this.bodyField = value;
-                this.RaisePropertyChanged("Body");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=3)]
-        public StringValue Category {
-            get {
-                return this.categoryField;
-            }
-            set {
-                this.categoryField = value;
-                this.RaisePropertyChanged("Category");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=4)]
-        public DateTimeValue EndDate {
-            get {
-                return this.endDateField;
-            }
-            set {
-                this.endDateField = value;
-                this.RaisePropertyChanged("EndDate");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=5)]
-        public DateTimeValue EndTime {
-            get {
-                return this.endTimeField;
-            }
-            set {
-                this.endTimeField = value;
-                this.RaisePropertyChanged("EndTime");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=6)]
-        public BooleanValue Internal {
-            get {
-                return this.internalField;
-            }
-            set {
-                this.internalField = value;
-                this.RaisePropertyChanged("Internal");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=7)]
-        public StringValue Location {
-            get {
-                return this.locationField;
-            }
-            set {
-                this.locationField = value;
-                this.RaisePropertyChanged("Location");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=8)]
-        public GuidValue NoteID {
-            get {
-                return this.noteIDField;
-            }
-            set {
-                this.noteIDField = value;
-                this.RaisePropertyChanged("NoteID");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=9)]
-        public StringValue Priority {
-            get {
-                return this.priorityField;
-            }
-            set {
-                this.priorityField = value;
-                this.RaisePropertyChanged("Priority");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlArrayAttribute(IsNullable=true, Order=10)]
-        public EventRelatedActivity[] RelatedActivities {
-            get {
-                return this.relatedActivitiesField;
-            }
-            set {
-                this.relatedActivitiesField = value;
-                this.RaisePropertyChanged("RelatedActivities");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=11)]
-        public StringValue RelatedEntityDescription {
-            get {
-                return this.relatedEntityDescriptionField;
-            }
-            set {
-                this.relatedEntityDescriptionField = value;
-                this.RaisePropertyChanged("RelatedEntityDescription");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=12)]
-        public ReminderDetail Reminder {
-            get {
-                return this.reminderField;
-            }
-            set {
-                this.reminderField = value;
-                this.RaisePropertyChanged("Reminder");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=13)]
-        public StringValue ShowAs {
-            get {
-                return this.showAsField;
-            }
-            set {
-                this.showAsField = value;
-                this.RaisePropertyChanged("ShowAs");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=14)]
-        public DateTimeValue StartDate {
-            get {
-                return this.startDateField;
-            }
-            set {
-                this.startDateField = value;
-                this.RaisePropertyChanged("StartDate");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=15)]
-        public DateTimeValue StartTime {
-            get {
-                return this.startTimeField;
-            }
-            set {
-                this.startTimeField = value;
-                this.RaisePropertyChanged("StartTime");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=16)]
-        public StringValue Status {
-            get {
-                return this.statusField;
-            }
-            set {
-                this.statusField = value;
-                this.RaisePropertyChanged("Status");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=17)]
-        public StringValue Summary {
-            get {
-                return this.summaryField;
-            }
-            set {
-                this.summaryField = value;
-                this.RaisePropertyChanged("Summary");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=18)]
-        public EventTimeActivity TimeActivity {
-            get {
-                return this.timeActivityField;
-            }
-            set {
-                this.timeActivityField = value;
-                this.RaisePropertyChanged("TimeActivity");
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.acumatica.com/entity/3/Default/18.200.001/")]
     public partial class ExpenseReceiptDetails : Entity {
         
         private DecimalValue amountField;
@@ -46698,7 +46501,7 @@ namespace CrmDataGeneration.Soap {
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.acumatica.com/entity/3/Default/18.200.001/")]
     public partial class ExpenseReceipt : Entity {
         
-        private StringValue branchIDField;
+        private StringValue branchField;
         
         private DecimalValue claimAmountField;
         
@@ -46722,13 +46525,13 @@ namespace CrmDataGeneration.Soap {
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=0)]
-        public StringValue BranchID {
+        public StringValue Branch {
             get {
-                return this.branchIDField;
+                return this.branchField;
             }
             set {
-                this.branchIDField = value;
-                this.RaisePropertyChanged("BranchID");
+                this.branchField = value;
+                this.RaisePropertyChanged("Branch");
             }
         }
         
@@ -46849,6 +46652,346 @@ namespace CrmDataGeneration.Soap {
             set {
                 this.taxTotalField = value;
                 this.RaisePropertyChanged("TaxTotal");
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.acumatica.com/entity/3/Default/18.200.001/")]
+    public partial class EventTimeActivity : Entity {
+        
+        private StringValue billableOvertimeField;
+        
+        private StringValue billableTimeField;
+        
+        private StringValue overtimeField;
+        
+        private StringValue timeSpentField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=0)]
+        public StringValue BillableOvertime {
+            get {
+                return this.billableOvertimeField;
+            }
+            set {
+                this.billableOvertimeField = value;
+                this.RaisePropertyChanged("BillableOvertime");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=1)]
+        public StringValue BillableTime {
+            get {
+                return this.billableTimeField;
+            }
+            set {
+                this.billableTimeField = value;
+                this.RaisePropertyChanged("BillableTime");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=2)]
+        public StringValue Overtime {
+            get {
+                return this.overtimeField;
+            }
+            set {
+                this.overtimeField = value;
+                this.RaisePropertyChanged("Overtime");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=3)]
+        public StringValue TimeSpent {
+            get {
+                return this.timeSpentField;
+            }
+            set {
+                this.timeSpentField = value;
+                this.RaisePropertyChanged("TimeSpent");
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.acumatica.com/entity/3/Default/18.200.001/")]
+    public partial class Event : Entity {
+        
+        private BooleanValue allDayField;
+        
+        private EventAttendee[] attendeesField;
+        
+        private StringValue bodyField;
+        
+        private StringValue categoryField;
+        
+        private DateTimeValue endDateField;
+        
+        private DateTimeValue endTimeField;
+        
+        private BooleanValue internalField;
+        
+        private StringValue locationField;
+        
+        private GuidValue noteIDField;
+        
+        private StringValue priorityField;
+        
+        private EventRelatedActivity[] relatedActivitiesField;
+        
+        private StringValue relatedEntityDescriptionField;
+        
+        private ReminderDetail reminderField;
+        
+        private StringValue showAsField;
+        
+        private DateTimeValue startDateField;
+        
+        private DateTimeValue startTimeField;
+        
+        private StringValue statusField;
+        
+        private StringValue summaryField;
+        
+        private EventTimeActivity timeActivityField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=0)]
+        public BooleanValue AllDay {
+            get {
+                return this.allDayField;
+            }
+            set {
+                this.allDayField = value;
+                this.RaisePropertyChanged("AllDay");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlArrayAttribute(IsNullable=true, Order=1)]
+        public EventAttendee[] Attendees {
+            get {
+                return this.attendeesField;
+            }
+            set {
+                this.attendeesField = value;
+                this.RaisePropertyChanged("Attendees");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=2)]
+        public StringValue Body {
+            get {
+                return this.bodyField;
+            }
+            set {
+                this.bodyField = value;
+                this.RaisePropertyChanged("Body");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=3)]
+        public StringValue Category {
+            get {
+                return this.categoryField;
+            }
+            set {
+                this.categoryField = value;
+                this.RaisePropertyChanged("Category");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=4)]
+        public DateTimeValue EndDate {
+            get {
+                return this.endDateField;
+            }
+            set {
+                this.endDateField = value;
+                this.RaisePropertyChanged("EndDate");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=5)]
+        public DateTimeValue EndTime {
+            get {
+                return this.endTimeField;
+            }
+            set {
+                this.endTimeField = value;
+                this.RaisePropertyChanged("EndTime");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=6)]
+        public BooleanValue Internal {
+            get {
+                return this.internalField;
+            }
+            set {
+                this.internalField = value;
+                this.RaisePropertyChanged("Internal");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=7)]
+        public StringValue Location {
+            get {
+                return this.locationField;
+            }
+            set {
+                this.locationField = value;
+                this.RaisePropertyChanged("Location");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=8)]
+        public GuidValue NoteID {
+            get {
+                return this.noteIDField;
+            }
+            set {
+                this.noteIDField = value;
+                this.RaisePropertyChanged("NoteID");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=9)]
+        public StringValue Priority {
+            get {
+                return this.priorityField;
+            }
+            set {
+                this.priorityField = value;
+                this.RaisePropertyChanged("Priority");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlArrayAttribute(IsNullable=true, Order=10)]
+        public EventRelatedActivity[] RelatedActivities {
+            get {
+                return this.relatedActivitiesField;
+            }
+            set {
+                this.relatedActivitiesField = value;
+                this.RaisePropertyChanged("RelatedActivities");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=11)]
+        public StringValue RelatedEntityDescription {
+            get {
+                return this.relatedEntityDescriptionField;
+            }
+            set {
+                this.relatedEntityDescriptionField = value;
+                this.RaisePropertyChanged("RelatedEntityDescription");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=12)]
+        public ReminderDetail Reminder {
+            get {
+                return this.reminderField;
+            }
+            set {
+                this.reminderField = value;
+                this.RaisePropertyChanged("Reminder");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=13)]
+        public StringValue ShowAs {
+            get {
+                return this.showAsField;
+            }
+            set {
+                this.showAsField = value;
+                this.RaisePropertyChanged("ShowAs");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=14)]
+        public DateTimeValue StartDate {
+            get {
+                return this.startDateField;
+            }
+            set {
+                this.startDateField = value;
+                this.RaisePropertyChanged("StartDate");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=15)]
+        public DateTimeValue StartTime {
+            get {
+                return this.startTimeField;
+            }
+            set {
+                this.startTimeField = value;
+                this.RaisePropertyChanged("StartTime");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=16)]
+        public StringValue Status {
+            get {
+                return this.statusField;
+            }
+            set {
+                this.statusField = value;
+                this.RaisePropertyChanged("Status");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=17)]
+        public StringValue Summary {
+            get {
+                return this.summaryField;
+            }
+            set {
+                this.summaryField = value;
+                this.RaisePropertyChanged("Summary");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=18)]
+        public EventTimeActivity TimeActivity {
+            get {
+                return this.timeActivityField;
+            }
+            set {
+                this.timeActivityField = value;
+                this.RaisePropertyChanged("TimeActivity");
             }
         }
     }
@@ -47469,6 +47612,99 @@ namespace CrmDataGeneration.Soap {
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.acumatica.com/entity/3/Default/18.200.001/")]
+    public partial class AccountByPeriodInquiry : Entity {
+        
+        private StringValue accountField;
+        
+        private StringValue branchIDField;
+        
+        private StringValue financialYearField;
+        
+        private StringValue ledgerField;
+        
+        private AccountByPeriodRow[] resultsField;
+        
+        private StringValue subaccountField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=0)]
+        public StringValue Account {
+            get {
+                return this.accountField;
+            }
+            set {
+                this.accountField = value;
+                this.RaisePropertyChanged("Account");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=1)]
+        public StringValue BranchID {
+            get {
+                return this.branchIDField;
+            }
+            set {
+                this.branchIDField = value;
+                this.RaisePropertyChanged("BranchID");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=2)]
+        public StringValue FinancialYear {
+            get {
+                return this.financialYearField;
+            }
+            set {
+                this.financialYearField = value;
+                this.RaisePropertyChanged("FinancialYear");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=3)]
+        public StringValue Ledger {
+            get {
+                return this.ledgerField;
+            }
+            set {
+                this.ledgerField = value;
+                this.RaisePropertyChanged("Ledger");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlArrayAttribute(IsNullable=true, Order=4)]
+        public AccountByPeriodRow[] Results {
+            get {
+                return this.resultsField;
+            }
+            set {
+                this.resultsField = value;
+                this.RaisePropertyChanged("Results");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=5)]
+        public StringValue Subaccount {
+            get {
+                return this.subaccountField;
+            }
+            set {
+                this.subaccountField = value;
+                this.RaisePropertyChanged("Subaccount");
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.acumatica.com/entity/3/Default/18.200.001/")]
     public partial class Discount : Entity {
         
         private BooleanValue activeField;
@@ -47734,99 +47970,6 @@ namespace CrmDataGeneration.Soap {
             set {
                 this.warehousesField = value;
                 this.RaisePropertyChanged("Warehouses");
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.acumatica.com/entity/3/Default/18.200.001/")]
-    public partial class AccountByPeriodInquiry : Entity {
-        
-        private StringValue accountField;
-        
-        private StringValue branchIDField;
-        
-        private StringValue financialYearField;
-        
-        private StringValue ledgerField;
-        
-        private AccountByPeriodRow[] resultsField;
-        
-        private StringValue subaccountField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=0)]
-        public StringValue Account {
-            get {
-                return this.accountField;
-            }
-            set {
-                this.accountField = value;
-                this.RaisePropertyChanged("Account");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=1)]
-        public StringValue BranchID {
-            get {
-                return this.branchIDField;
-            }
-            set {
-                this.branchIDField = value;
-                this.RaisePropertyChanged("BranchID");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=2)]
-        public StringValue FinancialYear {
-            get {
-                return this.financialYearField;
-            }
-            set {
-                this.financialYearField = value;
-                this.RaisePropertyChanged("FinancialYear");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=3)]
-        public StringValue Ledger {
-            get {
-                return this.ledgerField;
-            }
-            set {
-                this.ledgerField = value;
-                this.RaisePropertyChanged("Ledger");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlArrayAttribute(IsNullable=true, Order=4)]
-        public AccountByPeriodRow[] Results {
-            get {
-                return this.resultsField;
-            }
-            set {
-                this.resultsField = value;
-                this.RaisePropertyChanged("Results");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=5)]
-        public StringValue Subaccount {
-            get {
-                return this.subaccountField;
-            }
-            set {
-                this.subaccountField = value;
-                this.RaisePropertyChanged("Subaccount");
             }
         }
     }
@@ -49578,239 +49721,6 @@ namespace CrmDataGeneration.Soap {
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.acumatica.com/entity/3/Default/18.200.001/")]
-    public partial class FinancialYear : Entity {
-        
-        private BooleanValue adjustToPeriodStartField;
-        
-        private BooleanValue belongsToNextYearField;
-        
-        private DateTimeValue createdDateTimeField;
-        
-        private StringValue dayOfWeekField;
-        
-        private FinancialYearPeriodDetail[] detailsField;
-        
-        private DateTimeValue financialYearStartsOnField;
-        
-        private StringValue firstFinancialYearField;
-        
-        private DateTimeValue firstPeriodStartDateField;
-        
-        private BooleanValue hasAdjustmentPeriodField;
-        
-        private DateTimeValue lastModifiedDateTimeField;
-        
-        private ShortValue lengthOfFinancialPeriodInDaysField;
-        
-        private ShortValue nbrOfFinancialPeriodsField;
-        
-        private StringValue periodsStartDayOfWeekField;
-        
-        private StringValue periodTypeField;
-        
-        private BooleanValue userDefinedPeriodsField;
-        
-        private StringValue yearEndCalculationMethodField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=0)]
-        public BooleanValue AdjustToPeriodStart {
-            get {
-                return this.adjustToPeriodStartField;
-            }
-            set {
-                this.adjustToPeriodStartField = value;
-                this.RaisePropertyChanged("AdjustToPeriodStart");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=1)]
-        public BooleanValue BelongsToNextYear {
-            get {
-                return this.belongsToNextYearField;
-            }
-            set {
-                this.belongsToNextYearField = value;
-                this.RaisePropertyChanged("BelongsToNextYear");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=2)]
-        public DateTimeValue CreatedDateTime {
-            get {
-                return this.createdDateTimeField;
-            }
-            set {
-                this.createdDateTimeField = value;
-                this.RaisePropertyChanged("CreatedDateTime");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=3)]
-        public StringValue DayOfWeek {
-            get {
-                return this.dayOfWeekField;
-            }
-            set {
-                this.dayOfWeekField = value;
-                this.RaisePropertyChanged("DayOfWeek");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlArrayAttribute(IsNullable=true, Order=4)]
-        public FinancialYearPeriodDetail[] Details {
-            get {
-                return this.detailsField;
-            }
-            set {
-                this.detailsField = value;
-                this.RaisePropertyChanged("Details");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=5)]
-        public DateTimeValue FinancialYearStartsOn {
-            get {
-                return this.financialYearStartsOnField;
-            }
-            set {
-                this.financialYearStartsOnField = value;
-                this.RaisePropertyChanged("FinancialYearStartsOn");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=6)]
-        public StringValue FirstFinancialYear {
-            get {
-                return this.firstFinancialYearField;
-            }
-            set {
-                this.firstFinancialYearField = value;
-                this.RaisePropertyChanged("FirstFinancialYear");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=7)]
-        public DateTimeValue FirstPeriodStartDate {
-            get {
-                return this.firstPeriodStartDateField;
-            }
-            set {
-                this.firstPeriodStartDateField = value;
-                this.RaisePropertyChanged("FirstPeriodStartDate");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=8)]
-        public BooleanValue HasAdjustmentPeriod {
-            get {
-                return this.hasAdjustmentPeriodField;
-            }
-            set {
-                this.hasAdjustmentPeriodField = value;
-                this.RaisePropertyChanged("HasAdjustmentPeriod");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=9)]
-        public DateTimeValue LastModifiedDateTime {
-            get {
-                return this.lastModifiedDateTimeField;
-            }
-            set {
-                this.lastModifiedDateTimeField = value;
-                this.RaisePropertyChanged("LastModifiedDateTime");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=10)]
-        public ShortValue LengthOfFinancialPeriodInDays {
-            get {
-                return this.lengthOfFinancialPeriodInDaysField;
-            }
-            set {
-                this.lengthOfFinancialPeriodInDaysField = value;
-                this.RaisePropertyChanged("LengthOfFinancialPeriodInDays");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=11)]
-        public ShortValue NbrOfFinancialPeriods {
-            get {
-                return this.nbrOfFinancialPeriodsField;
-            }
-            set {
-                this.nbrOfFinancialPeriodsField = value;
-                this.RaisePropertyChanged("NbrOfFinancialPeriods");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=12)]
-        public StringValue PeriodsStartDayOfWeek {
-            get {
-                return this.periodsStartDayOfWeekField;
-            }
-            set {
-                this.periodsStartDayOfWeekField = value;
-                this.RaisePropertyChanged("PeriodsStartDayOfWeek");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=13)]
-        public StringValue PeriodType {
-            get {
-                return this.periodTypeField;
-            }
-            set {
-                this.periodTypeField = value;
-                this.RaisePropertyChanged("PeriodType");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=14)]
-        public BooleanValue UserDefinedPeriods {
-            get {
-                return this.userDefinedPeriodsField;
-            }
-            set {
-                this.userDefinedPeriodsField = value;
-                this.RaisePropertyChanged("UserDefinedPeriods");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=15)]
-        public StringValue YearEndCalculationMethod {
-            get {
-                return this.yearEndCalculationMethodField;
-            }
-            set {
-                this.yearEndCalculationMethodField = value;
-                this.RaisePropertyChanged("YearEndCalculationMethod");
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.acumatica.com/entity/3/Default/18.200.001/")]
     public partial class TransferOrder : Entity {
         
         private DateTimeValue dateField;
@@ -50551,6 +50461,239 @@ namespace CrmDataGeneration.Soap {
             set {
                 this.termsField = value;
                 this.RaisePropertyChanged("Terms");
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.acumatica.com/entity/3/Default/18.200.001/")]
+    public partial class FinancialYear : Entity {
+        
+        private BooleanValue adjustToPeriodStartField;
+        
+        private BooleanValue belongsToNextYearField;
+        
+        private DateTimeValue createdDateTimeField;
+        
+        private StringValue dayOfWeekField;
+        
+        private FinancialYearPeriodDetail[] detailsField;
+        
+        private DateTimeValue financialYearStartsOnField;
+        
+        private StringValue firstFinancialYearField;
+        
+        private DateTimeValue firstPeriodStartDateField;
+        
+        private BooleanValue hasAdjustmentPeriodField;
+        
+        private DateTimeValue lastModifiedDateTimeField;
+        
+        private ShortValue lengthOfFinancialPeriodInDaysField;
+        
+        private ShortValue nbrOfFinancialPeriodsField;
+        
+        private StringValue periodsStartDayOfWeekField;
+        
+        private StringValue periodTypeField;
+        
+        private BooleanValue userDefinedPeriodsField;
+        
+        private StringValue yearEndCalculationMethodField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=0)]
+        public BooleanValue AdjustToPeriodStart {
+            get {
+                return this.adjustToPeriodStartField;
+            }
+            set {
+                this.adjustToPeriodStartField = value;
+                this.RaisePropertyChanged("AdjustToPeriodStart");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=1)]
+        public BooleanValue BelongsToNextYear {
+            get {
+                return this.belongsToNextYearField;
+            }
+            set {
+                this.belongsToNextYearField = value;
+                this.RaisePropertyChanged("BelongsToNextYear");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=2)]
+        public DateTimeValue CreatedDateTime {
+            get {
+                return this.createdDateTimeField;
+            }
+            set {
+                this.createdDateTimeField = value;
+                this.RaisePropertyChanged("CreatedDateTime");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=3)]
+        public StringValue DayOfWeek {
+            get {
+                return this.dayOfWeekField;
+            }
+            set {
+                this.dayOfWeekField = value;
+                this.RaisePropertyChanged("DayOfWeek");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlArrayAttribute(IsNullable=true, Order=4)]
+        public FinancialYearPeriodDetail[] Details {
+            get {
+                return this.detailsField;
+            }
+            set {
+                this.detailsField = value;
+                this.RaisePropertyChanged("Details");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=5)]
+        public DateTimeValue FinancialYearStartsOn {
+            get {
+                return this.financialYearStartsOnField;
+            }
+            set {
+                this.financialYearStartsOnField = value;
+                this.RaisePropertyChanged("FinancialYearStartsOn");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=6)]
+        public StringValue FirstFinancialYear {
+            get {
+                return this.firstFinancialYearField;
+            }
+            set {
+                this.firstFinancialYearField = value;
+                this.RaisePropertyChanged("FirstFinancialYear");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=7)]
+        public DateTimeValue FirstPeriodStartDate {
+            get {
+                return this.firstPeriodStartDateField;
+            }
+            set {
+                this.firstPeriodStartDateField = value;
+                this.RaisePropertyChanged("FirstPeriodStartDate");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=8)]
+        public BooleanValue HasAdjustmentPeriod {
+            get {
+                return this.hasAdjustmentPeriodField;
+            }
+            set {
+                this.hasAdjustmentPeriodField = value;
+                this.RaisePropertyChanged("HasAdjustmentPeriod");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=9)]
+        public DateTimeValue LastModifiedDateTime {
+            get {
+                return this.lastModifiedDateTimeField;
+            }
+            set {
+                this.lastModifiedDateTimeField = value;
+                this.RaisePropertyChanged("LastModifiedDateTime");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=10)]
+        public ShortValue LengthOfFinancialPeriodInDays {
+            get {
+                return this.lengthOfFinancialPeriodInDaysField;
+            }
+            set {
+                this.lengthOfFinancialPeriodInDaysField = value;
+                this.RaisePropertyChanged("LengthOfFinancialPeriodInDays");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=11)]
+        public ShortValue NbrOfFinancialPeriods {
+            get {
+                return this.nbrOfFinancialPeriodsField;
+            }
+            set {
+                this.nbrOfFinancialPeriodsField = value;
+                this.RaisePropertyChanged("NbrOfFinancialPeriods");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=12)]
+        public StringValue PeriodsStartDayOfWeek {
+            get {
+                return this.periodsStartDayOfWeekField;
+            }
+            set {
+                this.periodsStartDayOfWeekField = value;
+                this.RaisePropertyChanged("PeriodsStartDayOfWeek");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=13)]
+        public StringValue PeriodType {
+            get {
+                return this.periodTypeField;
+            }
+            set {
+                this.periodTypeField = value;
+                this.RaisePropertyChanged("PeriodType");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=14)]
+        public BooleanValue UserDefinedPeriods {
+            get {
+                return this.userDefinedPeriodsField;
+            }
+            set {
+                this.userDefinedPeriodsField = value;
+                this.RaisePropertyChanged("UserDefinedPeriods");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=15)]
+        public StringValue YearEndCalculationMethod {
+            get {
+                return this.yearEndCalculationMethodField;
+            }
+            set {
+                this.yearEndCalculationMethodField = value;
+                this.RaisePropertyChanged("YearEndCalculationMethod");
             }
         }
     }
@@ -53758,6 +53901,99 @@ namespace CrmDataGeneration.Soap {
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.acumatica.com/entity/3/Default/18.200.001/")]
+    public partial class ManageFinancialPeriods : Entity {
+        
+        private StringValue actionToPerformField;
+        
+        private StringValue companyField;
+        
+        private ManageFinancialPeriodsDetail[] detailsField;
+        
+        private StringValue fromYearField;
+        
+        private BooleanValue reopenFinancialPeriodsinAllModulesField;
+        
+        private StringValue toYearField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=0)]
+        public StringValue ActionToPerform {
+            get {
+                return this.actionToPerformField;
+            }
+            set {
+                this.actionToPerformField = value;
+                this.RaisePropertyChanged("ActionToPerform");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=1)]
+        public StringValue Company {
+            get {
+                return this.companyField;
+            }
+            set {
+                this.companyField = value;
+                this.RaisePropertyChanged("Company");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlArrayAttribute(IsNullable=true, Order=2)]
+        public ManageFinancialPeriodsDetail[] Details {
+            get {
+                return this.detailsField;
+            }
+            set {
+                this.detailsField = value;
+                this.RaisePropertyChanged("Details");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=3)]
+        public StringValue FromYear {
+            get {
+                return this.fromYearField;
+            }
+            set {
+                this.fromYearField = value;
+                this.RaisePropertyChanged("FromYear");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=4)]
+        public BooleanValue ReopenFinancialPeriodsinAllModules {
+            get {
+                return this.reopenFinancialPeriodsinAllModulesField;
+            }
+            set {
+                this.reopenFinancialPeriodsinAllModulesField = value;
+                this.RaisePropertyChanged("ReopenFinancialPeriodsinAllModules");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=5)]
+        public StringValue ToYear {
+            get {
+                return this.toYearField;
+            }
+            set {
+                this.toYearField = value;
+                this.RaisePropertyChanged("ToYear");
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.acumatica.com/entity/3/Default/18.200.001/")]
     public partial class VendorPricesInquiry : Entity {
         
         private StringValue inventoryIDField;
@@ -54876,6 +55112,141 @@ namespace CrmDataGeneration.Soap {
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.acumatica.com/entity/3/Default/18.200.001/")]
+    public partial class Carrier : Entity {
+        
+        private StringValue carrierIDField;
+        
+        private StringValue carrierUnitOfWeightField;
+        
+        private DateTimeValue createdDateTimeField;
+        
+        private CarrierCustomerAccount[] customerAccountsField;
+        
+        private StringValue descriptionField;
+        
+        private DateTimeValue lastModifiedDateTimeField;
+        
+        private CarrierPluginParameter[] plugInParametersField;
+        
+        private StringValue plugInTypeField;
+        
+        private StringValue uOMField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=0)]
+        public StringValue CarrierID {
+            get {
+                return this.carrierIDField;
+            }
+            set {
+                this.carrierIDField = value;
+                this.RaisePropertyChanged("CarrierID");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=1)]
+        public StringValue CarrierUnitOfWeight {
+            get {
+                return this.carrierUnitOfWeightField;
+            }
+            set {
+                this.carrierUnitOfWeightField = value;
+                this.RaisePropertyChanged("CarrierUnitOfWeight");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=2)]
+        public DateTimeValue CreatedDateTime {
+            get {
+                return this.createdDateTimeField;
+            }
+            set {
+                this.createdDateTimeField = value;
+                this.RaisePropertyChanged("CreatedDateTime");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlArrayAttribute(IsNullable=true, Order=3)]
+        public CarrierCustomerAccount[] CustomerAccounts {
+            get {
+                return this.customerAccountsField;
+            }
+            set {
+                this.customerAccountsField = value;
+                this.RaisePropertyChanged("CustomerAccounts");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=4)]
+        public StringValue Description {
+            get {
+                return this.descriptionField;
+            }
+            set {
+                this.descriptionField = value;
+                this.RaisePropertyChanged("Description");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=5)]
+        public DateTimeValue LastModifiedDateTime {
+            get {
+                return this.lastModifiedDateTimeField;
+            }
+            set {
+                this.lastModifiedDateTimeField = value;
+                this.RaisePropertyChanged("LastModifiedDateTime");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlArrayAttribute(IsNullable=true, Order=6)]
+        public CarrierPluginParameter[] PlugInParameters {
+            get {
+                return this.plugInParametersField;
+            }
+            set {
+                this.plugInParametersField = value;
+                this.RaisePropertyChanged("PlugInParameters");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=7)]
+        public StringValue PlugInType {
+            get {
+                return this.plugInTypeField;
+            }
+            set {
+                this.plugInTypeField = value;
+                this.RaisePropertyChanged("PlugInType");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=8)]
+        public StringValue UOM {
+            get {
+                return this.uOMField;
+            }
+            set {
+                this.uOMField = value;
+                this.RaisePropertyChanged("UOM");
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.acumatica.com/entity/3/Default/18.200.001/")]
     public partial class CommonTask : Entity {
         
         private AttributeValue[] attributesField;
@@ -55094,141 +55465,6 @@ namespace CrmDataGeneration.Soap {
             set {
                 this.startDateField = value;
                 this.RaisePropertyChanged("StartDate");
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.acumatica.com/entity/3/Default/18.200.001/")]
-    public partial class Carrier : Entity {
-        
-        private StringValue carrierIDField;
-        
-        private StringValue carrierUnitOfWeightField;
-        
-        private DateTimeValue createdDateTimeField;
-        
-        private CarrierCustomerAccount[] customerAccountsField;
-        
-        private StringValue descriptionField;
-        
-        private DateTimeValue lastModifiedDateTimeField;
-        
-        private CarrierPluginParameter[] plugInParametersField;
-        
-        private StringValue plugInTypeField;
-        
-        private StringValue uOMField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=0)]
-        public StringValue CarrierID {
-            get {
-                return this.carrierIDField;
-            }
-            set {
-                this.carrierIDField = value;
-                this.RaisePropertyChanged("CarrierID");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=1)]
-        public StringValue CarrierUnitOfWeight {
-            get {
-                return this.carrierUnitOfWeightField;
-            }
-            set {
-                this.carrierUnitOfWeightField = value;
-                this.RaisePropertyChanged("CarrierUnitOfWeight");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=2)]
-        public DateTimeValue CreatedDateTime {
-            get {
-                return this.createdDateTimeField;
-            }
-            set {
-                this.createdDateTimeField = value;
-                this.RaisePropertyChanged("CreatedDateTime");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlArrayAttribute(IsNullable=true, Order=3)]
-        public CarrierCustomerAccount[] CustomerAccounts {
-            get {
-                return this.customerAccountsField;
-            }
-            set {
-                this.customerAccountsField = value;
-                this.RaisePropertyChanged("CustomerAccounts");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=4)]
-        public StringValue Description {
-            get {
-                return this.descriptionField;
-            }
-            set {
-                this.descriptionField = value;
-                this.RaisePropertyChanged("Description");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=5)]
-        public DateTimeValue LastModifiedDateTime {
-            get {
-                return this.lastModifiedDateTimeField;
-            }
-            set {
-                this.lastModifiedDateTimeField = value;
-                this.RaisePropertyChanged("LastModifiedDateTime");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlArrayAttribute(IsNullable=true, Order=6)]
-        public CarrierPluginParameter[] PlugInParameters {
-            get {
-                return this.plugInParametersField;
-            }
-            set {
-                this.plugInParametersField = value;
-                this.RaisePropertyChanged("PlugInParameters");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=7)]
-        public StringValue PlugInType {
-            get {
-                return this.plugInTypeField;
-            }
-            set {
-                this.plugInTypeField = value;
-                this.RaisePropertyChanged("PlugInType");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=8)]
-        public StringValue UOM {
-            get {
-                return this.uOMField;
-            }
-            set {
-                this.uOMField = value;
-                this.RaisePropertyChanged("UOM");
             }
         }
     }
@@ -56777,355 +57013,75 @@ namespace CrmDataGeneration.Soap {
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.acumatica.com/entity/3/Default/18.200.001/")]
-    public partial class Project : Entity {
+    public partial class CompanyFinancialPeriod : Entity {
         
-        private ProjectActivity[] activityHistoryField;
+        private StringValue companyField;
         
-        private Approval[] approvalDetailsField;
+        private FinancialPeriodDetail[] detailsField;
         
-        private DecimalValue assetsField;
+        private StringValue financialYearField;
         
-        private AttributeValue[] attributesField;
+        private ShortValue nbrOfPeriodsField;
         
-        private ProjectBalance[] balancesField;
-        
-        private ProjectBillingAndAllocationSettings billingAndAllocationSettingsField;
-        
-        private BillToSettings billToSettingsField;
-        
-        private StringValue customerField;
-        
-        private StringValue descriptionField;
-        
-        private ProjectEmployee[] employeesField;
-        
-        private ProjectEquipment[] equipmentsField;
-        
-        private DecimalValue expensesField;
-        
-        private StringValue externalRefNbrField;
-        
-        private ProjectGLAccount gLAccountsField;
-        
-        private BooleanValue holdField;
-        
-        private DecimalValue incomeField;
-        
-        private ProjectProFormaDetails[] invoicesField;
-        
-        private DateTimeValue lastModifiedDateTimeField;
-        
-        private DecimalValue liabilitiesField;
-        
-        private StringValue projectIDField;
-        
-        private ProjectProperties projectPropertiesField;
-        
-        private StringValue projectTemplateIDField;
-        
-        private StringValue statusField;
-        
-        private ProjectUnionLocal[] unionLocalsField;
-        
-        private VisibilitySettings visibilitySettingsField;
+        private DateTimeValue startDateField;
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlArrayAttribute(IsNullable=true, Order=0)]
-        public ProjectActivity[] ActivityHistory {
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=0)]
+        public StringValue Company {
             get {
-                return this.activityHistoryField;
+                return this.companyField;
             }
             set {
-                this.activityHistoryField = value;
-                this.RaisePropertyChanged("ActivityHistory");
+                this.companyField = value;
+                this.RaisePropertyChanged("Company");
             }
         }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlArrayAttribute(IsNullable=true, Order=1)]
-        public Approval[] ApprovalDetails {
+        public FinancialPeriodDetail[] Details {
             get {
-                return this.approvalDetailsField;
+                return this.detailsField;
             }
             set {
-                this.approvalDetailsField = value;
-                this.RaisePropertyChanged("ApprovalDetails");
+                this.detailsField = value;
+                this.RaisePropertyChanged("Details");
             }
         }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=2)]
-        public DecimalValue Assets {
+        public StringValue FinancialYear {
             get {
-                return this.assetsField;
+                return this.financialYearField;
             }
             set {
-                this.assetsField = value;
-                this.RaisePropertyChanged("Assets");
+                this.financialYearField = value;
+                this.RaisePropertyChanged("FinancialYear");
             }
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlArrayAttribute(IsNullable=true, Order=3)]
-        public AttributeValue[] Attributes {
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=3)]
+        public ShortValue NbrOfPeriods {
             get {
-                return this.attributesField;
+                return this.nbrOfPeriodsField;
             }
             set {
-                this.attributesField = value;
-                this.RaisePropertyChanged("Attributes");
+                this.nbrOfPeriodsField = value;
+                this.RaisePropertyChanged("NbrOfPeriods");
             }
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlArrayAttribute(IsNullable=true, Order=4)]
-        public ProjectBalance[] Balances {
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=4)]
+        public DateTimeValue StartDate {
             get {
-                return this.balancesField;
+                return this.startDateField;
             }
             set {
-                this.balancesField = value;
-                this.RaisePropertyChanged("Balances");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=5)]
-        public ProjectBillingAndAllocationSettings BillingAndAllocationSettings {
-            get {
-                return this.billingAndAllocationSettingsField;
-            }
-            set {
-                this.billingAndAllocationSettingsField = value;
-                this.RaisePropertyChanged("BillingAndAllocationSettings");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=6)]
-        public BillToSettings BillToSettings {
-            get {
-                return this.billToSettingsField;
-            }
-            set {
-                this.billToSettingsField = value;
-                this.RaisePropertyChanged("BillToSettings");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=7)]
-        public StringValue Customer {
-            get {
-                return this.customerField;
-            }
-            set {
-                this.customerField = value;
-                this.RaisePropertyChanged("Customer");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=8)]
-        public StringValue Description {
-            get {
-                return this.descriptionField;
-            }
-            set {
-                this.descriptionField = value;
-                this.RaisePropertyChanged("Description");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlArrayAttribute(IsNullable=true, Order=9)]
-        public ProjectEmployee[] Employees {
-            get {
-                return this.employeesField;
-            }
-            set {
-                this.employeesField = value;
-                this.RaisePropertyChanged("Employees");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlArrayAttribute(IsNullable=true, Order=10)]
-        public ProjectEquipment[] Equipments {
-            get {
-                return this.equipmentsField;
-            }
-            set {
-                this.equipmentsField = value;
-                this.RaisePropertyChanged("Equipments");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=11)]
-        public DecimalValue Expenses {
-            get {
-                return this.expensesField;
-            }
-            set {
-                this.expensesField = value;
-                this.RaisePropertyChanged("Expenses");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=12)]
-        public StringValue ExternalRefNbr {
-            get {
-                return this.externalRefNbrField;
-            }
-            set {
-                this.externalRefNbrField = value;
-                this.RaisePropertyChanged("ExternalRefNbr");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=13)]
-        public ProjectGLAccount GLAccounts {
-            get {
-                return this.gLAccountsField;
-            }
-            set {
-                this.gLAccountsField = value;
-                this.RaisePropertyChanged("GLAccounts");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=14)]
-        public BooleanValue Hold {
-            get {
-                return this.holdField;
-            }
-            set {
-                this.holdField = value;
-                this.RaisePropertyChanged("Hold");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=15)]
-        public DecimalValue Income {
-            get {
-                return this.incomeField;
-            }
-            set {
-                this.incomeField = value;
-                this.RaisePropertyChanged("Income");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlArrayAttribute(IsNullable=true, Order=16)]
-        public ProjectProFormaDetails[] Invoices {
-            get {
-                return this.invoicesField;
-            }
-            set {
-                this.invoicesField = value;
-                this.RaisePropertyChanged("Invoices");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=17)]
-        public DateTimeValue LastModifiedDateTime {
-            get {
-                return this.lastModifiedDateTimeField;
-            }
-            set {
-                this.lastModifiedDateTimeField = value;
-                this.RaisePropertyChanged("LastModifiedDateTime");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=18)]
-        public DecimalValue Liabilities {
-            get {
-                return this.liabilitiesField;
-            }
-            set {
-                this.liabilitiesField = value;
-                this.RaisePropertyChanged("Liabilities");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=19)]
-        public StringValue ProjectID {
-            get {
-                return this.projectIDField;
-            }
-            set {
-                this.projectIDField = value;
-                this.RaisePropertyChanged("ProjectID");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=20)]
-        public ProjectProperties ProjectProperties {
-            get {
-                return this.projectPropertiesField;
-            }
-            set {
-                this.projectPropertiesField = value;
-                this.RaisePropertyChanged("ProjectProperties");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=21)]
-        public StringValue ProjectTemplateID {
-            get {
-                return this.projectTemplateIDField;
-            }
-            set {
-                this.projectTemplateIDField = value;
-                this.RaisePropertyChanged("ProjectTemplateID");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=22)]
-        public StringValue Status {
-            get {
-                return this.statusField;
-            }
-            set {
-                this.statusField = value;
-                this.RaisePropertyChanged("Status");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlArrayAttribute(IsNullable=true, Order=23)]
-        public ProjectUnionLocal[] UnionLocals {
-            get {
-                return this.unionLocalsField;
-            }
-            set {
-                this.unionLocalsField = value;
-                this.RaisePropertyChanged("UnionLocals");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=24)]
-        public VisibilitySettings VisibilitySettings {
-            get {
-                return this.visibilitySettingsField;
-            }
-            set {
-                this.visibilitySettingsField = value;
-                this.RaisePropertyChanged("VisibilitySettings");
+                this.startDateField = value;
+                this.RaisePropertyChanged("StartDate");
             }
         }
     }
@@ -57989,6 +57945,365 @@ namespace CrmDataGeneration.Soap {
             set {
                 this.writeOffLimitField = value;
                 this.RaisePropertyChanged("WriteOffLimit");
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.7.2612.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.acumatica.com/entity/3/Default/18.200.001/")]
+    public partial class Project : Entity {
+        
+        private ProjectActivity[] activityHistoryField;
+        
+        private Approval[] approvalDetailsField;
+        
+        private DecimalValue assetsField;
+        
+        private AttributeValue[] attributesField;
+        
+        private ProjectBalance[] balancesField;
+        
+        private ProjectBillingAndAllocationSettings billingAndAllocationSettingsField;
+        
+        private BillToSettings billToSettingsField;
+        
+        private StringValue customerField;
+        
+        private StringValue descriptionField;
+        
+        private ProjectEmployee[] employeesField;
+        
+        private ProjectEquipment[] equipmentsField;
+        
+        private DecimalValue expensesField;
+        
+        private StringValue externalRefNbrField;
+        
+        private ProjectGLAccount gLAccountsField;
+        
+        private BooleanValue holdField;
+        
+        private DecimalValue incomeField;
+        
+        private ProjectProFormaDetails[] invoicesField;
+        
+        private DateTimeValue lastModifiedDateTimeField;
+        
+        private DecimalValue liabilitiesField;
+        
+        private StringValue projectIDField;
+        
+        private ProjectProperties projectPropertiesField;
+        
+        private StringValue projectTemplateIDField;
+        
+        private StringValue statusField;
+        
+        private ProjectUnionLocal[] unionLocalsField;
+        
+        private VisibilitySettings visibilitySettingsField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlArrayAttribute(IsNullable=true, Order=0)]
+        public ProjectActivity[] ActivityHistory {
+            get {
+                return this.activityHistoryField;
+            }
+            set {
+                this.activityHistoryField = value;
+                this.RaisePropertyChanged("ActivityHistory");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlArrayAttribute(IsNullable=true, Order=1)]
+        public Approval[] ApprovalDetails {
+            get {
+                return this.approvalDetailsField;
+            }
+            set {
+                this.approvalDetailsField = value;
+                this.RaisePropertyChanged("ApprovalDetails");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=2)]
+        public DecimalValue Assets {
+            get {
+                return this.assetsField;
+            }
+            set {
+                this.assetsField = value;
+                this.RaisePropertyChanged("Assets");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlArrayAttribute(IsNullable=true, Order=3)]
+        public AttributeValue[] Attributes {
+            get {
+                return this.attributesField;
+            }
+            set {
+                this.attributesField = value;
+                this.RaisePropertyChanged("Attributes");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlArrayAttribute(IsNullable=true, Order=4)]
+        public ProjectBalance[] Balances {
+            get {
+                return this.balancesField;
+            }
+            set {
+                this.balancesField = value;
+                this.RaisePropertyChanged("Balances");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=5)]
+        public ProjectBillingAndAllocationSettings BillingAndAllocationSettings {
+            get {
+                return this.billingAndAllocationSettingsField;
+            }
+            set {
+                this.billingAndAllocationSettingsField = value;
+                this.RaisePropertyChanged("BillingAndAllocationSettings");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=6)]
+        public BillToSettings BillToSettings {
+            get {
+                return this.billToSettingsField;
+            }
+            set {
+                this.billToSettingsField = value;
+                this.RaisePropertyChanged("BillToSettings");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=7)]
+        public StringValue Customer {
+            get {
+                return this.customerField;
+            }
+            set {
+                this.customerField = value;
+                this.RaisePropertyChanged("Customer");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=8)]
+        public StringValue Description {
+            get {
+                return this.descriptionField;
+            }
+            set {
+                this.descriptionField = value;
+                this.RaisePropertyChanged("Description");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlArrayAttribute(IsNullable=true, Order=9)]
+        public ProjectEmployee[] Employees {
+            get {
+                return this.employeesField;
+            }
+            set {
+                this.employeesField = value;
+                this.RaisePropertyChanged("Employees");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlArrayAttribute(IsNullable=true, Order=10)]
+        public ProjectEquipment[] Equipments {
+            get {
+                return this.equipmentsField;
+            }
+            set {
+                this.equipmentsField = value;
+                this.RaisePropertyChanged("Equipments");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=11)]
+        public DecimalValue Expenses {
+            get {
+                return this.expensesField;
+            }
+            set {
+                this.expensesField = value;
+                this.RaisePropertyChanged("Expenses");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=12)]
+        public StringValue ExternalRefNbr {
+            get {
+                return this.externalRefNbrField;
+            }
+            set {
+                this.externalRefNbrField = value;
+                this.RaisePropertyChanged("ExternalRefNbr");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=13)]
+        public ProjectGLAccount GLAccounts {
+            get {
+                return this.gLAccountsField;
+            }
+            set {
+                this.gLAccountsField = value;
+                this.RaisePropertyChanged("GLAccounts");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=14)]
+        public BooleanValue Hold {
+            get {
+                return this.holdField;
+            }
+            set {
+                this.holdField = value;
+                this.RaisePropertyChanged("Hold");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=15)]
+        public DecimalValue Income {
+            get {
+                return this.incomeField;
+            }
+            set {
+                this.incomeField = value;
+                this.RaisePropertyChanged("Income");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlArrayAttribute(IsNullable=true, Order=16)]
+        public ProjectProFormaDetails[] Invoices {
+            get {
+                return this.invoicesField;
+            }
+            set {
+                this.invoicesField = value;
+                this.RaisePropertyChanged("Invoices");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=17)]
+        public DateTimeValue LastModifiedDateTime {
+            get {
+                return this.lastModifiedDateTimeField;
+            }
+            set {
+                this.lastModifiedDateTimeField = value;
+                this.RaisePropertyChanged("LastModifiedDateTime");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=18)]
+        public DecimalValue Liabilities {
+            get {
+                return this.liabilitiesField;
+            }
+            set {
+                this.liabilitiesField = value;
+                this.RaisePropertyChanged("Liabilities");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=19)]
+        public StringValue ProjectID {
+            get {
+                return this.projectIDField;
+            }
+            set {
+                this.projectIDField = value;
+                this.RaisePropertyChanged("ProjectID");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=20)]
+        public ProjectProperties ProjectProperties {
+            get {
+                return this.projectPropertiesField;
+            }
+            set {
+                this.projectPropertiesField = value;
+                this.RaisePropertyChanged("ProjectProperties");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=21)]
+        public StringValue ProjectTemplateID {
+            get {
+                return this.projectTemplateIDField;
+            }
+            set {
+                this.projectTemplateIDField = value;
+                this.RaisePropertyChanged("ProjectTemplateID");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=22)]
+        public StringValue Status {
+            get {
+                return this.statusField;
+            }
+            set {
+                this.statusField = value;
+                this.RaisePropertyChanged("Status");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlArrayAttribute(IsNullable=true, Order=23)]
+        public ProjectUnionLocal[] UnionLocals {
+            get {
+                return this.unionLocalsField;
+            }
+            set {
+                this.unionLocalsField = value;
+                this.RaisePropertyChanged("UnionLocals");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=24)]
+        public VisibilitySettings VisibilitySettings {
+            get {
+                return this.visibilitySettingsField;
+            }
+            set {
+                this.visibilitySettingsField = value;
+                this.RaisePropertyChanged("VisibilitySettings");
             }
         }
     }
@@ -60081,7 +60396,7 @@ namespace CrmDataGeneration.Soap {
         
         private DecimalValue originalCommittedAmountField;
         
-        private DecimalValue originalCommittedQuantityField;
+        private DecimalValue originalCommittedQtyField;
         
         private DecimalValue pendingInvoiceAmountField;
         
@@ -60453,13 +60768,13 @@ namespace CrmDataGeneration.Soap {
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=28)]
-        public DecimalValue OriginalCommittedQuantity {
+        public DecimalValue OriginalCommittedQty {
             get {
-                return this.originalCommittedQuantityField;
+                return this.originalCommittedQtyField;
             }
             set {
-                this.originalCommittedQuantityField = value;
-                this.RaisePropertyChanged("OriginalCommittedQuantity");
+                this.originalCommittedQtyField = value;
+                this.RaisePropertyChanged("OriginalCommittedQty");
             }
         }
         
