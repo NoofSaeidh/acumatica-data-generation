@@ -12,8 +12,8 @@ namespace CrmDataGeneration.Common
         [JsonConstructor]
         public ExecutionTypeSettings(
             ExecutionType executionType,
-            int parallelThreads,
-            bool ignoreProcessingErrors)
+            bool ignoreProcessingErrors = false,
+            int parallelThreads = 1)
         {
             ExecutionType = executionType;
             ParallelThreads = parallelThreads;
@@ -31,12 +31,12 @@ namespace CrmDataGeneration.Common
 
         public static ExecutionTypeSettings Sequent(bool ignoreErrorsForEntities = false)
         {
-            return new ExecutionTypeSettings(ExecutionType.Sequent, 0, ignoreErrorsForEntities);
+            return new ExecutionTypeSettings(ExecutionType.Sequent, ignoreErrorsForEntities);
         }
 
         public static ExecutionTypeSettings Parallel(int parallelThreads, bool ignoreErrorsForEntities = false)
         {
-            return new ExecutionTypeSettings(ExecutionType.Parallel, parallelThreads, ignoreErrorsForEntities);
+            return new ExecutionTypeSettings(ExecutionType.Parallel,  ignoreErrorsForEntities, parallelThreads);
         }
     }
 }

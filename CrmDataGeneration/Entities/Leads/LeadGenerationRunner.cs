@@ -31,68 +31,63 @@ namespace CrmDataGeneration.Entities.Leads
                 foreach (var lead in leads)
                 {
                     cancellationToken.ThrowIfCancellationRequested();
-                    lead.ReturnBehavior = ReturnBehavior.None;
+                    lead.ReturnBehavior = ReturnBehavior.OnlySystem;
                     var resultLead = await client.PutAsync(lead, cancellationToken);
+                    lead.ID = resultLead.ID;
                 }
-            }
 
-            cancellationToken.ThrowIfCancellationRequested();
+                cancellationToken.ThrowIfCancellationRequested();
 
-            if (!GenerationSettings.ConvertByStatuses.IsNullOrEmpty())
-            {
-                var toConvertLeads = PrepareLeadsForConvertionByStatuses(leads).ToArray();
-
-                if (toConvertLeads.Any())
+                if (!GenerationSettings.ConvertByStatuses.IsNullOrEmpty())
                 {
-                    // convert to opportunities
-                    var convertLeadsToOpportunities = GetLeadsByConvertFlag(toConvertLeads, ConvertLead.ToOpportunity);
-                    await ConvertLeadsToOpportunities(convertLeadsToOpportunities, cancellationToken);
+                    var toConvertLeads = PrepareLeadsForConvertionByStatuses(leads).ToArray();
+
+                    if (toConvertLeads.Any())
+                    {
+                        // convert to opportunities
+                        var convertLeadsToOpportunities = GetLeadsByConvertFlag(toConvertLeads, ConvertLead.ToOpportunity);
+                        await ConvertLeadsToOpportunities(client, convertLeadsToOpportunities, cancellationToken);
+                    }
                 }
-            }
 
-            cancellationToken.ThrowIfCancellationRequested();
+                cancellationToken.ThrowIfCancellationRequested();
 
-            var pairs = PrepareEmailsForCreation(leads).ToArray();
-            if (pairs.Any())
-            {
-                await CreateEmailsAndLinkToLeads(pairs, cancellationToken);
+                var pairs = PrepareEmailsForCreation(leads).ToArray();
+                if (pairs.Any())
+                {
+                    await CreateEmailsAndLinkToLeads(client, pairs, cancellationToken);
+                }
             }
         }
 
-        public async VoidTask ConvertLeadsToOpportunities(IEnumerable<Lead> leads, CancellationToken cancellationToken = default)
+        public async VoidTask ConvertLeadsToOpportunities(AcumaticaSoapClient client, IEnumerable<Lead> leads, CancellationToken cancellationToken = default)
         {
-            using (var client = GetLoginLogoutClient())
+            foreach (var lead in leads)
             {
-                foreach (var lead in leads)
+                cancellationToken.ThrowIfCancellationRequested();
+
+                await client.InvokeAsync(lead, new ConvertLeadToOpportunity(), cancellationToken);
+            }
+        }
+
+        public async VoidTask CreateEmailsAndLinkToLeads(AcumaticaSoapClient client, IEnumerable<KeyValuePair<Lead, IEnumerable<Email>>> pairs, CancellationToken cancellationToken = default)
+        {
+            foreach (var pair in pairs)
+            {
+                foreach (var email in pair.Value)
                 {
                     cancellationToken.ThrowIfCancellationRequested();
 
-                    await client.InvokeAsync(lead, new ConvertLeadToOpportunity(), cancellationToken);
-                }
-            }
-        }
-
-        public async VoidTask CreateEmailsAndLinkToLeads(IEnumerable<KeyValuePair<Lead, IEnumerable<Email>>> pairs, CancellationToken cancellationToken = default)
-        {
-            using (var client = GetLoginLogoutClient())
-            {
-                foreach (var pair in pairs)
-                {
-                    foreach (var email in pair.Value)
-                    {
-                        cancellationToken.ThrowIfCancellationRequested();
-
-                        email.ReturnBehavior = ReturnBehavior.OnlySystem;
-                        var createdEmail = await client.PutAsync(email, cancellationToken);
-                        await client.InvokeAsync(
-                            createdEmail,
-                            new LinkEntityToEmail
-                            {
-                                RelatedEntity = pair.Key.LeadID?.ToString(),
-                                Type = GenerationSettings.PxTypeName
-                            }
-                        );
-                    }
+                    email.ReturnBehavior = ReturnBehavior.OnlySystem;
+                    var createdEmail = await client.PutAsync(email, cancellationToken);
+                    await client.InvokeAsync(
+                        createdEmail,
+                        new LinkEntityToEmail
+                        {
+                            RelatedEntity = pair.Key.LeadID?.ToString(),
+                            Type = GenerationSettings.PxTypeName
+                        }
+                    );
                 }
             }
         }

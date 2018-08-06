@@ -35,7 +35,7 @@ namespace CrmDataGeneration.Common
         {
             GenerationSettings.Validate();
 
-            Logger.Info("Generation of {type} with count: {count} started. Settings: {settings}",
+            Logger.Info("Generation of {type} with count: {count} started. Settings: {@settings}",
                 GenerationSettings.GenerationEntity, GenerationSettings.Count, GenerationSettings);
             var stopwatch = new Stopwatch();
 
