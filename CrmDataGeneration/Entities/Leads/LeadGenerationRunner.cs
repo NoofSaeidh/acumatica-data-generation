@@ -60,7 +60,7 @@ namespace CrmDataGeneration.Entities.Leads
             }
         }
 
-        public async VoidTask ConvertLeadsToOpportunities(AcumaticaSoapClient client, IEnumerable<Lead> leads, CancellationToken cancellationToken = default)
+        public async VoidTask ConvertLeadsToOpportunities(IApiClient client, IEnumerable<Lead> leads, CancellationToken cancellationToken = default)
         {
             foreach (var lead in leads)
             {
@@ -70,7 +70,7 @@ namespace CrmDataGeneration.Entities.Leads
             }
         }
 
-        public async VoidTask CreateEmailsAndLinkToLeads(AcumaticaSoapClient client, IEnumerable<KeyValuePair<Lead, IEnumerable<Email>>> pairs, CancellationToken cancellationToken = default)
+        public async VoidTask CreateEmailsAndLinkToLeads(IApiClient client, IEnumerable<KeyValuePair<Lead, IEnumerable<Email>>> pairs, CancellationToken cancellationToken = default)
         {
             foreach (var pair in pairs)
             {

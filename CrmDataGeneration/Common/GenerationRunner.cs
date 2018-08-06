@@ -11,14 +11,22 @@ namespace CrmDataGeneration.Common
 {
     public abstract class GenerationRunner
     {
+        private static Func<ApiConnectionConfig, Task<ILoginLogoutApiClient>> _apiClientFactory;
+
         public abstract Task RunGeneration(CancellationToken cancellationToken = default);
+        // use this if you wan't use custom api client
+        public static Func<ApiConnectionConfig, Task<ILoginLogoutApiClient>> ApiClientFactory
+        {
+            get => _apiClientFactory ?? (_apiClientFactory = async (config) => await Soap.AcumaticaSoapClient.LoginLogoutClientAsync(config));
+            set => _apiClientFactory = value;
+        }
     }
 
-    public abstract class GenerationRunner<TEntity, TGenerationSettings> : GenerationRunner 
+    public abstract class GenerationRunner<TEntity, TGenerationSettings> : GenerationRunner
         where TEntity : Soap.Entity
         where TGenerationSettings : class, IGenerationSettings<TEntity>
     {
-        private Bogus.Randomizer _bogusRandomizer;
+        private Bogus.Randomizer _randomizer;
         protected GenerationRunner(ApiConnectionConfig apiConnectionConfig, TGenerationSettings generationSettings)
         {
             ApiConnectionConfig = apiConnectionConfig ?? throw new ArgumentNullException(nameof(apiConnectionConfig));
@@ -28,7 +36,7 @@ namespace CrmDataGeneration.Common
         public ApiConnectionConfig ApiConnectionConfig { get; }
         public TGenerationSettings GenerationSettings { get; }
         protected ILogger Logger => LogConfiguration.DefaultLogger;
-        protected Bogus.Randomizer Randomizer => _bogusRandomizer ?? (_bogusRandomizer = new Bogus.Randomizer(GenerationSettings.RandomizerSettings.Seed));
+        protected Bogus.Randomizer Randomizer => _randomizer ?? (_randomizer = new Bogus.Randomizer(GenerationSettings.RandomizerSettings.Seed));
 
 
         public override async Task RunGeneration(CancellationToken cancellationToken = default)
@@ -55,7 +63,7 @@ namespace CrmDataGeneration.Common
                 }
                 stopwatch.Stop();
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Logger.Error(e, "Generation failed.");
                 throw;
@@ -87,7 +95,12 @@ namespace CrmDataGeneration.Common
 
         protected abstract Task RunGenerationSequentRaw(int count, CancellationToken cancellationToken);
 
-        protected Task<Soap.AcumaticaSoapClient> GetLoginLogoutClient() => Soap.AcumaticaSoapClient.LoginLogoutClientAsync(ApiConnectionConfig, !GenerationSettings.ExecutionTypeSettings.IgnoreProcessingErrors);
+        protected async Task<ILoginLogoutApiClient> GetLoginLogoutClient()
+        {
+            var client = await ApiClientFactory(ApiConnectionConfig);
+            client.ThrowOnErrors = !GenerationSettings.ExecutionTypeSettings.IgnoreProcessingErrors;
+            return client;
+        }
 
         protected IList<TEntity> GenerateRandomizedList(int count) => GenerationSettings.RandomizerSettings.GetDataGenerator().GenerateList(count);
     }

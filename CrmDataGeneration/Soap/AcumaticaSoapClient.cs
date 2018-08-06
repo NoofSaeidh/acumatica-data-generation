@@ -12,7 +12,7 @@ using VoidTask = System.Threading.Tasks.Task;
 
 namespace CrmDataGeneration.Soap
 {
-    public class AcumaticaSoapClient : IDisposable
+    public class AcumaticaSoapClient : IApiClient ,IDisposable
     {
         private static ILogger _logger => LogConfiguration.DefaultLogger;
 
@@ -55,21 +55,21 @@ namespace CrmDataGeneration.Soap
             );
         }
 
-        public static AcumaticaSoapClient LoginLogoutClient(ApiConnectionConfig connectionConfig, bool throwOnErrors = true)
+        public static ILoginLogoutApiClient LoginLogoutClient(ApiConnectionConfig connectionConfig, bool throwOnErrors = true)
         {
             if (connectionConfig == null)
             {
                 throw new ArgumentNullException(nameof(connectionConfig));
             }
 
-            var client = LogoutClient(connectionConfig.EndpointSettings);
+            var client = LogoutClient(connectionConfig.EndpointSettings, throwOnErrors);
 
             client.Login(connectionConfig.LoginInfo);
 
-            return client;
+            return (ILoginLogoutApiClient)client;
         }
 
-        public static async Task<AcumaticaSoapClient> LoginLogoutClientAsync(ApiConnectionConfig connectionConfig, bool throwOnErrors = true)
+        public static async Task<ILoginLogoutApiClient> LoginLogoutClientAsync(ApiConnectionConfig connectionConfig, bool throwOnErrors = true)
         {
             if (connectionConfig == null)
             {
@@ -77,14 +77,14 @@ namespace CrmDataGeneration.Soap
             }
 
 
-            var client = LogoutClient(connectionConfig.EndpointSettings);
+            var client = LogoutClient(connectionConfig.EndpointSettings, throwOnErrors);
 
             await client.LoginAsync(connectionConfig.LoginInfo);
 
-            return client;
+            return (ILoginLogoutApiClient)client;
         }
 
-        public static AcumaticaSoapClient LogoutClient(EndpointSettings endpointSettings, bool throwOnErrors = true)
+        public static ILogoutApiClient LogoutClient(EndpointSettings endpointSettings, bool throwOnErrors = true)
         {
             if (endpointSettings == null)
             {
@@ -321,7 +321,7 @@ namespace CrmDataGeneration.Soap
             }
         }
 
-        private class LogoutClientImpl : AcumaticaSoapClient, IDisposable
+        private class LogoutClientImpl : AcumaticaSoapClient, ILoginLogoutApiClient, IDisposable
         {
             public LogoutClientImpl(EndpointSettings endpointSettings) : base(endpointSettings)
             {

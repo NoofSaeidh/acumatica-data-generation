@@ -62,4 +62,57 @@ namespace CrmDataGeneration.Common
     {
         void Validate();
     }
+
+    public interface IApiClient
+    {
+        /// <summary>
+        ///     Throw execeptions on errors happened during execution API requests.
+        /// Otherwise only logger log exception and execution will continue.
+        /// Such exceptions as Argument exception will be thrown anyway.
+        /// Default is true.
+        /// </summary>
+        bool ThrowOnErrors { get; set; }
+
+        void Delete<T>(T entity) where T : Entity;
+        VoidTask DeleteAsync<T>(T entity) where T : Entity;
+        VoidTask DeleteAsync<T>(T entity, CancellationToken cancellationToken) where T : Entity;
+        T Get<T>(T whereEntity) where T : Entity;
+        Task<T> GetAsync<T>(T whereEntity) where T : Entity;
+        Task<T> GetAsync<T>(T whereEntity, CancellationToken cancellationToken) where T : Entity;
+        IList<T> GetList<T>(T whereEntity) where T : Entity;
+        Task<IList<T>> GetListAsync<T>(T whereEntity) where T : Entity;
+        Task<IList<T>> GetListAsync<T>(T whereEntity, CancellationToken cancellationToken) where T : Entity;
+        void Invoke<TEntity, TAction>(TEntity entity, TAction action)
+            where TEntity : Entity
+            where TAction : Soap.Action;
+        VoidTask InvokeAsync<TEntity, TAction>(TEntity entity, TAction action)
+            where TEntity : Entity
+            where TAction : Soap.Action;
+        VoidTask InvokeAsync<TEntity, TAction>(TEntity entity, TAction action, CancellationToken cancellationToken)
+            where TEntity : Entity
+            where TAction : Soap.Action;
+        void Login(LoginInfo loginInfo);
+        void Login(string name, string password, string company = null, string branch = null, string locale = null);
+        VoidTask LoginAsync(LoginInfo loginInfo);
+        VoidTask LoginAsync(string name, string password, string company = null, string branch = null, string locale = null);
+        void Logout();
+        VoidTask LogoutAsync();
+        T Put<T>(T entity) where T : Entity;
+        Task<T> PutAsync<T>(T entity) where T : Entity;
+        Task<T> PutAsync<T>(T entity, CancellationToken cancellationToken) where T : Entity;
+    }
+
+
+    // just indicates that client will autologout in dispose
+
+    public interface ILogoutApiClient : IApiClient, IDisposable
+    {
+
+    }
+
+    // just indicates that client will autologin in ctor and autologout in dispose
+    public interface ILoginLogoutApiClient : ILogoutApiClient, IDisposable
+    {
+
+    }
 }
