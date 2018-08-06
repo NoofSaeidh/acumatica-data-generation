@@ -10,9 +10,11 @@ using System.Threading.Tasks;
 
 namespace CrmDataGeneration.Common
 {
+
     public abstract class BaseRandomizerSettings
     {
         private int? _seed;
+
         // if not initialized manually - use random seed.
         public int Seed
         {
@@ -20,10 +22,30 @@ namespace CrmDataGeneration.Common
             set => _seed = value;
         }
     }
+
     public abstract class RandomizerSettings<T> : BaseRandomizerSettings, IRandomizerSettings<T> where T : Entity
     {
-        [JsonIgnore]
-        public IRandomizer<T> Randomizer => new Randomizer<T>(this);
+        private IDataGenerator<T> _statefullGenerator;
+
+        public IDataGenerator<T> GetStatelessDataGenerator() => new DataGenerator<T>(GetFaker());
+
+        /// <summary>
+        ///     The same as <see cref="GetStatelessDataGenerator"/> but after first call it will persist in memory,
+        /// and use the same generator at each call. 
+        /// This required to generate unique data from diferent places with the same seed.
+        /// This method is prefered.
+        /// </summary>
+        /// <param name="forceInitialize">Indicate should statefull generator be reinitialized.
+        /// You should specify true if any property was changed.</param>
+        /// <returns></returns>
+        public IDataGenerator<T> GetStatefullDataGenerator(bool forceInitialize = false)
+        {
+            return (forceInitialize || _statefullGenerator == null) 
+                ? (_statefullGenerator = GetStatelessDataGenerator()) 
+                : _statefullGenerator;
+        }
+
+        IDataGenerator<T> IRandomizerSettings<T>.GetDataGenerator() => GetStatefullDataGenerator();
 
         public virtual Faker<T> GetFaker()
         {
@@ -34,5 +56,7 @@ namespace CrmDataGeneration.Common
         }
 
         public void Validate() => ValidateHelper.ValidateObject(this);
+
+
     }
 }

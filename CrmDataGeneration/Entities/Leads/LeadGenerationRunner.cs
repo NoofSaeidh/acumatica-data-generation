@@ -26,7 +26,7 @@ namespace CrmDataGeneration.Entities.Leads
 
             cancellationToken.ThrowIfCancellationRequested();
 
-            using (var client = GetLoginLogoutClient())
+            using (var client = await GetLoginLogoutClient())
             {
                 foreach (var lead in leads)
                 {
@@ -127,7 +127,7 @@ namespace CrmDataGeneration.Entities.Leads
                             var conv = conversion.FirstOrDefault(c => c.status == l.Status);
                             if (conv == null)
                                 return false;
-                            if (BogusRandomizer.Bool((float)conv.probability))
+                            if (Randomizer.Bool((float)conv.probability))
                                 return true;
                             return false;
                         })
@@ -147,22 +147,22 @@ namespace CrmDataGeneration.Entities.Leads
 
             foreach (var lead in leads)
             {
-                var emailsCount = BogusRandomizer.ProbabilityRandomIfAny(emailSettings.EmailsForSingleLeadCounts);
+                var emailsCount = Randomizer.ProbabilityRandomIfAny(emailSettings.EmailsForSingleLeadCounts);
                 if (emailsCount == 0)
                     continue;
 
-                var emails = emailSettings.EmailRandomizerSettings.Randomizer.GenerateList(emailsCount);
+                var emails = emailSettings.EmailRandomizerSettings.GetStatefullDataGenerator().GenerateList(emailsCount);
                 var resultEmails = new List<Email>(emails.Count * 2);
                 foreach (var email in emails)
                 {
                     email.Incoming = true;
                     email.From = lead.Email;
-                    email.To = BogusRandomizer.ProbabilityRandomIfAny(emailSettings.SystemAccounts).Email;
+                    email.To = Randomizer.ProbabilityRandomIfAny(emailSettings.SystemAccounts).Email;
                     resultEmails.Add(email);
 
-                    var outEmail = emailSettings.EmailRandomizerSettings.Randomizer.Generate();
+                    var outEmail = emailSettings.EmailRandomizerSettings.GetStatefullDataGenerator().Generate();
                     outEmail.Incoming = false;
-                    outEmail.From = BogusRandomizer.ProbabilityRandomIfAny(emailSettings.SystemAccounts).Email;
+                    outEmail.From = Randomizer.ProbabilityRandomIfAny(emailSettings.SystemAccounts).Email;
                     outEmail.To = lead.Email;
                     resultEmails.Add(outEmail);
                 }

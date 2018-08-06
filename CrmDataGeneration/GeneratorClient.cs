@@ -50,6 +50,7 @@ namespace CrmDataGeneration
                         throw;
                 }
             }
+            _logger.Info("Generation all settings completed.");
         }
     }
 }

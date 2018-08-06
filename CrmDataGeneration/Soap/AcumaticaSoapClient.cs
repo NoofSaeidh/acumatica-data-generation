@@ -62,10 +62,26 @@ namespace CrmDataGeneration.Soap
                 throw new ArgumentNullException(nameof(connectionConfig));
             }
 
-            return new LoginLogoutClientImpl(connectionConfig)
+            var client = LogoutClient(connectionConfig.EndpointSettings);
+
+            client.Login(connectionConfig.LoginInfo);
+
+            return client;
+        }
+
+        public static async Task<AcumaticaSoapClient> LoginLogoutClientAsync(ApiConnectionConfig connectionConfig, bool throwOnErrors = true)
+        {
+            if (connectionConfig == null)
             {
-                ThrowOnErrors = throwOnErrors
-            };
+                throw new ArgumentNullException(nameof(connectionConfig));
+            }
+
+
+            var client = LogoutClient(connectionConfig.EndpointSettings);
+
+            await client.LoginAsync(connectionConfig.LoginInfo);
+
+            return client;
         }
 
         public static AcumaticaSoapClient LogoutClient(EndpointSettings endpointSettings, bool throwOnErrors = true)
@@ -314,14 +330,6 @@ namespace CrmDataGeneration.Soap
             {
                 Logout();
                 base.Dispose();
-            }
-        }
-
-        private class LoginLogoutClientImpl : LogoutClientImpl
-        {
-            public LoginLogoutClientImpl(ApiConnectionConfig apiConnectionConfig) : base(apiConnectionConfig.EndpointSettings)
-            {
-                Login(apiConnectionConfig.LoginInfo);
             }
         }
     }

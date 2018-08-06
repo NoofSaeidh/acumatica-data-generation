@@ -28,7 +28,7 @@ namespace CrmDataGeneration.Common
         public ApiConnectionConfig ApiConnectionConfig { get; }
         public TGenerationSettings GenerationSettings { get; }
         protected ILogger Logger => LogConfiguration.DefaultLogger;
-        protected Bogus.Randomizer BogusRandomizer => _bogusRandomizer ?? (_bogusRandomizer = new Bogus.Randomizer(GenerationSettings.RandomizerSettings.Seed));
+        protected Bogus.Randomizer Randomizer => _bogusRandomizer ?? (_bogusRandomizer = new Bogus.Randomizer(GenerationSettings.RandomizerSettings.Seed));
 
 
         public override async Task RunGeneration(CancellationToken cancellationToken = default)
@@ -87,8 +87,8 @@ namespace CrmDataGeneration.Common
 
         protected abstract Task RunGenerationSequentRaw(int count, CancellationToken cancellationToken);
 
-        protected Soap.AcumaticaSoapClient GetLoginLogoutClient() => Soap.AcumaticaSoapClient.LoginLogoutClient(ApiConnectionConfig, !GenerationSettings.ExecutionTypeSettings.IgnoreProcessingErrors);
+        protected Task<Soap.AcumaticaSoapClient> GetLoginLogoutClient() => Soap.AcumaticaSoapClient.LoginLogoutClientAsync(ApiConnectionConfig, !GenerationSettings.ExecutionTypeSettings.IgnoreProcessingErrors);
 
-        protected IList<TEntity> GenerateRandomizedList(int count) => GenerationSettings.RandomizerSettings.Randomizer.GenerateList(count);
+        protected IList<TEntity> GenerateRandomizedList(int count) => GenerationSettings.RandomizerSettings.GetDataGenerator().GenerateList(count);
     }
 }

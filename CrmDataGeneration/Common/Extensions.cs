@@ -28,6 +28,20 @@ namespace CrmDataGeneration.Common
         {
             return enumerable.Concat(elements);
         }
+
+        public static ICollection<T> AddMany<T>(this ICollection<T> collection, params T[] elements)
+        {
+            if(collection is List<T> list)
+            {
+                list.AddRange(elements);
+                return list;
+            }
+            foreach (var item in elements)
+            {
+                collection.Add(item);
+            }
+            return collection;
+        }
     }
 
     public static class BogusExtensions

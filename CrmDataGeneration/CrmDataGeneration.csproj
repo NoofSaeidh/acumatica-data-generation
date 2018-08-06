@@ -94,6 +94,7 @@
     <Compile Include="Common\GenerationRunner.cs" />
     <Compile Include="Common\JsonLogSerializer.cs" />
     <Compile Include="Common\LoginInfo.cs" />
+    <Compile Include="Common\ObjectExtensions.cs" />
     <Compile Include="Common\ValidateHelper.cs" />
     <Compile Include="Connected Services\Soap\Reference.cs">
       <AutoGen>True</AutoGen>
@@ -118,7 +119,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Common\Interfaces.cs" />
     <Compile Include="Entities\Leads\LeadRandomizerSettings.cs" />
-    <Compile Include="Common\Randomizer.cs" />
+    <Compile Include="Common\DataGenerator.cs" />
     <Compile Include="Soap\AcumaticaSoapClient.cs" />
     <Compile Include="Soap\AcumaticaException.cs" />
     <Compile Include="Soap\ReferenceExtended.cs" />
