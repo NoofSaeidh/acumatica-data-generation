@@ -7,10 +7,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CrmDataGeneration", "CrmDat
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AC_81769", "AC_81769\AC_81769.csproj", "{C26FA0D4-6DC6-4F87-BF45-5B9A982855E4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bench", "Bench\Bench.csproj", "{516B2334-2D3B-4435-9B87-B0A2C4E41298}"
+EndProject
 Global
-	GlobalSection(Performance) = preSolution
-		HasPerformanceSessions = true
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
@@ -24,12 +23,19 @@ Global
 		{C26FA0D4-6DC6-4F87-BF45-5B9A982855E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C26FA0D4-6DC6-4F87-BF45-5B9A982855E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C26FA0D4-6DC6-4F87-BF45-5B9A982855E4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{516B2334-2D3B-4435-9B87-B0A2C4E41298}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{516B2334-2D3B-4435-9B87-B0A2C4E41298}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{516B2334-2D3B-4435-9B87-B0A2C4E41298}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{516B2334-2D3B-4435-9B87-B0A2C4E41298}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {200555AD-024A-4DA1-99D4-30AE990D5558}
+	EndGlobalSection
+	GlobalSection(Performance) = preSolution
+		HasPerformanceSessions = true
 	EndGlobalSection
 	GlobalSection(Performance) = preSolution
 		HasPerformanceSessions = true
