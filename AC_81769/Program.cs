@@ -2,6 +2,7 @@
 using CrmDataGeneration.Common;
 using CrmDataGeneration.Entities.Emails;
 using CrmDataGeneration.Entities.Leads;
+using CrmDataGeneration.Rest;
 using CrmDataGeneration.Soap;
 using Newtonsoft.Json;
 using System;
@@ -12,6 +13,7 @@ using System.IO;
 using System.Linq;
 using System.ServiceModel;
 using System.Text;
+using System.Threading;
 using VoidTask = System.Threading.Tasks.Task; // Task in generated Api Client also exists
 
 namespace AC_81769
@@ -20,27 +22,30 @@ namespace AC_81769
     {
         static async VoidTask Main(string[] args)
         {
-
+            //NLog.Targets.Target.Register<GenerationConsoleTarget>("GenerationConsole");
             GeneratorConfig config;
             try
-            {
+            {         
                 config = GeneratorConfig.ReadConfigDefault();
+                var f = config.GenerationSettingsCollection.First() as LeadGenerationSettings;
+                f.Count = 10;
+
+                var tokenSource = new CancellationTokenSource();
+                Console.CancelKeyPress += (sender, e) =>
+                {
+                    tokenSource.Cancel();
+                };
+
+                var generator = new GeneratorClient(config);
+
+                await generator.GenerateAllOptions(tokenSource.Token);
             }
             catch (Exception e)
             {
                 throw;
             }
-            try
-            {
-                var generator = new GeneratorClient(config);
-
-                await generator.GenerateAllOptions();
-            }
-            catch (Exception e)
-            {
-
-            }
         }
+
         static async VoidTask LogActionTime(string actionName, VoidTask action)
         {
             using (var sw = new StreamWriter("log_common\\main.log"))
