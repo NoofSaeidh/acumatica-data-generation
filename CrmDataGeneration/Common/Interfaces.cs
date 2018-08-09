@@ -73,9 +73,9 @@ namespace CrmDataGeneration.Common
         /// </summary>
         bool ThrowOnErrors { get; set; }
 
-        void Delete<T>(T entity) where T : Entity;
-        VoidTask DeleteAsync<T>(T entity) where T : Entity;
-        VoidTask DeleteAsync<T>(T entity, CancellationToken cancellationToken) where T : Entity;
+        void Delete<T>(T whereEntity) where T : Entity;
+        VoidTask DeleteAsync<T>(T whereEntity) where T : Entity;
+        VoidTask DeleteAsync<T>(T whereEntity, CancellationToken cancellationToken) where T : Entity;
         T Get<T>(T whereEntity) where T : Entity;
         Task<T> GetAsync<T>(T whereEntity) where T : Entity;
         Task<T> GetAsync<T>(T whereEntity, CancellationToken cancellationToken) where T : Entity;

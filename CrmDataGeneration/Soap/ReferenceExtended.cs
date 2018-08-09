@@ -19,12 +19,12 @@ namespace CrmDataGeneration.Soap
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Guid? IEntity.Id { get => ID; set => ID = value; }
 
-        public override string ToString() => $"{GetType().Name}: {new EntityDebuggerProxy(this).ToString().Replace(Environment.NewLine, " ")}";
+        public override string ToString() => $"{GetType().Name}";
     }
 
     public partial class Action
     {
-        public override string ToString() => $"{GetType().Name}: {new EntityDebuggerProxy(this).ToString().Replace(Environment.NewLine, " ")}";
+        public override string ToString() => $"{GetType().Name}";
 
     }
 
