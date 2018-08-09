@@ -104,14 +104,14 @@ namespace CrmDataGeneration.Soap
                 throw new ArgumentNullException(nameof(loginInfo));
             }
 
-            _logger.Info("Login to {acumatica}.", _client.Endpoint.Address.Uri);
+            _logger.Info("Login to {acumatica}", _client.Endpoint.Address.Uri);
 
             TryCatch("Login", () => _client.Login(loginInfo.Username, loginInfo.Password, loginInfo.Company, loginInfo.Branch, loginInfo.Locale));
         }
 
         public void Login(string name, string password, string company = null, string branch = null, string locale = null)
         {
-            _logger.Info("Login to {acumatica}.", _client.Endpoint.Address.Uri);
+            _logger.Info("Login to {acumatica}", _client.Endpoint.Address.Uri);
 
             TryCatch("Login", () => _client.Login(name, password, company, branch, locale));
         }
@@ -123,28 +123,28 @@ namespace CrmDataGeneration.Soap
                 throw new ArgumentNullException(nameof(loginInfo));
             }
 
-            _logger.Info("Login to {acumatica}.", _client.Endpoint.Address.Uri);
+            _logger.Info("Login to {acumatica}", _client.Endpoint.Address.Uri);
 
             await TryCatchAsync("Login", _client.LoginAsync(loginInfo.Username, loginInfo.Password, loginInfo.Company, loginInfo.Branch, loginInfo.Locale));
         }
 
         public async VoidTask LoginAsync(string name, string password, string company = null, string branch = null, string locale = null)
         {
-            _logger.Info("Login to {acumatica}.", _client.Endpoint.Address.Uri);
+            _logger.Info("Login to {acumatica}", _client.Endpoint.Address.Uri);
 
             await TryCatchAsync("Login", _client.LoginAsync(name, password, company, branch, locale));
         }
 
         public void Logout()
         {
-            _logger.Info("Logout from {acumatica}.", _client.Endpoint.Address.Uri);
+            _logger.Info("Logout from {acumatica}", _client.Endpoint.Address.Uri);
 
             TryCatch("Logout", () => _client.Logout());
         }
 
         public async VoidTask LogoutAsync()
         {
-            _logger.Info("Logout from {acumatica}.", _client.Endpoint.Address.Uri);
+            _logger.Info("Logout from {acumatica}", _client.Endpoint.Address.Uri);
 
             await TryCatchAsync("Logout", _client.LogoutAsync());
         }
@@ -233,7 +233,7 @@ namespace CrmDataGeneration.Soap
         {
             try
             {
-                _logger.Debug(descr, logDebugArgs);
+                _logger.Trace(descr, logDebugArgs);
                 return action();
             }
             catch (Exception e)
@@ -250,7 +250,7 @@ namespace CrmDataGeneration.Soap
         {
             try
             {
-                _logger.Debug(descr, logDebugArgs);
+                _logger.Trace(descr, logDebugArgs);
                 action();
             }
             catch (Exception e)
@@ -266,7 +266,7 @@ namespace CrmDataGeneration.Soap
         {
             try
             {
-                _logger.Debug(descr, logDebugArgs);
+                _logger.Trace(descr, logDebugArgs);
                 return await task;
             }
             catch (Exception e)
@@ -283,7 +283,7 @@ namespace CrmDataGeneration.Soap
         {
             try
             {
-                _logger.Debug(descr, logDebugArgs);
+                _logger.Trace(descr, logDebugArgs);
                 await task;
             }
             catch (Exception e)
@@ -299,7 +299,7 @@ namespace CrmDataGeneration.Soap
         {
             try
             {
-                _logger.Debug(descr, logDebugArgs);
+                _logger.Trace(descr, logDebugArgs);
                 return await task.WithCancellation(cancellationToken);
             }
             catch (Exception e)
@@ -315,7 +315,7 @@ namespace CrmDataGeneration.Soap
         {
             try
             {
-                _logger.Debug(descr, logDebugArgs);
+                _logger.Trace(descr, logDebugArgs);
                 await task.WithCancellation(cancellationToken);
             }
             catch (Exception e)

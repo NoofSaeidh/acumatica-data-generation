@@ -28,18 +28,18 @@ namespace CrmDataGeneration.Common
         {
             if (_configurationInitialized) return;
 
-            ConfigurationItemFactory.Default.JsonConverter = new JsonLogSerializer();
+            //ConfigurationItemFactory.Default.JsonConverter = new JsonLogSerializer();
 
             // wrap unhandled exceptions to add them in log
             AppDomain.CurrentDomain.UnhandledException += (s, e) =>
             {
                 if (e.ExceptionObject is Exception ex)
                 {
-                    DefaultLogger.Error(ex, "Unhandled exception has occured.");
+                    DefaultLogger.Fatal(ex, "Unhandled exception has occured.");
                 }
                 else
                 {
-                    DefaultLogger.Error("Unhandled exception has occured. {Exception}", e.ExceptionObject);
+                    DefaultLogger.Fatal("Unhandled exception has occured. {Exception}", e.ExceptionObject);
                 }
             };
 

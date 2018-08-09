@@ -11,7 +11,7 @@ using Newtonsoft.Json.Converters;
 
 namespace CrmDataGeneration
 {
-    public class GeneratorConfig
+    public class GeneratorConfig : IValidatable
     {
         #region Static fields
 
@@ -34,9 +34,35 @@ namespace CrmDataGeneration
 
         #endregion
         public ApiConnectionConfig ApiConnectionConfig { get; set; }
+        [RequiredCollection]
         public ICollection<IGenerationSettings> GenerationSettingsCollection { get; set; }
         // if true processing will be stopped if any generation option will fail
         public bool StopProccesingOnExeception { get; set; }
+        // provide ability to run EACH Generations Settings with different Execution Settings
+        public ICollection<ExecutionTypeSettings> InjectExecutionSettings { get; set; }
+
+        // inject all injected props to GenerationSettingsCollection (now only InjectExecutionSettings)
+        // work only if items in GenerationSettingsCollection inherited from GenerationSettingsBase
+        public IEnumerable<IGenerationSettings> GetInjectedGenerationSettingsCollection()
+        {
+            if (InjectExecutionSettings.IsNullOrEmpty())
+                return GenerationSettingsCollection.ToList();
+
+            return GenerationSettingsCollection
+                ?.SelectMany(s =>
+                    InjectExecutionSettings
+                    .Select(es =>
+                    {
+                        if (s is GenerationSettingsBase gsb)
+                        {
+                            var res = gsb.Copy();
+                            res.ExecutionTypeSettings = es;
+                            return res;
+                        }
+                        return s;
+                    })
+                );
+        }
 
         #region Common methods
 
@@ -65,6 +91,11 @@ namespace CrmDataGeneration
 
             JsonConvert.PopulateObject(File.ReadAllText(ConfigCredsFileName), config, _jsonSettings);
             return config;
+        }
+
+        public void Validate()
+        {
+            ValidateHelper.ValidateObject(this);
         }
 
         #endregion

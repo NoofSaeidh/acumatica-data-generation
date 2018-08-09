@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace CrmDataGeneration.Common
 {
 
-    public abstract class BaseRandomizerSettings
+    public abstract class RandomizerSettingsBase
     {
         private int? _seed;
 
@@ -23,7 +23,7 @@ namespace CrmDataGeneration.Common
         }
     }
 
-    public abstract class RandomizerSettings<T> : BaseRandomizerSettings, IRandomizerSettings<T> where T : Entity
+    public abstract class RandomizerSettings<T> : RandomizerSettingsBase, IRandomizerSettings<T> where T : Entity
     {
         private IDataGenerator<T> _statefullGenerator;
 

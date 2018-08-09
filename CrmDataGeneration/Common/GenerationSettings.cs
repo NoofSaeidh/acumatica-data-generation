@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace CrmDataGeneration.Common
 {
-    public abstract class BaseGenerationSettings
+    public abstract class GenerationSettingsBase : IGenerationSettings
     {
         public int Count { get; set; }
         public ExecutionTypeSettings ExecutionTypeSettings { get; set; }
@@ -19,10 +19,10 @@ namespace CrmDataGeneration.Common
 
         public abstract GenerationRunner GetGenerationRunner(ApiConnectionConfig apiConnectionConfig);
 
-        internal virtual BaseRandomizerSettings BaseRandomizerSettings { get; }
+        internal virtual RandomizerSettingsBase RandomizerSettingsBase { get; }
     }
 
-    public abstract class GenerationSettings<T> : BaseGenerationSettings, IGenerationSettings<T> where T : Soap.Entity
+    public abstract class GenerationSettings<T> : GenerationSettingsBase, IGenerationSettings<T> where T : Soap.Entity
     {
         private string _pxTypeName;
         [JsonIgnore]
@@ -32,7 +32,7 @@ namespace CrmDataGeneration.Common
 
         [Required]
         public IRandomizerSettings<T> RandomizerSettings { get; set; }
-        internal override BaseRandomizerSettings BaseRandomizerSettings => RandomizerSettings as BaseRandomizerSettings;
+        internal override RandomizerSettingsBase RandomizerSettingsBase => RandomizerSettings as RandomizerSettingsBase;
 
         public virtual void Validate()
         {

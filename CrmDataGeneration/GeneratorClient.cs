@@ -33,10 +33,9 @@ namespace CrmDataGeneration
 
         public async Task GenerateAllOptions(CancellationToken cancellationToken = default)
         {
-            if (Config.GenerationSettingsCollection == null)
-                throw new InvalidOperationException($"{nameof(Config.GenerationSettingsCollection)} propety is not specified in {nameof(Config)}.");
-            _logger.Info("Start generation for all settings.");
-            foreach (var settings in Config.GenerationSettingsCollection)
+            Config.Validate();
+            _logger.Info("Start generation for all settings");
+            foreach (var settings in Config.GetInjectedGenerationSettingsCollection())
             {
                 cancellationToken.ThrowIfCancellationRequested();
                 try
@@ -50,7 +49,7 @@ namespace CrmDataGeneration
                         throw;
                 }
             }
-            _logger.Info("Generation all settings completed.");
+            _logger.Info("Generation all settings completed");
         }
     }
 }
