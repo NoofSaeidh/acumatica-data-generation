@@ -16,6 +16,7 @@ using VoidTask = System.Threading.Tasks.Task;
 
 namespace CrmDataGeneration.Rest
 {
+    [Obsolete("Not fully implemented.")]
     public class AcumaticaRestClient : IApiClient
     {
         private static ILogger _logger => LogConfiguration.DefaultLogger;

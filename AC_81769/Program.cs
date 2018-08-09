@@ -20,31 +20,77 @@ namespace AC_81769
 {
     class Program
     {
-        static async VoidTask Main(string[] args)
+        static void Main()
         {
-            //NLog.Targets.Target.Register<GenerationConsoleTarget>("GenerationConsole");
-            GeneratorConfig config;
-            try
-            {         
-                config = GeneratorConfig.ReadConfigDefault();
-                var f = config.GenerationSettingsCollection.First() as LeadGenerationSettings;
-                f.Count = 10;
-
-                var tokenSource = new CancellationTokenSource();
-                Console.CancelKeyPress += (sender, e) =>
-                {
-                    tokenSource.Cancel();
-                };
-
-                var generator = new GeneratorClient(config);
-
-                await generator.GenerateAllOptions(tokenSource.Token);
-            }
-            catch (Exception e)
-            {
-                throw;
-            }
+            new GeneratorClient(GeneratorConfig.ReadConfigDefault()).GenerateAllOptions().Wait();
         }
+
+
+        //static async VoidTask Main(string[] args)
+        //{
+        //    //NLog.Targets.Target.Register<GenerationConsoleTarget>("GenerationConsole");
+        //    GeneratorConfig config;
+        //    try
+        //    {
+        //        config = GeneratorConfig.ReadConfigDefault();
+        //        var f = config.GenerationSettingsCollection.First() as LeadGenerationSettings;
+        //        f.Count = 10;
+
+        //        var tokenSource = new CancellationTokenSource();
+        //        Console.CancelKeyPress += (sender, e) =>
+        //        {
+        //            tokenSource.Cancel();
+        //        };
+
+
+        //        async System.Threading.Tasks.Task<Lead> createLead(IApiClient apiClient, int nummer, string last)
+        //        {
+        //            return await apiClient.PutAsync(new Lead
+        //            {
+        //                LastName = last + "__" + nummer,
+        //                FirstName = "aaa",
+        //                LeadClass = "JOB",
+        //                ReturnBehavior = ReturnBehavior.OnlySystem
+        //            });
+        //        }
+
+        //        async VoidTask convert(IApiClient apiClient, Lead lead)
+        //        {
+        //            await apiClient.InvokeAsync(lead, new ConvertLeadToOpportunity());
+        //        }
+
+        //        bool startDoShit = false;
+        //        int num = 2;
+
+        //        async VoidTask doShit(string id)
+        //        {
+        //            using (var client = await AcumaticaSoapClient.LoginLogoutClientAsync(config.ApiConnectionConfig))
+        //            {
+        //                var lead = await createLead(client, num, "__" + id);
+
+        //                while(!startDoShit)
+        //                {
+
+        //                }
+
+        //                await convert(client, lead);
+        //            }
+        //        }
+
+
+        //        var shitTasks = Enumerable.Range(1, 12).Select(i => doShit(i.ToString())).ToList();
+
+        //        Thread.Sleep(1000);
+
+        //        startDoShit = true;
+
+        //        await VoidTask.WhenAll(shitTasks);
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        throw;
+        //    }
+        //}
 
         static async VoidTask LogActionTime(string actionName, VoidTask action)
         {
@@ -98,15 +144,15 @@ namespace AC_81769
                                 ["Lost"] = 0.2m
                             }
                         },
-                        ConvertByStatuses = new Dictionary<string, ProbabilityCollection<ConvertLead>>
+                        ConvertByStatuses = new Dictionary<string, ProbabilityCollection<ConvertLeadFlags>>
                         {
-                            ["New"] = new ProbabilityCollection<ConvertLead>
+                            ["New"] = new ProbabilityCollection<ConvertLeadFlags>
                             {
-                                [ConvertLead.ToOpportunity] = 0.5m
+                                [ConvertLeadFlags.ToOpportunity] = 0.5m
                             },
-                            ["Open"] = new ProbabilityCollection<ConvertLead>
+                            ["Open"] = new ProbabilityCollection<ConvertLeadFlags>
                             {
-                                [ConvertLead.ToOpportunity] = 0.5m
+                                [ConvertLeadFlags.ToOpportunity] = 0.5m
                             },
                         },
                         EmailsGenerationSettings = new LeadGenerationSettings.EmailsForLeadGenerationSettings

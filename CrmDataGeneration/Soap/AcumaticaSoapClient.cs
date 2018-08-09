@@ -12,7 +12,7 @@ using VoidTask = System.Threading.Tasks.Task;
 
 namespace CrmDataGeneration.Soap
 {
-    public class AcumaticaSoapClient : IApiClient ,IDisposable
+    public class AcumaticaSoapClient : IApiClient, IDisposable
     {
         private static ILogger _logger => LogConfiguration.DefaultLogger;
 
@@ -151,77 +151,77 @@ namespace CrmDataGeneration.Soap
 
         public T Get<T>(T whereEntity) where T : Entity
         {
-            return TryCatch($"Get {typeof(T).Name}", () => _client.Get(whereEntity));
+            return TryCatch($"Get {typeof(T).Name}", () => _client.Get(whereEntity), whereEntity);
         }
 
         public async Task<T> GetAsync<T>(T whereEntity) where T : Entity
         {
-            return await TryCatchAsync($"Get {typeof(T).Name}", _client.GetAsync(whereEntity));
+            return await TryCatchAsync($"Get {typeof(T).Name}", _client.GetAsync(whereEntity), whereEntity);
         }
 
         public async Task<T> GetAsync<T>(T whereEntity, CancellationToken cancellationToken) where T : Entity
         {
-            return await TryCatchAsync($"Get {typeof(T).Name}", _client.GetAsync(whereEntity), cancellationToken);
+            return await TryCatchAsync($"Get {typeof(T).Name}", _client.GetAsync(whereEntity), cancellationToken, whereEntity);
         }
 
         public IList<T> GetList<T>(T whereEntity) where T : Entity
         {
-            return TryCatch($"Get list {typeof(T).Name}", () => _client.GetList(whereEntity));
+            return TryCatch($"Get list {typeof(T).Name}", () => _client.GetList(whereEntity), whereEntity);
         }
 
         public async Task<IList<T>> GetListAsync<T>(T whereEntity) where T : Entity
         {
-            return await TryCatchAsync($"Get list {typeof(T).Name}", _client.GetListAsync(whereEntity));
+            return await TryCatchAsync($"Get list {typeof(T).Name}", _client.GetListAsync(whereEntity), whereEntity);
         }
 
         public async Task<IList<T>> GetListAsync<T>(T whereEntity, CancellationToken cancellationToken) where T : Entity
         {
-            return await TryCatchAsync($"Get list {typeof(T).Name}", _client.GetListAsync(whereEntity), cancellationToken);
+            return await TryCatchAsync($"Get list {typeof(T).Name}", _client.GetListAsync(whereEntity), cancellationToken, whereEntity);
         }
 
         public T Put<T>(T entity) where T : Entity
         {
-            return TryCatch($"Put {typeof(T).Name}", () => _client.Put(entity));
+            return TryCatch($"Put {typeof(T).Name}", () => _client.Put(entity), entity);
         }
 
         public async Task<T> PutAsync<T>(T entity) where T : Entity
         {
-            return await TryCatchAsync($"Put {typeof(T).Name}", _client.PutAsync(entity));
+            return await TryCatchAsync($"Put {typeof(T).Name}", _client.PutAsync(entity), entity);
         }
 
         public async Task<T> PutAsync<T>(T entity, CancellationToken cancellationToken) where T : Entity
         {
-            return await TryCatchAsync($"Put {typeof(T).Name}", _client.PutAsync(entity), cancellationToken);
+            return await TryCatchAsync($"Put {typeof(T).Name}", _client.PutAsync(entity), cancellationToken, entity);
         }
 
         public void Delete<T>(T entity) where T : Entity
         {
-            TryCatch($"Delete {typeof(T).Name}", () => _client.Delete(entity));
+            TryCatch($"Delete {typeof(T).Name}", () => _client.Delete(entity), entity);
         }
 
         public async VoidTask DeleteAsync<T>(T entity) where T : Entity
         {
-            await TryCatchAsync($"Delete {typeof(T).Name}", _client.DeleteAsync(entity));
+            await TryCatchAsync($"Delete {typeof(T).Name}", _client.DeleteAsync(entity), entity);
         }
 
         public async VoidTask DeleteAsync<T>(T entity, CancellationToken cancellationToken) where T : Entity
         {
-            await TryCatchAsync($"Delete {typeof(T).Name}", _client.DeleteAsync(entity), cancellationToken);
+            await TryCatchAsync($"Delete {typeof(T).Name}", _client.DeleteAsync(entity), cancellationToken, entity);
         }
 
         public void Invoke<TEntity, TAction>(TEntity entity, TAction action) where TEntity : Entity where TAction : Action
         {
-            TryCatch($"Invoke {typeof(TAction).Name} on {typeof(TEntity)}", () => _client.Invoke(entity, action));
+            TryCatch($"Invoke {typeof(TAction).Name} on {typeof(TEntity).Name}", () => _client.Invoke(entity, action), entity, action);
         }
 
         public async VoidTask InvokeAsync<TEntity, TAction>(TEntity entity, TAction action) where TEntity : Entity where TAction : Action
         {
-            await TryCatchAsync($"Invoke {typeof(TAction).Name} on {typeof(TEntity)}", _client.InvokeAsync(entity, action));
+            await TryCatchAsync($"Invoke {typeof(TAction).Name} on {typeof(TEntity).Name}", _client.InvokeAsync(entity, action), entity, action);
         }
 
         public async VoidTask InvokeAsync<TEntity, TAction>(TEntity entity, TAction action, CancellationToken cancellationToken) where TEntity : Entity where TAction : Action
         {
-            await TryCatchAsync($"Invoke {typeof(TAction).Name} on {typeof(TEntity)}", _client.InvokeAsync(entity, action), cancellationToken);
+            await TryCatchAsync($"Invoke {typeof(TAction).Name} on {typeof(TEntity).Name}", _client.InvokeAsync(entity, action), cancellationToken, entity, action);
         }
 
         public void Dispose()
@@ -229,26 +229,28 @@ namespace CrmDataGeneration.Soap
             ((IDisposable)_client).Dispose();
         }
 
-        private T TryCatch<T>(string descr, Func<T> action)
+        private T TryCatch<T>(string descr, Func<T> action, params object[] logDebugArgs)
         {
             try
             {
+                LogDebug(descr, logDebugArgs);
                 return action();
             }
             catch (Exception e)
             {
                 var text = $"Action \"{descr}\" failed.";
                 _logger.Error(e, text);
-                if(ThrowOnErrors)
+                if (ThrowOnErrors)
                     throw new AcumaticaException(text, e);
                 return default;
             }
         }
 
-        private void TryCatch(string descr, System.Action action)
+        private void TryCatch(string descr, System.Action action, params object[] logDebugArgs)
         {
             try
             {
+                LogDebug(descr, logDebugArgs);
                 action();
             }
             catch (Exception e)
@@ -260,10 +262,11 @@ namespace CrmDataGeneration.Soap
             }
         }
 
-        private async Task<T> TryCatchAsync<T>(string descr, Task<T> task)
+        private async Task<T> TryCatchAsync<T>(string descr, Task<T> task, params object[] logDebugArgs)
         {
             try
             {
+                LogDebug(descr, logDebugArgs);
                 return await task;
             }
             catch (Exception e)
@@ -276,10 +279,11 @@ namespace CrmDataGeneration.Soap
             }
         }
 
-        private async VoidTask TryCatchAsync(string descr, VoidTask task)
+        private async VoidTask TryCatchAsync(string descr, VoidTask task, params object[] logDebugArgs)
         {
             try
             {
+                LogDebug(descr, logDebugArgs);
                 await task;
             }
             catch (Exception e)
@@ -291,10 +295,11 @@ namespace CrmDataGeneration.Soap
             }
         }
 
-        private async Task<T> TryCatchAsync<T>(string descr, Task<T> task, CancellationToken cancellationToken)
+        private async Task<T> TryCatchAsync<T>(string descr, Task<T> task, CancellationToken cancellationToken, params object[] logDebugArgs)
         {
             try
             {
+                LogDebug(descr, logDebugArgs);
                 return await task.WithCancellation(cancellationToken);
             }
             catch (Exception e)
@@ -306,10 +311,11 @@ namespace CrmDataGeneration.Soap
                 return default;
             }
         }
-        private async VoidTask TryCatchAsync(string descr, VoidTask task, CancellationToken cancellationToken)
+        private async VoidTask TryCatchAsync(string descr, VoidTask task, CancellationToken cancellationToken, params object[] logDebugArgs)
         {
             try
             {
+                LogDebug(descr, logDebugArgs);
                 await task.WithCancellation(cancellationToken);
             }
             catch (Exception e)
@@ -319,6 +325,14 @@ namespace CrmDataGeneration.Soap
                 if (ThrowOnErrors)
                     throw new AcumaticaException(text, e);
             }
+        }
+
+        private void LogDebug(string descr, params object[] args)
+        {
+            if (args == null || args.Length == 0)
+                _logger.Debug(descr);
+            else
+                _logger.Debug(descr + "  " + string.Join(" ", Enumerable.Range(0, args.Length).Select(i => "{arg" + i + '}')), args);
         }
 
         private class LogoutClientImpl : AcumaticaSoapClient, ILoginLogoutApiClient, IDisposable

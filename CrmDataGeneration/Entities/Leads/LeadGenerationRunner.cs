@@ -31,82 +31,47 @@ namespace CrmDataGeneration.Entities.Leads
                 foreach (var lead in leads)
                 {
                     cancellationToken.ThrowIfCancellationRequested();
-                    lead.ReturnBehavior = ReturnBehavior.OnlySystem;
+
+                    lead.ReturnBehavior = ReturnBehavior.OnlySpecified;
+                    lead.LeadID = new IntSearch();
                     var resultLead = await client.PutAsync(lead, cancellationToken);
                     lead.ID = resultLead.ID;
-                }
+                    lead.LeadID = resultLead.LeadID;
 
-                cancellationToken.ThrowIfCancellationRequested();
+                    // convert lead
+                    var convertFlags = GetConvertFlags(lead);
+                    if (convertFlags.HasFlag(ConvertLeadFlags.ToOpportunity))
+                        await client.InvokeAsync(lead, new ConvertLeadToOpportunity(), cancellationToken);
 
-                if (!GenerationSettings.ConvertByStatuses.IsNullOrEmpty())
-                {
-                    var toConvertLeads = PrepareLeadsForConvertionByStatuses(leads).ToArray();
 
-                    if (toConvertLeads.Any())
+                    // create emails
+                    var emails = PrepareEmailsForCreation(lead);
+                    if(emails != null)
                     {
-                        // convert to opportunities
-                        var convertLeadsToOpportunities = GetLeadsByConvertFlag(toConvertLeads, ConvertLead.ToOpportunity);
-                        await ConvertLeadsToOpportunities(client, convertLeadsToOpportunities, cancellationToken);
-                    }
-                }
-
-                cancellationToken.ThrowIfCancellationRequested();
-
-                var pairs = PrepareEmailsForCreation(leads).ToArray();
-                if (pairs.Any())
-                {
-                    await CreateEmailsAndLinkToLeads(client, pairs, cancellationToken);
-                }
-            }
-        }
-
-        public async VoidTask ConvertLeadsToOpportunities(IApiClient client, IEnumerable<Lead> leads, CancellationToken cancellationToken = default)
-        {
-            foreach (var lead in leads)
-            {
-                cancellationToken.ThrowIfCancellationRequested();
-
-                await client.InvokeAsync(lead, new ConvertLeadToOpportunity(), cancellationToken);
-            }
-        }
-
-        public async VoidTask CreateEmailsAndLinkToLeads(IApiClient client, IEnumerable<KeyValuePair<Lead, IEnumerable<Email>>> pairs, CancellationToken cancellationToken = default)
-        {
-            foreach (var pair in pairs)
-            {
-                foreach (var email in pair.Value)
-                {
-                    cancellationToken.ThrowIfCancellationRequested();
-
-                    email.ReturnBehavior = ReturnBehavior.OnlySystem;
-                    var createdEmail = await client.PutAsync(email, cancellationToken);
-                    await client.InvokeAsync(
-                        createdEmail,
-                        new LinkEntityToEmail
+                        foreach (var email in emails)
                         {
-                            RelatedEntity = pair.Key.LeadID?.ToString(),
-                            Type = GenerationSettings.PxTypeName
+                            cancellationToken.ThrowIfCancellationRequested();
+
+                            email.ReturnBehavior = ReturnBehavior.OnlySystem;
+                            var createdEmail = await client.PutAsync(email, cancellationToken);
+                            await client.InvokeAsync(
+                                createdEmail,
+                                new LinkEntityToEmail
+                                {
+                                    RelatedEntity = lead.LeadID.ToString(),
+                                    Type = GenerationSettings.PxTypeName
+                                }
+                            );
                         }
-                    );
+                    }
+
                 }
             }
         }
 
-
-        protected IEnumerable<Lead> GetLeadsByConvertFlag(IEnumerable<KeyValuePair<ConvertLead, IEnumerable<Lead>>> leads, ConvertLead flag)
-        {
-            return leads
-                .Where(x => x.Key.HasFlag(flag))
-                .SelectMany(x => x.Value);
-        }
-
-        protected IEnumerable<KeyValuePair<ConvertLead, IEnumerable<Lead>>> PrepareLeadsForConvertionByStatuses(IEnumerable<Lead> leads)
+        private ConvertLeadFlags GetConvertFlags(Lead lead)
         {
             // convert depending on Probability defined in ConvertToOpportunityByStatus
-
-            var leadsList = leads.ToArray();
-
-            var convertToOpportunity = new List<Lead>(leadsList.Length);
 
             var byConversion = GenerationSettings
                 .ConvertByStatuses
@@ -115,58 +80,45 @@ namespace CrmDataGeneration.Entities.Leads
                 .GroupBy(x => x.conversion);
             //.ToDictionary(x => x.conversion, x => new { x.status, x.probability });
             if (byConversion == null)
-                yield break;
+                return ConvertLeadFlags.DontConvert;
+
+            var result = ConvertLeadFlags.DontConvert;
 
             foreach (var conversion in byConversion)
             {
-                yield return new KeyValuePair<ConvertLead, IEnumerable<Lead>>(
-                    conversion.Key,
-                    leadsList
-                        .Where(l =>
-                        {
-                            var conv = conversion.FirstOrDefault(c => c.status == l.Status);
-                            if (conv == null)
-                                return false;
-                            if (Randomizer.Bool((float)conv.probability))
-                                return true;
-                            return false;
-                        })
-                );
+                var conv = conversion.FirstOrDefault(c => c.status == lead.Status);
+                if (conv == null)
+                    continue;
+                if (Randomizer.Bool((float)conv.probability))
+                    result |= conv.conversion;
             }
+            return result;
         }
 
-        protected IEnumerable<KeyValuePair<Lead, IEnumerable<Email>>> PrepareEmailsForCreation(IEnumerable<Lead> leads)
+        private IEnumerable<Email> PrepareEmailsForCreation(Lead lead)
         {
             var emailSettings = GenerationSettings.EmailsGenerationSettings;
-            if (emailSettings == null
-                || emailSettings.EmailRandomizerSettings == null
-                || emailSettings.EmailsForSingleLeadCounts == null
-            )
+            if (emailSettings == null)
+                yield break;
+            emailSettings.Validate();
+
+            var emailsCount = Randomizer.ProbabilityRandomIfAny(emailSettings.EmailsForSingleLeadCounts);
+            if (emailsCount == 0)
                 yield break;
 
-
-            foreach (var lead in leads)
+            var emails = emailSettings.EmailRandomizerSettings.GetStatefullDataGenerator().GenerateList(emailsCount);
+            foreach (var email in emails)
             {
-                var emailsCount = Randomizer.ProbabilityRandomIfAny(emailSettings.EmailsForSingleLeadCounts);
-                if (emailsCount == 0)
-                    continue;
+                email.Incoming = true;
+                email.From = lead.Email;
+                email.To = Randomizer.ProbabilityRandomIfAny(emailSettings.SystemAccounts).Email;
+                yield return email;
 
-                var emails = emailSettings.EmailRandomizerSettings.GetStatefullDataGenerator().GenerateList(emailsCount);
-                var resultEmails = new List<Email>(emails.Count * 2);
-                foreach (var email in emails)
-                {
-                    email.Incoming = true;
-                    email.From = lead.Email;
-                    email.To = Randomizer.ProbabilityRandomIfAny(emailSettings.SystemAccounts).Email;
-                    resultEmails.Add(email);
-
-                    var outEmail = emailSettings.EmailRandomizerSettings.GetStatefullDataGenerator().Generate();
-                    outEmail.Incoming = false;
-                    outEmail.From = Randomizer.ProbabilityRandomIfAny(emailSettings.SystemAccounts).Email;
-                    outEmail.To = lead.Email;
-                    resultEmails.Add(outEmail);
-                }
-                yield return new KeyValuePair<Lead, IEnumerable<Email>>(lead, resultEmails);
+                var outEmail = emailSettings.EmailRandomizerSettings.GetStatefullDataGenerator().Generate();
+                outEmail.Incoming = false;
+                outEmail.From = Randomizer.ProbabilityRandomIfAny(emailSettings.SystemAccounts).Email;
+                outEmail.To = lead.Email;
+                yield return email;
             }
         }
     }

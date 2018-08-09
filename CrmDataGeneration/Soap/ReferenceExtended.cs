@@ -19,7 +19,13 @@ namespace CrmDataGeneration.Soap
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         Guid? IEntity.Id { get => ID; set => ID = value; }
 
-        public override string ToString() => $"{GetType().Name}, {nameof(ID)} = {ID}";
+        public override string ToString() => $"{GetType().Name}: {new EntityDebuggerProxy(this).ToString().Replace(Environment.NewLine, " ")}";
+    }
+
+    public partial class Action
+    {
+        public override string ToString() => $"{GetType().Name}: {new EntityDebuggerProxy(this).ToString().Replace(Environment.NewLine, " ")}";
+
     }
 
     #endregion
@@ -536,8 +542,8 @@ namespace CrmDataGeneration.Soap
     #region Debugger display
     internal class EntityDebuggerProxy
     {
-        private readonly Entity _entity;
-        public EntityDebuggerProxy(Entity entity)
+        private readonly object _entity;
+        public EntityDebuggerProxy(object entity)
         {
             _entity = entity;
         }
@@ -609,6 +615,8 @@ namespace CrmDataGeneration.Soap
             }
         }
 
+        public override string ToString() => string.Join("; ", Items.Select(i => i.ToString()));
+
         [DebuggerDisplay("{Value}", Name = "{Key}", Type = "")]
         internal class KeyValuePairs
         {
@@ -639,6 +647,8 @@ namespace CrmDataGeneration.Soap
                     _value = value;
                 }
             }
+
+            public override string ToString() => $"{Key} = {Value}";
         }
     }
     #endregion
