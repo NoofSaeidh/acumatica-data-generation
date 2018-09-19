@@ -40,7 +40,7 @@ namespace CrmDataGeneration
                 cancellationToken.ThrowIfCancellationRequested();
                 try
                 {
-                    await settings.GetGenerationRunner(Config.ApiConnectionConfig).RunGeneration(cancellationToken);
+                    await settings.GetGenerationRunner(Config.ApiConnectionConfig).RunGeneration(cancellationToken).ConfigureAwait(false);
                 }
                 catch
                 {
