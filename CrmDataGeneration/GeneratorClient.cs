@@ -46,7 +46,7 @@ namespace CrmDataGeneration
                 {
                     // logger in GenerationRunner
                     if (Config.StopProccesingOnExeception)
-                        throw;
+                        return;
                 }
             }
             _logger.Info("Generation all settings completed");

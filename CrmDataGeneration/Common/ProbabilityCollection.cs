@@ -74,7 +74,7 @@ namespace CrmDataGeneration.Common
 
         public IDictionary<T, decimal> AsDictionary => this;
 
-        // because linq doesn't when both interfaces defined
+        // because linq doesn't work when both interfaces defined
         public IList<T> AsList => this;
 
         public decimal FreeProbability { get; private set; }

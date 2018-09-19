@@ -104,14 +104,14 @@ namespace CrmDataGeneration.Soap
                 throw new ArgumentNullException(nameof(loginInfo));
             }
 
-            _logger.Info("Login to {acumatica}", _client.Endpoint.Address.Uri);
+            _logger.Debug("Login to {acumatica}", _client.Endpoint.Address.Uri);
 
             TryCatch("Login", () => _client.Login(loginInfo.Username, loginInfo.Password, loginInfo.Company, loginInfo.Branch, loginInfo.Locale));
         }
 
         public void Login(string name, string password, string company = null, string branch = null, string locale = null)
         {
-            _logger.Info("Login to {acumatica}", _client.Endpoint.Address.Uri);
+            _logger.Debug("Login to {acumatica}", _client.Endpoint.Address.Uri);
 
             TryCatch("Login", () => _client.Login(name, password, company, branch, locale));
         }
@@ -123,28 +123,28 @@ namespace CrmDataGeneration.Soap
                 throw new ArgumentNullException(nameof(loginInfo));
             }
 
-            _logger.Info("Login to {acumatica}", _client.Endpoint.Address.Uri);
+            _logger.Debug("Login to {acumatica}", _client.Endpoint.Address.Uri);
 
             await TryCatchAsync("Login", _client.LoginAsync(loginInfo.Username, loginInfo.Password, loginInfo.Company, loginInfo.Branch, loginInfo.Locale));
         }
 
         public async VoidTask LoginAsync(string name, string password, string company = null, string branch = null, string locale = null)
         {
-            _logger.Info("Login to {acumatica}", _client.Endpoint.Address.Uri);
+            _logger.Debug("Login to {acumatica}", _client.Endpoint.Address.Uri);
 
             await TryCatchAsync("Login", _client.LoginAsync(name, password, company, branch, locale));
         }
 
         public void Logout()
         {
-            _logger.Info("Logout from {acumatica}", _client.Endpoint.Address.Uri);
+            _logger.Debug("Logout from {acumatica}", _client.Endpoint.Address.Uri);
 
             TryCatch("Logout", () => _client.Logout());
         }
 
         public async VoidTask LogoutAsync()
         {
-            _logger.Info("Logout from {acumatica}", _client.Endpoint.Address.Uri);
+            _logger.Debug("Logout from {acumatica}", _client.Endpoint.Address.Uri);
 
             await TryCatchAsync("Logout", _client.LogoutAsync());
         }
