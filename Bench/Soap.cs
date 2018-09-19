@@ -23,7 +23,7 @@ namespace Bench
         [GlobalSetup]
         public void Setup()
         {
-            _generatorConfig = GeneratorConfig.ReadConfigDefault();
+            _generatorConfig = GeneratorConfig.ReadConfig("config.json");
         }
 
         [IterationSetup]

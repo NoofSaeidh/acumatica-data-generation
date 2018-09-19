@@ -22,7 +22,7 @@ namespace AC_81769
     {
         static void Main()
         {
-            new GeneratorClient(GeneratorConfig.ReadConfigDefault()).GenerateAllOptions().Wait();
+            new GeneratorClient(GeneratorConfig.ReadConfig("config.json")).GenerateAllOptions().Wait();
         }
 
 
