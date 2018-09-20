@@ -10,7 +10,7 @@
       "Password": "123"
     }
   },
-  "StopProccesingOnExeception": true,
+  "StopProccesingAtExeception": true,
   "GenerationSettingsCollection": [
     {
       "$type": "CrmDataGeneration.Entities.Leads.LeadGenerationSettings, CrmDataGeneration",

@@ -45,7 +45,7 @@ namespace CrmDataGeneration
                 }
                 catch (GenerationException)
                 {
-                    if (Config.StopProccesingOnExeception)
+                    if (Config.StopProccesingAtExeception)
                         return;
                 }
                 catch (ValidationException ve)

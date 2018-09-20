@@ -29,7 +29,7 @@ namespace AC_81769
                         Password = "123",
                     }
                 ),
-                StopProccesingOnExeception = true,
+                StopProccesingAtExeception = true,
                 GenerationSettingsCollection = new IGenerationSettings[]
                 {
                     new LeadGenerationSettings

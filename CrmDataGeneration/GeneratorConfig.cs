@@ -37,7 +37,7 @@ namespace CrmDataGeneration
         public ICollection<Injection> GenerationSettingsInjections { get; set; }
 
         // if true processing will be stopped if any generation option will fail
-        public bool StopProccesingOnExeception { get; set; }
+        public bool StopProccesingAtExeception { get; set; }
 
         // inject all injected props to GenerationSettingsCollection (now only InjectExecutionSettings)
         // work only if items in GenerationSettingsCollection inherited from GenerationSettingsBase
