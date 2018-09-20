@@ -1,13 +1,9 @@
 ﻿using Bogus;
 using CrmDataGeneration.Common;
-using CrmDataGeneration.Entities.Emails;
 using CrmDataGeneration.Soap;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using VoidTask = System.Threading.Tasks.Task;
 
 namespace CrmDataGeneration.Entities.Leads
@@ -21,17 +17,23 @@ namespace CrmDataGeneration.Entities.Leads
 
         protected override async VoidTask GenerateSingle(IApiClient client, Lead entity, CancellationToken cancellationToken)
         {
-            entity.ReturnBehavior = ReturnBehavior.OnlySpecified;
-            entity.LeadID = new IntSearch();
+            entity.ReturnBehavior = ReturnBehavior.OnlySystem;
             var resultLead = await client.PutAsync(entity, cancellationToken);
-            entity.ID = resultLead.ID;
-            entity.LeadID = resultLead.LeadID;
+
+            // to fetch only one fields
+            // if specify it at put, it also will fetch all other fields
+            resultLead = await client.GetAsync(
+                new Lead
+                {
+                    ReturnBehavior = ReturnBehavior.OnlySpecified,
+                    ID = resultLead.ID,
+                    NoteID = new GuidReturn(),
+                }, cancellationToken);
 
             // convert entity
-
             var convertFlags = GetConvertFlags(entity);
             if (convertFlags.HasFlag(ConvertLeadFlags.ToOpportunity))
-                await client.InvokeAsync(entity, new ConvertLeadToOpportunity(), cancellationToken);
+                await client.InvokeAsync(resultLead, new ConvertLeadToOpportunity(), cancellationToken);
 
 
             // create emails
@@ -48,7 +50,7 @@ namespace CrmDataGeneration.Entities.Leads
                         createdEmail,
                         new LinkEntityToEmail
                         {
-                            RelatedEntity = entity.LeadID.ToString(),
+                            RelatedEntity = resultLead.NoteID.ToString(),
                             Type = GenerationSettings.PxTypeName
                         }
                     );

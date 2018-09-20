@@ -10,6 +10,17 @@ using System.Threading.Tasks;
 
 namespace CrmDataGeneration.Soap
 {
+    #region Extensions
+
+    public static class SoapExtensions
+    {
+        public static StringSearch ToSearch(this StringValue value) => new StringSearch { Value = value?.Value };
+        public static IntSearch ToSearch(this IntValue value) => new IntSearch { Value = value?.Value };
+        public static GuidSearch ToSearch(this GuidValue value) => new GuidSearch { Value = value?.Value };
+    }
+
+    #endregion
+
     #region Common
 
     // just extend generated classes to be more easy to use and debug
