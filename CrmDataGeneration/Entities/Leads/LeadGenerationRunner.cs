@@ -105,7 +105,7 @@ namespace CrmDataGeneration.Entities.Leads
                 outEmail.Incoming = false;
                 outEmail.From = Randomizer.ProbabilityRandomIfAny(emailSettings.SystemAccounts).Email;
                 outEmail.To = lead.Email;
-                yield return email;
+                yield return outEmail;
             }
         }
     }
