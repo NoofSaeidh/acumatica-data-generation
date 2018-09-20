@@ -1,12 +1,8 @@
 ﻿using CrmDataGeneration.Common;
 using CrmDataGeneration.Entities.Emails;
 using CrmDataGeneration.Soap;
-using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CrmDataGeneration.Entities.Leads
 {
@@ -18,6 +14,18 @@ namespace CrmDataGeneration.Entities.Leads
         public IDictionary<string, ProbabilityCollection<ConvertLeadFlags>> ConvertByStatuses { get; set; }
 
         public EmailsForLeadGenerationSettings EmailsGenerationSettings { get; set; }
+
+        public override int? Seed
+        {
+            get => base.Seed;
+            set
+            {
+                base.Seed = value;
+                if(EmailsGenerationSettings != null && EmailsGenerationSettings.EmailRandomizerSettings != null)
+                    EmailsGenerationSettings.EmailRandomizerSettings.Seed = (int)value;
+            }
+        }
+
 
         public override void Validate()
         {

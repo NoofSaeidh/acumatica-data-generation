@@ -30,7 +30,7 @@ namespace CrmDataGeneration.Common
     /// <typeparam name="T"></typeparam>
     public interface IRandomizerSettings<T>: IValidatable where T : IEntity
     {
-        int Seed { get; }
+        int Seed { get; set; }
         IDataGenerator<T> GetDataGenerator();
     }
 
@@ -46,16 +46,18 @@ namespace CrmDataGeneration.Common
 
     public interface IGenerationSettings
     {
-        int Count { get; }
+        int Count { get; set; }
         string GenerationEntity { get; }
-        ExecutionTypeSettings ExecutionTypeSettings { get; }
+        // get, set seed for randomizer settings
+        int? Seed { get; set; }
+        ExecutionTypeSettings ExecutionTypeSettings { get; set; }
 
         GenerationRunner GetGenerationRunner(ApiConnectionConfig apiConnectionConfig);
     }
 
     public interface IGenerationSettings<T> : IGenerationSettings, IValidatable where T : IEntity
     {
-        IRandomizerSettings<T> RandomizerSettings { get; }
+        IRandomizerSettings<T> RandomizerSettings { get; set; }
     }
 
     public interface IValidatable

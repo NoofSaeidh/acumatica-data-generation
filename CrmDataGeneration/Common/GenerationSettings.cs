@@ -15,6 +15,7 @@ namespace CrmDataGeneration.Common
     {
         public int Count { get; set; }
         public ExecutionTypeSettings ExecutionTypeSettings { get; set; }
+        public abstract int? Seed { get; set; }
         public abstract string GenerationEntity { get; }
 
         public abstract GenerationRunner GetGenerationRunner(ApiConnectionConfig apiConnectionConfig);
@@ -29,6 +30,18 @@ namespace CrmDataGeneration.Common
         public string PxTypeName => _pxTypeName ?? (_pxTypeName = PxObjectsTypes.GetEntityPxTypeName<T>());
 
         public override string GenerationEntity => typeof(T).Name;
+        
+        public override int? Seed
+        {
+            get => RandomizerSettings?.Seed;
+            set
+            {
+                if(RandomizerSettings != null && value != null)
+                {
+                    RandomizerSettings.Seed = (int)value;
+                }
+            }
+        }
 
         [Required]
         public IRandomizerSettings<T> RandomizerSettings { get; set; }

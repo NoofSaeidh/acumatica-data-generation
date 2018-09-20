@@ -18,6 +18,8 @@
         "ExecutionType": "Parallel",
         "ParallelThreads": 4
       },
+      "Seed": 123124,
+      "Count": 1000,
       "ConvertByStatuses": {
         "New": {
           "ToOpportunity": 0.5
@@ -69,10 +71,20 @@
   ],
   "GenerationSettingsInjections": [
     {
-      "Count": 1000
+      "ExecutionTypeSettings": {
+        "ExecutionType": "Parallel",
+        "ParallelThreads": 2
+      },
+      "Count": 100,
+      "Seed": 5
     },
     {
-      "Count": 1000
+      "Count": 200
+    },
+    {
+      "ExecutionTypeSettings": {
+        "ExecutionType": "Sequent"
+      }
     }
   ]
 }

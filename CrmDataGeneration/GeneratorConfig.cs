@@ -1,13 +1,10 @@
-﻿using System;
+﻿using CrmDataGeneration.Common;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
-using CrmDataGeneration.Common;
-using CrmDataGeneration.Entities.Leads;
-using Newtonsoft.Json.Converters;
 
 namespace CrmDataGeneration
 {
@@ -29,36 +26,30 @@ namespace CrmDataGeneration
             }
         };
 
-        #endregion
+        #endregion Static fields
+
         public ApiConnectionConfig ApiConnectionConfig { get; set; }
+
         [RequiredCollection]
         public ICollection<IGenerationSettings> GenerationSettingsCollection { get; set; }
+
+        // provide ability to multiply GenerationSettings for each injection
+        public ICollection<Injection> GenerationSettingsInjections { get; set; }
+
         // if true processing will be stopped if any generation option will fail
         public bool StopProccesingOnExeception { get; set; }
-        // provide ability to run EACH Generations Settings with different Execution Settings
-        public ICollection<ExecutionTypeSettings> InjectExecutionSettings { get; set; }
 
         // inject all injected props to GenerationSettingsCollection (now only InjectExecutionSettings)
         // work only if items in GenerationSettingsCollection inherited from GenerationSettingsBase
         public IEnumerable<IGenerationSettings> GetInjectedGenerationSettingsCollection()
         {
-            if (InjectExecutionSettings.IsNullOrEmpty())
+            if (GenerationSettingsCollection.IsNullOrEmpty())
+                return GenerationSettingsCollection;
+
+            if (GenerationSettingsInjections.IsNullOrEmpty())
                 return GenerationSettingsCollection.ToList();
 
-            return GenerationSettingsCollection
-                ?.SelectMany(s =>
-                    InjectExecutionSettings
-                    .Select(es =>
-                    {
-                        if (s is GenerationSettingsBase gsb)
-                        {
-                            var res = gsb.Copy();
-                            res.ExecutionTypeSettings = es;
-                            return res;
-                        }
-                        return s;
-                    })
-                );
+            return GenerationSettingsCollection.SelectMany(s => Injection.Inject(GenerationSettingsInjections, s));
         }
 
         #region Common methods
@@ -78,6 +69,48 @@ namespace CrmDataGeneration
             ValidateHelper.ValidateObject(this);
         }
 
-        #endregion
+        public class Injection
+        {
+            public ExecutionTypeSettings? ExecutionTypeSettings { get; set; }
+            public int? Count { get; set; }
+            public int? Seed { get; set; }
+
+            public static IEnumerable<IGenerationSettings> Inject(IEnumerable<Injection> injections, IGenerationSettings generationSettings)
+            {
+                if (injections == null)
+                    throw new ArgumentNullException(nameof(injections));
+                if (generationSettings == null)
+                    throw new ArgumentNullException(nameof(generationSettings));
+
+                // check if there are no injections to return single setting
+                bool empty = false;
+
+                foreach (var injection in injections)
+                {
+                    if (injection.Count == 0
+                        && injection.ExecutionTypeSettings == null
+                        && injection.Seed == null)
+                    {
+                        empty = true;
+                        continue;
+                    }
+
+                    var res = generationSettings.Copy();
+                    if (injection.Count != null)
+                        res.Count = injection.Count.Value;
+                    if (injection.ExecutionTypeSettings != null)
+                        res.ExecutionTypeSettings = injection.ExecutionTypeSettings.Value;
+                    if (injection.Seed != null)
+                        res.Seed = injection.Seed;
+
+                    yield return res;
+                }
+
+                if (empty)
+                    yield return generationSettings;
+            }
+        }
+
+        #endregion Common methods
     }
 }
