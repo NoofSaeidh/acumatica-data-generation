@@ -90,6 +90,7 @@
     <Compile Include="Common\Enums.cs" />
     <Compile Include="Common\ExecutionTypeSettings.cs" />
     <Compile Include="Common\Extensions.cs" />
+    <Compile Include="Common\GenerationException.cs" />
     <Compile Include="Common\GenerationSettings.cs" />
     <Compile Include="Common\GenerationRunner.cs" />
     <Compile Include="Common\JsonLogSerializer.cs" />

@@ -66,7 +66,7 @@ namespace CrmDataGeneration.Common
             catch (Exception e)
             {
                 Logger.Error(e, "Generation failed.");
-                throw;
+                throw GenerationException.NewFromEntityType<TEntity>(e);
             }
 
             Logger.Info("Generation of {type} with count: {count} completed. Time elapsed: {time}.",

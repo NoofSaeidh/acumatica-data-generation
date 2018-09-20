@@ -4,6 +4,7 @@ using CrmDataGeneration.Entities.Leads;
 using NLog;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -42,11 +43,19 @@ namespace CrmDataGeneration
                 {
                     await settings.GetGenerationRunner(Config.ApiConnectionConfig).RunGeneration(cancellationToken).ConfigureAwait(false);
                 }
-                catch
+                catch (GenerationException)
                 {
-                    // logger in GenerationRunner
                     if (Config.StopProccesingOnExeception)
                         return;
+                }
+                catch (ValidationException ve)
+                {
+                    _logger.Error(ve, "Generation not started because of invalid configuration");
+                }
+                catch (Exception e)
+                {
+                    _logger.Fatal(e, "Generation failed with unexpected error");
+                    return;
                 }
             }
             _logger.Info("Generation all settings completed");
