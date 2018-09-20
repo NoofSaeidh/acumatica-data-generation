@@ -19,12 +19,12 @@ namespace CrmDataGeneration.Soap
         private readonly DefaultSoapClient _client;
 
         /// <summary>
-        ///     Throw execeptions on errors happened during execution API requests.
+        ///     Throw exceptions on errors happened during execution API requests.
         /// Otherwise only logger log exception and execution will continue.
         /// Such exceptions as Argument exception will be thrown anyway.
         /// Default is true.
         /// </summary>
-        public bool ThrowOnErrors { get; set; } = true;
+        public bool ThrowAtErrors { get; set; } = true;
 
         static AcumaticaSoapClient()
         {
@@ -93,7 +93,7 @@ namespace CrmDataGeneration.Soap
 
             return new LogoutClientImpl(endpointSettings)
             {
-                ThrowOnErrors = throwOnErrors
+                ThrowAtErrors = throwOnErrors
             };
         }
 
@@ -240,7 +240,7 @@ namespace CrmDataGeneration.Soap
             {
                 var text = $"Action \"{descr}\" failed.";
                 _logger.Error(e, text, logDebugArgs);
-                if (ThrowOnErrors)
+                if (ThrowAtErrors)
                     throw new AcumaticaException(text, e);
                 return default;
             }
@@ -257,7 +257,7 @@ namespace CrmDataGeneration.Soap
             {
                 var text = $"Action \"{descr}\" failed.";
                 _logger.Error(e, text, logDebugArgs);
-                if (ThrowOnErrors)
+                if (ThrowAtErrors)
                     throw new AcumaticaException(text, e);
             }
         }
@@ -273,7 +273,7 @@ namespace CrmDataGeneration.Soap
             {
                 var text = $"Action \"{descr}\" failed.";
                 _logger.Error(e, text, logDebugArgs);
-                if (ThrowOnErrors)
+                if (ThrowAtErrors)
                     throw new AcumaticaException(text, e);
                 return default;
             }
@@ -290,7 +290,7 @@ namespace CrmDataGeneration.Soap
             {
                 var text = $"Action \"{descr}\" failed.";
                 _logger.Error(e, text, logDebugArgs);
-                if (ThrowOnErrors)
+                if (ThrowAtErrors)
                     throw new AcumaticaException(text, e);
             }
         }
@@ -306,7 +306,7 @@ namespace CrmDataGeneration.Soap
             {
                 var text = $"Action \"{descr}\" failed.";
                 _logger.Error(e, text, logDebugArgs);
-                if (ThrowOnErrors)
+                if (ThrowAtErrors)
                     throw new AcumaticaException(text, e);
                 return default;
             }
@@ -322,7 +322,7 @@ namespace CrmDataGeneration.Soap
             {
                 var text = $"Action \"{descr}\" failed.";
                 _logger.Error(e, text, logDebugArgs);
-                if (ThrowOnErrors)
+                if (ThrowAtErrors)
                     throw new AcumaticaException(text, e);
             }
         }

@@ -73,7 +73,7 @@ namespace CrmDataGeneration.Common
         /// Such exceptions as Argument exception will be thrown anyway.
         /// Default is true.
         /// </summary>
-        bool ThrowOnErrors { get; set; }
+        bool ThrowAtErrors { get; set; }
 
         void Delete<T>(T whereEntity) where T : Entity;
         VoidTask DeleteAsync<T>(T whereEntity) where T : Entity;

@@ -98,7 +98,7 @@ namespace CrmDataGeneration.Common
         protected async Task<ILoginLogoutApiClient> GetLoginLogoutClient()
         {
             var client = await ApiClientFactory(ApiConnectionConfig);
-            client.ThrowOnErrors = !GenerationSettings.ExecutionTypeSettings.IgnoreProcessingErrors;
+            client.ThrowAtErrors = !GenerationSettings.ExecutionTypeSettings.IgnoreProcessingErrors;
             return client;
         }
 

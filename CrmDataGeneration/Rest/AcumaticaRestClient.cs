@@ -45,7 +45,7 @@ namespace CrmDataGeneration.Rest
             };
             _endpointAddress = _apiConnectionConfig.EndpointSettings.EndpointUrl.ToString();
         }
-        public bool ThrowOnErrors { get; set; }
+        public bool ThrowAtErrors { get; set; }
 
         public static async Task<ILoginLogoutApiClient> GetLoginLogoutClientAsync(ApiConnectionConfig apiConnectionConfig)
         {
@@ -233,7 +233,7 @@ namespace CrmDataGeneration.Rest
             {
                 var text = $"Action \"{descr}\" failed.";
                 _logger.Error(e, text);
-                if (ThrowOnErrors)
+                if (ThrowAtErrors)
                     throw new AcumaticaException(text, e);
                 return default;
             }
@@ -249,7 +249,7 @@ namespace CrmDataGeneration.Rest
             {
                 var text = $"Action \"{descr}\" failed.";
                 _logger.Error(e, text);
-                if (ThrowOnErrors)
+                if (ThrowAtErrors)
                     throw new AcumaticaException(text, e);
             }
         }
@@ -264,7 +264,7 @@ namespace CrmDataGeneration.Rest
             {
                 var text = $"Action \"{descr}\" failed.";
                 _logger.Error(e, text);
-                if (ThrowOnErrors)
+                if (ThrowAtErrors)
                     throw new AcumaticaException(text, e);
                 return default;
             }
@@ -280,7 +280,7 @@ namespace CrmDataGeneration.Rest
             {
                 var text = $"Action \"{descr}\" failed.";
                 _logger.Error(e, text);
-                if (ThrowOnErrors)
+                if (ThrowAtErrors)
                     throw new AcumaticaException(text, e);
                 return default;
             }
@@ -296,7 +296,7 @@ namespace CrmDataGeneration.Rest
             {
                 var text = $"Action \"{descr}\" failed.";
                 _logger.Error(e, text);
-                if (ThrowOnErrors)
+                if (ThrowAtErrors)
                     throw new AcumaticaException(text, e);
             }
         }
@@ -311,7 +311,7 @@ namespace CrmDataGeneration.Rest
             {
                 var text = $"Action \"{descr}\" failed.";
                 _logger.Error(e, text);
-                if (ThrowOnErrors)
+                if (ThrowAtErrors)
                     throw new AcumaticaException(text, e);
                 return default;
             }
@@ -327,7 +327,7 @@ namespace CrmDataGeneration.Rest
             {
                 var text = $"Action \"{descr}\" failed.";
                 _logger.Error(e, text);
-                if (ThrowOnErrors)
+                if (ThrowAtErrors)
                     throw new AcumaticaException(text, e);
             }
         }
