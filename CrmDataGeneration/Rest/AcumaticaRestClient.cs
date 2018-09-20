@@ -169,16 +169,17 @@ namespace CrmDataGeneration.Rest
 
         public async VoidTask LoginAsync(string name, string password, string company = null, string branch = null, string locale = null)
         {
-            await TryCatchAsync("Login", async () =>
-            (await _httpClient.PostAsJsonAsync(_apiConnectionConfig.EndpointSettings.LoginUrl,
-                new
-                {
-                    name,
-                    password,
-                    company,
-                    branch,
-                    locale
-                })).EnsureSuccessStatusCode());
+            throw new NotImplementedException();
+            //await TryCatchAsync("Login", async () =>
+            //(await _httpClient.PostAsJsonAsync(_apiConnectionConfig.EndpointSettings.LoginUrl,
+            //    new
+            //    {
+            //        name,
+            //        password,
+            //        company,
+            //        branch,
+            //        locale
+            //    })).EnsureSuccessStatusCode());
         }
 
         public void Logout()
