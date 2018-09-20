@@ -19,52 +19,39 @@ namespace CrmDataGeneration.Entities.Leads
         {
         }
 
-        protected override async VoidTask RunGenerationSequentRaw(int count, CancellationToken cancellationToken)
+        protected override async VoidTask GenerateSingle(IApiClient client, Lead entity, CancellationToken cancellationToken)
         {
-            var seed = GenerationSettings.RandomizerSettings.Seed;
-            var leads = GenerateRandomizedList(count);
+            entity.ReturnBehavior = ReturnBehavior.OnlySpecified;
+            entity.LeadID = new IntSearch();
+            var resultLead = await client.PutAsync(entity, cancellationToken);
+            entity.ID = resultLead.ID;
+            entity.LeadID = resultLead.LeadID;
 
-            cancellationToken.ThrowIfCancellationRequested();
+            // convert entity
 
-            using (var client = await GetLoginLogoutClient())
+            var convertFlags = GetConvertFlags(entity);
+            if (convertFlags.HasFlag(ConvertLeadFlags.ToOpportunity))
+                await client.InvokeAsync(entity, new ConvertLeadToOpportunity(), cancellationToken);
+
+
+            // create emails
+            var emails = PrepareEmailsForCreation(entity);
+            if (emails != null)
             {
-                foreach (var lead in leads)
+                foreach (var email in emails)
                 {
                     cancellationToken.ThrowIfCancellationRequested();
 
-                    lead.ReturnBehavior = ReturnBehavior.OnlySpecified;
-                    lead.LeadID = new IntSearch();
-                    var resultLead = await client.PutAsync(lead, cancellationToken);
-                    lead.ID = resultLead.ID;
-                    lead.LeadID = resultLead.LeadID;
-
-                    // convert lead
-                    var convertFlags = GetConvertFlags(lead);
-                    if (convertFlags.HasFlag(ConvertLeadFlags.ToOpportunity))
-                        await client.InvokeAsync(lead, new ConvertLeadToOpportunity(), cancellationToken);
-
-
-                    // create emails
-                    var emails = PrepareEmailsForCreation(lead);
-                    if(emails != null)
-                    {
-                        foreach (var email in emails)
+                    email.ReturnBehavior = ReturnBehavior.OnlySystem;
+                    var createdEmail = await client.PutAsync(email, cancellationToken);
+                    await client.InvokeAsync(
+                        createdEmail,
+                        new LinkEntityToEmail
                         {
-                            cancellationToken.ThrowIfCancellationRequested();
-
-                            email.ReturnBehavior = ReturnBehavior.OnlySystem;
-                            var createdEmail = await client.PutAsync(email, cancellationToken);
-                            await client.InvokeAsync(
-                                createdEmail,
-                                new LinkEntityToEmail
-                                {
-                                    RelatedEntity = lead.LeadID.ToString(),
-                                    Type = GenerationSettings.PxTypeName
-                                }
-                            );
+                            RelatedEntity = entity.LeadID.ToString(),
+                            Type = GenerationSettings.PxTypeName
                         }
-                    }
-
+                    );
                 }
             }
         }

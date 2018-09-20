@@ -4,8 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.ServiceModel;
-using System.ServiceModel.Channels;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using VoidTask = System.Threading.Tasks.Task;
@@ -17,14 +15,6 @@ namespace CrmDataGeneration.Soap
         private static ILogger _logger => LogConfiguration.DefaultLogger;
 
         private readonly DefaultSoapClient _client;
-
-        /// <summary>
-        ///     Throw exceptions on errors happened during execution API requests.
-        /// Otherwise only logger log exception and execution will continue.
-        /// Such exceptions as Argument exception will be thrown anyway.
-        /// Default is true.
-        /// </summary>
-        public bool ThrowAtErrors { get; set; } = true;
 
         static AcumaticaSoapClient()
         {
@@ -91,10 +81,7 @@ namespace CrmDataGeneration.Soap
                 throw new ArgumentNullException(nameof(endpointSettings));
             }
 
-            return new LogoutClientImpl(endpointSettings)
-            {
-                ThrowAtErrors = throwOnErrors
-            };
+            return new LogoutClientImpl(endpointSettings);
         }
 
         public void Login(LoginInfo loginInfo)
@@ -240,9 +227,7 @@ namespace CrmDataGeneration.Soap
             {
                 var text = $"Action \"{descr}\" failed.";
                 _logger.Error(e, text, logDebugArgs);
-                if (ThrowAtErrors)
-                    throw new AcumaticaException(text, e);
-                return default;
+                throw new ApiException(text, e);
             }
         }
 
@@ -257,8 +242,7 @@ namespace CrmDataGeneration.Soap
             {
                 var text = $"Action \"{descr}\" failed.";
                 _logger.Error(e, text, logDebugArgs);
-                if (ThrowAtErrors)
-                    throw new AcumaticaException(text, e);
+                throw new ApiException(text, e);
             }
         }
 
@@ -273,9 +257,7 @@ namespace CrmDataGeneration.Soap
             {
                 var text = $"Action \"{descr}\" failed.";
                 _logger.Error(e, text, logDebugArgs);
-                if (ThrowAtErrors)
-                    throw new AcumaticaException(text, e);
-                return default;
+                throw new ApiException(text, e);
             }
         }
 
@@ -290,8 +272,7 @@ namespace CrmDataGeneration.Soap
             {
                 var text = $"Action \"{descr}\" failed.";
                 _logger.Error(e, text, logDebugArgs);
-                if (ThrowAtErrors)
-                    throw new AcumaticaException(text, e);
+                throw new ApiException(text, e);
             }
         }
 
@@ -306,9 +287,7 @@ namespace CrmDataGeneration.Soap
             {
                 var text = $"Action \"{descr}\" failed.";
                 _logger.Error(e, text, logDebugArgs);
-                if (ThrowAtErrors)
-                    throw new AcumaticaException(text, e);
-                return default;
+                throw new ApiException(text, e);
             }
         }
         private async VoidTask TryCatchAsync(string descr, VoidTask task, CancellationToken cancellationToken, params object[] logDebugArgs)
@@ -322,8 +301,7 @@ namespace CrmDataGeneration.Soap
             {
                 var text = $"Action \"{descr}\" failed.";
                 _logger.Error(e, text, logDebugArgs);
-                if (ThrowAtErrors)
-                    throw new AcumaticaException(text, e);
+                throw new ApiException(text, e);
             }
         }
 

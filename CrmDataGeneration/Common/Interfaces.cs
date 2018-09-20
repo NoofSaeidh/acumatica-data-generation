@@ -67,14 +67,6 @@ namespace CrmDataGeneration.Common
 
     public interface IApiClient
     {
-        /// <summary>
-        ///     Throw execeptions on errors happened during execution API requests.
-        /// Otherwise only logger log exception and execution will continue.
-        /// Such exceptions as Argument exception will be thrown anyway.
-        /// Default is true.
-        /// </summary>
-        bool ThrowAtErrors { get; set; }
-
         void Delete<T>(T whereEntity) where T : Entity;
         VoidTask DeleteAsync<T>(T whereEntity) where T : Entity;
         VoidTask DeleteAsync<T>(T whereEntity, CancellationToken cancellationToken) where T : Entity;

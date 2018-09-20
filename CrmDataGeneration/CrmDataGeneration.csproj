@@ -99,7 +99,7 @@
     <Compile Include="Common\DataGenerator.cs" />
     <Compile Include="Rest\AcumaticaRestClient.cs" />
     <Compile Include="Soap\AcumaticaSoapClient.cs" />
-    <Compile Include="Soap\AcumaticaException.cs" />
+    <Compile Include="Common\ApiException.cs" />
     <Compile Include="Soap\ReferenceExtended.cs" />
     <Compile Include="Common\ValueComparer.cs" />
   </ItemGroup>

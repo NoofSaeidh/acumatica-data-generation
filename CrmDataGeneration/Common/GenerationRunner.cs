@@ -93,12 +93,42 @@ namespace CrmDataGeneration.Common
             return Task.WhenAll(tasks);
         }
 
-        protected abstract Task RunGenerationSequentRaw(int count, CancellationToken cancellationToken);
+        protected async virtual Task RunGenerationSequentRaw(int count, CancellationToken cancellationToken)
+        {
+            var entities = GenerateRandomizedList(count);
+
+            cancellationToken.ThrowIfCancellationRequested();
+
+            using (var client = await GetLoginLogoutClient())
+            {
+                foreach (var entity in entities)
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
+
+                    try
+                    {
+                        await GenerateSingle(client, entity, cancellationToken);
+                    }
+                    catch (ApiException ae)
+                    {
+                        Logger.Error(ae, "Generation {$entity} failed", typeof(TEntity));
+                        if (!GenerationSettings.ExecutionTypeSettings.IgnoreProcessingErrors)
+                            return;
+                    }
+                    catch (Exception e)
+                    {
+                        Logger.Fatal(e, "Unexpected exception has occurred");
+                        return;
+                    }
+                }
+            }
+        }
+
+        protected abstract Task GenerateSingle(IApiClient client, TEntity entity, CancellationToken cancellationToken);
 
         protected async Task<ILoginLogoutApiClient> GetLoginLogoutClient()
         {
             var client = await ApiClientFactory(ApiConnectionConfig);
-            client.ThrowAtErrors = !GenerationSettings.ExecutionTypeSettings.IgnoreProcessingErrors;
             return client;
         }
 
