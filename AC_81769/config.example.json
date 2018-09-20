@@ -16,7 +16,8 @@
       "$type": "CrmDataGeneration.Entities.Leads.LeadGenerationSettings, CrmDataGeneration",
       "ExecutionTypeSettings": {
         "ExecutionType": "Parallel",
-        "ParallelThreads": 4
+        "ParallelThreads": 4,
+        "IgnoreProcessingErrors": false
       },
       "Seed": 123124,
       "Count": 1000,

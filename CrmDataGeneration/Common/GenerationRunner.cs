@@ -14,7 +14,7 @@ namespace CrmDataGeneration.Common
         private static Func<ApiConnectionConfig, Task<ILoginLogoutApiClient>> _apiClientFactory;
 
         public abstract Task RunGeneration(CancellationToken cancellationToken = default);
-        // use this if you wan't use custom api client
+        // HACK: set this if you want use another api client
         public static Func<ApiConnectionConfig, Task<ILoginLogoutApiClient>> ApiClientFactory
         {
             get => _apiClientFactory ?? (_apiClientFactory = async (config) => await Soap.AcumaticaSoapClient.LoginLogoutClientAsync(config));
