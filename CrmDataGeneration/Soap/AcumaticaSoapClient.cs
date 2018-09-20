@@ -29,7 +29,7 @@ namespace CrmDataGeneration.Soap
         static AcumaticaSoapClient()
         {
             // otherwise all soap clients will use same settings
-            ClientBase<DefaultSoapClient>.CacheSetting = CacheSetting.AlwaysOff;
+            ClientBase<DefaultSoap>.CacheSetting = CacheSetting.AlwaysOff;
         }
 
         public AcumaticaSoapClient(DefaultSoapClient client)
