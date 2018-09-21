@@ -17,7 +17,7 @@ namespace CrmDataGeneration.Entities.Leads
 
         protected override async VoidTask GenerateSingle(IApiClient client, Lead entity, CancellationToken cancellationToken)
         {
-            var sw = new StopwatchLogger().Start();
+            var sw = StopwatchLoggerFactory.GetLogger().Start();
 
             entity.ReturnBehavior = ReturnBehavior.OnlySpecified;
             entity.NoteID = new GuidReturn();
