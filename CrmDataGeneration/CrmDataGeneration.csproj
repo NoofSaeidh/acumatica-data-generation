@@ -72,6 +72,7 @@
     <Compile Include="Common\JsonLogSerializer.cs" />
     <Compile Include="Common\LoginInfo.cs" />
     <Compile Include="Common\ObjectExtensions.cs" />
+    <Compile Include="Common\StopwatchLogger.cs" />
     <Compile Include="Common\ValidateHelper.cs" />
     <Compile Include="Connected Services\Soap\Reference.cs">
       <AutoGen>True</AutoGen>

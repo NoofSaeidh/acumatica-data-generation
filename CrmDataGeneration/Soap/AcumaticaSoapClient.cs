@@ -12,7 +12,7 @@ namespace CrmDataGeneration.Soap
 {
     public class AcumaticaSoapClient : IApiClient, IDisposable
     {
-        private static ILogger _logger => LogConfiguration.DefaultLogger;
+        private static ILogger _logger => LogConfiguration.GetLogger(LogConfiguration.LoggerNames.ApiClient);
 
         private readonly DefaultSoapClient _client;
 

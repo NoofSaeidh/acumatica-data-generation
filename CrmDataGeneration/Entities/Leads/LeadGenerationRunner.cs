@@ -17,23 +17,23 @@ namespace CrmDataGeneration.Entities.Leads
 
         protected override async VoidTask GenerateSingle(IApiClient client, Lead entity, CancellationToken cancellationToken)
         {
-            entity.ReturnBehavior = ReturnBehavior.OnlySystem;
+            var sw = new StopwatchLogger().Start();
+
+            entity.ReturnBehavior = ReturnBehavior.OnlySpecified;
+            entity.NoteID = new GuidReturn();
             var resultLead = await client.PutAsync(entity, cancellationToken);
 
-            // to fetch only one fields
-            // if specify it at put, it also will fetch all other fields
-            resultLead = await client.GetAsync(
-                new Lead
-                {
-                    ReturnBehavior = ReturnBehavior.OnlySpecified,
-                    ID = resultLead.ID,
-                    NoteID = new GuidReturn(),
-                }, cancellationToken);
+            sw.Log("Put Lead").Restart();
 
             // convert entity
             var convertFlags = GetConvertFlags(entity);
+
+            sw.Restart();
+
             if (convertFlags.HasFlag(ConvertLeadFlags.ToOpportunity))
                 await client.InvokeAsync(resultLead, new ConvertLeadToOpportunity(), cancellationToken);
+
+            sw.Log("Convert Lead");
 
 
             // create emails
@@ -45,7 +45,9 @@ namespace CrmDataGeneration.Entities.Leads
                     cancellationToken.ThrowIfCancellationRequested();
 
                     email.ReturnBehavior = ReturnBehavior.OnlySystem;
+                    sw.Restart();
                     var createdEmail = await client.PutAsync(email, cancellationToken);
+                    sw.Log("Put Email").Restart();
                     await client.InvokeAsync(
                         createdEmail,
                         new LinkEntityToEmail
@@ -54,6 +56,7 @@ namespace CrmDataGeneration.Entities.Leads
                             Type = GenerationSettings.PxTypeName
                         }
                     );
+                    sw.Log("Link Email");
                 }
             }
         }

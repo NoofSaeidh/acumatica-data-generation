@@ -71,9 +71,6 @@
   "GenerationSettingsInjections": [
     {
       "Count": 1000
-    },
-    {
-      "Count": 1000
     }
   ]
 }
