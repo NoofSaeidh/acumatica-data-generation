@@ -1,24 +1,16 @@
-﻿using CrmDataGeneration.OpenApi;
+﻿using CrmDataGeneration.Common;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
-using CrmDataGeneration.OpenApi.Reference;
-using CrmDataGeneration.Common;
-using CrmDataGeneration.Entities.Leads;
-using Newtonsoft.Json.Converters;
 
 namespace CrmDataGeneration
 {
-    public class GeneratorConfig
+    public class GeneratorConfig : IValidatable
     {
         #region Static fields
-
-        public const string ConfigFileName = "config.json";
-        public const string ConfigCredsFileName = "config.creds.json";
 
         private static readonly JsonSerializerSettings _jsonSettings = new JsonSerializerSettings
         {
@@ -34,20 +26,33 @@ namespace CrmDataGeneration
             }
         };
 
-        #endregion
+        #endregion Static fields
 
-        public int GlobalSeed { get; set; }
-        public OpenApiSettings OpenApiSettings { get; set; }
-        public ICollection<GenerationOption> GenerationOptions { get; set; }
-        // if true processing will continue even if some of options will fail.
-        public bool StopProccesingOnExeception { get; set; }
+        public ApiConnectionConfig ApiConnectionConfig { get; set; }
+
+        [RequiredCollection]
+        public ICollection<IGenerationSettings> GenerationSettingsCollection { get; set; }
+
+        // provide ability to multiply GenerationSettings for each injection
+        public ICollection<Injection> GenerationSettingsInjections { get; set; }
+
+        // if true processing will be stopped if any generation option will fail
+        public bool StopProccesingAtExeception { get; set; }
+
+        // inject all injected props to GenerationSettingsCollection (now only InjectExecutionSettings)
+        // work only if items in GenerationSettingsCollection inherited from GenerationSettingsBase
+        public IEnumerable<IGenerationSettings> GetInjectedGenerationSettingsCollection()
+        {
+            if (GenerationSettingsCollection.IsNullOrEmpty())
+                return GenerationSettingsCollection;
+
+            if (GenerationSettingsInjections.IsNullOrEmpty())
+                return GenerationSettingsCollection.ToList();
+
+            return GenerationSettingsCollection.SelectMany(s => Injection.Inject(GenerationSettingsInjections, s));
+        }
 
         #region Common methods
-
-        //public GenerationOption<T> GetGenerationOption<T>() where T : Entity
-        //{
-        //    return GenerationOptions.OfType<GenerationOption<T>>().First();
-        //}
 
         public void SaveConfig(string path)
         {
@@ -59,23 +64,53 @@ namespace CrmDataGeneration
             return JsonConvert.DeserializeObject<GeneratorConfig>(File.ReadAllText(path), _jsonSettings);
         }
 
-        /// <summary>
-        ///     Read default config files from current folder.
-        /// Read both files, <see cref="ConfigFileName"/> and user's <see cref="ConfigCredsFileName"/>.
-        /// First is added to source control while second is not, so you can change second file from the solution.
-        /// Second file by default doesn't exist, but you can create it (it will be automatically added to solution).
-        /// </summary>
-        /// <returns></returns>
-        public static GeneratorConfig ReadConfigDefault()
+        public void Validate()
         {
-            var config = ReadConfig(ConfigFileName);
-            if (!File.Exists(ConfigCredsFileName))
-                return config;
-
-            JsonConvert.PopulateObject(File.ReadAllText(ConfigCredsFileName), config, _jsonSettings);
-            return config;
+            ValidateHelper.ValidateObject(this);
         }
 
-        #endregion
+        public class Injection
+        {
+            public ExecutionTypeSettings? ExecutionTypeSettings { get; set; }
+            public int? Count { get; set; }
+            public int? Seed { get; set; }
+
+            public static IEnumerable<IGenerationSettings> Inject(IEnumerable<Injection> injections, IGenerationSettings generationSettings)
+            {
+                if (injections == null)
+                    throw new ArgumentNullException(nameof(injections));
+                if (generationSettings == null)
+                    throw new ArgumentNullException(nameof(generationSettings));
+
+                // check if there are no injections to return single setting
+                bool empty = false;
+
+                foreach (var injection in injections)
+                {
+                    if (injection.Count == 0
+                        && injection.ExecutionTypeSettings == null
+                        && injection.Seed == null)
+                    {
+                        empty = true;
+                        continue;
+                    }
+
+                    var res = generationSettings.Copy();
+                    if (injection.Count != null)
+                        res.Count = injection.Count.Value;
+                    if (injection.ExecutionTypeSettings != null)
+                        res.ExecutionTypeSettings = injection.ExecutionTypeSettings.Value;
+                    if (injection.Seed != null)
+                        res.Seed = injection.Seed;
+
+                    yield return res;
+                }
+
+                if (empty)
+                    yield return generationSettings;
+            }
+        }
+
+        #endregion Common methods
     }
 }

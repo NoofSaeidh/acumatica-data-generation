@@ -1,7 +1,7 @@
 ﻿using Bogus;
 using CrmDataGeneration.Common;
 using CrmDataGeneration.Entities.Emails;
-using CrmDataGeneration.OpenApi.Reference;
+using CrmDataGeneration.Soap;
 using System;
 using System.Collections;
 using System.Collections.Generic;

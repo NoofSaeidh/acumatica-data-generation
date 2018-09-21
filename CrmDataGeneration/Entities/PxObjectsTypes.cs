@@ -1,4 +1,4 @@
-﻿using CrmDataGeneration.OpenApi.Reference;
+﻿using CrmDataGeneration.Soap;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -31,7 +31,7 @@ namespace CrmDataGeneration.Entities
         {
             if (PxTypes.TryGetValue(typeof(T), out var result))
                 return result;
-            throw new NotSupportedException();
+            return null;
         }
     }
 }

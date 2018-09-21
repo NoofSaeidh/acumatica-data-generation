@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace CrmDataGeneration.Entities.Leads
 {
     [Flags]
-    public enum ConvertLead
+    public enum ConvertLeadFlags
     {
         DontConvert = 0,
         ToOpportunity = 1

@@ -1,0 +1,91 @@
+{
+  "ApiConnectionConfig": {
+    "EndpointSettings": {
+      "AcumaticaBaseUrl": "http://localhost:444",
+      "EndpointName": "Default",
+      "EndpointVersion": "18.200.001"
+    },
+    "LoginInfo": {
+      "Username": "admin",
+      "Password": "123"
+    }
+  },
+  "StopProccesingAtExeception": true,
+  "GenerationSettingsCollection": [
+    {
+      "$type": "CrmDataGeneration.Entities.Leads.LeadGenerationSettings, CrmDataGeneration",
+      "ExecutionTypeSettings": {
+        "ExecutionType": "Parallel",
+        "ParallelThreads": 4,
+        "IgnoreProcessingErrors": false
+      },
+      "Seed": 123124,
+      "Count": 1000,
+      "ConvertByStatuses": {
+        "New": {
+          "ToOpportunity": 0.5
+        },
+        "Open": {
+          "ToOpportunity": 0.5
+        }
+      },
+      "EmailsGenerationSettings": {
+        "EmailsForSingleLeadCounts": {
+          "0": 0.3,
+          "1": null,
+          "2": null,
+          "3": null,
+          "4": null,
+          "5": null
+        },
+        "SystemAccounts": [
+          [
+            "testadmin@acumatica.con",
+            "System Email Account"
+          ]
+        ],
+        "EmailRandomizerSettings": {
+          "DateRanges": [
+            {
+              "StartDate": "2017-01-01T00:00:00",
+              "EndDate": "2018-05-01T00:00:00"
+            }
+          ]
+        }
+      },
+      "GenerationEntity": "Lead",
+      "RandomizerSettings": {
+        "$type": "CrmDataGeneration.Entities.Leads.LeadRandomizerSettings, CrmDataGeneration",
+        "LeadClasses": {
+          "LEAD": 0.7,
+          "LEADBUS": 0.15,
+          "LEADBUSSVC": 0.15
+        },
+        "Statuses": {
+          "New": 0.2,
+          "Open": 0.5,
+          "Suspended": 0.1,
+          "Lost": 0.2
+        }
+      }
+    }
+  ],
+  "GenerationSettingsInjections": [
+    {
+      "ExecutionTypeSettings": {
+        "ExecutionType": "Parallel",
+        "ParallelThreads": 2
+      },
+      "Count": 100,
+      "Seed": 5
+    },
+    {
+      "Count": 200
+    },
+    {
+      "ExecutionTypeSettings": {
+        "ExecutionType": "Sequent"
+      }
+    }
+  ]
+}

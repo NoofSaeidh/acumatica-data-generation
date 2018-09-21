@@ -31,7 +31,7 @@ namespace CrmDataGeneration.Common
                 case JObject jObject:
                 {
                     var dictType = typeof(IDictionary<,>)
-                        .MakeGenericType(objectType.GenericTypeArguments[0], typeof(decimal));
+                        .MakeGenericType(objectType.GenericTypeArguments[0], typeof(decimal?));
                     return Activator.CreateInstance(objectType, jObject.ToObject(dictType, serializer));
                 }
                 case JArray jArray:

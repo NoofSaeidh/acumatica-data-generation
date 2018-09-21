@@ -1,5 +1,5 @@
 ﻿using Bogus;
-using CrmDataGeneration.OpenApi.Reference;
+using CrmDataGeneration.Soap;
 using Newtonsoft.Json;
 using System;
 using System.Collections;
@@ -10,47 +10,53 @@ using System.Threading.Tasks;
 
 namespace CrmDataGeneration.Common
 {
-    public abstract class RandomizerSettings<T> : IRandomizerSettings<T> where T : Entity
+
+    public abstract class RandomizerSettingsBase
     {
-        public int? Seed { get; set; }
+        private int? _seed;
 
+        // if not initialized manually - use random seed.
+        public int Seed
+        {
+            get => _seed ?? (int)(_seed = new Random().Next());
+            set => _seed = value;
+        }
+    }
 
-        public IRandomizer<T> GetRandomizer() => new Randomizer<T>(this);
+    public abstract class RandomizerSettings<T> : RandomizerSettingsBase, IRandomizerSettings<T> where T : Entity
+    {
+        private IDataGenerator<T> _statefullGenerator;
+
+        public IDataGenerator<T> GetStatelessDataGenerator() => new DataGenerator<T>(GetFaker());
+
+        /// <summary>
+        ///     The same as <see cref="GetStatelessDataGenerator"/> but after first call it will persist in memory,
+        /// and use the same generator at each call. 
+        /// This required to generate unique data from diferent places with the same seed.
+        /// This method is prefered.
+        /// </summary>
+        /// <param name="forceInitialize">Indicate should statefull generator be reinitialized.
+        /// You should specify true if any property was changed.</param>
+        /// <returns></returns>
+        public IDataGenerator<T> GetStatefullDataGenerator(bool forceInitialize = false)
+        {
+            return (forceInitialize || _statefullGenerator == null) 
+                ? (_statefullGenerator = GetStatelessDataGenerator()) 
+                : _statefullGenerator;
+        }
+
+        IDataGenerator<T> IRandomizerSettings<T>.GetDataGenerator() => GetStatefullDataGenerator();
 
         public virtual Faker<T> GetFaker()
         {
-            ThrowIfSettingsNotSpecified();
+            ValidateHelper.ValidateObject(this);
             var faker = new Faker<T>();
-            if (Seed != null)
-                faker.UseSeed((int)Seed);
+            faker.UseSeed(Seed);
             return faker;
         }
 
-        [JsonIgnore]
-        public virtual bool RequiredSettingsSpecified => true;
+        public void Validate() => ValidateHelper.ValidateObject(this);
 
-        protected virtual void ThrowIfSettingsNotSpecified()
-        {
-            if (!RequiredSettingsSpecified)
-                throw new InvalidOperationException("Some required settings are not specified.");
-        }
 
-        protected bool IsAllCollectionsDefined(params IEnumerable[] enumerations)
-        {
-            if (enumerations == null) return true;
-            foreach (var enumer in enumerations)
-            {
-                if (enumer.IsNullOrEmpty())
-                    return false;
-            }
-            return true;
-        }
-
-        protected bool IsAllObjectsDefined(params object[] objects)
-        {
-            if (objects == null) return true;
-            if (objects.Any(o => o == null)) return false;
-            return true;
-        }
     }
 }
