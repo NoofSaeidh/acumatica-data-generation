@@ -13,12 +13,11 @@ namespace DataGeneration
             return new GeneratorConfig
             {
                 ApiConnectionConfig = new ApiConnectionConfig(
-                    new EndpointSettings
-                    {
-                        AcumaticaBaseUrl = "http://localhost/",
-                        EndpointName = "Default",
-                        EndpointVersion = "18.200.001"
-                    },
+                    new EndpointSettings(
+                        "http://localhost/",
+                        "Default",
+                        "18.200.001"
+                    ),
                     new LoginInfo
                     {
                         Username = "admin",

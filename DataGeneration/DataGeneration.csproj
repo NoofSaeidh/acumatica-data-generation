@@ -74,6 +74,11 @@
     <Compile Include="Common\ObjectExtensions.cs" />
     <Compile Include="Common\StopwatchLogger.cs" />
     <Compile Include="Common\ValidateHelper.cs" />
+    <Compile Include="Connected Services\Soap.Maint\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
     <Compile Include="Connected Services\Soap\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -95,6 +100,7 @@
     <Compile Include="GeneratorConfig.cs" />
     <Compile Include="GeneratorClient.cs" />
     <Compile Include="Common\EndpointSettings.cs" />
+    <Compile Include="Maint\MaintenanceClient.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Common\Interfaces.cs" />
@@ -112,6 +118,22 @@
     <None Include="config.example.json" />
     <None Include="config.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Connected Services\Soap.Maint\5.wsdl" />
+    <None Include="Connected Services\Soap.Maint\DataGeneration.Soap.Maint.EndpointValidationError.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\Soap.Maint\DataGeneration.Soap.Maint.GetSchemaResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\Soap.Maint\DataGeneration.Soap.Maint.LoginResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\Soap.Maint\DataGeneration.Soap.Maint.PutSchemaResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\Soap.Maint\DataGeneration.Soap.Maint.ValidateEndpointResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Connected Services\Soap\18.wsdl" />
     <None Include="Connected Services\Soap\DataGeneration.Soap.Entity.datasource">
@@ -139,6 +161,7 @@
     <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <ItemGroup>
+    <WCFMetadataStorage Include="Connected Services\Soap.Maint\" />
     <WCFMetadataStorage Include="Connected Services\Soap\" />
   </ItemGroup>
   <ItemGroup>
@@ -149,6 +172,18 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Connected Services\Soap\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\Soap.Maint\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\Soap.Maint\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Connected Services\Soap.Maint\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>

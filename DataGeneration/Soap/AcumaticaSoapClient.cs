@@ -34,15 +34,7 @@ namespace DataGeneration.Soap
                 throw new ArgumentNullException(nameof(endpointSettings));
             }
 
-            _client = new DefaultSoapClient(
-                new BasicHttpBinding
-                {
-                    AllowCookies = true,
-                    MaxReceivedMessageSize = int.MaxValue,
-                    SendTimeout = TimeSpan.FromHours(1)
-                },
-                new EndpointAddress(endpointSettings.EndpointUrl)
-            );
+            _client = new DefaultSoapClient(endpointSettings.GetBinding(), endpointSettings.GetEndpointAddress());
         }
 
         public static ILoginLogoutApiClient LoginLogoutClient(ApiConnectionConfig connectionConfig, bool throwOnErrors = true)
@@ -212,7 +204,7 @@ namespace DataGeneration.Soap
 
         public void Dispose()
         {
-            ((IDisposable)_client).Dispose();
+            _client.Close();
         }
 
         private T TryCatch<T>(string descr, Func<T> action, params object[] logDebugArgs)

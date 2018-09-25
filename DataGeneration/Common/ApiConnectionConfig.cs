@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using System;
+using Newtonsoft.Json;
 
 namespace DataGeneration.Common
 {
@@ -7,8 +8,8 @@ namespace DataGeneration.Common
         [JsonConstructor]
         public ApiConnectionConfig(EndpointSettings endpointSettings, LoginInfo loginInfo)
         {
-            EndpointSettings = endpointSettings;
-            LoginInfo = loginInfo;
+            EndpointSettings = endpointSettings ?? throw new ArgumentNullException(nameof(endpointSettings));
+            LoginInfo = loginInfo ?? throw new ArgumentNullException(nameof(loginInfo));
         }
 
         public EndpointSettings EndpointSettings { get; }
