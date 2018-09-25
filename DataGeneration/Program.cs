@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace DataGeneration
 {
@@ -7,23 +8,24 @@ namespace DataGeneration
     {
         private static void Main()
         {
-            Execute();
+            Execute().Wait();
         }
 
-        public static async void Execute()
+        public static async Task Execute()
         {
-
             using (var tokenSource = new CancellationTokenSource())
             {
                 Console.CancelKeyPress += (s, e) =>
                 {
-                    tokenSource.Cancel();
+                    if(!tokenSource.IsCancellationRequested)
+                        tokenSource.Cancel();
                     e.Cancel = true;
                 };
                 try
                 {
                     await new GeneratorClient(GeneratorConfig.ReadConfig("config.json"))
-                        .GenerateAllOptions(tokenSource.Token);
+                        .GenerateAllOptions(tokenSource.Token)
+                        .ConfigureAwait(false);
 
                     WriteInfo("Operation completed successfully.", ConsoleColor.Green);
                 }
@@ -36,10 +38,6 @@ namespace DataGeneration
                     WriteInfo("Unhandled exception has occurred.", ConsoleColor.Red, e);
                 }
             }
-
-            WriteInfo("Press any button.", ConsoleColor.Yellow);
-
-            Console.ReadKey();
         }
 
         private static void WriteInfo(string line, ConsoleColor color = ConsoleColor.Gray, Exception e = null)
