@@ -32,10 +32,16 @@ namespace DataGeneration
             _logger.Info("Start generation for all settings");
             foreach (var settings in Config.GetInjectedGenerationSettingsCollection())
             {
-                cancellationToken.ThrowIfCancellationRequested();
                 try
                 {
+                    cancellationToken.ThrowIfCancellationRequested();
+
                     await settings.GetGenerationRunner(Config.ApiConnectionConfig).RunGeneration(cancellationToken).ConfigureAwait(false);
+                }
+                catch (OperationCanceledException oce)
+                {
+                    _logger.Fatal(oce, "Operation was canceled.");
+                    throw;
                 }
                 catch (GenerationException)
                 {

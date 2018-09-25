@@ -63,6 +63,10 @@ namespace DataGeneration.Common
                 }
                 stopwatch.Stop();
             }
+            catch (OperationCanceledException)
+            {
+                throw;
+            }
             catch (Exception e)
             {
                 Logger.Error(e, "Generation failed.");
@@ -109,6 +113,7 @@ namespace DataGeneration.Common
                     {
                         await GenerateSingle(client, entity, cancellationToken);
                     }
+                    catch (OperationCanceledException){throw;}
                     catch (ApiException ae)
                     {
                         Logger.Error(ae, "Generation {$entity} failed", typeof(TEntity));

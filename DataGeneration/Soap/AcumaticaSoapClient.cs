@@ -222,6 +222,11 @@ namespace DataGeneration.Soap
                 _logger.Trace(descr, logDebugArgs);
                 return action();
             }
+            catch (OperationCanceledException oce)
+            {
+                _logger.Error(oce, $"Action \"{descr}\" canceled.");
+                throw;
+            }
             catch (Exception e)
             {
                 var text = $"Action \"{descr}\" failed.";
@@ -236,6 +241,11 @@ namespace DataGeneration.Soap
             {
                 _logger.Trace(descr, logDebugArgs);
                 action();
+            }
+            catch (OperationCanceledException oce)
+            {
+                _logger.Error(oce, $"Action \"{descr}\" canceled.");
+                throw;
             }
             catch (Exception e)
             {
@@ -252,6 +262,11 @@ namespace DataGeneration.Soap
                 _logger.Trace(descr, logDebugArgs);
                 return await task;
             }
+            catch (OperationCanceledException oce)
+            {
+                _logger.Error(oce, $"Action \"{descr}\" canceled.");
+                throw;
+            }
             catch (Exception e)
             {
                 var text = $"Action \"{descr}\" failed.";
@@ -266,6 +281,11 @@ namespace DataGeneration.Soap
             {
                 _logger.Trace(descr, logDebugArgs);
                 await task;
+            }
+            catch (OperationCanceledException oce)
+            {
+                _logger.Error(oce, $"Action \"{descr}\" canceled.");
+                throw;
             }
             catch (Exception e)
             {
@@ -282,6 +302,11 @@ namespace DataGeneration.Soap
                 _logger.Trace(descr, logDebugArgs);
                 return await task.WithCancellation(cancellationToken);
             }
+            catch (OperationCanceledException oce)
+            {
+                _logger.Error(oce, $"Action \"{descr}\" canceled.");
+                throw;
+            }
             catch (Exception e)
             {
                 var text = $"Action \"{descr}\" failed.";
@@ -295,6 +320,11 @@ namespace DataGeneration.Soap
             {
                 _logger.Trace(descr, logDebugArgs);
                 await task.WithCancellation(cancellationToken);
+            }
+            catch (OperationCanceledException oce)
+            {
+                _logger.Error(oce, $"Action \"{descr}\" canceled.");
+                throw;
             }
             catch (Exception e)
             {
