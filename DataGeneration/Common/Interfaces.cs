@@ -1,9 +1,6 @@
-﻿using Bogus;
-using DataGeneration.Soap;
+﻿using DataGeneration.Soap;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using VoidTask = System.Threading.Tasks.Task;
@@ -28,7 +25,7 @@ namespace DataGeneration.Common
     /// to return configured randomizer that generate entities depending on class properties.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public interface IRandomizerSettings<T>: IValidatable where T : IEntity
+    public interface IRandomizerSettings<T> : IValidatable where T : IEntity
     {
         int Seed { get; set; }
         IDataGenerator<T> GetDataGenerator();
@@ -48,8 +45,10 @@ namespace DataGeneration.Common
     {
         int Count { get; set; }
         string GenerationEntity { get; }
+
         // get, set seed for randomizer settings
         int? Seed { get; set; }
+
         ExecutionTypeSettings ExecutionTypeSettings { get; set; }
 
         GenerationRunner GetGenerationRunner(ApiConnectionConfig apiConnectionConfig);
@@ -105,17 +104,14 @@ namespace DataGeneration.Common
         Task<T> PutAsync<T>(T entity, CancellationToken cancellationToken) where T : Entity;
     }
 
-
     // just indicates that client will autologout in dispose
 
     public interface ILogoutApiClient : IApiClient, IDisposable
     {
-
     }
 
     // just indicates that client will autologin in ctor and autologout in dispose
     public interface ILoginLogoutApiClient : ILogoutApiClient, IDisposable
     {
-
     }
 }

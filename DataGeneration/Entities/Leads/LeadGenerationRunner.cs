@@ -35,7 +35,6 @@ namespace DataGeneration.Entities.Leads
 
             sw.Log("Convert Lead");
 
-
             // create emails
             var emails = PrepareEmailsForCreation(entity);
             if (emails != null)

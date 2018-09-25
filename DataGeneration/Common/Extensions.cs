@@ -1,10 +1,6 @@
-﻿using Bogus;
-using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -31,7 +27,7 @@ namespace DataGeneration.Common
 
         public static ICollection<T> AddMany<T>(this ICollection<T> collection, params T[] elements)
         {
-            if(collection is List<T> list)
+            if (collection is List<T> list)
             {
                 list.AddRange(elements);
                 return list;
@@ -68,7 +64,7 @@ namespace DataGeneration.Common
     {
         public static async Task<T> WithCancellation<T>(this Task<T> task, CancellationToken cancellationToken)
         {
-            // Create a self-cancelling TaskCompletionSource 
+            // Create a self-cancelling TaskCompletionSource
             var tcs = new TaskCompletionSourceWithCancellation<T>(cancellationToken);
 
             // Wait for completion or cancellation
@@ -78,7 +74,7 @@ namespace DataGeneration.Common
 
         public static async Task WithCancellation(this Task task, CancellationToken cancellationToken)
         {
-            // Create a self-cancelling TaskCompletionSource 
+            // Create a self-cancelling TaskCompletionSource
             var tcs = new TaskCompletionSourceWithCancellation<object>(cancellationToken);
 
             // Wait for completion or cancellation
@@ -86,7 +82,7 @@ namespace DataGeneration.Common
             await completedTask;
         }
 
-        class TaskCompletionSourceWithCancellation<TResult> : TaskCompletionSource<TResult>
+        private class TaskCompletionSourceWithCancellation<TResult> : TaskCompletionSource<TResult>
         {
             public TaskCompletionSourceWithCancellation(CancellationToken cancellationToken)
             {

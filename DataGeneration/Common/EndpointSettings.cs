@@ -15,8 +15,10 @@ namespace DataGeneration.Common
 
         [JsonIgnore]
         public Uri EndpointUrl => new Uri(AcumaticaBaseUrl.TrimEnd('/') + $"/{OpenApiEnpointPart}/{EndpointName}/{EndpointVersion}/");
+
         [JsonIgnore]
         public Uri LoginUrl => new Uri(AcumaticaBaseUrl.TrimEnd('/') + $"/{OpenApiEnpointPart}/{LoginEndpointPart}");
+
         [JsonIgnore]
         public Uri LogoutUrl => new Uri(AcumaticaBaseUrl.TrimEnd('/') + $"/{OpenApiEnpointPart}/{LoginEndpointPart}");
     }

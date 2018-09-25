@@ -2,9 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DataGeneration.Entities
 {
@@ -26,8 +23,10 @@ namespace DataGeneration.Entities
             {
                 case Lead lead:
                     return lead.LeadDisplayName;
+
                 case Contact contact:
                     return contact.DisplayName;
+
                 default:
                     throw new NotSupportedException();
             }

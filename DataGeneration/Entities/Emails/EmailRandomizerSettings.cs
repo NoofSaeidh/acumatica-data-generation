@@ -2,10 +2,6 @@
 using DataGeneration.Common;
 using DataGeneration.Soap;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DataGeneration.Entities.Emails
 {
@@ -21,7 +17,6 @@ namespace DataGeneration.Entities.Emails
 
                 var (StartDate, EndDate) = f.Random.ProbabilityRandomIfAny(DateRanges);
                 e.Date = f.Date.Between(StartDate, EndDate);
-
             });
     }
 }

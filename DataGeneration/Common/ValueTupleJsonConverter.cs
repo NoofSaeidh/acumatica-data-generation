@@ -4,8 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DataGeneration.Common
 {
@@ -47,7 +45,7 @@ namespace DataGeneration.Common
             SubstituteNullableType(ref objectType);
 
             return objectType.IsValueType
-                && objectType.GetTypeInfo().IsGenericType 
+                && objectType.GetTypeInfo().IsGenericType
                 && ValueTupleTypes.Contains(objectType.GetGenericTypeDefinition());
         }
 

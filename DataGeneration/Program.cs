@@ -1,11 +1,10 @@
 ﻿namespace DataGeneration
 {
-    class Program
+    internal class Program
     {
-        static void Main()
+        private static void Main()
         {
             new GeneratorClient(GeneratorConfig.ReadConfig("config.json")).GenerateAllOptions().Wait();
         }
     }
 }
-

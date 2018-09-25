@@ -1,22 +1,15 @@
 ﻿using Bogus;
 using DataGeneration.Common;
-using DataGeneration.Entities.Emails;
 using DataGeneration.Soap;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DataGeneration.Entities.Leads
 {
     public class LeadRandomizerSettings : RandomizerSettings<Lead>
     {
-
         // todo: should include, instead of Bogus random country code?
         // public ProbabilityCollection<string> CountryCodes { get; set; }
         public ProbabilityCollection<string> LeadClasses { get; set; }
+
         public ProbabilityCollection<string> Statuses { get; set; }
 
         public override Faker<Lead> GetFaker() => base.GetFaker()

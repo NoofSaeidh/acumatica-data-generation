@@ -2,8 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -14,6 +12,7 @@ namespace DataGeneration.Common
         private static Func<ApiConnectionConfig, Task<ILoginLogoutApiClient>> _apiClientFactory;
 
         public abstract Task RunGeneration(CancellationToken cancellationToken = default);
+
         // HACK: set this if you want use another api client
         public static Func<ApiConnectionConfig, Task<ILoginLogoutApiClient>> ApiClientFactory
         {
@@ -38,7 +37,6 @@ namespace DataGeneration.Common
         protected ILogger Logger => LogConfiguration.DefaultLogger;
         protected Bogus.Randomizer Randomizer => _randomizer ?? (_randomizer = new Bogus.Randomizer(GenerationSettings.RandomizerSettings.Seed));
 
-
         public override async Task RunGeneration(CancellationToken cancellationToken = default)
         {
             GenerationSettings.Validate();
@@ -55,9 +53,11 @@ namespace DataGeneration.Common
                     case ExecutionType.Sequent:
                         await RunGenerationSequentRaw(GenerationSettings.Count, cancellationToken);
                         break;
+
                     case ExecutionType.Parallel:
                         await RunGenerationParallel(cancellationToken);
                         break;
+
                     default:
                         break;
                 }
@@ -93,7 +93,7 @@ namespace DataGeneration.Common
             return Task.WhenAll(tasks);
         }
 
-        protected async virtual Task RunGenerationSequentRaw(int count, CancellationToken cancellationToken)
+        protected virtual async Task RunGenerationSequentRaw(int count, CancellationToken cancellationToken)
         {
             var entities = GenerateRandomizedList(count);
 

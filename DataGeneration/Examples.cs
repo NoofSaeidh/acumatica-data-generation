@@ -1,12 +1,8 @@
-﻿using DataGeneration;
-using DataGeneration.Common;
+﻿using DataGeneration.Common;
 using DataGeneration.Entities.Emails;
 using DataGeneration.Entities.Leads;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DataGeneration
 {

@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System.ArrayExtensions;
+using System.Collections.Generic;
 using System.Reflection;
-using System.ArrayExtensions;
 
 namespace System
 {
@@ -34,7 +34,6 @@ namespace System
                     Array clonedArray = (Array)cloneObject;
                     clonedArray.ForEach((array, indices) => array.SetValue(InternalCopy(clonedArray.GetValue(indices), visited), indices));
                 }
-
             }
             visited.Add(originalObject, cloneObject);
             CopyFields(originalObject, visited, cloneObject, typeToReflect);
@@ -127,5 +126,4 @@ namespace System
             }
         }
     }
-
 }

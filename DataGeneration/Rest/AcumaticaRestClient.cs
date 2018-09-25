@@ -13,7 +13,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using VoidTask = System.Threading.Tasks.Task;
 
-
 namespace DataGeneration.Rest
 {
     [Obsolete("Not fully implemented.")]
@@ -55,7 +54,6 @@ namespace DataGeneration.Rest
             await client.LoginAsync(apiConnectionConfig.LoginInfo);
             return client;
         }
-
 
         public void Delete<T>(T entity) where T : Entity
         {
@@ -136,6 +134,7 @@ namespace DataGeneration.Rest
                     {
                         case HttpStatusCode.NoContent:
                             return "No content";
+
                         case HttpStatusCode.Accepted:
                             if ((DateTime.Now - dt).Seconds > 30)
                                 throw new TimeoutException();

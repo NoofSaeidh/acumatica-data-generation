@@ -1,16 +1,9 @@
 ﻿using Bogus;
 using DataGeneration.Soap;
-using Newtonsoft.Json;
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DataGeneration.Common
 {
-
     public abstract class RandomizerSettingsBase
     {
         private int? _seed;
@@ -31,7 +24,7 @@ namespace DataGeneration.Common
 
         /// <summary>
         ///     The same as <see cref="GetStatelessDataGenerator"/> but after first call it will persist in memory,
-        /// and use the same generator at each call. 
+        /// and use the same generator at each call.
         /// This required to generate unique data from diferent places with the same seed.
         /// This method is prefered.
         /// </summary>
@@ -40,8 +33,8 @@ namespace DataGeneration.Common
         /// <returns></returns>
         public IDataGenerator<T> GetStatefullDataGenerator(bool forceInitialize = false)
         {
-            return (forceInitialize || _statefullGenerator == null) 
-                ? (_statefullGenerator = GetStatelessDataGenerator()) 
+            return (forceInitialize || _statefullGenerator == null)
+                ? (_statefullGenerator = GetStatelessDataGenerator())
                 : _statefullGenerator;
         }
 
@@ -56,7 +49,5 @@ namespace DataGeneration.Common
         }
 
         public void Validate() => ValidateHelper.ValidateObject(this);
-
-
     }
 }

@@ -66,7 +66,6 @@ namespace DataGeneration.Soap
                 throw new ArgumentNullException(nameof(connectionConfig));
             }
 
-
             var client = LogoutClient(connectionConfig.EndpointSettings, throwOnErrors);
 
             await client.LoginAsync(connectionConfig.LoginInfo);

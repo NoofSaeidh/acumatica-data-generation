@@ -21,11 +21,10 @@ namespace DataGeneration.Entities.Leads
             set
             {
                 base.Seed = value;
-                if(EmailsGenerationSettings != null && EmailsGenerationSettings.EmailRandomizerSettings != null)
+                if (EmailsGenerationSettings != null && EmailsGenerationSettings.EmailRandomizerSettings != null)
                     EmailsGenerationSettings.EmailRandomizerSettings.Seed = (int)value;
             }
         }
-
 
         public override void Validate()
         {
@@ -37,8 +36,10 @@ namespace DataGeneration.Entities.Leads
         {
             [RequiredCollection]
             public ProbabilityCollection<int> EmailsForSingleLeadCounts { get; set; }
+
             [Required]
             public ProbabilityCollection<(string Email, string DisplayName)> SystemAccounts { get; set; }
+
             [Required]
             public EmailRandomizerSettings EmailRandomizerSettings { get; set; }
 
