@@ -4,12 +4,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("CrmDataGeneration")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("DataGeneration")]
+[assembly: AssemblyDescription("Generate entities for pushing to Acumatica")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("CrmDataGeneration")]
-[assembly: AssemblyCopyright("Copyright ©  2018")]
+[assembly: AssemblyCompany("Acumatica")]
+[assembly: AssemblyProduct("DataGeneration")]
+[assembly: AssemblyCopyright("Acumatica ©  2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

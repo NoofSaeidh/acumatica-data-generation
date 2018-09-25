@@ -2,7 +2,7 @@
   "ApiConnectionConfig": {
     "EndpointSettings": {
       "AcumaticaBaseUrl": "http://localhost:444",
-      "EndpointName": "Default",
+      "EndpointName": "datagen",
       "EndpointVersion": "18.200.001"
     },
     "LoginInfo": {
@@ -13,7 +13,7 @@
   "StopProccesingAtExeception": true,
   "GenerationSettingsCollection": [
     {
-      "$type": "CrmDataGeneration.Entities.Leads.LeadGenerationSettings, CrmDataGeneration",
+      "$type": "DataGeneration.Entities.Leads.LeadGenerationSettings, DataGeneration",
       "ExecutionTypeSettings": {
         "ExecutionType": "Parallel",
         "ParallelThreads": 4,
@@ -53,7 +53,7 @@
       },
       "GenerationEntity": "Lead",
       "RandomizerSettings": {
-        "$type": "CrmDataGeneration.Entities.Leads.LeadRandomizerSettings, CrmDataGeneration",
+        "$type": "DataGeneration.Entities.Leads.LeadRandomizerSettings, DataGeneration",
         "LeadClasses": {
           "LEAD": 0.7,
           "LEADBUS": 0.15,
