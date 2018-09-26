@@ -21,7 +21,7 @@ namespace DataGeneration.Common
         private string _pxTypeName;
 
         [JsonIgnore]
-        public string PxTypeName => _pxTypeName ?? (_pxTypeName = PxObjectsTypes.GetEntityPxTypeName<T>());
+        public string PxTypeName => _pxTypeName ?? (_pxTypeName = PxObjectsTypes.GetPxTypeName<T>());
 
         public override string GenerationEntity => typeof(T).Name;
 

@@ -62,7 +62,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Common\AcumaticaTimeHelper.cs" />
     <Compile Include="Common\ApiConnectionConfig.cs" />
+    <Compile Include="Entities\EntityHelper.cs" />
     <Compile Include="Common\Enums.cs" />
     <Compile Include="Common\ExecutionTypeSettings.cs" />
     <Compile Include="Common\Extensions.cs" />
@@ -85,6 +87,9 @@
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
     <Compile Include="ConsoleExecutor.cs" />
+    <Compile Include="Entities\Activities\ActivityGenerationRunner.cs" />
+    <Compile Include="Entities\Activities\ActivityGenerationSettings.cs" />
+    <Compile Include="Entities\Activities\ActivityRandomizerSettings.cs" />
     <Compile Include="Entities\KeyFields.cs" />
     <Compile Include="Common\LogConfiguration.cs" />
     <Compile Include="Common\ProbabilityCollection.cs" />

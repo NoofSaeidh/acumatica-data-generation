@@ -17,7 +17,7 @@
       "ExecutionTypeSettings": {
         "ExecutionType": "Parallel",
         "ParallelThreads": 4,
-        "IgnoreProcessingErrors":  true
+        "IgnoreProcessingErrors": true
       },
       "ConvertByStatuses": {
         "New": {
@@ -43,12 +43,10 @@
           ]
         ],
         "EmailRandomizerSettings": {
-          "DateRanges": [
-            {
-              "StartDate": "2017-01-01T00:00:00",
-              "EndDate": "2018-05-01T00:00:00"
-            }
-          ]
+          "DateRange": {
+            "StartDate": "2017-01-01T00:00:00",
+            "EndDate": "2018-05-01T00:00:00"
+          }
         }
       },
       "GenerationEntity": "Lead",

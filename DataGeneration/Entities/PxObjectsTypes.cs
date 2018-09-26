@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 
 namespace DataGeneration.Entities
 {
+    // todo: move it to config
     public static class PxObjectsTypes
     {
         public const string ContactType = "PX.Objects.CR.Contact";
@@ -17,14 +18,14 @@ namespace DataGeneration.Entities
                 {typeof(Contact), ContactType }
             });
 
-        public static string GetEntityPxTypeName(this Entity entity)
+        public static string GetPxTypeName(this Entity entity)
         {
             if (PxTypes.TryGetValue(entity.GetType(), out var result))
                 return result;
-            throw new NotSupportedException();
+            throw null;
         }
 
-        public static string GetEntityPxTypeName<T>() where T : Entity
+        public static string GetPxTypeName<T>() where T : Entity
         {
             if (PxTypes.TryGetValue(typeof(T), out var result))
                 return result;
