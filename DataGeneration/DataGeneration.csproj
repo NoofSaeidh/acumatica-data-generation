@@ -84,6 +84,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
+    <Compile Include="ConsoleExecutor.cs" />
     <Compile Include="Entities\KeyFields.cs" />
     <Compile Include="Common\LogConfiguration.cs" />
     <Compile Include="Common\ProbabilityCollection.cs" />
@@ -187,6 +188,11 @@
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="endpoint-datagen.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

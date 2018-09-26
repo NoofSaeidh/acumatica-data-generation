@@ -1,0 +1,13 @@
+﻿<Endpoint xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="datagen" version="18.200.001" systemContractVersion="3" xmlns="http://www.acumatica.com/entity/maintenance/5.31">
+  <ExtendsEndpoint name="Default" version="18.200.001" />
+  <TopLevelEntity name="Lead" screen="CR301000">
+    <Fields>
+      <Field name="NoteID" type="GuidValue" />
+    </Fields>
+    <Mappings>
+      <Mapping field="NoteID">
+        <To object="Lead" field="NoteID" />
+      </Mapping>
+    </Mappings>
+  </TopLevelEntity>
+</Endpoint>

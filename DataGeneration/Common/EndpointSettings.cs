@@ -34,7 +34,7 @@ namespace DataGeneration.Common
         public Uri LogoutUrl => new Uri(AcumaticaBaseUrl.TrimEnd('/') + $"/{EndpointPart}/{LoginEndpointPart}");
 
         [JsonIgnore]
-        public Uri MaintananceUrl => new Uri(AcumaticaBaseUrl.TrimEnd('/') + $"/{MaintPart}");
+        public Uri MaintananceUrl => new Uri(AcumaticaBaseUrl.TrimEnd('/') + $"/{EndpointPart}/{MaintPart}");
 
 
         public Binding GetBinding()
