@@ -3,6 +3,7 @@ using DataGeneration.Soap;
 using System.Collections.Concurrent;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using VoidTask = System.Threading.Tasks.Task;
 
 namespace DataGeneration.Entities.Activities
@@ -18,7 +19,8 @@ namespace DataGeneration.Entities.Activities
         }
 
         // everything will crash if run two generation simultaneously
-        public override async VoidTask RunGeneration(CancellationToken cancellationToken = default)
+
+        protected override async VoidTask RunBeforeGeneration(CancellationToken cancellationToken = default)
         {
             using (var client = await GetLoginLogoutClient())
             {
@@ -31,8 +33,6 @@ namespace DataGeneration.Entities.Activities
 
                 _linkEntitiesKeys = new ConcurrentQueue<string>(list.Select(e => e.GetNoteId().ToString()));
             }
-
-            await base.RunGeneration(cancellationToken);
         }
 
         protected override async VoidTask GenerateSingle(IApiClient client, Activity entity, CancellationToken cancellationToken)

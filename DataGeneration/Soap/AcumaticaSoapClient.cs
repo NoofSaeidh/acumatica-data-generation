@@ -12,7 +12,7 @@ namespace DataGeneration.Soap
 {
     public class AcumaticaSoapClient : IApiClient, IDisposable
     {
-        private static ILogger _logger => LogConfiguration.GetLogger(LogConfiguration.LoggerNames.ApiClient);
+        private static ILogger _logger => Common.LogManager.GetLogger(Common.LogManager.LoggerNames.ApiClient);
 
         private readonly DefaultSoapClient _client;
 

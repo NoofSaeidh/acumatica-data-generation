@@ -18,7 +18,7 @@ namespace DataGeneration.Rest
     [Obsolete("Not fully implemented.")]
     public class AcumaticaRestClient : IApiClient
     {
-        private static ILogger _logger => LogConfiguration.DefaultLogger;
+        private static ILogger _logger => Common.LogManager.DefaultLogger;
 
         private readonly HttpClient _httpClient;
 

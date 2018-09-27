@@ -42,6 +42,8 @@ namespace DataGeneration.Entities
             var property = entityType.GetProperty(propertyName);
             if (property == null)
                 throw new InvalidOperationException($"Entity {entityType.Name} doesn't contain property {propertyName}.");
+            if (!property.CanWrite)
+                throw new InvalidOperationException($"Property {propertyName} doesn't have set method.");
 
             try
             {
@@ -64,6 +66,8 @@ namespace DataGeneration.Entities
             var property = entityType.GetProperty(propertyName);
             if (property == null)
                 throw new InvalidOperationException($"Entity {entityType.Name} doesn't contain property {propertyName}.");
+            if (!property.CanRead)
+                throw new InvalidOperationException($"Property {propertyName} doesn't have get method.");
 
             try
             {

@@ -7,7 +7,7 @@ namespace DataGeneration.Common
 {
     public static class StopwatchLoggerFactory
     {
-        private static Lazy<bool> _isStopwatchEnabled = new Lazy<bool>(() => LogManager.Configuration.LoggingRules.Any(r => r.NameMatches(LogConfiguration.LoggerNames.TimeTracker)));
+        private static Lazy<bool> _isStopwatchEnabled = new Lazy<bool>(() => NLog.LogManager.Configuration.LoggingRules.Any(r => r.NameMatches(LogManager.LoggerNames.TimeTracker)));
         public static bool IsStopwatchEnabled => _isStopwatchEnabled.Value;
 
         public static IStopwatchLogger GetLogger()
@@ -40,7 +40,7 @@ namespace DataGeneration.Common
     }
 
     /// <summary>
-    ///     Stopwatch that log everything to <see cref="LogConfiguration.LoggerNames.TimeTracker"/> logger.
+    ///     Stopwatch that log everything to <see cref="LogManager.LoggerNames.TimeTracker"/> logger.
     /// Use it with fluent API
     /// </summary>
     /// <example>
@@ -55,7 +55,7 @@ namespace DataGeneration.Common
     /// </example>
     internal class StopwatchLogger : IStopwatchLogger
     {
-        private static readonly ILogger _logger = LogConfiguration.GetLogger(LogConfiguration.LoggerNames.TimeTracker);
+        private static readonly ILogger _logger = LogManager.GetLogger(LogManager.LoggerNames.TimeTracker);
         private readonly Stopwatch _stopwatch;
 
         public StopwatchLogger()

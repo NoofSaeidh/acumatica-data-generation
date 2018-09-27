@@ -10,4 +10,24 @@
       </Mapping>
     </Mappings>
   </TopLevelEntity>
+  <TopLevelEntity name="Opportunity" screen="CR304000">
+    <Fields>
+      <Field name="NoteID" type="GuidValue" />
+    </Fields>
+    <Mappings>
+      <Mapping field="NoteID">
+        <To object="Opportunity" field="NoteID" />
+      </Mapping>
+    </Mappings>
+  </TopLevelEntity>
+  <TopLevelEntity name="Case" screen="CR306000">
+    <Fields>
+      <Field name="NoteID" type="GuidValue" />
+    </Fields>
+    <Mappings>
+      <Mapping field="NoteID">
+        <To object="Case" field="NoteID" />
+      </Mapping>
+    </Mappings>
+  </TopLevelEntity>
 </Endpoint>

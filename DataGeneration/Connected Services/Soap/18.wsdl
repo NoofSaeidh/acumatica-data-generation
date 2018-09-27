@@ -5658,6 +5658,7 @@
               <s:element minOccurs="0" maxOccurs="1" name="Estimation" nillable="true" type="q229:DateTimeValue" />
               <s:element minOccurs="0" maxOccurs="1" name="Location" nillable="true" type="q229:StringValue" />
               <s:element minOccurs="0" maxOccurs="1" name="ManualAmount" nillable="true" type="q229:BooleanValue" />
+              <s:element minOccurs="0" maxOccurs="1" name="NoteID" nillable="true" type="q229:GuidValue" />
               <s:element minOccurs="0" maxOccurs="1" name="OpportunityID" nillable="true" type="q229:StringValue" />
               <s:element minOccurs="0" maxOccurs="1" name="Override" nillable="true" type="q229:BooleanValue" />
               <s:element minOccurs="0" maxOccurs="1" name="Owner" nillable="true" type="q229:StringValue" />
@@ -5835,6 +5836,7 @@
               <s:element minOccurs="0" maxOccurs="1" name="LastOutgoingActivity" nillable="true" type="q235:DateTimeValue" />
               <s:element minOccurs="0" maxOccurs="1" name="Location" nillable="true" type="q235:StringValue" />
               <s:element minOccurs="0" maxOccurs="1" name="ManualOverride" nillable="true" type="q235:BooleanValue" />
+              <s:element minOccurs="0" maxOccurs="1" name="NoteID" nillable="true" type="q235:GuidValue" />
               <s:element minOccurs="0" maxOccurs="1" name="OvertimeSpent" nillable="true" type="q235:StringValue" />
               <s:element minOccurs="0" maxOccurs="1" name="Owner" nillable="true" type="q235:StringValue" />
               <s:element minOccurs="0" maxOccurs="1" name="OwnerEmployeeName" nillable="true" type="q235:StringValue" />

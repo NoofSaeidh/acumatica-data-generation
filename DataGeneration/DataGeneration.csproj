@@ -91,7 +91,7 @@
     <Compile Include="Entities\Activities\ActivityGenerationSettings.cs" />
     <Compile Include="Entities\Activities\ActivityRandomizerSettings.cs" />
     <Compile Include="Entities\KeyFields.cs" />
-    <Compile Include="Common\LogConfiguration.cs" />
+    <Compile Include="Common\LogManager.cs" />
     <Compile Include="Common\ProbabilityCollection.cs" />
     <Compile Include="Common\ProbabilityCollectionJsonConverter.cs" />
     <Compile Include="Entities\Leads\LeadGenerationRunner.cs" />
@@ -196,7 +196,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="endpoint-datagen.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

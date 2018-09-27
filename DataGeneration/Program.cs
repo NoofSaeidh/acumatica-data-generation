@@ -1,18 +1,28 @@
-﻿using System;
+﻿using DataGeneration.Common;
+using System;
+using System.ComponentModel.DataAnnotations;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace DataGeneration
 {
-    internal class Program
+    public class Program
     {
-        private static void Main(string[] args)
+        public static void Main(string[] args)
         {
             var executor = new ConsoleExecutor();
-            if (!executor.ExecuteArgs(args))
-                return;
+            try
+            {
+                if (!executor.ExecuteArgs(args))
+                    return;
 
-            Generate(executor.Config).Wait();
+                Generate(executor.Config).Wait();
+            }
+            catch(Exception e)
+            {
+                LogManager.DefaultLogger.Fatal(e, "Unexpected exception has occurred");
+                ConsoleExecutor.WriteInfo("Unexpected exception has occurred.", ConsoleColor.DarkRed, e);
+            }
         }
 
         public static async Task Generate(GeneratorConfig config)
@@ -30,19 +40,38 @@ namespace DataGeneration
                 };
                 try
                 {
-                    await new GeneratorClient(config)
+                    var result = await new GeneratorClient(config)
                         .GenerateAllOptions(tokenSource.Token)
                         .ConfigureAwait(false);
 
-                    ConsoleExecutor.WriteInfo("Operation completed successfully.", ConsoleColor.Green);
+                    if (result.AllSucceeded)
+                        ConsoleExecutor.WriteInfo("All generations completed successfully.", ConsoleColor.Green);
+                    else
+                    {
+                        if (result.AllFailed)
+                            ConsoleExecutor.WriteInfo("All generations completed unsuccessfully.", ConsoleColor.Red);
+                        else
+                            ConsoleExecutor.WriteInfo("Some generations completed unsuccessfully.", ConsoleColor.Yellow);
+
+                        for (var i = 0; i < result.GenerationResults.Length; i++)
+                        {
+                            var item = result.GenerationResults[i];
+                            if (!item.Success)
+                                ConsoleExecutor.WriteInfo($"Generation {i} - {item.GenerationSettings.GenerationEntity} failed.", ConsoleColor.Red, item.Exception);
+                        }
+                    }
+                }
+                catch (ValidationException ve)
+                {
+                    ConsoleExecutor.WriteInfo("Validation failed.", ConsoleColor.Red, ve);
                 }
                 catch (OperationCanceledException oce)
                 {
-                    ConsoleExecutor.WriteInfo("Operation has been canceled.", ConsoleColor.Red, oce);
+                    ConsoleExecutor.WriteInfo("Operation was canceled.", ConsoleColor.Red, oce);
                 }
                 catch (Exception e)
                 {
-                    ConsoleExecutor.WriteInfo("Unhandled exception has occurred.", ConsoleColor.Red, e);
+                    ConsoleExecutor.WriteInfo("Unhandled exception has occurred.", ConsoleColor.DarkRed, e);
                 }
             }
         }

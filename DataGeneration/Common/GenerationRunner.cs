@@ -26,6 +26,7 @@ namespace DataGeneration.Common
         where TGenerationSettings : class, IGenerationSettings<TEntity>
     {
         private Bogus.Randomizer _randomizer;
+
         protected GenerationRunner(ApiConnectionConfig apiConnectionConfig, TGenerationSettings generationSettings)
         {
             ApiConnectionConfig = apiConnectionConfig ?? throw new ArgumentNullException(nameof(apiConnectionConfig));
@@ -34,9 +35,12 @@ namespace DataGeneration.Common
 
         public ApiConnectionConfig ApiConnectionConfig { get; }
         public TGenerationSettings GenerationSettings { get; }
-        protected ILogger Logger => LogConfiguration.DefaultLogger;
+        protected ILogger Logger => LogManager.GetLogger(LogManager.LoggerNames.GenerationRunner);
         protected Bogus.Randomizer Randomizer => _randomizer ?? (_randomizer = new Bogus.Randomizer(GenerationSettings.RandomizerSettings.Seed));
 
+        // please do not override this (it contains loggers, try catches and stopwatch)
+        // instead override RunGenerationSequentRaw (for single thread)
+        // or RunBeforeGeneration (for all threads before entiry generation)
         public override async Task RunGeneration(CancellationToken cancellationToken = default)
         {
             GenerationSettings.Validate();
@@ -48,10 +52,11 @@ namespace DataGeneration.Common
             try
             {
                 stopwatch.Start();
+                await RunBeforeGeneration(cancellationToken);
                 switch (GenerationSettings.ExecutionTypeSettings.ExecutionType)
                 {
                     case ExecutionType.Sequent:
-                        await RunGenerationSequentRaw(GenerationSettings.Count, cancellationToken);
+                        await RunGenerationSequent(GenerationSettings.Count, cancellationToken);
                         break;
 
                     case ExecutionType.Parallel:
@@ -63,18 +68,24 @@ namespace DataGeneration.Common
                 }
                 stopwatch.Stop();
             }
-            catch (OperationCanceledException)
+            catch (OperationCanceledException oce)
             {
+                Logger.Error(oce, "Generation was canceled");
                 throw;
             }
             catch (Exception e)
             {
-                Logger.Error(e, "Generation failed.");
+                Logger.Error(e, "Generation failed");
                 throw GenerationException.NewFromEntityType<TEntity>(e);
             }
 
-            Logger.Info("Generation of {type} with count: {count} completed. Time elapsed: {time}.",
+            Logger.Info("Generation of {type} with count: {count} completed. Time elapsed: {time}",
                 GenerationSettings.GenerationEntity, GenerationSettings.Count, stopwatch.Elapsed);
+        }
+
+        protected virtual Task RunBeforeGeneration(CancellationToken cancellationToken = default)
+        {
+            return Task.CompletedTask;
         }
 
         protected Task RunGenerationParallel(CancellationToken cancellationToken)
@@ -91,13 +102,13 @@ namespace DataGeneration.Common
                 if (remain > i) rem = 1;
 
                 var currentCount = count + rem;
-                tasks[i] = RunGenerationSequentRaw(currentCount, cancellationToken);
+                tasks[i] = RunGenerationSequent(currentCount, cancellationToken);
             }
 
             return Task.WhenAll(tasks);
         }
 
-        protected virtual async Task RunGenerationSequentRaw(int count, CancellationToken cancellationToken)
+        protected async Task RunGenerationSequent(int count, CancellationToken cancellationToken)
         {
             var entities = GenerateRandomizedList(count);
 
@@ -113,7 +124,7 @@ namespace DataGeneration.Common
                     {
                         await GenerateSingle(client, entity, cancellationToken);
                     }
-                    catch (OperationCanceledException){throw;}
+                    catch (OperationCanceledException) { throw; }
                     catch (ApiException ae)
                     {
                         Logger.Error(ae, "Generation {$entity} failed", typeof(TEntity));
@@ -133,8 +144,7 @@ namespace DataGeneration.Common
 
         protected async Task<ILoginLogoutApiClient> GetLoginLogoutClient()
         {
-            var client = await ApiClientFactory(ApiConnectionConfig);
-            return client;
+            return await ApiClientFactory(ApiConnectionConfig);
         }
 
         protected IList<TEntity> GenerateRandomizedList(int count) => GenerationSettings.RandomizerSettings.GetDataGenerator().GenerateList(count);
