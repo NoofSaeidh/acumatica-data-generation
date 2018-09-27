@@ -9,16 +9,16 @@ namespace DataGeneration.Common
 {
     public abstract class GenerationRunner
     {
-        private static Func<ApiConnectionConfig, Task<ILoginLogoutApiClient>> _apiClientFactory;
-
-        public abstract Task RunGeneration(CancellationToken cancellationToken = default);
+        private static Func<ApiConnectionConfig, CancellationToken, Task<ILoginLogoutApiClient>> _apiClientFactory;
 
         // HACK: set this if you want use another api client
-        public static Func<ApiConnectionConfig, Task<ILoginLogoutApiClient>> ApiClientFactory
+        public static Func<ApiConnectionConfig, CancellationToken, Task<ILoginLogoutApiClient>> ApiClientFactory
         {
-            get => _apiClientFactory ?? (_apiClientFactory = async (config) => await Soap.AcumaticaSoapClient.LoginLogoutClientAsync(config));
+            get => _apiClientFactory ?? (_apiClientFactory = async (config, ct) => (ILoginLogoutApiClient)await Soap.AcumaticaSoapClient.LoginLogoutClientAsync(config, ct));
             set => _apiClientFactory = value;
         }
+
+        public abstract Task RunGeneration(CancellationToken cancellationToken = default);
     }
 
     public abstract class GenerationRunner<TEntity, TGenerationSettings> : GenerationRunner
@@ -114,7 +114,7 @@ namespace DataGeneration.Common
 
             cancellationToken.ThrowIfCancellationRequested();
 
-            using (var client = await GetLoginLogoutClient())
+            using (var client = await GetLoginLogoutClient(cancellationToken))
             {
                 foreach (var entity in entities)
                 {
@@ -142,9 +142,9 @@ namespace DataGeneration.Common
 
         protected abstract Task GenerateSingle(IApiClient client, TEntity entity, CancellationToken cancellationToken);
 
-        protected async Task<ILoginLogoutApiClient> GetLoginLogoutClient()
+        protected async Task<ILoginLogoutApiClient> GetLoginLogoutClient(CancellationToken cancellationToken = default)
         {
-            return await ApiClientFactory(ApiConnectionConfig);
+            return await ApiClientFactory(ApiConnectionConfig, cancellationToken);
         }
 
         protected IList<TEntity> GenerateRandomizedList(int count) => GenerationSettings.RandomizerSettings.GetDataGenerator().GenerateList(count);

@@ -1,4 +1,7 @@
-﻿using DataGeneration.Common;
+﻿/* Maybe usefull if you need this uncomment and write missing methods */
+
+/*
+using DataGeneration.Common;
 using DataGeneration.Soap;
 using Newtonsoft.Json;
 using NLog;
@@ -16,7 +19,7 @@ using VoidTask = System.Threading.Tasks.Task;
 namespace DataGeneration.Rest
 {
     [Obsolete("Not fully implemented.")]
-    public class AcumaticaRestClient : IApiClient
+    public class AcumaticaRestClient : IApiClient 
     {
         private static ILogger _logger => Common.LogManager.DefaultLogger;
 
@@ -337,3 +340,4 @@ namespace DataGeneration.Rest
         }
     }
 }
+*/

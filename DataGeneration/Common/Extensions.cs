@@ -68,8 +68,7 @@ namespace DataGeneration.Common
             var tcs = new TaskCompletionSourceWithCancellation<T>(cancellationToken);
 
             // Wait for completion or cancellation
-            Task<T> completedTask = await Task.WhenAny(task, tcs.Task);
-            return await completedTask;
+            return await await Task.WhenAny(task, tcs.Task);
         }
 
         public static async Task WithCancellation(this Task task, CancellationToken cancellationToken)
@@ -78,8 +77,7 @@ namespace DataGeneration.Common
             var tcs = new TaskCompletionSourceWithCancellation<object>(cancellationToken);
 
             // Wait for completion or cancellation
-            Task completedTask = await Task.WhenAny(task, tcs.Task);
-            await completedTask;
+            await await Task.WhenAny(task, tcs.Task);
         }
 
         private class TaskCompletionSourceWithCancellation<TResult> : TaskCompletionSource<TResult>
@@ -87,7 +85,7 @@ namespace DataGeneration.Common
             public TaskCompletionSourceWithCancellation(CancellationToken cancellationToken)
             {
                 CancellationTokenRegistration registration =
-                    cancellationToken.Register(() => TrySetResult(default));
+                    cancellationToken.Register(() => TrySetCanceled());
 
                 // Remove the registration after the task completes
                 Task.ContinueWith(_ => registration.Dispose());

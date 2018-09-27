@@ -22,16 +22,19 @@ namespace DataGeneration.Entities.Activities
 
         protected override async VoidTask RunBeforeGeneration(CancellationToken cancellationToken = default)
         {
-            using (var client = await GetLoginLogoutClient())
+            using (var client = await GetLoginLogoutClient(cancellationToken))
             {
-                _pxTypeName = GenerationSettings.PxTypeNameForLinkedEntity;
-                var entity = EntityHelper.InitializeFromType(GenerationSettings.EntityTypeName);
+                using (StopwatchLoggerFactory.Log($"Get all {GenerationSettings.EntityTypeName}"))
+                {
+                    _pxTypeName = GenerationSettings.PxTypeNameForLinkedEntity;
+                    var entity = EntityHelper.InitializeFromType(GenerationSettings.EntityTypeName);
 
-                entity.ReturnBehavior = ReturnBehavior.OnlySpecified;
-                EntityHelper.SetPropertyValue(entity, "NoteID", new StringReturn());
-                var list = await client.GetListAsync(entity);
+                    entity.ReturnBehavior = ReturnBehavior.OnlySpecified;
+                    EntityHelper.SetPropertyValue(entity, "NoteID", new GuidReturn());
+                    var list = await client.GetListAsync(entity, cancellationToken);
 
-                _linkEntitiesKeys = new ConcurrentQueue<string>(list.Select(e => e.GetNoteId().ToString()));
+                    _linkEntitiesKeys = new ConcurrentQueue<string>(list.Select(e => e.GetNoteId().ToString()));
+                }
             }
         }
 

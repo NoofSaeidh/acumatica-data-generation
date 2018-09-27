@@ -37,35 +37,35 @@ namespace DataGeneration.Soap
             _client = new DefaultSoapClient(endpointSettings.GetBinding(), endpointSettings.GetEndpointAddress());
         }
 
-        public static ILoginLogoutApiClient LoginLogoutClient(ApiConnectionConfig connectionConfig, bool throwOnErrors = true)
+        public static AcumaticaSoapClient LoginLogoutClient(ApiConnectionConfig connectionConfig)
         {
             if (connectionConfig == null)
             {
                 throw new ArgumentNullException(nameof(connectionConfig));
             }
 
-            var client = LogoutClient(connectionConfig.EndpointSettings, throwOnErrors);
+            var client = LogoutClient(connectionConfig.EndpointSettings);
 
             client.Login(connectionConfig.LoginInfo);
 
-            return (ILoginLogoutApiClient)client;
+            return client;
         }
 
-        public static async Task<ILoginLogoutApiClient> LoginLogoutClientAsync(ApiConnectionConfig connectionConfig, bool throwOnErrors = true)
+        public static async Task<AcumaticaSoapClient> LoginLogoutClientAsync(ApiConnectionConfig connectionConfig, CancellationToken cancellationToken = default)
         {
             if (connectionConfig == null)
             {
                 throw new ArgumentNullException(nameof(connectionConfig));
             }
 
-            var client = LogoutClient(connectionConfig.EndpointSettings, throwOnErrors);
+            var client = LogoutClient(connectionConfig.EndpointSettings);
 
-            await client.LoginAsync(connectionConfig.LoginInfo);
+            await client.LoginAsync(connectionConfig.LoginInfo, cancellationToken);
 
-            return (ILoginLogoutApiClient)client;
+            return client;
         }
 
-        public static ILogoutApiClient LogoutClient(EndpointSettings endpointSettings, bool throwOnErrors = true)
+        public static AcumaticaSoapClient LogoutClient(EndpointSettings endpointSettings)
         {
             if (endpointSettings == null)
             {
@@ -94,23 +94,26 @@ namespace DataGeneration.Soap
             TryCatch("Login", () => _client.Login(name, password, company, branch, locale));
         }
 
-        public async VoidTask LoginAsync(LoginInfo loginInfo)
+        public VoidTask LoginAsync(LoginInfo loginInfo)
+        {
+            return LoginAsync(loginInfo, default);
+        }
+
+        public VoidTask LoginAsync(LoginInfo loginInfo, CancellationToken cancellationToken)
         {
             if (loginInfo == null)
             {
                 throw new ArgumentNullException(nameof(loginInfo));
             }
 
-            _logger.Debug("Login to {acumatica}", _client.Endpoint.Address.Uri);
-
-            await TryCatchAsync("Login", _client.LoginAsync(loginInfo.Username, loginInfo.Password, loginInfo.Company, loginInfo.Branch, loginInfo.Locale));
+            return LoginAsync(loginInfo.Username, loginInfo.Password, loginInfo.Company, loginInfo.Branch, loginInfo.Locale, cancellationToken);
         }
 
-        public async VoidTask LoginAsync(string name, string password, string company = null, string branch = null, string locale = null)
+        public async VoidTask LoginAsync(string name, string password, string company = null, string branch = null, string locale = null, CancellationToken cancellationToken = default)
         {
             _logger.Debug("Login to {acumatica}", _client.Endpoint.Address.Uri);
 
-            await TryCatchAsync("Login", _client.LoginAsync(name, password, company, branch, locale));
+            await TryCatchAsync("Login", _client.LoginAsync(name, password, company, branch, locale), cancellationToken);
         }
 
         public void Logout()
@@ -306,6 +309,7 @@ namespace DataGeneration.Soap
                 throw new ApiException(text, e);
             }
         }
+
         private async VoidTask TryCatchAsync(string descr, VoidTask task, CancellationToken cancellationToken, params object[] logDebugArgs)
         {
             try
@@ -331,9 +335,17 @@ namespace DataGeneration.Soap
             public LogoutClientImpl(EndpointSettings endpointSettings) : base(endpointSettings)
             {
             }
+
             void IDisposable.Dispose()
             {
-                Logout();
+                try
+                {
+                    Logout();
+                }
+                catch (Exception e)
+                {
+                    _logger.Error(e, "Could not logout while disposing");
+                }
                 base.Dispose();
             }
         }
