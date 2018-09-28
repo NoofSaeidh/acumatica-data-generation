@@ -36,12 +36,8 @@ namespace DataGeneration.Entities.Activities
 
         protected override async VoidTask GenerateSingle(IApiClient client, Activity entity, CancellationToken cancellationToken)
         {
-            Activity activity;
-            using (StopwatchLoggerFactory.Log("Put Activity"))
-            {
-                entity.ReturnBehavior = ReturnBehavior.OnlySystem;
-                activity = await client.PutAsync(entity);
-            }
+            entity.ReturnBehavior = ReturnBehavior.OnlySystem;
+            var activity = await client.PutAsync(entity);
             if (_linkEntitiesKeys.TryTake(out var id))
             {
                 var link = new LinkEntityToActivity
