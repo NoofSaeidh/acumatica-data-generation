@@ -96,7 +96,6 @@
     <Compile Include="Common\ProbabilityCollectionJsonConverter.cs" />
     <Compile Include="Entities\Leads\LeadGenerationRunner.cs" />
     <Compile Include="Entities\Leads\LeadGenerationSettings.cs" />
-    <Compile Include="Entities\PxObjectsTypes.cs" />
     <Compile Include="Common\RandomizerSettings.cs" />
     <Compile Include="Common\ValueTupleJsonConverter.cs" />
     <Compile Include="Entities\Emails\EmailRandomizerSettings.cs" />

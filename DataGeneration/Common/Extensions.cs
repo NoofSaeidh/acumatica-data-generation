@@ -8,6 +8,16 @@ namespace DataGeneration.Common
 {
     public static class EnumerationExtensions
     {
+        public static bool IsNullOrWhiteSpace(this string value)
+        {
+            return string.IsNullOrWhiteSpace(value);
+        }
+
+        public static bool IsNullOrEmpty(this string value)
+        {
+            return string.IsNullOrEmpty(value);
+        }
+
         public static bool IsNullOrEmpty(this IEnumerable enumerable)
         {
             if (enumerable == null) return true;

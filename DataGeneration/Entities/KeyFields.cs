@@ -18,12 +18,10 @@ namespace DataGeneration.Entities
             {
                 case Lead lead:
                     return lead.NoteID?.Value;
-
-                //todo: extend endpoint
-                //case Opportunity opportunity:
-                //    return opportunity.NoteID?.Value;
-                //case Case @case:
-                //    return @case.NoteID?.Value;
+                case Opportunity opportunity:
+                    return opportunity.NoteID?.Value;
+                case Case @case:
+                    return @case.NoteID?.Value;
 
                 default:
                     try

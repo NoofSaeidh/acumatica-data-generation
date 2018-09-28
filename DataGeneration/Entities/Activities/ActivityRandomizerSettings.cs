@@ -14,6 +14,7 @@ namespace DataGeneration.Entities.Activities
         public (DateTime StartDate, DateTime EndDate)? DateRange { get; set; }
         public ProbabilityCollection<bool> TrackTime { get; set; }
         public (string MinTime, string MaxTime)? TimeSpent { get; set; }
+        public string ActivityType { get; set; }
 
         public override Faker<Activity> GetFaker() => base.GetFaker()
             .Rules((f, a) =>
@@ -21,6 +22,11 @@ namespace DataGeneration.Entities.Activities
                 a.Body = f.Lorem.Text();
                 a.Summary = f.Lorem.Sentence();
                 a.Status = "Completed";
+
+                if(!ActivityType.IsNullOrWhiteSpace())
+                {
+                    a.Type = ActivityType;
+                }
 
                 if(f.Random.ProbabilityRandomIfAny(TrackTime))
                 {
@@ -33,9 +39,14 @@ namespace DataGeneration.Entities.Activities
                     if(TimeSpent != null)
                     {
                         var (min, max) = TimeSpent.Value;
-                        var (minI, maxI) = (AcumaticaTimeHelper.ToMinutes(min), AcumaticaTimeHelper.ToMinutes(max));
-                        var time = f.Random.Int(minI, maxI);
-                        a.TimeActivity.TimeSpent = AcumaticaTimeHelper.FromMinutes(time);
+                        if (max == null)
+                            a.TimeActivity.TimeSpent = min;
+                        else
+                        {
+                            var (minI, maxI) = (AcumaticaTimeHelper.ToMinutes(min), AcumaticaTimeHelper.ToMinutes(max));
+                            var time = f.Random.Int(minI, maxI);
+                            a.TimeActivity.TimeSpent = AcumaticaTimeHelper.FromMinutes(time);
+                        }
                     }
                 }
 

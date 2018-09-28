@@ -18,10 +18,7 @@ namespace DataGeneration.Common
 
     public abstract class GenerationSettings<T> : GenerationSettingsBase, IGenerationSettings<T> where T : Soap.Entity
     {
-        private string _pxTypeName;
-
-        [JsonIgnore]
-        public string PxTypeName => _pxTypeName ?? (_pxTypeName = PxObjectsTypes.GetPxTypeName<T>());
+        public string PxType { get; set; }
 
         public override string GenerationEntity => typeof(T).Name;
 

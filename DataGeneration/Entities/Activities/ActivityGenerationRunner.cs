@@ -23,8 +23,8 @@ namespace DataGeneration.Entities.Activities
         {
             using (var client = await GetLoginLogoutClient(cancellationToken))
             {
-                _pxTypeName = GenerationSettings.PxTypeNameForLinkedEntity;
-                var entity = EntityHelper.InitializeFromType(GenerationSettings.EntityTypeName);
+                _pxTypeName = GenerationSettings.PxTypeForLinkedEntity;
+                var entity = EntityHelper.InitializeFromType(GenerationSettings.EntityTypeForLinkedEntity);
                 entity.ReturnBehavior = ReturnBehavior.OnlySpecified;
                 EntityHelper.SetPropertyValue(entity, "NoteID", new GuidReturn());
 

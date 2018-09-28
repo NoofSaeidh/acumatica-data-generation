@@ -21,6 +21,7 @@
       },
       "Seed": 123124,
       "Count": 1000,
+      "PxType": "PX.Object.CR.Contact",
       "ConvertByStatuses": {
         "New": {
           "ToOpportunity": 0.5
@@ -70,8 +71,8 @@
     {
       "$type": "DataGeneration.Entities.Activities.ActivityGenerationSettings, DataGeneration",
       "GenerationEntity": "Activity",
-      "EntityTypeName": "Opportunity",
-      "PxTypeNameForLinkedEntity": "PX.Objects.CR.CROpportunity",
+      "EntityTypeForLinkedEntity": "Opportunity",
+      "PxTypeForLinkedEntity": "PX.Objects.CR.CROpportunity",
       "EntitiesCountProbability": 0.20,
       "RandomizerSettings": {
         "$type": "DataGeneration.Entities.Activities.ActivityRandomizerSettings, DataGeneration",

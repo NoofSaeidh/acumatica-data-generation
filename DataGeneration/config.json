@@ -19,6 +19,7 @@
         "ParallelThreads": 4,
         "IgnoreProcessingErrors": true
       },
+      "PxType": "PX.Object.CR.Contact",
       "ConvertByStatuses": {
         "New": {
           "ToOpportunity": 0.5

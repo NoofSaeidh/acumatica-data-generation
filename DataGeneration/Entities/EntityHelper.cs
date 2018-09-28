@@ -11,6 +11,7 @@ namespace DataGeneration.Entities
     public static class EntityHelper
     {
         private static readonly string _namespace = typeof(Entity).Namespace;
+        // can use fully qualified name, or just name of type, if it specified in soap reference namespace
         public static Entity InitializeFromType(string entityType)
         {
             var type = entityType.Contains('.')

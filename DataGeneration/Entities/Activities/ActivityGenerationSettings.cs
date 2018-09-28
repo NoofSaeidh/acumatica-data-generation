@@ -14,10 +14,10 @@ namespace DataGeneration.Entities.Activities
         public override GenerationRunner GetGenerationRunner(ApiConnectionConfig apiConnectionConfig) => new ActivityGenerationRunner(apiConnectionConfig, this);
 
         [Required]
-        public string PxTypeNameForLinkedEntity { get; set; }
+        public string PxTypeForLinkedEntity { get; set; }
 
         [Required]
-        public string EntityTypeName { get; set; }
+        public string EntityTypeForLinkedEntity { get; set; }
 
         [Required]
         public double EntitiesCountProbability { get; set; }

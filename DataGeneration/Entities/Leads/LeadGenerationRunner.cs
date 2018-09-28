@@ -34,7 +34,6 @@ namespace DataGeneration.Entities.Leads
                 foreach (var email in emails)
                 {
                     cancellationToken.ThrowIfCancellationRequested();
-
                     email.ReturnBehavior = ReturnBehavior.OnlySystem;
                     var createdEmail = await client.PutAsync(email, cancellationToken);
                     await client.InvokeAsync(
@@ -42,7 +41,7 @@ namespace DataGeneration.Entities.Leads
                         new LinkEntityToEmail
                         {
                             RelatedEntity = resultLead.NoteID.ToString(),
-                            Type = GenerationSettings.PxTypeName
+                            Type = GenerationSettings.PxType
                         }
                     );
                 }
