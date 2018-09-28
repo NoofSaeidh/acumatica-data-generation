@@ -5644,6 +5644,7 @@
               <s:element minOccurs="0" maxOccurs="1" name="ContactInformation" nillable="true" type="q229:OpportunityContact" />
               <s:element minOccurs="0" maxOccurs="1" name="ConvertedLeadDisplayName" nillable="true" type="q229:StringValue" />
               <s:element minOccurs="0" maxOccurs="1" name="ConvertedLeadID" nillable="true" type="q229:IntValue" />
+              <s:element minOccurs="0" maxOccurs="1" name="CreatedAt" nillable="true" type="q229:DateTimeValue" />
               <s:element minOccurs="0" maxOccurs="1" name="CurrencyID" nillable="true" type="q229:StringValue" />
               <s:element minOccurs="0" maxOccurs="1" name="CurrencyViewState" nillable="true" type="q229:BooleanValue" />
               <s:element minOccurs="0" maxOccurs="1" name="Details" nillable="true" type="q229:StringValue" />
@@ -5828,6 +5829,7 @@
               <s:element minOccurs="0" maxOccurs="1" name="ContactDisplayName" nillable="true" type="q235:StringValue" />
               <s:element minOccurs="0" maxOccurs="1" name="ContactID" nillable="true" type="q235:IntValue" />
               <s:element minOccurs="0" maxOccurs="1" name="Contract" nillable="true" type="q235:StringValue" />
+              <s:element minOccurs="0" maxOccurs="1" name="CreatedAt" nillable="true" type="q235:DateTimeValue" />
               <s:element minOccurs="0" maxOccurs="1" name="DateReported" nillable="true" type="q235:DateTimeValue" />
               <s:element minOccurs="0" maxOccurs="1" name="Description" nillable="true" type="q235:StringValue" />
               <s:element minOccurs="0" maxOccurs="1" name="InitialResponse" nillable="true" type="q235:StringValue" />
