@@ -19,7 +19,11 @@ namespace DataGeneration.Entities.Activities
         [Required]
         public string EntityTypeForLinkedEntity { get; set; }
 
+        // it will adjust Count property
         [Required]
-        public double EntitiesCountProbability { get; set; }
+        public double? EntitiesCountProbability { get; set; }
+
+        // link only to entities create in specified range
+        public (DateTime? StartDate, DateTime? EndDate)? CreatedAtSearchRange { get; set; }
     }
 }

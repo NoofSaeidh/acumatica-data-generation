@@ -12,8 +12,6 @@ namespace DataGeneration.Common
         public abstract string GenerationEntity { get; }
 
         public abstract GenerationRunner GetGenerationRunner(ApiConnectionConfig apiConnectionConfig);
-
-        internal virtual RandomizerSettingsBase RandomizerSettingsBase { get; }
     }
 
     public abstract class GenerationSettings<T> : GenerationSettingsBase, IGenerationSettings<T> where T : Soap.Entity
@@ -36,8 +34,6 @@ namespace DataGeneration.Common
 
         [Required]
         public IRandomizerSettings<T> RandomizerSettings { get; set; }
-
-        internal override RandomizerSettingsBase RandomizerSettingsBase => RandomizerSettings as RandomizerSettingsBase;
 
         public virtual void Validate()
         {

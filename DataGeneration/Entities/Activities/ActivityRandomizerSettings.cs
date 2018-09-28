@@ -34,9 +34,10 @@ namespace DataGeneration.Entities.Activities
                     {
                         TrackTime = true,
                         Billable = false,
+                        Status = "Completed"
                     };
 
-                    if(TimeSpent != null)
+                    if (TimeSpent != null)
                     {
                         var (min, max) = TimeSpent.Value;
                         if (max == null)
@@ -48,6 +49,10 @@ namespace DataGeneration.Entities.Activities
                             a.TimeActivity.TimeSpent = AcumaticaTimeHelper.FromMinutes(time);
                         }
                     }
+                }
+                else
+                {
+                    a.TimeActivity = new TimeActivity { TrackTime = false };
                 }
 
                 if(DateRange != null)

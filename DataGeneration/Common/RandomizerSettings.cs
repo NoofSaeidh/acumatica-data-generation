@@ -14,6 +14,21 @@ namespace DataGeneration.Common
             get => _seed ?? (int)(_seed = new Random().Next());
             set => _seed = value;
         }
+
+        public Randomizer GetRandomizer() => new Randomizer(Seed);
+        public static Randomizer GetRandomizer<T>(IRandomizerSettings<T> randomizer) where T : Entity  
+            => new Randomizer(randomizer?.Seed ?? throw new ArgumentNullException(nameof(randomizer)));
+
+        public static Faker<T> GetFaker<T>(IRandomizerSettings<T> randomizer) where T : Entity
+        {
+            if (randomizer == null)
+                throw new ArgumentNullException(nameof(randomizer));
+            if(randomizer.GetDataGenerator() is DataGenerator<T> dg)
+            {
+                return dg.Faker;
+            }
+            throw new NotSupportedException($"Randomizer should return {typeof(DataGenerator<T>)} for {nameof(randomizer.GetDataGenerator)} method in order to get faker.");
+        }
     }
 
     public abstract class RandomizerSettings<T> : RandomizerSettingsBase, IRandomizerSettings<T> where T : Entity

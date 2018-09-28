@@ -27,19 +27,56 @@ namespace DataGeneration.Entities.Activities
                 var entity = EntityHelper.InitializeFromType(GenerationSettings.EntityTypeForLinkedEntity);
                 entity.ReturnBehavior = ReturnBehavior.OnlySpecified;
                 EntityHelper.SetPropertyValue(entity, "NoteID", new GuidReturn());
+                if (GenerationSettings.CreatedAtSearchRange != null)
+                {
+                    var (start, end) = GenerationSettings.CreatedAtSearchRange.Value;
+                    if (start != null || end != null)
+                    {
+                        var date = new DateTimeSearch();
+                        if (start != null && end != null)
+                        {
+                            date.Value = start;
+                            date.Value2 = end;
+                            date.Condition = DateTimeCondition.IsBetween;
+                        }
+                        else if (start != null)
+                        {
+                            date.Value = start;
+                            date.Condition = DateTimeCondition.IsGreaterThanOrEqualsTo;
+                        }
+                        else if (end != null)
+                        {
+                            date.Value = end;
+                            date.Condition = DateTimeCondition.IsLessThanOrEqualsTo;
+                        }
+
+                        EntityHelper.SetPropertyValue(entity, "CreatedAt", date);
+                    }
+                }
 
                 var entities = await client.GetListAsync(entity, cancellationToken);
 
                 _linkEntitiesKeys = new ConcurrentQueue<string>(entities.Select(e => e.GetNoteId().ToString()));
+
+                // adjust count
+                if (GenerationSettings.EntitiesCountProbability != null)
+                {
+                    GenerationSettings.Count = (int)(RandomizerSettingsBase
+                        .GetRandomizer(GenerationSettings.RandomizerSettings)
+                        .Double(0, GenerationSettings.EntitiesCountProbability.Value) * _linkEntitiesKeys.Count);
+                }
             }
         }
 
         protected override async VoidTask GenerateSingle(IApiClient client, Activity entity, CancellationToken cancellationToken)
         {
-            entity.ReturnBehavior = ReturnBehavior.OnlySystem;
-            var activity = await client.PutAsync(entity);
             if (_linkEntitiesKeys.TryTake(out var id))
             {
+                entity.ReturnBehavior = ReturnBehavior.OnlySystem;
+                if (entity.TimeActivity != null)
+                    entity.TimeActivity.ReturnBehavior = ReturnBehavior.None;
+                var activity = await client.PutAsync(entity);
+
                 var link = new LinkEntityToActivity
                 {
                     RelatedEntity = id,
