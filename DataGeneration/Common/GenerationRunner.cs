@@ -129,12 +129,12 @@ namespace DataGeneration.Common
                     {
                         Logger.Error(ae, "Generation {$entity} failed", typeof(TEntity));
                         if (!GenerationSettings.ExecutionTypeSettings.IgnoreProcessingErrors)
-                            return;
+                            throw;
                     }
                     catch (Exception e)
                     {
                         Logger.Fatal(e, "Unexpected exception has occurred");
-                        return;
+                        throw;
                     }
                 }
             }
