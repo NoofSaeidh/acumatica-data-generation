@@ -3,7 +3,6 @@ using DataGeneration.Soap;
 using System.Collections.Concurrent;
 using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
 using VoidTask = System.Threading.Tasks.Task;
 
 namespace DataGeneration.Entities.Activities
@@ -24,17 +23,14 @@ namespace DataGeneration.Entities.Activities
         {
             using (var client = await GetLoginLogoutClient(cancellationToken))
             {
-                using (StopwatchLoggerFactory.Log($"Get all {GenerationSettings.EntityTypeName}"))
-                {
-                    _pxTypeName = GenerationSettings.PxTypeNameForLinkedEntity;
-                    var entity = EntityHelper.InitializeFromType(GenerationSettings.EntityTypeName);
+                _pxTypeName = GenerationSettings.PxTypeNameForLinkedEntity;
+                var entity = EntityHelper.InitializeFromType(GenerationSettings.EntityTypeName);
+                entity.ReturnBehavior = ReturnBehavior.OnlySpecified;
+                EntityHelper.SetPropertyValue(entity, "NoteID", new GuidReturn());
 
-                    entity.ReturnBehavior = ReturnBehavior.OnlySpecified;
-                    EntityHelper.SetPropertyValue(entity, "NoteID", new GuidReturn());
-                    var list = await client.GetListAsync(entity, cancellationToken);
+                var entities = await client.GetListAsync(entity, cancellationToken);
 
-                    _linkEntitiesKeys = new ConcurrentQueue<string>(list.Select(e => e.GetNoteId().ToString()));
-                }
+                _linkEntitiesKeys = new ConcurrentQueue<string>(entities.Select(e => e.GetNoteId().ToString()));
             }
         }
 
@@ -48,16 +44,13 @@ namespace DataGeneration.Entities.Activities
             }
             if (_linkEntitiesKeys.TryTake(out var id))
             {
-                using (StopwatchLoggerFactory.Log("Link Activity"))
+                var link = new LinkEntityToActivity
                 {
-                    var link = new LinkEntityToActivity
-                    {
-                        RelatedEntity = id,
-                        Type = _pxTypeName
-                    };
+                    RelatedEntity = id,
+                    Type = _pxTypeName
+                };
 
-                    await client.InvokeAsync(activity, link);
-                }
+                await client.InvokeAsync(activity, link);
             }
         }
     }

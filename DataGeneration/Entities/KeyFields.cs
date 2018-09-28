@@ -28,7 +28,7 @@ namespace DataGeneration.Entities
                 default:
                     try
                     {
-                        return EntityHelper.GetPropertyValue(entity, "NoteID") as Guid?;
+                        return (EntityHelper.GetPropertyValue(entity, "NoteID") as GuidValue)?.Value;
                     }
                     catch (Exception e)
                     {

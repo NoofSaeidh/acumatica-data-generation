@@ -7,13 +7,26 @@ namespace DataGeneration.Common
 {
     public static class StopwatchLoggerFactory
     {
-        private static Lazy<bool> _isStopwatchEnabled = new Lazy<bool>(() => NLog.LogManager.Configuration.LoggingRules.Any(r => r.NameMatches(LogManager.LoggerNames.TimeTracker)));
-        public static bool IsStopwatchEnabled => _isStopwatchEnabled.Value;
+        private static Lazy<bool> _isTimeTrackingEnabled = new Lazy<bool>(() => NLog.LogManager.Configuration.LoggingRules.Any(r => r.NameMatches(LogManager.LoggerNames.TimeTrackerPattern)));
+        public static bool IsTimeTrackingEnabled => _isTimeTrackingEnabled.Value;
 
-        public static IStopwatchLogger GetLogger()
+        private static ILogger GetLoggerInternal(string baseLoggerName)
         {
-            if (IsStopwatchEnabled)
-                return new StopwatchLogger();
+            string loggerName;
+            if (string.IsNullOrWhiteSpace(baseLoggerName))
+                loggerName = LogManager.LoggerNames.TimeTracker;
+            else
+                loggerName = baseLoggerName.TrimEnd('.') + '.' + LogManager.LoggerNames.TimeTracker;
+
+            return LogManager.GetLogger(loggerName);
+        }
+
+        public static IStopwatchLogger GetLogger() => GetLogger(null);
+
+        public static IStopwatchLogger GetLogger(string baseLoggerName)
+        {
+            if (IsTimeTrackingEnabled)
+                return new StopwatchLogger(GetLoggerInternal(baseLoggerName));
 
             return new NullStopwatchLogger();
         }
@@ -30,10 +43,12 @@ namespace DataGeneration.Common
         ///     // do something
         /// }
         /// </example>
-        public static IDisposable Log(string description, params object[] args)
+        public static IDisposable Log(string description, params object[] args) => Log(null, description, args);
+
+        public static IDisposable Log(string baseLoggerName, string description, params object[] args)
         {
-            if (IsStopwatchEnabled)
-                return new StopwatchLogger.StopwatchLoggerDisposable(description, args);
+            if (IsTimeTrackingEnabled)
+                return new StopwatchLogger.StopwatchLoggerDisposable(GetLoggerInternal(baseLoggerName), description, args);
 
             return new NullStopwatchLogger.NullStopwatchLoggerDisposable();
         }
@@ -55,11 +70,12 @@ namespace DataGeneration.Common
     /// </example>
     internal class StopwatchLogger : IStopwatchLogger
     {
-        private static readonly ILogger _logger = LogManager.GetLogger(LogManager.LoggerNames.TimeTracker);
+        private readonly ILogger _logger;
         private readonly Stopwatch _stopwatch;
 
-        public StopwatchLogger()
+        public StopwatchLogger(ILogger logger)
         {
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _stopwatch = new Stopwatch();
         }
 
@@ -93,9 +109,14 @@ namespace DataGeneration.Common
             return this;
         }
 
-        private static void LogTime(TimeSpan time, string description, params object[] args)
+        private void LogTime(TimeSpan time, string description, params object[] args)
         {
-            _logger.Info(description + $"; Time elapsed = {time}", args);
+            LogTime(_logger, time, description, args);
+        }
+
+        private static void LogTime(ILogger logger, TimeSpan time, string description, params object[] args)
+        {
+            logger.Info(description + $"; Time elapsed = {time}", args);
         }
 
         internal class StopwatchLoggerDisposable : IDisposable
@@ -103,11 +124,13 @@ namespace DataGeneration.Common
             private readonly Stopwatch _stopwatch;
             private readonly string _description;
             private readonly object[] _args;
+            private readonly ILogger _logger;
 
-            public StopwatchLoggerDisposable(string description, object[] args)
+            public StopwatchLoggerDisposable(ILogger logger, string description, object[] args)
             {
                 _description = description;
                 _args = args;
+                _logger = logger;
                 _stopwatch = new Stopwatch();
                 _stopwatch.Start();
             }
@@ -115,7 +138,7 @@ namespace DataGeneration.Common
             public void Dispose()
             {
                 _stopwatch.Stop();
-                LogTime(_stopwatch.Elapsed, _description, _args);
+                LogTime(_logger, _stopwatch.Elapsed, _description, _args);
             }
         }
     }

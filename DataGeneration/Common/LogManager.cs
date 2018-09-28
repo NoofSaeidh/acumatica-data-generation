@@ -17,6 +17,7 @@ namespace DataGeneration.Common
             public const string ApiClient = "Api.Client";
             public const string Default = "Default";
             public const string TimeTracker = "TimeTracker";
+            public const string TimeTrackerPattern = "*." + TimeTracker;
             public const string GenerationRunner = "Generation.Runner";
             public const string GenerationClient = "Generation.Client";
         }

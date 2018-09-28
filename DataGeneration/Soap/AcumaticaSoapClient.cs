@@ -12,7 +12,9 @@ namespace DataGeneration.Soap
 {
     public class AcumaticaSoapClient : IApiClient, IDisposable
     {
-        private static ILogger _logger => Common.LogManager.GetLogger(Common.LogManager.LoggerNames.ApiClient);
+        private const string _loggerName = Common.LogManager.LoggerNames.ApiClient;
+
+        private static ILogger _logger => Common.LogManager.GetLogger(_loggerName);
 
         private readonly DefaultSoapClient _client;
 
@@ -82,16 +84,16 @@ namespace DataGeneration.Soap
                 throw new ArgumentNullException(nameof(loginInfo));
             }
 
-            _logger.Debug("Login to {acumatica}", _client.Endpoint.Address.Uri);
-
-            TryCatch("Login", () => _client.Login(loginInfo.Username, loginInfo.Password, loginInfo.Company, loginInfo.Branch, loginInfo.Locale));
+            Login(loginInfo.Username, loginInfo.Password, loginInfo.Company, loginInfo.Branch, loginInfo.Locale);
         }
 
         public void Login(string name, string password, string company = null, string branch = null, string locale = null)
         {
             _logger.Debug("Login to {acumatica}", _client.Endpoint.Address.Uri);
-
-            TryCatch("Login", () => _client.Login(name, password, company, branch, locale));
+            using (Log("Login"))
+            {
+                TryCatch("Login", () => _client.Login(name, password, company, branch, locale));
+            }
         }
 
         public VoidTask LoginAsync(LoginInfo loginInfo)
@@ -113,96 +115,151 @@ namespace DataGeneration.Soap
         {
             _logger.Debug("Login to {acumatica}", _client.Endpoint.Address.Uri);
 
-            await TryCatchAsync("Login", _client.LoginAsync(name, password, company, branch, locale), cancellationToken);
+            using (Log("Login"))
+            {
+                await TryCatchAsync("Login", _client.LoginAsync(name, password, company, branch, locale), cancellationToken);
+            }
         }
 
         public void Logout()
         {
             _logger.Debug("Logout from {acumatica}", _client.Endpoint.Address.Uri);
 
-            TryCatch("Logout", () => _client.Logout());
+            using (Log("Logout"))
+            {
+                TryCatch("Logout", () => _client.Logout());
+            }
         }
 
         public async VoidTask LogoutAsync()
         {
             _logger.Debug("Logout from {acumatica}", _client.Endpoint.Address.Uri);
 
-            await TryCatchAsync("Logout", _client.LogoutAsync());
+            using (Log("Logout"))
+            {
+                await TryCatchAsync("Logout", _client.LogoutAsync());
+            }
         }
 
         public T Get<T>(T whereEntity) where T : Entity
         {
-            return TryCatch("Get {whereEntity}", () => _client.Get(whereEntity), whereEntity);
+            using (Log<T>("Get"))
+            {
+                return TryCatch("Get {whereEntity}", () => _client.Get(whereEntity), whereEntity);
+            }
         }
 
         public async Task<T> GetAsync<T>(T whereEntity) where T : Entity
         {
-            return await TryCatchAsync("Get {whereEntity}", _client.GetAsync(whereEntity), whereEntity);
+            using (Log<T>("Get"))
+            {
+                return await TryCatchAsync("Get {whereEntity}", _client.GetAsync(whereEntity), whereEntity);
+            }
         }
 
         public async Task<T> GetAsync<T>(T whereEntity, CancellationToken cancellationToken) where T : Entity
         {
-            return await TryCatchAsync("Get {whereEntity}", _client.GetAsync(whereEntity), cancellationToken, whereEntity);
+            using (Log<T>("Get"))
+            {
+                return await TryCatchAsync("Get {whereEntity}", _client.GetAsync(whereEntity), cancellationToken, whereEntity);
+            }
         }
 
         public IList<T> GetList<T>(T whereEntity) where T : Entity
         {
-            return TryCatch("Get list {whereEntity}", () => _client.GetList(whereEntity), whereEntity);
+            using (Log<T>("Get List"))
+            {
+                return TryCatch("Get list {whereEntity}", () => _client.GetList(whereEntity), whereEntity);
+            }
         }
 
         public async Task<IList<T>> GetListAsync<T>(T whereEntity) where T : Entity
         {
-            return await TryCatchAsync("Get list {whereEntity}", _client.GetListAsync(whereEntity), whereEntity);
+            using (Log<T>("Get List"))
+            {
+                return await TryCatchAsync("Get list {whereEntity}", _client.GetListAsync(whereEntity), whereEntity);
+            }
         }
 
         public async Task<IList<T>> GetListAsync<T>(T whereEntity, CancellationToken cancellationToken) where T : Entity
         {
-            return await TryCatchAsync("Get list {whereEntity}", _client.GetListAsync(whereEntity), cancellationToken, whereEntity);
+            using (Log<T>("Get List"))
+            {
+                return await TryCatchAsync("Get list {whereEntity}", _client.GetListAsync(whereEntity), cancellationToken, whereEntity);
+            }
         }
 
         public T Put<T>(T entity) where T : Entity
         {
-            return TryCatch("Put {entity}", () => _client.Put(entity), entity);
+            using (Log<T>("Put"))
+            {
+                return TryCatch("Put {entity}", () => _client.Put(entity), entity);
+            }
         }
 
         public async Task<T> PutAsync<T>(T entity) where T : Entity
         {
-            return await TryCatchAsync("Put {entity}", _client.PutAsync(entity), entity);
+            using (Log<T>("Put"))
+            {
+                return await TryCatchAsync("Put {entity}", _client.PutAsync(entity), entity);
+            }
         }
 
         public async Task<T> PutAsync<T>(T entity, CancellationToken cancellationToken) where T : Entity
         {
-            return await TryCatchAsync("Put {entity}", _client.PutAsync(entity), cancellationToken, entity);
+            using (Log<T>("Put"))
+            {
+                return await TryCatchAsync("Put {entity}", _client.PutAsync(entity), cancellationToken, entity);
+            }
         }
 
         public void Delete<T>(T whereEntity) where T : Entity
         {
-            TryCatch("Delete {whereEntity}", () => _client.Delete(whereEntity), whereEntity);
+            using (Log<T>("Delete"))
+            {
+                TryCatch("Delete {whereEntity}", () => _client.Delete(whereEntity), whereEntity);
+            }
         }
 
         public async VoidTask DeleteAsync<T>(T whereEntity) where T : Entity
         {
-            await TryCatchAsync("Delete {whereEntity}", _client.DeleteAsync(whereEntity), whereEntity);
+            using (Log<T>("Delete"))
+            {
+                await TryCatchAsync("Delete {whereEntity}", _client.DeleteAsync(whereEntity), whereEntity);
+            }
         }
 
         public async VoidTask DeleteAsync<T>(T whereEntity, CancellationToken cancellationToken) where T : Entity
         {
-            await TryCatchAsync("Delete {whereEntity}", _client.DeleteAsync(whereEntity), cancellationToken, whereEntity);
+            using (Log<T>("Delete"))
+            {
+                await TryCatchAsync("Delete {whereEntity}", _client.DeleteAsync(whereEntity), cancellationToken, whereEntity);
+            }
         }
 
+        //todo: add wait for all invoke
         public void Invoke<TEntity, TAction>(TEntity entity, TAction action) where TEntity : Entity where TAction : Action
         {
-            TryCatch("Invoke {action} for {entity}", () => _client.Invoke(entity, action), action, entity);
+            using (Log($"Invoke {typeof(TAction).Name} for {typeof(TEntity).Name}"))
+            {
+                TryCatch("Invoke {action} for {entity}", () => _client.Invoke(entity, action), action, entity);
+            }
         }
 
         public async VoidTask InvokeAsync<TEntity, TAction>(TEntity entity, TAction action) where TEntity : Entity where TAction : Action
         {
-            await TryCatchAsync("Invoke {action} for {entity}", _client.InvokeAsync(entity, action), action, entity);
+            using (Log($"Invoke {typeof(TAction).Name} for {typeof(TEntity).Name}"))
+            {
+                await TryCatchAsync("Invoke {action} for {entity}", _client.InvokeAsync(entity, action), action, entity);
+            }
         }
 
         public async VoidTask InvokeAsync<TEntity, TAction>(TEntity entity, TAction action, CancellationToken cancellationToken) where TEntity : Entity where TAction : Action
         {
-            await TryCatchAsync("Invoke {action} for {entity}", _client.InvokeAsync(entity, action), cancellationToken, action, entity);
+            using (Log($"Invoke {typeof(TAction).Name} for {typeof(TEntity).Name}"))
+            {
+                await TryCatchAsync("Invoke {action} for {entity}", _client.InvokeAsync(entity, action), cancellationToken, action, entity);
+            }
         }
 
         public void Dispose()
@@ -328,6 +385,16 @@ namespace DataGeneration.Soap
                 _logger.Error(e, text, logDebugArgs);
                 throw new ApiException(text, e);
             }
+        }
+
+        private IDisposable Log(string description, params object[] args)
+        {
+            return StopwatchLoggerFactory.Log(_loggerName, description, args);
+        }
+
+        private IDisposable Log<T>(string description, params object[] args)
+        {
+            return StopwatchLoggerFactory.Log(_loggerName, description + ' ' + typeof(T).Name, args);
         }
 
         private class LogoutClientImpl : AcumaticaSoapClient, ILoginLogoutApiClient, IDisposable
