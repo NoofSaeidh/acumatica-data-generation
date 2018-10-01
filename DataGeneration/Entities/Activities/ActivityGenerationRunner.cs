@@ -69,9 +69,13 @@ namespace DataGeneration.Entities.Activities
                 var randomizer = RandomizerSettingsBase
                     .GetRandomizer(generationSettings.Seed ?? throw new InvalidOperationException()); //it should not fail
 
-                search = randomizer.ArrayElements(search, generationSettings.Count).ToArray();
+                var count = (int)(search.Length * generationSettings.EntitiesCountProbability);
+
+                search = randomizer.ArrayElements(search, count).ToArray();
 
                 generationSettings.Count = search.Length;
+
+                Logger.Info("Count changed to {count}", generationSettings.Count);
             }
 
             return new ConcurrentQueue<(string, Entity)>(search);
