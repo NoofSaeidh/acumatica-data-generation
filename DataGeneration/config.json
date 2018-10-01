@@ -69,6 +69,11 @@
   ],
   "GenerationSettingsInjections": [
     {
+      "ExecutionTypeSettings": {
+        "ExecutionType": "Parallel",
+        "ParallelThreads": 4,
+        "IgnoreProcessingErrors": false
+      },
       "Count": 1000
     }
   ]

@@ -90,6 +90,9 @@
     <Compile Include="Entities\Activities\ActivityGenerationRunner.cs" />
     <Compile Include="Entities\Activities\ActivityGenerationSettings.cs" />
     <Compile Include="Entities\Activities\ActivityRandomizerSettings.cs" />
+    <Compile Include="Entities\Events\EventGenerationRunner.cs" />
+    <Compile Include="Entities\Events\EventGenerationSettings.cs" />
+    <Compile Include="Entities\Events\EventRandomizerSettings.cs" />
     <Compile Include="Entities\KeyFields.cs" />
     <Compile Include="Common\LogManager.cs" />
     <Compile Include="Common\ProbabilityCollection.cs" />

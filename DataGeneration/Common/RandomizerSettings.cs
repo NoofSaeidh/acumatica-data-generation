@@ -15,9 +15,10 @@ namespace DataGeneration.Common
             set => _seed = value;
         }
 
-        public Randomizer GetRandomizer() => new Randomizer(Seed);
+        public Randomizer GetRandomizer() => GetRandomizer(Seed);
+        public static Randomizer GetRandomizer(int seed) => new Randomizer(seed);
         public static Randomizer GetRandomizer<T>(IRandomizerSettings<T> randomizer) where T : Entity  
-            => new Randomizer(randomizer?.Seed ?? throw new ArgumentNullException(nameof(randomizer)));
+            => GetRandomizer(randomizer?.Seed ?? throw new ArgumentNullException(nameof(randomizer)));
 
         public static Faker<T> GetFaker<T>(IRandomizerSettings<T> randomizer) where T : Entity
         {

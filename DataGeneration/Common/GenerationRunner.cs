@@ -45,7 +45,7 @@ namespace DataGeneration.Common
         {
             GenerationSettings.Validate();
 
-            Logger.Info("Generation of {type} with count: {count} started. Settings: {@settings}",
+            Logger.Info("Generation {type} started. Count: {count}. Settings: {@settings}",
                 GenerationSettings.GenerationEntity, GenerationSettings.Count, GenerationSettings);
             var stopwatch = new Stopwatch();
 
@@ -53,6 +53,11 @@ namespace DataGeneration.Common
             {
                 stopwatch.Start();
                 await RunBeforeGeneration(cancellationToken);
+                if(GenerationSettings.Count == 0)
+                {
+                    Logger.Warn("Generation {type} was not started. No entities could be generated. Count: 0");
+                    return;
+                }
                 switch (GenerationSettings.ExecutionTypeSettings.ExecutionType)
                 {
                     case ExecutionType.Sequent:
@@ -79,7 +84,7 @@ namespace DataGeneration.Common
                 throw GenerationException.NewFromEntityType<TEntity>(e);
             }
 
-            Logger.Info("Generation of {type} with count: {count} completed. Time elapsed: {time}",
+            Logger.Info("Generation {type} completed. Count: {count}. Time elapsed: {time}",
                 GenerationSettings.GenerationEntity, GenerationSettings.Count, stopwatch.Elapsed);
         }
 

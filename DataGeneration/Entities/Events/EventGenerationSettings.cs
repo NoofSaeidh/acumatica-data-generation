@@ -1,4 +1,5 @@
 ﻿using DataGeneration.Common;
+using DataGeneration.Entities.Activities;
 using DataGeneration.Soap;
 using System;
 using System.Collections.Generic;
@@ -7,19 +8,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataGeneration.Entities.Activities
+namespace DataGeneration.Entities.Events
 {
-    internal interface IActivityGenerationSettings : IGenerationSettings
+    public class EventGenerationSettings : GenerationSettings<Event>, IActivityGenerationSettings
     {
-        string PxTypeForLinkedEntity { get; set; }
-        string EntityTypeForLinkedEntity { get; set; }
-        double? EntitiesCountProbability { get; set; }
-        (DateTime? StartDate, DateTime? EndDate)? CreatedAtSearchRange { get; set; }
-    }
-
-    public class ActivityGenerationSettings : GenerationSettings<Activity>, IActivityGenerationSettings
-    {
-        public override GenerationRunner GetGenerationRunner(ApiConnectionConfig apiConnectionConfig) => new ActivityGenerationRunner(apiConnectionConfig, this);
+        public override GenerationRunner GetGenerationRunner(ApiConnectionConfig apiConnectionConfig) => new EventGenerationRunner(apiConnectionConfig, this);
 
         [Required]
         public string PxTypeForLinkedEntity { get; set; }
@@ -29,7 +22,6 @@ namespace DataGeneration.Entities.Activities
 
         // it will adjust Count property
         [Required]
-        [Range(0, 1)]
         public double? EntitiesCountProbability { get; set; }
 
         // link only to entities create in specified range

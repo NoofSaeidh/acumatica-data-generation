@@ -14,6 +14,7 @@
   "GenerationSettingsCollection": [
     {
       "$type": "DataGeneration.Entities.Leads.LeadGenerationSettings, DataGeneration",
+      "#comment": "Create leads, convert some to opportunities, create emails for it",
       "ExecutionTypeSettings": {
         "ExecutionType": "Parallel",
         "ParallelThreads": 4,
@@ -70,12 +71,79 @@
     },
     {
       "$type": "DataGeneration.Entities.Activities.ActivityGenerationSettings, DataGeneration",
+      "#comment": "Create activities (notes) for opportunities",
+      "GenerationEntity": "Activity",
+      "EntityTypeForLinkedEntity": "Opportunity",
+      "PxTypeForLinkedEntity": "PX.Objects.CR.CROpportunity",
+      "EntitiesCountProbability": 0.2,
+      "CreatedAtSearchRange": {
+        "StartDate": "2018-09-27T00:00:00",
+        "EndDate": null
+      },
+      "RandomizerSettings": {
+        "$type": "DataGeneration.Entities.Activities.ActivityRandomizerSettings, DataGeneration",
+        "ActivityType": "N",
+        "DateRange": {
+          "StartDate": "2017-01-01T00:00:00",
+          "EndDate": "2018-05-01T00:00:00"
+        },
+        "TrackTime": {
+          "true": 0.5,
+          "false": 0.5
+        },
+        "TimeSpent": {
+          "MinTime": "00:10",
+          "MaxTime": "02:00"
+        }
+      }
+    },
+    {
+      "$type": "DataGeneration.Entities.Activities.ActivityGenerationSettings, DataGeneration",
+      "#comment": "Create activities (work items) for cases",
+      "GenerationEntity": "Activity",
+      "EntityTypeForLinkedEntity": "Case",
+      "PxTypeForLinkedEntity": "PX.Objects.CR.CRCase",
+      "EntitiesCountProbability": 1,
+      "RandomizerSettings": {
+        "$type": "DataGeneration.Entities.Activities.ActivityRandomizerSettings, DataGeneration",
+        "ActivityType": "W",
+        "DateRange": {
+          "StartDate": "2017-01-01T00:00:00",
+          "EndDate": "2018-05-01T00:00:00"
+        },
+        "TrackTime": {
+          "true": 0.5,
+          "false": 0.5
+        },
+        "TimeSpent": {
+          "MinTime": "00:10",
+          "MaxTime": "02:00"
+        }
+      }
+    },
+    {
+      "$type": "DataGeneration.Entities.Activities.ActivityGenerationSettings, DataGeneration",
+      "#comment": "Create activities (phone calls) for cases",
+      "GenerationEntity": "Activity",
+      "EntityTypeForLinkedEntity": "Case",
+      "PxTypeForLinkedEntity": "PX.Objects.CR.CRCase",
+      "EntitiesCountProbability": 0.2,
+      "RandomizerSettings": {
+        "$type": "DataGeneration.Entities.Activities.ActivityRandomizerSettings, DataGeneration",
+        "ActivityType": "P",
+        "TrackTime": [ true ],
+        "TimeSpent": [ "00:30", null ]
+      }
+    },
+    {
+      "$type": "DataGeneration.Entities.Events.EventGenerationSettings, DataGeneration",
+      "#comment": "Create events for opportunities",
       "GenerationEntity": "Activity",
       "EntityTypeForLinkedEntity": "Opportunity",
       "PxTypeForLinkedEntity": "PX.Objects.CR.CROpportunity",
       "EntitiesCountProbability": 0.20,
       "RandomizerSettings": {
-        "$type": "DataGeneration.Entities.Activities.ActivityRandomizerSettings, DataGeneration",
+        "$type": "DataGeneration.Entities.Events.EventRandomizerSettings, DataGeneration",
         "DateRange": {
           "StartDate": "2017-01-01T00:00:00",
           "EndDate": "2018-05-01T00:00:00"
