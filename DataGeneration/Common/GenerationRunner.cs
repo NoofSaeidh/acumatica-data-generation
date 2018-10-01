@@ -96,17 +96,19 @@ namespace DataGeneration.Common
         protected Task RunGenerationParallel(CancellationToken cancellationToken)
         {
             var threads = GenerationSettings.ExecutionTypeSettings.ParallelThreads;
+            if (GenerationSettings.Count < threads)
+                threads = GenerationSettings.Count;
             var tasks = new Task[threads];
 
-            var count = GenerationSettings.Count / threads;
-            var remain = GenerationSettings.Count % threads;
+            var countPerThread = GenerationSettings.Count / threads;
+            var remainUnits = GenerationSettings.Count % threads;
 
-            for (int i = 0, rem = 0; i < threads; i++)
+            for (int i = 0, rem = 1; i < threads; i++)
             {
                 // remaining of division
-                if (remain > i) rem = 1;
+                if (i >= remainUnits) rem = 0;
 
-                var currentCount = count + rem;
+                var currentCount = countPerThread + rem;
                 tasks[i] = RunGenerationSequent(currentCount, cancellationToken);
             }
 
