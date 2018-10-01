@@ -1,5 +1,6 @@
 ﻿using NLog;
 using System;
+using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Linq;
 
@@ -7,26 +8,56 @@ namespace DataGeneration.Common
 {
     public static class StopwatchLoggerFactory
     {
-        private static Lazy<bool> _isTimeTrackingEnabled = new Lazy<bool>(() => NLog.LogManager.Configuration.LoggingRules.Any(r => r.NameMatches(LogManager.LoggerNames.TimeTrackerPattern)));
-        public static bool IsTimeTrackingEnabled => _isTimeTrackingEnabled.Value;
+        public const string AllowTimeTrackingVariableName = "allow-time-tracking";
 
-        private static ILogger GetLoggerInternal(string baseLoggerName)
+        public static readonly LogLevel TimeTrackingLogLevel = LogLevel.Debug;
+
+        private static ConcurrentDictionary<string, bool> _timeTrackingAvailability = new ConcurrentDictionary<string, bool>();
+
+        private static Lazy<bool> _globalTimeTrackingAvailable =
+            new Lazy<bool>(() =>
+            {
+                // true if not specified
+                if (NLog.LogManager.Configuration.Variables.TryGetValue(AllowTimeTrackingVariableName, out var allow)
+                    && bool.TryParse(allow.OriginalText, out var allowbool)
+                    && !allowbool)
+                {
+                    return false;
+                }
+
+                return NLog.LogManager.Configuration.LoggingRules.Any(r => r.Levels.Contains(TimeTrackingLogLevel));
+            });
+
+        private static bool GlobalTimeTrackingAvailable => _globalTimeTrackingAvailable.Value;
+
+        private static bool IsTimeTrackingAvailable(string loggerName)
+        {
+            return _timeTrackingAvailability
+                .GetOrAdd(
+                    loggerName,
+                    name => NLog.LogManager.Configuration.LoggingRules.Any(r => r.NameMatches(name) && r.Levels.Contains(TimeTrackingLogLevel)));
+        }
+
+        private static string GetLoggerName(string baseLoggerName)
         {
             string loggerName;
             if (string.IsNullOrWhiteSpace(baseLoggerName))
                 loggerName = LogManager.LoggerNames.TimeTracker;
             else
                 loggerName = baseLoggerName.TrimEnd('.') + '.' + LogManager.LoggerNames.TimeTracker;
-
-            return LogManager.GetLogger(loggerName);
+            return loggerName;
         }
 
         public static IStopwatchLogger GetLogger() => GetLogger(null);
 
         public static IStopwatchLogger GetLogger(string baseLoggerName)
         {
-            if (IsTimeTrackingEnabled)
-                return new StopwatchLogger(GetLoggerInternal(baseLoggerName));
+            if (GlobalTimeTrackingAvailable)
+            {
+                var loggerName = GetLoggerName(baseLoggerName);
+                if (IsTimeTrackingAvailable(loggerName))
+                    return new StopwatchLogger(LogManager.GetLogger(loggerName));
+            }
 
             return new NullStopwatchLogger();
         }
@@ -47,9 +78,12 @@ namespace DataGeneration.Common
 
         public static IDisposable Log(string baseLoggerName, string description, params object[] args)
         {
-            if (IsTimeTrackingEnabled)
-                return new StopwatchLogger.StopwatchLoggerDisposable(GetLoggerInternal(baseLoggerName), description, args);
-
+            if (GlobalTimeTrackingAvailable)
+            {
+                var loggerName = GetLoggerName(baseLoggerName);
+                if (IsTimeTrackingAvailable(loggerName))
+                    return new StopwatchLogger.StopwatchLoggerDisposable(LogManager.GetLogger(loggerName), description, args);
+            }
             return new NullStopwatchLogger.NullStopwatchLoggerDisposable();
         }
     }
@@ -116,7 +150,7 @@ namespace DataGeneration.Common
 
         private static void LogTime(ILogger logger, TimeSpan time, string description, params object[] args)
         {
-            logger.Info(description + $"; Time elapsed = {time}", args);
+            logger.Debug(description + $"; Time elapsed = {time}", args);
         }
 
         internal class StopwatchLoggerDisposable : IDisposable
