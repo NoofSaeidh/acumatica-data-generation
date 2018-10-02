@@ -14,7 +14,7 @@
   "GenerationSettingsCollection": [
     {
       "$type": "DataGeneration.Entities.Leads.LeadGenerationSettings, DataGeneration",
-      "#comment": "Create leads, convert some to opportunities, create emails for it",
+      "#comment": "Create leads, convert some to opportunities, create emails for them",
       "ExecutionTypeSettings": {
         "ExecutionType": "Parallel",
         "ParallelThreads": 4,

@@ -52,6 +52,9 @@ namespace DataGeneration.Common
 
         public static IStopwatchLogger GetLogger(string baseLoggerName)
         {
+#if DISABLE_TIMETRACKING
+            return new NullStopwatchLogger();
+#else
             if (GlobalTimeTrackingAvailable)
             {
                 var loggerName = GetLoggerName(baseLoggerName);
@@ -60,6 +63,7 @@ namespace DataGeneration.Common
             }
 
             return new NullStopwatchLogger();
+#endif
         }
 
         /// <summary>
@@ -78,6 +82,9 @@ namespace DataGeneration.Common
 
         public static IDisposable Log(string baseLoggerName, string description, params object[] args)
         {
+#if DISABLE_TIMETRACKING
+            return new NullStopwatchLogger.NullStopwatchLoggerDisposable();
+#else
             if (GlobalTimeTrackingAvailable)
             {
                 var loggerName = GetLoggerName(baseLoggerName);
@@ -85,6 +92,7 @@ namespace DataGeneration.Common
                     return new StopwatchLogger.StopwatchLoggerDisposable(LogManager.GetLogger(loggerName), description, args);
             }
             return new NullStopwatchLogger.NullStopwatchLoggerDisposable();
+#endif
         }
     }
 

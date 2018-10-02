@@ -349,6 +349,9 @@ namespace DataGeneration.Soap
 
         private async Task<T> TryCatchAsync<T>(string descr, Task<T> task, CancellationToken cancellationToken, params object[] logDebugArgs)
         {
+#if DISABLE_API_CANCELLATION
+            return await TryCatchAsync(descr, task, logDebugArgs);
+#else
             try
             {
                 _logger.Trace(descr, logDebugArgs);
@@ -365,10 +368,14 @@ namespace DataGeneration.Soap
                 _logger.Error(e, text, logDebugArgs);
                 throw new ApiException(text, e);
             }
+#endif
         }
 
         private async VoidTask TryCatchAsync(string descr, VoidTask task, CancellationToken cancellationToken, params object[] logDebugArgs)
         {
+#if DISABLE_API_CANCELLATION
+            await TryCatchAsync(descr, task, logDebugArgs);
+#else
             try
             {
                 _logger.Trace(descr, logDebugArgs);
@@ -385,6 +392,7 @@ namespace DataGeneration.Soap
                 _logger.Error(e, text, logDebugArgs);
                 throw new ApiException(text, e);
             }
+#endif
         }
 
         private IDisposable Log(string description, params object[] args)
