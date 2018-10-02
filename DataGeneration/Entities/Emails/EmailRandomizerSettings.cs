@@ -7,7 +7,7 @@ namespace DataGeneration.Entities.Emails
 {
     public class EmailRandomizerSettings : RandomizerSettings<Email>
     {
-        public ProbabilityCollection<(DateTime StartDate, DateTime EndDate)> DateRanges { get; set; }
+        public (DateTime StartDate, DateTime EndDate)? DateRange { get; set; }
 
         public override Faker<Email> GetFaker() => base.GetFaker()
             .Rules((f, e) =>
@@ -15,8 +15,11 @@ namespace DataGeneration.Entities.Emails
                 e.Subject = f.Lorem.Sentence();
                 e.Body = f.Lorem.Text();
 
-                var (StartDate, EndDate) = f.Random.ProbabilityRandomIfAny(DateRanges);
-                e.Date = f.Date.Between(StartDate, EndDate);
+                if (DateRange != null)
+                {
+                    var (start, end) = DateRange.Value;
+                    e.Date = f.Date.Between(start, end);
+                }
             });
     }
 }

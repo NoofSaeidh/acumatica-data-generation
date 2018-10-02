@@ -62,10 +62,7 @@ namespace DataGeneration
                         {
                             EmailRandomizerSettings = new EmailRandomizerSettings
                             {
-                                DateRanges = new ProbabilityCollection<(DateTime StartDate, DateTime EndDate)>
-                                {
-                                    (DateTime.Parse("01/01/2017"), DateTime.Parse("05/01/2018"))
-                                },
+                                DateRange = (DateTime.Parse("01/01/2017"), DateTime.Parse("05/01/2018")),
                             },
                             EmailsForSingleLeadCounts = new ProbabilityCollection<int>
                             {

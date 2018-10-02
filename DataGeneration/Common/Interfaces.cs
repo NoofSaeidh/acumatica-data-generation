@@ -96,7 +96,10 @@ namespace DataGeneration.Common
         void Login(LoginInfo loginInfo);
         void Login(string name, string password, string company = null, string branch = null, string locale = null);
         VoidTask LoginAsync(LoginInfo loginInfo);
-        VoidTask LoginAsync(string name, string password, string company = null, string branch = null, string locale = null);
+        VoidTask LoginAsync(LoginInfo loginInfo, CancellationToken cancellationToken);
+        // no sense to do 2 methods with cancellation token and optional arguments
+        //VoidTask LoginAsync(string name, string password, string company = null, string branch = null, string locale = null);
+        VoidTask LoginAsync(string name, string password, string company = null, string branch = null, string locale = null, CancellationToken cancellationToken = default);
         void Logout();
         VoidTask LogoutAsync();
         T Put<T>(T entity) where T : Entity;

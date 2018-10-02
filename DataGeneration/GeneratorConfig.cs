@@ -37,6 +37,7 @@ namespace DataGeneration
         public ICollection<Injection> GenerationSettingsInjections { get; set; }
 
         // if true processing will be stopped if any generation option will fail
+        // ignored for validation exceptions
         public bool StopProccesingAtExeception { get; set; }
 
         // inject all injected props to GenerationSettingsCollection (now only InjectExecutionSettings)

@@ -10,4 +10,32 @@
       </Mapping>
     </Mappings>
   </TopLevelEntity>
+  <TopLevelEntity name="Opportunity" screen="CR304000">
+    <Fields>
+      <Field name="NoteID" type="GuidValue" />
+      <Field name="CreatedAt" type="DateTimeValue" />
+    </Fields>
+    <Mappings>
+      <Mapping field="NoteID">
+        <To object="Opportunity" field="NoteID" />
+      </Mapping>
+      <Mapping field="CreatedAt">
+        <To object="Opportunity" field="CreatedDateTime" />
+      </Mapping>
+    </Mappings>
+  </TopLevelEntity>
+  <TopLevelEntity name="Case" screen="CR306000">
+    <Fields>
+      <Field name="NoteID" type="GuidValue" />
+      <Field name="CreatedAt" type="DateTimeValue" />
+    </Fields>
+    <Mappings>
+      <Mapping field="NoteID">
+        <To object="Case" field="NoteID" />
+      </Mapping>
+      <Mapping field="CreatedAt">
+        <To object="Case" field="CreatedDateTime" />
+      </Mapping>
+    </Mappings>
+  </TopLevelEntity>
 </Endpoint>

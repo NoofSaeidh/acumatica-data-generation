@@ -8,6 +8,16 @@ namespace DataGeneration.Common
 {
     public static class EnumerationExtensions
     {
+        public static bool IsNullOrWhiteSpace(this string value)
+        {
+            return string.IsNullOrWhiteSpace(value);
+        }
+
+        public static bool IsNullOrEmpty(this string value)
+        {
+            return string.IsNullOrEmpty(value);
+        }
+
         public static bool IsNullOrEmpty(this IEnumerable enumerable)
         {
             if (enumerable == null) return true;
@@ -68,8 +78,7 @@ namespace DataGeneration.Common
             var tcs = new TaskCompletionSourceWithCancellation<T>(cancellationToken);
 
             // Wait for completion or cancellation
-            Task<T> completedTask = await Task.WhenAny(task, tcs.Task);
-            return await completedTask;
+            return await await Task.WhenAny(task, tcs.Task);
         }
 
         public static async Task WithCancellation(this Task task, CancellationToken cancellationToken)
@@ -78,8 +87,7 @@ namespace DataGeneration.Common
             var tcs = new TaskCompletionSourceWithCancellation<object>(cancellationToken);
 
             // Wait for completion or cancellation
-            Task completedTask = await Task.WhenAny(task, tcs.Task);
-            await completedTask;
+            await await Task.WhenAny(task, tcs.Task);
         }
 
         private class TaskCompletionSourceWithCancellation<TResult> : TaskCompletionSource<TResult>
@@ -87,7 +95,7 @@ namespace DataGeneration.Common
             public TaskCompletionSourceWithCancellation(CancellationToken cancellationToken)
             {
                 CancellationTokenRegistration registration =
-                    cancellationToken.Register(() => TrySetResult(default));
+                    cancellationToken.Register(() => TrySetCanceled());
 
                 // Remove the registration after the task completes
                 Task.ContinueWith(_ => registration.Dispose());

@@ -69,7 +69,7 @@ namespace DataGeneration
         {
             var executer = new ArgsExecutor(args);
             if (executer.Empty())
-                return false;
+                return true;
 
             try
             {

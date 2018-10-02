@@ -17,8 +17,9 @@
       "ExecutionTypeSettings": {
         "ExecutionType": "Parallel",
         "ParallelThreads": 4,
-        "IgnoreProcessingErrors":  true
+        "IgnoreProcessingErrors": true
       },
+      "PxType": "PX.Object.CR.Contact",
       "ConvertByStatuses": {
         "New": {
           "ToOpportunity": 0.5
@@ -43,12 +44,10 @@
           ]
         ],
         "EmailRandomizerSettings": {
-          "DateRanges": [
-            {
-              "StartDate": "2017-01-01T00:00:00",
-              "EndDate": "2018-05-01T00:00:00"
-            }
-          ]
+          "DateRange": {
+            "StartDate": "2017-01-01T00:00:00",
+            "EndDate": "2018-05-01T00:00:00"
+          }
         }
       },
       "GenerationEntity": "Lead",
@@ -70,6 +69,11 @@
   ],
   "GenerationSettingsInjections": [
     {
+      "ExecutionTypeSettings": {
+        "ExecutionType": "Parallel",
+        "ParallelThreads": 4,
+        "IgnoreProcessingErrors": false
+      },
       "Count": 1000
     }
   ]

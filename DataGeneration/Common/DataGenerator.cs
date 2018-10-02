@@ -11,7 +11,7 @@ namespace DataGeneration.Common
             Faker = faker ?? throw new ArgumentNullException(nameof(faker));
         }
 
-        protected Faker<T> Faker { get; }
+        public Faker<T> Faker { get; }
 
         public virtual T Generate() => Faker.Generate();
         public virtual IList<T> GenerateList(int count) => Faker.Generate(count);

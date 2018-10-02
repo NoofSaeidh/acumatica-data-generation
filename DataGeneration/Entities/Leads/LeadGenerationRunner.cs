@@ -17,23 +17,15 @@ namespace DataGeneration.Entities.Leads
 
         protected override async VoidTask GenerateSingle(IApiClient client, Lead entity, CancellationToken cancellationToken)
         {
-            var sw = StopwatchLoggerFactory.GetLogger().Start();
-
             entity.ReturnBehavior = ReturnBehavior.OnlySpecified;
             entity.NoteID = new GuidReturn();
             var resultLead = await client.PutAsync(entity, cancellationToken);
 
-            sw.Log("Put Lead").Restart();
-
             // convert entity
             var convertFlags = GetConvertFlags(entity);
 
-            sw.Restart();
-
             if (convertFlags.HasFlag(ConvertLeadFlags.ToOpportunity))
                 await client.InvokeAsync(resultLead, new ConvertLeadToOpportunity(), cancellationToken);
-
-            sw.Log("Convert Lead");
 
             // create emails
             var emails = PrepareEmailsForCreation(entity);
@@ -42,20 +34,16 @@ namespace DataGeneration.Entities.Leads
                 foreach (var email in emails)
                 {
                     cancellationToken.ThrowIfCancellationRequested();
-
                     email.ReturnBehavior = ReturnBehavior.OnlySystem;
-                    sw.Restart();
                     var createdEmail = await client.PutAsync(email, cancellationToken);
-                    sw.Log("Put Email").Restart();
                     await client.InvokeAsync(
                         createdEmail,
                         new LinkEntityToEmail
                         {
                             RelatedEntity = resultLead.NoteID.ToString(),
-                            Type = GenerationSettings.PxTypeName
+                            Type = GenerationSettings.PxType
                         }
                     );
-                    sw.Log("Link Email");
                 }
             }
         }

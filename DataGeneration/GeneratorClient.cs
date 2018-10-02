@@ -1,7 +1,9 @@
 ﻿using DataGeneration.Common;
 using NLog;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -9,7 +11,7 @@ namespace DataGeneration
 {
     public class GeneratorClient
     {
-        private static ILogger _logger => LogConfiguration.DefaultLogger;
+        private static ILogger _logger => Common.LogManager.GetLogger(Common.LogManager.LoggerNames.GenerationClient);
 
         static GeneratorClient()
         {
@@ -26,39 +28,93 @@ namespace DataGeneration
 
         public GeneratorConfig Config { get; }
 
-        public async Task GenerateAllOptions(CancellationToken cancellationToken = default)
+        /// <summary>
+        ///     Start generation all options defined in <see cref="Config"/>.
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns>Generation result for each generation setting.</returns>
+        /// <exception cref="ValidationException">Config is invalid.</exception>
+        /// <exception cref="OperationCanceledException">Operation was canceled.</exception>
+        public async Task<AllGenerationsResult> GenerateAllOptions(CancellationToken cancellationToken = default)
         {
-            Config.Validate();
+            try
+            {
+                Config.Validate();
+            }
+            catch (ValidationException ve)
+            {
+                _logger.Fatal(ve, "Cannot start generation, Config is invalid");
+                throw;
+            }
             _logger.Info("Start generation for all settings");
+            var generatationResults = new List<GenerationResult>();
+            bool stopProcessing = false;
             foreach (var settings in Config.GetInjectedGenerationSettingsCollection())
             {
+                GenerationResult result;
                 try
                 {
                     cancellationToken.ThrowIfCancellationRequested();
 
                     await settings.GetGenerationRunner(Config.ApiConnectionConfig).RunGeneration(cancellationToken).ConfigureAwait(false);
+                    result = new GenerationResult(settings);
                 }
                 catch (OperationCanceledException oce)
                 {
-                    _logger.Fatal(oce, "Operation was canceled.");
+                    _logger.Fatal(oce, "Operation was canceled");
                     throw;
                 }
-                catch (GenerationException)
+                catch (GenerationException ge)
                 {
+                    _logger.Error(ge, "Generation failed");
+                    result = new GenerationResult(settings, ge);
                     if (Config.StopProccesingAtExeception)
-                        return;
+                        stopProcessing = true;
                 }
                 catch (ValidationException ve)
                 {
                     _logger.Error(ve, "Generation not started because of invalid configuration");
+                    result = new GenerationResult(settings, ve);
                 }
+                // this should not happen
                 catch (Exception e)
                 {
                     _logger.Fatal(e, "Generation failed with unexpected error");
-                    return;
+                    throw;
                 }
+                generatationResults.Add(result);
+                if (stopProcessing)
+                    break;
             }
             _logger.Info("Generation all settings completed");
+            return new AllGenerationsResult(generatationResults, stopProcessing);
         }
+    }
+
+    public class AllGenerationsResult
+    {
+        internal AllGenerationsResult(IEnumerable<GenerationResult> generationResults, bool processingStopped = false)
+        {
+            GenerationResults = generationResults.ToArray();
+            ProcessingStopped = processingStopped;
+        }
+
+        public bool ProcessingStopped { get; }
+        public bool AllSucceeded => GenerationResults.All(g => g.Success);
+        public bool AllFailed => GenerationResults.All(g => !g.Success);
+        public GenerationResult[] GenerationResults { get; }
+    }
+
+    public class GenerationResult
+    {
+        internal GenerationResult(IGenerationSettings generationSettings, Exception exception = null)
+        {
+            GenerationSettings = generationSettings;
+            Exception = exception;
+        }
+
+        public IGenerationSettings GenerationSettings { get; }
+        public Exception Exception { get; }
+        public bool Success => Exception == null;
     }
 }
