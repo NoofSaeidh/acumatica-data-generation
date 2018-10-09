@@ -48,6 +48,15 @@ namespace DataGeneration.Common
             }
             return collection;
         }
+
+        public static bool ContainsOnly<T>(this IEnumerable<T> enumerable, T element)
+        {
+            if(enumerable is ICollection<T> collection)
+            {
+                return collection.Count == 1 && collection.Contains(element);
+            }
+            return enumerable.Count() == 1 && enumerable.Contains(element);
+        }
     }
 
     public static class BogusExtensions
