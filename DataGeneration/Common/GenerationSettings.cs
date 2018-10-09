@@ -1,6 +1,7 @@
 ﻿using DataGeneration.Entities;
 using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
 
 namespace DataGeneration.Common
 {
@@ -14,7 +15,9 @@ namespace DataGeneration.Common
         public abstract GenerationRunner GetGenerationRunner(ApiConnectionConfig apiConnectionConfig);
     }
 
-    public abstract class GenerationSettings<T> : GenerationSettingsBase, IGenerationSettings<T> where T : Soap.Entity
+    public abstract class GenerationSettings<T, TRandomizerSettings> : GenerationSettingsBase, IGenerationSettings<T> 
+        where T : Soap.Entity
+        where TRandomizerSettings : IRandomizerSettings<T>
     {
         public string PxType { get; set; }
 
@@ -33,7 +36,9 @@ namespace DataGeneration.Common
         }
 
         [Required]
-        public IRandomizerSettings<T> RandomizerSettings { get; set; }
+        public TRandomizerSettings RandomizerSettings { get; set; }
+
+        IRandomizerSettings<T> IGenerationSettings<T>.RandomizerSettings => RandomizerSettings;
 
         public virtual void Validate()
         {

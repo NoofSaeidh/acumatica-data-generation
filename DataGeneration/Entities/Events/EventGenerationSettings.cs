@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace DataGeneration.Entities.Events
 {
-    public class EventGenerationSettings : GenerationSettings<Event>, IActivityGenerationSettings
+    public class EventGenerationSettings : GenerationSettings<Event, EventRandomizerSettings>, IActivityGenerationSettings
     {
         public override GenerationRunner GetGenerationRunner(ApiConnectionConfig apiConnectionConfig) => new EventGenerationRunner(apiConnectionConfig, this);
 

@@ -116,6 +116,10 @@
     <Compile Include="Entities\Emails\EmailRandomizerSettings.cs" />
     <Compile Include="Entities\Emails\Enums.cs" />
     <Compile Include="Entities\Leads\Enums.cs" />
+    <Compile Include="Entities\Opportunities\Enums.cs" />
+    <Compile Include="Entities\Opportunities\OpportunityGenerationRunner.cs" />
+    <Compile Include="Entities\Opportunities\OpportunityGenerationSettings.cs" />
+    <Compile Include="Entities\Opportunities\OpportunityRandomizerSettings.cs" />
     <Compile Include="Examples.cs" />
     <Compile Include="GeneratorConfig.cs" />
     <Compile Include="GeneratorClient.cs" />

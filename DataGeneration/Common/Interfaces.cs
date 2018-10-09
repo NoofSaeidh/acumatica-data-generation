@@ -56,7 +56,7 @@ namespace DataGeneration.Common
 
     public interface IGenerationSettings<T> : IGenerationSettings, IValidatable where T : IEntity
     {
-        IRandomizerSettings<T> RandomizerSettings { get; set; }
+        IRandomizerSettings<T> RandomizerSettings { get; }
     }
 
     public interface IValidatable
