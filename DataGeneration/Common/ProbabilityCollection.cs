@@ -45,17 +45,17 @@ namespace DataGeneration.Common
             FreeProbability = 1;
         }
 
-        public ProbabilityCollection(IDictionary<T, decimal> dictionary) : this()
+        public ProbabilityCollection(IEnumerable<KeyValuePair<T, decimal>> pairs) : this()
         {
-            foreach (var item in dictionary)
+            foreach (var item in pairs)
             {
                 Add(item);
             }
         }
 
-        public ProbabilityCollection(IDictionary<T, decimal?> dictionary) : this()
+        public ProbabilityCollection(IEnumerable<KeyValuePair<T, decimal?>> pairs) : this()
         {
-            foreach (var item in dictionary)
+            foreach (var item in pairs)
             {
                 Add(item);
             }

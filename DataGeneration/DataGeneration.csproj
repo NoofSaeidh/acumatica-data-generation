@@ -76,6 +76,8 @@
   <ItemGroup>
     <Compile Include="Common\AcumaticaTimeHelper.cs" />
     <Compile Include="Common\ApiConnectionConfig.cs" />
+    <Compile Include="Common\ProbabilityObjectCollection.cs" />
+    <Compile Include="Common\ValueTupleExtensions.cs" />
     <Compile Include="Entities\EntityHelper.cs" />
     <Compile Include="Common\Enums.cs" />
     <Compile Include="Common\ExecutionTypeSettings.cs" />

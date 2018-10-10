@@ -73,6 +73,11 @@ namespace DataGeneration.Common
         IStopwatchLogger Restart();
     }
 
+    public interface IProbabilityObject
+    {
+        decimal? Probability { get; }
+    }
+
     public interface IApiClient
     {
         void Delete<T>(T whereEntity) where T : Entity;

@@ -59,9 +59,12 @@ namespace DataGeneration.Common
         public virtual Faker<T> GetFaker()
         {
             ValidateHelper.ValidateObject(this);
-            var faker = new Faker<T>();
-            faker.UseSeed(Seed);
-            return faker;
+            return GetFaker<T>();
+        }
+        
+        public Faker<TOut> GetFaker<TOut>() where TOut : class
+        {
+            return new Faker<TOut>().UseSeed(Seed);
         }
 
         public void Validate() => ValidateHelper.ValidateObject(this);
