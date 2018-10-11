@@ -55,7 +55,6 @@
       },
       "GenerationEntity": "Lead",
       "RandomizerSettings": {
-        "$type": "DataGeneration.Entities.Leads.LeadRandomizerSettings, DataGeneration",
         "LeadClasses": {
           "LEAD": 0.7,
           "LEADBUS": 0.15,
@@ -81,7 +80,6 @@
         "EndDate": null
       },
       "RandomizerSettings": {
-        "$type": "DataGeneration.Entities.Activities.ActivityRandomizerSettings, DataGeneration",
         "ActivityType": "N",
         "DateRange": {
           "StartDate": "2017-01-01T00:00:00",
@@ -129,7 +127,6 @@
       "PxTypeForLinkedEntity": "PX.Objects.CR.CRCase",
       "EntitiesCountProbability": 0.2,
       "RandomizerSettings": {
-        "$type": "DataGeneration.Entities.Activities.ActivityRandomizerSettings, DataGeneration",
         "ActivityType": "P",
         "TrackTime": [ true ],
         "TimeSpent": [ "00:30", null ]
@@ -143,7 +140,6 @@
       "PxTypeForLinkedEntity": "PX.Objects.CR.CROpportunity",
       "EntitiesCountProbability": 0.20,
       "RandomizerSettings": {
-        "$type": "DataGeneration.Entities.Events.EventRandomizerSettings, DataGeneration",
         "DateRange": {
           "StartDate": "2017-01-01T00:00:00",
           "EndDate": "2018-05-01T00:00:00"
@@ -155,6 +151,49 @@
         "TimeSpent": {
           "MinTime": "00:10",
           "MaxTime": "02:00"
+        }
+      }
+    },
+    {
+      "$type": "DataGeneration.Entities.Opportunities.OpportunityGenerationSettings, DataGeneration",
+      "#comment": "Create opportunities. Fetches business accounts and links to it.",
+      "GenerationEntity": "Opportunity",
+      "Count": 100,
+      "RandomizerSettings": {
+        "OpportunityAccountTypes": {
+          "WithoutAccount": 0.25,
+          "WithProspectAccount": 0.125,
+          "WithCustomerAccount": 0.625
+        },
+        "OpportunityStatusTypes": {
+          "New": 0.15,
+          "Prospect": 0.20,
+          "Nurture": 0.20,
+          "Development": 0.20,
+          "Negotiation": 0.05,
+          "Won": 0.20
+        },
+        "OpportunityClasses": {
+          "PARTNER": 0.3,
+          "PRODUCT": 0.3,
+          "SERVICE": 0.3,
+          "BIDDING": 0.1,
+          "OpportunityProductsSettings": [
+            {
+              "Probability": 0.33,
+              "ManualAmount": true,
+              "Amounts": [ 1, 500000 ]
+            },
+            {
+              "Probability": 0.65,
+              "ProductsCounts": [ 1, 20 ],
+              "Quantities": [ 1, 20 ]
+            },
+            {
+              "Probability": 0.02,
+              "ProductsCounts": [ 20, 400 ]
+            }
+          ]
         }
       }
     }

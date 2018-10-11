@@ -8,9 +8,7 @@ namespace DataGeneration.Common
     {
         public static void ValidateObject(object instance)
         {
-            var context = new ValidationContext(instance);
-            var results = new List<ValidationResult>();
-            Validator.ValidateObject(instance, context);
+            Validator.ValidateObject(instance, new ValidationContext(instance));
         }
     }
 

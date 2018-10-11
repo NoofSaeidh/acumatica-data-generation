@@ -17,7 +17,7 @@ namespace DataGeneration.Entities.Activities
         (DateTime? StartDate, DateTime? EndDate)? CreatedAtSearchRange { get; set; }
     }
 
-    public class ActivityGenerationSettings : GenerationSettings<Activity>, IActivityGenerationSettings
+    public class ActivityGenerationSettings : GenerationSettings<Activity, ActivityRandomizerSettings>, IActivityGenerationSettings
     {
         public override GenerationRunner GetGenerationRunner(ApiConnectionConfig apiConnectionConfig) => new ActivityGenerationRunner(apiConnectionConfig, this);
 

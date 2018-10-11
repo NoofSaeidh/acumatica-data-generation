@@ -1,4 +1,5 @@
 ﻿using DataGeneration.Maint;
+using DataGeneration.Common;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -17,6 +18,7 @@ namespace DataGeneration
             public const string UpdateEndpoint = "/update-endpoint";
             public const string SaveEndpoint = "/save-endpoint";
             public const string Help = "/?";
+            internal const string _Default = "_default";
 
             public static readonly Dictionary<string, string> AvailableArgsHelp = new Dictionary<string, string>
             {
@@ -68,20 +70,30 @@ namespace DataGeneration
         public bool ExecuteArgs(IEnumerable<string> args)
         {
             var executer = new ArgsExecutor(args);
-            if (executer.Empty())
+            if (executer.IsEmpty)
                 return true;
 
             try
             {
-                var start = false;
-                executer
+                var result = executer
                     .Arg(Args.Help, ShowHelp, stopOnSuccess: true)
                     .Arg_ThrowNoValue(Args.Config, value => _config = new Lazy<GeneratorConfig>(() => GeneratorConfig.ReadConfig(value)))
                     .Arg(Args.UpdateEndpoint, PutEndpoint, () => PutEndpoint(EndpointDatagenFileName))
                     .Arg_ThrowNoValues(Args.SaveEndpoint, GetAndSaveEndpoint)
-                    .Arg(Args.Start, () => start = true)
-                    .Default(WrongArgumentsSpecified);
-                return start;
+                    .Arg(Args.Start, () => { }, res => res.StartGeneration = true)
+                    .Default(WrongArgumentsSpecified)
+                    .Result;
+
+                if (result.StartGeneration.HasValue)
+                    return (bool)result.StartGeneration;
+
+                if (result.Stopped == true)
+                    return false;
+
+                if (result.Executed.ContainsOnly(Args.Config))
+                    return true;
+
+                return false;
             }
             catch (ArgsExecutionException aee)
             {
@@ -199,84 +211,119 @@ namespace DataGeneration
                                 return null;
                             return vals;
                         });
+
+                Result = new ArgsExecutionResult();
             }
 
             // if some option caught
             public bool Any() => _any;
 
-            public ArgsExecutor Arg(string arg, Action action, bool stopOnSuccess = false)
+            public ArgsExecutor Arg(string arg, Action action, Action<ArgsExecutionResult> resulting = null, bool stopOnSuccess = false)
             {
-                return Arg(arg, (Action<string[]>) null, action, stopOnSuccess);
+                return Arg(arg, (Action<string[]>)null, action, resulting, stopOnSuccess);
             }
 
             // default action only if value is null
-            public ArgsExecutor Arg(string arg, Action<string> action, Action defaultAction = null, bool stopOnSuccess = false)
+            public ArgsExecutor Arg(
+                string arg,
+                Action<string> action,
+                Action defaultAction = null,
+                Action<ArgsExecutionResult> resulting = null,
+                bool stopOnSuccess = false)
             {
-                return Arg(arg, (string[] s) => action(s[0]), defaultAction, stopOnSuccess);
+                return Arg(arg, (string[] s) => action(s[0]), defaultAction, resulting, stopOnSuccess);
             }
 
-            public ArgsExecutor Arg_ThrowNoValue(string arg, Action<string> action, bool stopOnSuccess = false)
+            public ArgsExecutor Arg_ThrowNoValue(
+                string arg,
+                Action<string> action,
+                Action<ArgsExecutionResult> resulting = null,
+                bool stopOnSuccess = false)
             {
-                return Arg_ThrowNoValues(arg, (string[] s) => action(s[0]), stopOnSuccess);
+                return Arg_ThrowNoValues(arg, (string[] s) => action(s[0]), resulting, stopOnSuccess);
             }
 
-            public ArgsExecutor Arg(string arg, Action<string[]> action, Action defaultAction = null, bool stopOnSuccess = false)
+            public ArgsExecutor Arg(
+                string arg,
+                Action<string[]> action, Action
+                defaultAction = null,
+                Action<ArgsExecutionResult> resulting = null,
+                bool stopOnSuccess = false)
             {
-                if (_stopped) return this;
+                if (Stopped) return this;
 
-                if(action == null && defaultAction == null)
+                if (action == null && defaultAction == null)
                     throw new InvalidOperationException("Both action and defaultAction cannot be null.");
 
                 if (_args.TryGetValue(arg, out var value))
                 {
-                    if (value != null)
+                    var withValues = value != null;
+                    try
                     {
-                        try
+                        if (withValues && action != null)
                         {
-                            if (action != null)
-                                action(value);
-                            else
-                                defaultAction();
+                            action(value);
                         }
-                        catch (ArgsExecutionException) { throw; }
-                        catch(Exception e)
-                        {
-                            throw new ArgsExecutionException($"Execution \"{arg}\" with values failed.", e);
-                        }
-                        _any = true;
-                    }
-                    else if (defaultAction != null)
-                    {
-                        try
+                        else if (defaultAction != null)
                         {
                             defaultAction();
                         }
-                        catch (ArgsExecutionException) { throw; }
-                        catch (Exception e)
-                        {
-                            throw new ArgsExecutionException($"Execution \"{arg}\" without values failed.", e);
-                        }
-                        _any = true;
+                        else return this;
                     }
-                    _stopped |= stopOnSuccess;
+                    catch (ArgsExecutionException) { throw; }
+                    catch (Exception e)
+                    {
+                        throw new ArgsExecutionException($"Execution \"{arg}\" {(withValues ? "with" : "without")} values failed.", e);
+                    }
+                    _any = true;
+                    Stopped |= stopOnSuccess;
+                    resulting?.Invoke(Result);
+                    Result.Executed.Add(arg);
                 }
                 return this;
             }
 
-            public ArgsExecutor Arg_ThrowNoValues(string arg, Action<string[]> action, bool stopOnSuccess = false)
+            public ArgsExecutor Arg_ThrowNoValues(
+                string arg,
+                Action<string[]> action,
+                Action<ArgsExecutionResult> resulting = null,
+                bool stopOnSuccess = false)
             {
-                return Arg(arg, action, () => throw new ArgsExecutionException($"No value specified for option \"{arg}\"."), stopOnSuccess);
+                return Arg(arg, action, () => throw new ArgsExecutionException($"No value specified for option \"{arg}\"."), resulting, stopOnSuccess);
             }
 
-            public ArgsExecutor Default(Action action)
+            public ArgsExecutor Default(Action action, Action<ArgsExecutionResult> resulting = null)
             {
-                if (!_stopped && !_any)
+                if (!Stopped && !_any)
+                {
                     action();
+                    resulting?.Invoke(Result);
+                    Result.Executed.Add(Args._Default);
+                }
                 return this;
             }
 
             // if no options
-            public bool Empty() => _args == null || !_args.Any();
+            public bool IsEmpty => _args == null || !_args.Any();
+
+            public ArgsExecutionResult Result { get; }
+            private bool Stopped
+            {
+                get => _stopped;
+                set
+                {
+                    _stopped = value;
+                    if (value)
+                        Result.Stopped = value;
+                }
+            }
+        }
+
+        private class ArgsExecutionResult
+        {
+            public bool? StartGeneration { get; set; }
+            public bool? Stopped { get; set; }
+            public List<string> Executed { get; } = new List<string>();
         }
 
         private class ArgsExecutionException : Exception

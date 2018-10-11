@@ -52,8 +52,11 @@ namespace DataGeneration.Common
             try
             {
                 stopwatch.Start();
-                await RunBeforeGeneration(cancellationToken);
-                if(GenerationSettings.Count == 0)
+                using (StopwatchLoggerFactory.Log(LogManager.LoggerNames.GenerationRunner, "Before Generation"))
+                {
+                    await RunBeforeGeneration(cancellationToken);
+                }
+                if (GenerationSettings.Count == 0)
                 {
                     Logger.Warn("Generation {type} was not started. No entities could be generated. Count: 0");
                     return;
@@ -103,45 +106,51 @@ namespace DataGeneration.Common
             var countPerThread = GenerationSettings.Count / threads;
             var remainUnits = GenerationSettings.Count % threads;
 
-            for (int i = 0, rem = 1; i < threads; i++)
+            using (StopwatchLoggerFactory.Log(LogManager.LoggerNames.GenerationRunner, "Generation Parallel. {count}, {threads}", GenerationSettings.Count, threads))
             {
-                // remaining of division
-                if (i >= remainUnits) rem = 0;
+                for (int i = 0, rem = 1; i < threads; i++)
+                {
+                    // remaining of division
+                    if (i >= remainUnits) rem = 0;
 
-                var currentCount = countPerThread + rem;
-                tasks[i] = RunGenerationSequent(currentCount, cancellationToken);
+                    var currentCount = countPerThread + rem;
+                    tasks[i] = RunGenerationSequent(currentCount, cancellationToken);
+                }
+
+                return Task.WhenAll(tasks);
             }
-
-            return Task.WhenAll(tasks);
         }
 
         protected async Task RunGenerationSequent(int count, CancellationToken cancellationToken)
         {
-            var entities = GenerateRandomizedList(count);
-
-            cancellationToken.ThrowIfCancellationRequested();
-
-            using (var client = await GetLoginLogoutClient(cancellationToken))
+            using (StopwatchLoggerFactory.Log(LogManager.LoggerNames.GenerationRunner, "Generation Sequent. {count}", count))
             {
-                foreach (var entity in entities)
-                {
-                    cancellationToken.ThrowIfCancellationRequested();
+                var entities = GenerateRandomizedList(count);
 
-                    try
+                cancellationToken.ThrowIfCancellationRequested();
+
+                using (var client = await GetLoginLogoutClient(cancellationToken))
+                {
+                    foreach (var entity in entities)
                     {
-                        await GenerateSingle(client, entity, cancellationToken);
-                    }
-                    catch (OperationCanceledException) { throw; }
-                    catch (ApiException ae)
-                    {
-                        Logger.Error(ae, "Generation {$entity} failed", typeof(TEntity));
-                        if (!GenerationSettings.ExecutionTypeSettings.IgnoreProcessingErrors)
+                        cancellationToken.ThrowIfCancellationRequested();
+
+                        try
+                        {
+                            await GenerateSingle(client, entity, cancellationToken);
+                        }
+                        catch (OperationCanceledException) { throw; }
+                        catch (ApiException ae)
+                        {
+                            Logger.Error(ae, "Generation {$entity} failed", typeof(TEntity));
+                            if (!GenerationSettings.ExecutionTypeSettings.IgnoreProcessingErrors)
+                                throw;
+                        }
+                        catch (Exception e)
+                        {
+                            Logger.Fatal(e, "Unexpected exception has occurred");
                             throw;
-                    }
-                    catch (Exception e)
-                    {
-                        Logger.Fatal(e, "Unexpected exception has occurred");
-                        throw;
+                        }
                     }
                 }
             }

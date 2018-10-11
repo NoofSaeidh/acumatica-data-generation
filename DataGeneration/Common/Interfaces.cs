@@ -56,7 +56,7 @@ namespace DataGeneration.Common
 
     public interface IGenerationSettings<T> : IGenerationSettings, IValidatable where T : IEntity
     {
-        IRandomizerSettings<T> RandomizerSettings { get; set; }
+        IRandomizerSettings<T> RandomizerSettings { get; }
     }
 
     public interface IValidatable
@@ -71,6 +71,11 @@ namespace DataGeneration.Common
         IStopwatchLogger Stop();
         IStopwatchLogger Reset();
         IStopwatchLogger Restart();
+    }
+
+    public interface IProbabilityObject
+    {
+        decimal? Probability { get; }
     }
 
     public interface IApiClient

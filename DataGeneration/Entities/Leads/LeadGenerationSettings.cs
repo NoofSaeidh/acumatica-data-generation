@@ -6,11 +6,10 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DataGeneration.Entities.Leads
 {
-    public class LeadGenerationSettings : GenerationSettings<Lead>
+    public class LeadGenerationSettings : GenerationSettings<Lead, LeadRandomizerSettings>
     {
         public override GenerationRunner GetGenerationRunner(ApiConnectionConfig apiConnectionConfig) => new LeadGenerationRunner(apiConnectionConfig, this);
 
-        [RequiredCollection(AllowEmpty = true)]
         public IDictionary<string, ProbabilityCollection<ConvertLeadFlags>> ConvertByStatuses { get; set; }
 
         public EmailsForLeadGenerationSettings EmailsGenerationSettings { get; set; }
