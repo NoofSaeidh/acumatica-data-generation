@@ -10,7 +10,6 @@ namespace DataGeneration.Entities.Leads
     {
         public override GenerationRunner GetGenerationRunner(ApiConnectionConfig apiConnectionConfig) => new LeadGenerationRunner(apiConnectionConfig, this);
 
-        [RequiredCollection(AllowEmpty = true)]
         public IDictionary<string, ProbabilityCollection<ConvertLeadFlags>> ConvertByStatuses { get; set; }
 
         public EmailsForLeadGenerationSettings EmailsGenerationSettings { get; set; }

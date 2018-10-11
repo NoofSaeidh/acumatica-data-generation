@@ -21,7 +21,10 @@ namespace DataGeneration.Entities.Opportunities
         {
             using (var client = await GetLoginLogoutClient())
             {
-                GenerationSettings.RandomizerSettings.BusinessAccounts = await GetBusinessAccounts(client, cancellationToken);
+                if(GenerationSettings.RandomizerSettings.FetchBusinessAccounts)
+                    GenerationSettings.RandomizerSettings.BusinessAccounts = await GetBusinessAccounts(client, cancellationToken);
+                if(GenerationSettings.RandomizerSettings.FetchInventoryIds)
+                    GenerationSettings.RandomizerSettings.InventoryIds = await GetInventoryIds(client, cancellationToken);
             }
         }
 
@@ -55,6 +58,7 @@ namespace DataGeneration.Entities.Opportunities
                         {
                             ContactID = new IntReturn(),
                             BusinessAccount = new StringReturn(),
+                            Active = new BooleanSearch { Value = true },
                             ReturnBehavior = ReturnBehavior.OnlySpecified
                         }
                     );
@@ -70,6 +74,25 @@ namespace DataGeneration.Entities.Opportunities
             }
 
             return result;
+        }
+
+        private async Task<IList<string>> GetInventoryIds(IApiClient client, CancellationToken cancellationToken)
+        {
+            var nonstock = client.GetListAsync(new NonStockItem
+            {
+                InventoryID = new StringReturn(),
+                ItemStatus = new StringSearch("Active"),
+                ReturnBehavior = ReturnBehavior.OnlySpecified
+            });
+            var stock = client.GetListAsync(new StockItem
+            {
+                InventoryID = new StringReturn(),
+                ItemStatus = new StringSearch("Active"),
+                ReturnBehavior = ReturnBehavior.OnlySpecified
+            });
+            return (await nonstock).Select(i => i.InventoryID.Value)
+                .Concat((await stock).Select(i => i.InventoryID.Value))
+                .ToArray();
         }
 
         protected override async VoidTask GenerateSingle(IApiClient client, Opportunity entity, CancellationToken cancellationToken)

@@ -20,6 +20,13 @@ namespace DataGeneration.Entities.Opportunities
         Nurture,
         Development,
         Negotiation,
-        Won
+        Won,
+    }
+
+    public enum OpportunityProductsType
+    {
+        ManualAmount,
+        FewProducts,
+        ManyProducts,
     }
 }
