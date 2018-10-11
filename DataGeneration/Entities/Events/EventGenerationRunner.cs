@@ -19,7 +19,7 @@ namespace DataGeneration.Entities.Events
         {
             using (var client = await GetLoginLogoutClient(cancellationToken))
             {
-                _linkEntities = await ActivityGenerationRunner.BeforeActivityGeneration(
+                _linkEntities = await CrossEntityGenerationHelper.GetLinkEntitiesCollectionForActivityGeneration(
                     GenerationSettings,
                     client,
                     cancellationToken,

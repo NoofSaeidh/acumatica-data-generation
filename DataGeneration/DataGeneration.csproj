@@ -107,6 +107,7 @@
     <Compile Include="Entities\Events\EventGenerationRunner.cs" />
     <Compile Include="Entities\Events\EventGenerationSettings.cs" />
     <Compile Include="Entities\Events\EventRandomizerSettings.cs" />
+    <Compile Include="Entities\CrossEntityGenerationHelper.cs" />
     <Compile Include="Entities\KeyFields.cs" />
     <Compile Include="Common\LogManager.cs" />
     <Compile Include="Common\ProbabilityCollection.cs" />
