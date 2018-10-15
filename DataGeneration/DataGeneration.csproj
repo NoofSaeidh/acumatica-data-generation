@@ -78,6 +78,10 @@
     <Compile Include="Common\ApiConnectionConfig.cs" />
     <Compile Include="Common\ProbabilityObjectCollection.cs" />
     <Compile Include="Common\ValueTupleExtensions.cs" />
+    <Compile Include="Entities\Cases\CaseGenerationRunner.cs" />
+    <Compile Include="Entities\Cases\CaseGenerationSettings.cs" />
+    <Compile Include="Entities\Cases\CaseRandomizerSettings.cs" />
+    <Compile Include="Entities\Cases\Enums.cs" />
     <Compile Include="Entities\EntityHelper.cs" />
     <Compile Include="Common\Enums.cs" />
     <Compile Include="Common\ExecutionTypeSettings.cs" />
@@ -107,6 +111,7 @@
     <Compile Include="Entities\Events\EventGenerationRunner.cs" />
     <Compile Include="Entities\Events\EventGenerationSettings.cs" />
     <Compile Include="Entities\Events\EventRandomizerSettings.cs" />
+    <Compile Include="Entities\CrossEntityGenerationHelper.cs" />
     <Compile Include="Entities\KeyFields.cs" />
     <Compile Include="Common\LogManager.cs" />
     <Compile Include="Common\ProbabilityCollection.cs" />

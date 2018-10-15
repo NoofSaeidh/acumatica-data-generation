@@ -1,7 +1,5 @@
-﻿using Bogus;
-using DataGeneration.Common;
+﻿using DataGeneration.Common;
 using DataGeneration.Soap;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -21,59 +19,24 @@ namespace DataGeneration.Entities.Opportunities
         {
             using (var client = await GetLoginLogoutClient())
             {
-                if(GenerationSettings.RandomizerSettings.FetchBusinessAccounts)
+                if (GenerationSettings.RandomizerSettings.FetchBusinessAccounts)
                     GenerationSettings.RandomizerSettings.BusinessAccounts = await GetBusinessAccounts(client, cancellationToken);
-                if(GenerationSettings.RandomizerSettings.FetchInventoryIds)
+                if (GenerationSettings.RandomizerSettings.FetchInventoryIds)
                     GenerationSettings.RandomizerSettings.InventoryIds = await GetInventoryIds(client, cancellationToken);
             }
         }
 
         private async Task<IDictionary<OpportunityAccountType, (string, int[])[]>> GetBusinessAccounts(IApiClient client, CancellationToken cancellationToken)
         {
-            var accounts = await client.GetListAsync(
-                new BusinessAccount
-                {
-                    BusinessAccountID = new StringReturn(),
-                    Type = new StringReturn(),
-                    ReturnBehavior = ReturnBehavior.OnlySpecified
-                },
+            return await CrossEntityGenerationHelper.GetBusinessAccountsWithLinkedContactsFromType(
+                client,
+                type => type == "Customer"
+                            ? (OpportunityAccountType.WithCustomerAccount, CrossEntityGenerationHelper.FetchOption.IncludeInner)
+                            : type == "Prospect"
+                                ? (OpportunityAccountType.WithProspectAccount, CrossEntityGenerationHelper.FetchOption.Include)
+                                : (OpportunityAccountType.WithoutAccount, CrossEntityGenerationHelper.FetchOption.Exlude),
                 cancellationToken
             );
-
-            var result = new Dictionary<OpportunityAccountType, (string, int[])[]>();
-
-            foreach (var accountGroup in accounts.GroupBy(a => a.Type))
-            {
-                if (accountGroup.Key == "Prospect")
-                {
-                    result[OpportunityAccountType.WithProspectAccount] = accountGroup.Select(a => (a.BusinessAccountID.Value, (int[])null)).ToArray();
-                    continue;
-                }
-
-                if (accountGroup.Key == "Customer")
-                {
-
-                    var contacts = await client.GetListAsync(
-                        new Contact
-                        {
-                            ContactID = new IntReturn(),
-                            BusinessAccount = new StringReturn(),
-                            Active = new BooleanSearch { Value = true },
-                            ReturnBehavior = ReturnBehavior.OnlySpecified
-                        }
-                    );
-
-                    result[OpportunityAccountType.WithCustomerAccount] = accountGroup
-                        .Select(a => (a.BusinessAccountID.Value, contacts: contacts
-                                        .Where(c => c.BusinessAccount == a.BusinessAccountID)
-                                        .Select(c => c.ContactID.Value ?? default)
-                                        .ToArray()))
-                        .Where(a => a.contacts != null && a.contacts.Length > 0)
-                        .ToArray();
-                }
-            }
-
-            return result;
         }
 
         private async Task<IList<string>> GetInventoryIds(IApiClient client, CancellationToken cancellationToken)
