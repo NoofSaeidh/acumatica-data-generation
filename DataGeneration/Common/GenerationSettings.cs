@@ -1,5 +1,7 @@
 ﻿using DataGeneration.Entities;
+using DataGeneration.Soap;
 using Newtonsoft.Json;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 
@@ -16,7 +18,7 @@ namespace DataGeneration.Common
     }
 
     public abstract class GenerationSettings<T, TRandomizerSettings> : GenerationSettingsBase, IGenerationSettings<T> 
-        where T : Soap.Entity
+        where T : class
         where TRandomizerSettings : IRandomizerSettings<T>
     {
         public string PxType { get; set; }

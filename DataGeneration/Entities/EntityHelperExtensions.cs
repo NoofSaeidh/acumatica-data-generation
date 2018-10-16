@@ -3,7 +3,7 @@ using System;
 
 namespace DataGeneration.Entities
 {
-    public static class KeyFields
+    public static class EntityHelperExtensions
     {
         public static Guid? GetNoteId(this Entity entity)
         {
@@ -16,12 +16,8 @@ namespace DataGeneration.Entities
 
             switch (entity)
             {
-                case Lead lead:
-                    return lead.NoteID?.Value;
-                case Opportunity opportunity:
-                    return opportunity.NoteID?.Value;
-                case Case @case:
-                    return @case.NoteID?.Value;
+                case INoteIdEntity noteIdEntity:
+                    return noteIdEntity.NoteID;
 
                 default:
                     try
@@ -33,12 +29,6 @@ namespace DataGeneration.Entities
                         throw new InvalidOperationException("Current entity doesn't contain NoteID field.", e);
                     }
             }
-        }
-
-        public static string GetNaturalKey(this Entity entity)
-        {
-            //todo: perhaps may be needed
-            throw new NotImplementedException();
         }
     }
 }

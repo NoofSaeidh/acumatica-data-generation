@@ -20,12 +20,20 @@ namespace DataGeneration.Common
             var token = JToken.Load(reader);
 
             var genericParam = objectType.GenericTypeArguments[0];
+            var resultParam = genericParam;
 
-            if (genericParam.GetInterface(nameof(IProbabilityObject)) != null)
+            // todo: perhaps should little review and parse all objects if they have property "Probability" as IProbabilityObject, not only valuetuples
+
+            if (ValueTupleReflectionHelper.IsValueTupleOrNullableType(genericParam, out var _, out var _))
+            {
+                resultParam = typeof(ValueTupleProbabilityWrapper<>).MakeGenericType(genericParam);
+            }
+
+            if (resultParam.GetInterface(nameof(IProbabilityObject)) != null)
             {
                 if(token is JArray jArray)
                 {
-                    var arType = typeof(IList<>).MakeGenericType(genericParam);
+                    var arType = typeof(IList<>).MakeGenericType(resultParam);
                     var wrapperType = typeof(ProbabilityObjectCollection<>).MakeGenericType(genericParam);
                     var wrapper = Activator.CreateInstance(wrapperType, jArray.ToObject(arType, serializer));
                     return wrapperType.GetProperty(nameof(ProbabilityObjectCollection<IProbabilityObject>.ProbabilityCollection)).GetValue(wrapper);

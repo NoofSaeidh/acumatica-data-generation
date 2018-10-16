@@ -2,6 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -22,7 +24,7 @@ namespace DataGeneration.Common
     }
 
     public abstract class GenerationRunner<TEntity, TGenerationSettings> : GenerationRunner
-        where TEntity : Soap.Entity
+        where TEntity : class
         where TGenerationSettings : class, IGenerationSettings<TEntity>
     {
         private Bogus.Randomizer _randomizer;
@@ -164,5 +166,14 @@ namespace DataGeneration.Common
         }
 
         protected IList<TEntity> GenerateRandomizedList(int count) => GenerationSettings.RandomizerSettings.GetDataGenerator().GenerateList(count);
+
+        protected void ChangeGenerationCount(int count, string message,
+            [CallerMemberName] string memberName = "",
+            [CallerFilePath] string sourceFilePath = "",
+            [CallerLineNumber] int sourceLineNumber = 0)
+        {
+            GenerationSettings.Count = count;
+            Logger.Info("Count changed to {count}; Reason :{message}; caller: {callerinfo}", count, message, $"{memberName} at {sourceFilePath}:{sourceLineNumber}");
+        }
     }
 }

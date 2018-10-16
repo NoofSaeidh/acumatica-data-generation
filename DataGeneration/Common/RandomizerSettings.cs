@@ -32,7 +32,7 @@ namespace DataGeneration.Common
         }
     }
 
-    public abstract class RandomizerSettings<T> : RandomizerSettingsBase, IRandomizerSettings<T> where T : Entity
+    public abstract class RandomizerSettings<T> : RandomizerSettingsBase, IRandomizerSettings<T> where T : class
     {
         private IDataGenerator<T> _statefullGenerator;
 

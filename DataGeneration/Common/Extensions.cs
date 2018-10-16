@@ -25,6 +25,14 @@ namespace DataGeneration.Common
             return false;
         }
 
+        public static bool IsNullOrEmpty<T>(this IEnumerable<T> enumerable)
+        {
+            if (enumerable == null) return true;
+            if (enumerable is ICollection col) return col.Count == 0;
+            if (!enumerable.Any()) return true;
+            return false;
+        }
+
         public static IEnumerable<T> Concat<T>(this IEnumerable<T> enumerable, T element)
         {
             return enumerable.Concat(Enumerable.Repeat(element, 1));

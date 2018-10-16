@@ -19,12 +19,12 @@ namespace DataGeneration.Entities
             IActivityGenerationSettings generationSettings,
             IApiClient apiClient,
             CancellationToken cancellationToken,
-            Action<Entity> searchEntityAdjustmet = null,
+            Action<Entity> searchEntityAdjustment = null,
             bool returnEntities = false)
         {
             var entity = EntityHelper.InitializeFromType(generationSettings.EntityTypeForLinkedEntity);
             entity.ReturnBehavior = ReturnBehavior.OnlySpecified;
-            searchEntityAdjustmet?.Invoke(entity);
+            searchEntityAdjustment?.Invoke(entity);
             EntityHelper.SetPropertyValue(entity, "NoteID", new GuidReturn());
             if (generationSettings.CreatedAtSearchRange != null)
             {

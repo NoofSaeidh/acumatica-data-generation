@@ -86,19 +86,19 @@ namespace DataGeneration.Entities.Leads
                 yield break;
 
             var emails = emailSettings.EmailRandomizerSettings.GetStatefullDataGenerator().GenerateList(emailsCount);
-            foreach (var email in emails)
-            {
-                email.Incoming = true;
-                email.From = lead.Email;
-                email.To = Randomizer.ProbabilityRandomIfAny(emailSettings.SystemAccounts).Email;
-                yield return email;
+            //foreach (var email in emails)
+            //{
+            //    email.Incoming = true;
+            //    email.From = lead.Email;
+            //    email.To = Randomizer.ProbabilityRandomIfAny(emailSettings.SystemAccounts).Email;
+            //    yield return email;
 
-                var outEmail = emailSettings.EmailRandomizerSettings.GetStatefullDataGenerator().Generate();
-                outEmail.Incoming = false;
-                outEmail.From = Randomizer.ProbabilityRandomIfAny(emailSettings.SystemAccounts).Email;
-                outEmail.To = lead.Email;
-                yield return outEmail;
-            }
+            //    var outEmail = emailSettings.EmailRandomizerSettings.GetStatefullDataGenerator().Generate();
+            //    outEmail.Incoming = false;
+            //    outEmail.From = Randomizer.ProbabilityRandomIfAny(emailSettings.SystemAccounts).Email;
+            //    outEmail.To = lead.Email;
+            //    yield return outEmail;
+            //}
         }
     }
 }

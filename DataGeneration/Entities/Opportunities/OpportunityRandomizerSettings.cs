@@ -41,7 +41,7 @@ namespace DataGeneration.Entities.Opportunities
                 {
                     var (account, contacts) = f.PickRandom(accounts);
                     o.BusinessAccount = account;
-                    if (contacts != null && contacts.Length > 0)
+                    if (!contacts.IsNullOrEmpty())
                     {
                         o.ContactID = f.PickRandom(contacts);
                     }
@@ -71,7 +71,7 @@ namespace DataGeneration.Entities.Opportunities
                         }
                     }
                     else if (productsSettings.ProductsCounts.TryGetValues(out var pmin, out var pmax)
-                        && InventoryIds != null && InventoryIds.Count > 0)
+                        && !InventoryIds.IsNullOrEmpty())
                     {
                         var count = f.Random.Int(pmin, pmax);
 

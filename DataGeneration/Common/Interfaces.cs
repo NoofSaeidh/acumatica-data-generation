@@ -11,7 +11,7 @@ namespace DataGeneration.Common
     ///     Randomizer that can generate entities.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public interface IDataGenerator<T> where T : IEntity
+    public interface IDataGenerator<T>
     {
         T Generate();
         IList<T> GenerateList(int count);
@@ -25,7 +25,7 @@ namespace DataGeneration.Common
     /// to return configured randomizer that generate entities depending on class properties.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public interface IRandomizerSettings<T> : IValidatable where T : IEntity
+    public interface IRandomizerSettings<T> : IValidatable
     {
         int Seed { get; set; }
         IDataGenerator<T> GetDataGenerator();
@@ -54,7 +54,7 @@ namespace DataGeneration.Common
         GenerationRunner GetGenerationRunner(ApiConnectionConfig apiConnectionConfig);
     }
 
-    public interface IGenerationSettings<T> : IGenerationSettings, IValidatable where T : IEntity
+    public interface IGenerationSettings<T> : IGenerationSettings, IValidatable
     {
         IRandomizerSettings<T> RandomizerSettings { get; }
     }

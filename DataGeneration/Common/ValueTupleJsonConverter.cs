@@ -8,50 +8,16 @@ using System.Reflection;
 namespace DataGeneration.Common
 {
     public class ValueTupleJsonConverter : JsonConverter
-    {
-        private static readonly HashSet<Type> ValueTupleTypes = new HashSet<Type>(new Type[]
-        {
-            typeof(ValueTuple<>),
-            typeof(ValueTuple<,>),
-            typeof(ValueTuple<,,>),
-            typeof(ValueTuple<,,,>),
-            typeof(ValueTuple<,,,,>),
-            typeof(ValueTuple<,,,,,>),
-            typeof(ValueTuple<,,,,,,>),
-            typeof(ValueTuple<,,,,,,,>)
-        });
-
-        private readonly Dictionary<int, MethodInfo> _createMethodsByArgsCount = typeof(ValueTuple)
-            .GetMethods(BindingFlags.Static
-                      | BindingFlags.Public
-                      | BindingFlags.InvokeMethod)
-            .ToDictionary(m => m.GetParameters().Length, m => m);
-
-        private const int _argsMaxCount = 8;
-
+    {   
         public override bool CanRead => true;
 
         public override bool CanWrite => true;
 
-        private void SubstituteNullableType(ref Type objectType)
-        {
-            if (objectType.IsGenericType
-                && objectType.GetGenericTypeDefinition() == typeof(Nullable<>))
-                objectType = objectType.GetGenericArguments()[0];
-        }
-
-        public override bool CanConvert(Type objectType)
-        {
-            SubstituteNullableType(ref objectType);
-
-            return objectType.IsValueType
-                && objectType.GetTypeInfo().IsGenericType
-                && ValueTupleTypes.Contains(objectType.GetGenericTypeDefinition());
-        }
+        public override bool CanConvert(Type objectType) => ValueTupleReflectionHelper.IsValueTupleOrNullableType(objectType, out var _, out var _);
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
-            SubstituteNullableType(ref objectType);
+            ValueTupleReflectionHelper.IsNullableType(objectType, out objectType);
 
             if (objectType == typeof(ValueTuple))
                 return ValueTuple.Create();
@@ -68,31 +34,30 @@ namespace DataGeneration.Common
                 case JArray jArray:
                 {
                     tokens = jArray.Values().ToArray();
-                    if (tokens.Length > _argsMaxCount)
-                        throw new NotSupportedException($"Now only {_argsMaxCount} count for value tuple supported.");
                     break;
                 }
                 case JObject jObject:
                 {
                     tokens = jObject.PropertyValues().ToArray();
-                    if (tokens.Length > _argsMaxCount)
-                        throw new NotSupportedException($"Now only {_argsMaxCount} count for value tuple supported.");
-                    break;
+                     break;
                 }
                 default:
                     throw new NotSupportedException();
             }
 
+            if (tokens.Length > ValueTupleReflectionHelper.MaxGenericArgsCount)
+                throw new NotSupportedException($"Currently only {ValueTupleReflectionHelper.MaxGenericArgsCount} count for value tuple supported.");
             var genArgs = objectType.GetGenericArguments();
+            if (tokens.Length > genArgs.Length)
+                throw new InvalidOperationException("Input argument count must not be greater that generic arguments count.");
 
-            var method = _createMethodsByArgsCount[tokens.Length]
-                .MakeGenericMethod(genArgs);
-            var values = new object[tokens.Length];
-            for (var i = 0; i < genArgs.Length; i++)
+            var method = ValueTupleReflectionHelper.GetCreateValueTupleStaticMethod(genArgs);
+            var values = new object[genArgs.Length];
+            for (var i = 0; i < tokens.Length; i++)
             {
                 values[i] = tokens[i].ToObject(genArgs[i], serializer);
             }
-
+            
             return method.Invoke(null, values);
         }
 
@@ -104,12 +69,7 @@ namespace DataGeneration.Common
                 return;
             }
 
-            var values = value
-                .GetType()
-                .GetFields()
-                .Where(f => f.Name.StartsWith("item", StringComparison.OrdinalIgnoreCase))
-                .Select(f => f.GetValue(value))
-                .ToArray();
+            var values = ValueTupleReflectionHelper.GetValues(value);
 
             serializer.Serialize(writer, values);
         }

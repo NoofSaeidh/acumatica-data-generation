@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace DataGeneration.Common
 {
-    public class DataGenerator<T> : IDataGenerator<T> where T : Soap.Entity
+    public class DataGenerator<T> : IDataGenerator<T> where T : class
     {
         public DataGenerator(Faker<T> faker)
         {
