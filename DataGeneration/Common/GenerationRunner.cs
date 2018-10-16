@@ -1,4 +1,5 @@
-﻿using NLog;
+﻿using DataGeneration.Entities;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -175,5 +176,7 @@ namespace DataGeneration.Common
             GenerationSettings.Count = count;
             Logger.Info("Count changed to {count}; Reason :{message}; caller: {callerinfo}", count, message, $"{memberName} at {sourceFilePath}:{sourceLineNumber}");
         }
+
+        protected EntitySearcher GetEntitySearcher() => new EntitySearcher(GetLoginLogoutClient);
     }
 }

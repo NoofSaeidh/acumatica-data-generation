@@ -19,17 +19,9 @@ namespace DataGeneration.Entities.Emails
 
         protected override async VoidTask RunBeforeGeneration(CancellationToken cancellationToken = default)
         {
-            using (var client = await GetLoginLogoutClient(cancellationToken))
-            {
-                var entities = await client.GetListAsync(new Case
-                {
-                    ReturnBehavior = ReturnBehavior.OnlySpecified,
-                    NoteID = new GuidReturn(),
-                    CaseID = new StringReturn()
-                });
-                GenerationSettings.RandomizerSettings.LinkEntities = new ConcurrentQueue<Entity>(entities);
-                ChangeGenerationCount(GenerationSettings.RandomizerSettings.LinkEntities.Count, "to be equal count of linked entities");
-            }
+            GenerationSettings.RandomizerSettings.LinkEntities = new ConcurrentQueue<Entity>(s);
+            ChangeGenerationCount(GenerationSettings.RandomizerSettings.LinkEntities.Count, "to be equal count of linked entities");
+
         }
 
         protected override async VoidTask GenerateSingle(IApiClient client, LinkEmails entity, CancellationToken cancellationToken)

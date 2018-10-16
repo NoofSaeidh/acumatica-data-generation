@@ -75,7 +75,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common\AcumaticaTimeHelper.cs" />
+    <Compile Include="Common\Adjuster.cs" />
     <Compile Include="Common\ApiConnectionConfig.cs" />
+    <Compile Include="Entities\EntitySearcher.cs" />
     <Compile Include="Common\ProbabilityCollectionSerializationHelpers.cs" />
     <Compile Include="Common\ValueTupleExtensions.cs" />
     <Compile Include="Common\ValueTupleReflectionHelper.cs" />
