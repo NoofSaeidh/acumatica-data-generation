@@ -19,7 +19,7 @@ namespace DataGeneration.Entities.Emails
 
         protected override async VoidTask RunBeforeGeneration(CancellationToken cancellationToken = default)
         {
-            GenerationSettings.RandomizerSettings.LinkEntities = new ConcurrentQueue<Entity>(s);
+            GenerationSettings.RandomizerSettings.LinkEntities = new ConcurrentQueue<Entity>(await GetEntities(GenerationSettings.Searchment, cancellationToken));
             ChangeGenerationCount(GenerationSettings.RandomizerSettings.LinkEntities.Count, "to be equal count of linked entities");
 
         }

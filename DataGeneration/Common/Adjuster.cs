@@ -21,22 +21,22 @@ namespace DataGeneration.Common
             return this;
         }
 
-        public Adjuster<T> AdjustIf(bool condition, Action<T> adjustment, Action<T> elseAdjustment = null)
+        public Adjuster<T> AdjustIf(bool condition, Action<Adjuster<T>> adjustment, Action<Adjuster<T>> elseAdjustment = null)
         {
             if (adjustment == null) throw new ArgumentNullException(nameof(adjustment));
 
-            if (condition) adjustment(Value);
-            else elseAdjustment?.Invoke(Value);
+            if (condition) adjustment(this);
+            else elseAdjustment?.Invoke(this);
             return this;
         }
 
-        public Adjuster<T> AdjustIf(Func<T, bool> predicate, Action<T> adjustment, Action<T> elseAdjustment = null)
+        public Adjuster<T> AdjustIf(Func<T, bool> predicate, Action<Adjuster<T>> adjustment, Action<Adjuster<T>> elseAdjustment = null)
         {
             if (adjustment == null) throw new ArgumentNullException(nameof(adjustment));
             if (predicate == null) throw new ArgumentNullException(nameof(predicate));
 
-            if (predicate(Value)) adjustment(Value);
-            else elseAdjustment?.Invoke(Value);
+            if (predicate(Value)) adjustment(this);
+            else elseAdjustment?.Invoke(this);
             return this;
         }
 
@@ -85,7 +85,7 @@ namespace DataGeneration.Common
 
             foreach (var item in Value)
             {
-                adjustment(item.Adjust());
+                adjustment(item.GetAdjuster());
             }
 
             return this;
@@ -121,7 +121,7 @@ namespace DataGeneration.Common
 
     public static class AdjustmentExtensions
     {
-        public static Adjuster<T> Adjust<T>(this T value) where T : class => new Adjuster<T>(value);
-        public static EnumerableAdjuster<T> Adjust<T>(this IEnumerable<T> value) where T : class => new EnumerableAdjuster<T>(value);
+        public static Adjuster<T> GetAdjuster<T>(this T value) where T : class => new Adjuster<T>(value);
+        public static EnumerableAdjuster<T> GetAdjuster<T>(this IEnumerable<T> value) where T : class => new EnumerableAdjuster<T>(value);
     }
 }

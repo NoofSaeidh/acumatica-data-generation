@@ -8,7 +8,7 @@ namespace DataGeneration.Soap
 {
     public interface INoteIdEntity
     {
-        GuidValue NoteID { get; }
+        GuidValue NoteID { get; set; }
     }
 
     public interface IEmailEntity
@@ -16,27 +16,27 @@ namespace DataGeneration.Soap
         StringValue Email { get; }
     }
 
-    public interface ISearchByDateEntity
+    public interface ICreatedDateEntity
     {
         DateTimeValue Date { get; set; }
     }
 
     #region Entities implementation
-    public partial class Opportunity : INoteIdEntity, IEmailEntity, ISearchByDateEntity
+    public partial class Opportunity : INoteIdEntity, IEmailEntity, ICreatedDateEntity
     {
         StringValue IEmailEntity.Email => ContactInformation?.Email;
-        DateTimeValue ISearchByDateEntity.Date { get => CreatedAt; set => CreatedAt = value;  }
+        DateTimeValue ICreatedDateEntity.Date { get => CreatedAt; set => CreatedAt = value;  }
     }
-    public partial class Case : INoteIdEntity, IEmailEntity, ISearchByDateEntity
+    public partial class Case : INoteIdEntity, IEmailEntity, ICreatedDateEntity
     {
         // todo: need to map
         StringValue IEmailEntity.Email => "some@email.com"; // throw new NotImplementedException();
 
-        DateTimeValue ISearchByDateEntity.Date { get => CreatedAt; set => CreatedAt = value; }
+        DateTimeValue ICreatedDateEntity.Date { get => CreatedAt; set => CreatedAt = value; }
     }
-    public partial class Lead : INoteIdEntity, IEmailEntity, ISearchByDateEntity
+    public partial class Lead : INoteIdEntity, IEmailEntity, ICreatedDateEntity
     {
-        DateTimeValue ISearchByDateEntity.Date { get; set; } // CreatedAt
+        DateTimeValue ICreatedDateEntity.Date { get; set; } // CreatedAt
     }
     #endregion
 }

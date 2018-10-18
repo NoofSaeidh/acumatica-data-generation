@@ -12,22 +12,17 @@ namespace DataGeneration.Entities
     // lazy sorting and filtering
     public class EntitySearcher
     {
-        private readonly Func<Task<ILoginLogoutApiClient>> _clientFactory;
+        private readonly Func<Entity, CancellationToken, Task<IEnumerable<Entity>>> _getListFactory;
         private readonly List<Action<Adjuster<Entity>>> _inputAdjustment;
         private readonly List<Action<EnumerableAdjuster<Entity>>> _outputAdjustment;
-        private Func<Entity> _entityFactory;
+        private readonly Func<Entity> _entityFactory;
 
-        public EntitySearcher(Func<Task<ILoginLogoutApiClient>> clientFactory)
+        public EntitySearcher(Func<Entity, CancellationToken, Task<IEnumerable<Entity>>> getListFactory, Func<Entity> entityFactory)
         {
-            _clientFactory = clientFactory ?? throw new ArgumentNullException(nameof(clientFactory));
+            _getListFactory = getListFactory ?? throw new ArgumentNullException(nameof(getListFactory));
+            _entityFactory = entityFactory ?? throw new ArgumentNullException(nameof(entityFactory));
             _inputAdjustment = new List<Action<Adjuster<Entity>>>();
             _outputAdjustment = new List<Action<EnumerableAdjuster<Entity>>>();
-        }
-
-        public EntitySearcher EntityFactory(Func<Entity> factory)
-        {
-            _entityFactory = factory ?? throw new ArgumentNullException(nameof(factory));
-            return this;
         }
 
         public EntitySearcher AdjustInput(Action<Adjuster<Entity>> adjustment)
@@ -46,19 +41,12 @@ namespace DataGeneration.Entities
 
         public async Task<IList<Entity>> Execute(CancellationToken ct = default)
         {
-            if (_entityFactory == null)
-                throw new InvalidOperationException("Entity factory must not be null. Call EntityFactory method before Execute.");
-
-            var adjEntity = _entityFactory().Adjust();
+            var adjEntity = _entityFactory().GetAdjuster();
             _inputAdjustment.ForEach(action => action(adjEntity));
-            IEnumerable<Entity> result;
-            using (var client = await _clientFactory())
-            {
-                result = await client.GetListAsync(adjEntity.Value, ct);
-            }
+            IEnumerable<Entity> result = await _getListFactory(adjEntity.Value, ct);
             _outputAdjustment.ForEach(action =>
             {
-                var adj = result.Adjust();
+                var adj = result.GetAdjuster();
                 action(adj);
                 result = adj.Value;
             });

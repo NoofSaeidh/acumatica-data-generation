@@ -177,6 +177,32 @@ namespace DataGeneration.Common
             Logger.Info("Count changed to {count}; Reason :{message}; caller: {callerinfo}", count, message, $"{memberName} at {sourceFilePath}:{sourceLineNumber}");
         }
 
-        protected EntitySearcher GetEntitySearcher() => new EntitySearcher(GetLoginLogoutClient);
+        protected EntitySearcher GetEntitySearcher(Func<Soap.Entity> factory)
+        {
+            return new EntitySearcher(async (entity, ct) =>
+            {
+                using (var client = await GetLoginLogoutClient(ct))
+                {
+                    return await client.GetListAsync(entity, ct);
+                }
+            }, factory);
+        }
+
+        protected EntitySearcher GetEntitySearcher(string entityType) => GetEntitySearcher(() => EntityHelper.InitializeFromType(entityType));
+
+        protected async Task<IList<Soap.Entity>> GetEntities(Searchment searchment, CancellationToken ct)
+        {
+            if (searchment == null)
+                throw new ArgumentNullException(nameof(searchment));
+
+            return await GetEntitySearcher(searchment.EntityType)
+                .AdjustInput(a =>
+                    a.Adjust(e => e.ReturnBehavior = Soap.ReturnBehavior.OnlySpecified)
+                     .AdjustIfIs<Soap.INoteIdEntity>(e => e.NoteID = new Soap.GuidReturn())
+                     .AdjustIf(!(searchment.CreatedDate is null),
+                        e => e.AdjustIfIsOrThrow<Soap.ICreatedDateEntity>(ee => ee.Date = searchment.CreatedDate)
+                     )
+                ).Execute(ct);
+        }
     }
 }

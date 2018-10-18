@@ -59,6 +59,11 @@ namespace DataGeneration.Common
         IRandomizerSettings<T> RandomizerSettings { get; }
     }
 
+    public interface ISearchGenerationSettings : IGenerationSettings
+    {
+        Searchment Searchment { get; }
+    }
+
     public interface IValidatable
     {
         void Validate();

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace DataGeneration.Entities.Emails
 {
-    public class LinkEmailsGenerationSettings : GenerationSettings<LinkEmails, LinkEmailsRandomizerSettings>
+    public class LinkEmailsGenerationSettings : GenerationSettings<LinkEmails, LinkEmailsRandomizerSettings>, ISearchGenerationSettings
     {
         public override GenerationRunner GetGenerationRunner(ApiConnectionConfig apiConnectionConfig) => new LinkEmailsGenerationRunner(apiConnectionConfig, this);
 
@@ -17,6 +17,8 @@ namespace DataGeneration.Entities.Emails
         public string PxTypeForLinkedEntity { get; set; }
         [Required]
         public string EntityTypeForLinkedEntity { get; set; }
+
+        public Searchment Searchment { get; set; }
     }
 
 
