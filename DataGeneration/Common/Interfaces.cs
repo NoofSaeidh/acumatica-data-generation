@@ -1,6 +1,7 @@
 ﻿using DataGeneration.Soap;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Threading;
 using System.Threading.Tasks;
 using VoidTask = System.Threading.Tasks.Task;
@@ -59,9 +60,9 @@ namespace DataGeneration.Common
         IRandomizerSettings<T> RandomizerSettings { get; }
     }
 
-    public interface ISearchGenerationSettings : IGenerationSettings
+    public interface IEntitiesSearchGenerationSettings : IGenerationSettings
     {
-        Searchment Searchment { get; }
+        SearchPattern SearchPattern { get; set; }
     }
 
     public interface IValidatable

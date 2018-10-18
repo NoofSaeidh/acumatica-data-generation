@@ -11,17 +11,15 @@ using VoidTask = System.Threading.Tasks.Task;
 
 namespace DataGeneration.Entities.Emails
 {
-    public class LinkEmailsGenerationRunner : GenerationRunner<LinkEmails, LinkEmailsGenerationSettings>
+    public class LinkEmailsGenerationRunner : EntitiesSearchGenerationRunner<LinkEmails, LinkEmailsGenerationSettings>
     {
         public LinkEmailsGenerationRunner(ApiConnectionConfig apiConnectionConfig, LinkEmailsGenerationSettings generationSettings) : base(apiConnectionConfig, generationSettings)
         {
         }
 
-        protected override async VoidTask RunBeforeGeneration(CancellationToken cancellationToken = default)
+        protected override void UtilizeFoundEntities(IList<Entity> entities)
         {
-            GenerationSettings.RandomizerSettings.LinkEntities = new ConcurrentQueue<Entity>(await GetEntities(GenerationSettings.Searchment, cancellationToken));
-            ChangeGenerationCount(GenerationSettings.RandomizerSettings.LinkEntities.Count, "to be equal count of linked entities");
-
+            GenerationSettings.RandomizerSettings.LinkEntities = new ConcurrentQueue<Entity>(entities);
         }
 
         protected override async VoidTask GenerateSingle(IApiClient client, LinkEmails entity, CancellationToken cancellationToken)
@@ -45,5 +43,4 @@ namespace DataGeneration.Entities.Emails
             }
         }
     }
-
 }

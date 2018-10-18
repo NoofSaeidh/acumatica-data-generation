@@ -1,13 +1,8 @@
 ﻿using DataGeneration.Soap;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DataGeneration.Common
 {
-    public class Searchment
+    public class SearchPattern
     {
         public string EntityType { get; set; }
 

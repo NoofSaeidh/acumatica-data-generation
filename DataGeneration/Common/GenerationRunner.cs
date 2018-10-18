@@ -2,6 +2,7 @@
 using NLog;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -41,13 +42,17 @@ namespace DataGeneration.Common
         protected static ILogger Logger => LogManager.GetLogger(LogManager.LoggerNames.GenerationRunner);
         protected Bogus.Randomizer Randomizer => _randomizer ?? (_randomizer = new Bogus.Randomizer(GenerationSettings.RandomizerSettings.Seed));
 
+        protected virtual void ValidateGenerationSettings()
+        {
+            GenerationSettings.Validate();
+        }
+
         // please do not override this (it contains loggers, try catches and stopwatch)
         // instead override RunGenerationSequentRaw (for single thread)
         // or RunBeforeGeneration (for all threads before entiry generation)
         public override async Task RunGeneration(CancellationToken cancellationToken = default)
         {
-            GenerationSettings.Validate();
-
+            ValidateGenerationSettings();
             Logger.Info("Generation {type} started. Count: {count}. Settings: {@settings}",
                 GenerationSettings.GenerationEntity, GenerationSettings.Count, GenerationSettings);
             var stopwatch = new Stopwatch();
@@ -174,7 +179,7 @@ namespace DataGeneration.Common
             [CallerLineNumber] int sourceLineNumber = 0)
         {
             GenerationSettings.Count = count;
-            Logger.Info("Count changed to {count}; Reason :{message}; caller: {callerinfo}", count, message, $"{memberName} at {sourceFilePath}:{sourceLineNumber}");
+            Logger.Info("Count changed to {count}; Reason: {message}; caller: {callerinfo}", count, message, $"{memberName} at {sourceFilePath}:{sourceLineNumber}");
         }
 
         protected EntitySearcher GetEntitySearcher(Func<Soap.Entity> factory)
@@ -190,19 +195,58 @@ namespace DataGeneration.Common
 
         protected EntitySearcher GetEntitySearcher(string entityType) => GetEntitySearcher(() => EntityHelper.InitializeFromType(entityType));
 
-        protected async Task<IList<Soap.Entity>> GetEntities(Searchment searchment, CancellationToken ct)
+        protected Task<IList<Soap.Entity>> GetEntities(SearchPattern searchment, CancellationToken ct)
         {
-            if (searchment == null)
-                throw new ArgumentNullException(nameof(searchment));
+            return GetEntities(searchment, null, ct);
+        }
 
-            return await GetEntitySearcher(searchment.EntityType)
+        protected async Task<IList<Soap.Entity>> GetEntities(SearchPattern searchPattern, Action<EntitySearcher> searcherAdjustment,  CancellationToken ct)
+        {
+            if (searchPattern == null)
+                throw new ArgumentNullException(nameof(searchPattern));
+
+            var searcher = GetEntitySearcher(searchPattern.EntityType)
                 .AdjustInput(a =>
                     a.Adjust(e => e.ReturnBehavior = Soap.ReturnBehavior.OnlySpecified)
                      .AdjustIfIs<Soap.INoteIdEntity>(e => e.NoteID = new Soap.GuidReturn())
-                     .AdjustIf(!(searchment.CreatedDate is null),
-                        e => e.AdjustIfIsOrThrow<Soap.ICreatedDateEntity>(ee => ee.Date = searchment.CreatedDate)
+                     .AdjustIf(!(searchPattern.CreatedDate is null),
+                        e => e.AdjustIfIsOrThrow<Soap.ICreatedDateEntity>(ee => ee.Date = searchPattern.CreatedDate)
                      )
-                ).Execute(ct);
+                );
+
+            searcherAdjustment?.Invoke(searcher);
+            
+            return await searcher.Execute(ct);
+        }
+    }
+
+    // provides search in RunBeforeGeneration
+    // and changes count
+    public abstract class EntitiesSearchGenerationRunner<TEntity, TGenerationSettings> : GenerationRunner<TEntity, TGenerationSettings>
+        where TEntity : class
+        where TGenerationSettings : class, IGenerationSettings<TEntity>, IEntitiesSearchGenerationSettings
+    {
+        protected EntitiesSearchGenerationRunner(ApiConnectionConfig apiConnectionConfig, TGenerationSettings generationSettings) : base(apiConnectionConfig, generationSettings)
+        {
+        }
+
+        protected abstract void UtilizeFoundEntities(IList<Soap.Entity> entities);
+        protected virtual void AdjustEntitySearcher(EntitySearcher searcherAdjustment) { }
+
+        protected override async Task RunBeforeGeneration(CancellationToken cancellationToken = default)
+        {
+            await base.RunBeforeGeneration(cancellationToken);
+
+            var entities = await GetEntities(GenerationSettings.SearchPattern, AdjustEntitySearcher, cancellationToken);
+            ChangeGenerationCount(entities.Count, "Count changed due to search completed.");
+            UtilizeFoundEntities(entities);
+        }
+
+        protected override void ValidateGenerationSettings()
+        {
+            base.ValidateGenerationSettings();
+            if (GenerationSettings.SearchPattern is null)
+                throw new ValidationException($"Property {nameof(SearchPattern)} of {nameof(GenerationSettings)} must be not null in order to search entities in {nameof(RunBeforeGeneration)}");
         }
     }
 }

@@ -13,7 +13,7 @@ namespace DataGeneration.Soap
 
     public interface IEmailEntity
     {
-        StringValue Email { get; }
+        StringValue Email { get; set; }
     }
 
     public interface ICreatedDateEntity
@@ -24,13 +24,30 @@ namespace DataGeneration.Soap
     #region Entities implementation
     public partial class Opportunity : INoteIdEntity, IEmailEntity, ICreatedDateEntity
     {
-        StringValue IEmailEntity.Email => ContactInformation?.Email;
+        StringValue IEmailEntity.Email
+        {
+            get => ContactInformation?.Email;
+            set
+            {
+                if (ContactInformation != null)
+                    ContactInformation.Email = value;
+                else
+                {
+                    ContactInformation = new OpportunityContact
+                    {
+                        ReturnBehavior = ReturnBehavior.OnlySpecified,
+                        Email = value
+                    };
+                }
+            }
+        }
+
         DateTimeValue ICreatedDateEntity.Date { get => CreatedAt; set => CreatedAt = value;  }
     }
     public partial class Case : INoteIdEntity, IEmailEntity, ICreatedDateEntity
     {
         // todo: need to map
-        StringValue IEmailEntity.Email => "some@email.com"; // throw new NotImplementedException();
+        StringValue IEmailEntity.Email { get; set; }
 
         DateTimeValue ICreatedDateEntity.Date { get => CreatedAt; set => CreatedAt = value; }
     }

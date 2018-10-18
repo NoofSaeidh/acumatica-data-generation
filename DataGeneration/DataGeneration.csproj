@@ -77,7 +77,7 @@
     <Compile Include="Common\AcumaticaTimeHelper.cs" />
     <Compile Include="Common\Adjuster.cs" />
     <Compile Include="Common\ApiConnectionConfig.cs" />
-    <Compile Include="Common\Searchment.cs" />
+    <Compile Include="Common\SearchPattern.cs" />
     <Compile Include="Entities\EntitySearcher.cs" />
     <Compile Include="Common\ProbabilityCollectionSerializationHelpers.cs" />
     <Compile Include="Common\ValueTupleExtensions.cs" />
