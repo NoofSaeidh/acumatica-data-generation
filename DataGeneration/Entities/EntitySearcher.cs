@@ -39,18 +39,14 @@ namespace DataGeneration.Entities
             return this;
         }
 
-        public async Task<IList<Entity>> Execute(CancellationToken ct = default)
+        public async Task<IList<Entity>> ExecuteSearch(CancellationToken ct = default)
         {
             var adjEntity = _entityFactory().GetAdjuster();
             _inputAdjustment.ForEach(action => action(adjEntity));
             IEnumerable<Entity> result = await _getListFactory(adjEntity.Value, ct);
-            _outputAdjustment.ForEach(action =>
-            {
-                var adj = result.GetAdjuster();
-                action(adj);
-                result = adj.Value;
-            });
-            return result.ToArray();
+            var adjResult = result.GetAdjuster();
+            _outputAdjustment.ForEach(action => action(adjResult));
+            return adjResult.Value.ToArray();
         }
     }
 }

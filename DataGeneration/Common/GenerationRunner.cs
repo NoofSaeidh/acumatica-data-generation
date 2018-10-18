@@ -216,7 +216,7 @@ namespace DataGeneration.Common
 
             searcherAdjustment?.Invoke(searcher);
             
-            return await searcher.Execute(ct);
+            return await searcher.ExecuteSearch(ct);
         }
     }
 
