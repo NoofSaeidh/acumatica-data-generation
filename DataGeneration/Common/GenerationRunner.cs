@@ -182,15 +182,17 @@ namespace DataGeneration.Common
             Logger.Info("Count changed to {count}; Reason: {message}; caller: {callerinfo}", count, message, $"{memberName} at {sourceFilePath}:{sourceLineNumber}");
         }
 
+        private async Task<IEnumerable<Soap.Entity>> GetListFactory(Soap.Entity entity, CancellationToken ct)
+        {
+            using (var client = await GetLoginLogoutClient(ct))
+            {
+                return await client.GetListAsync(entity, ct);
+            }
+        }
+
         protected EntitySearcher GetEntitySearcher(Func<Soap.Entity> factory)
         {
-            return new EntitySearcher(async (entity, ct) =>
-            {
-                using (var client = await GetLoginLogoutClient(ct))
-                {
-                    return await client.GetListAsync(entity, ct);
-                }
-            }, factory);
+            return new EntitySearcher(GetListFactory, factory);
         }
 
         protected EntitySearcher GetEntitySearcher(string entityType) => GetEntitySearcher(() => EntityHelper.InitializeFromType(entityType));
@@ -218,6 +220,8 @@ namespace DataGeneration.Common
             
             return await searcher.ExecuteSearch(ct);
         }
+
+        protected ComplexQueryExecutor GetComplexQueryExecutor() => new ComplexQueryExecutor(GetListFactory);
     }
 
     // provides search in RunBeforeGeneration
@@ -231,14 +235,26 @@ namespace DataGeneration.Common
         }
 
         protected abstract void UtilizeFoundEntities(IList<Soap.Entity> entities);
-        protected virtual void AdjustEntitySearcher(EntitySearcher searcherAdjustment) { }
+        protected virtual void AdjustEntitySearcher(EntitySearcher searcher) { }
+
+        private void AdjustEntitySearcherInner(EntitySearcher searcher)
+        {
+            searcher.AdjustInput(adj => adj.AdjustIfIs<Soap.IComplexQueryEntity>(e => e.AdjustReturnBehavior()));
+
+            AdjustEntitySearcher(searcher);
+        }
 
         protected override async Task RunBeforeGeneration(CancellationToken cancellationToken = default)
         {
             await base.RunBeforeGeneration(cancellationToken);
 
-            var entities = await GetEntities(GenerationSettings.SearchPattern, AdjustEntitySearcher, cancellationToken);
+            var entities = await GetEntities(GenerationSettings.SearchPattern, AdjustEntitySearcherInner, cancellationToken);
             ChangeGenerationCount(entities.Count, "Count changed due to search completed.");
+            var complexEntities = entities.OfType<Soap.IComplexQueryEntity>();
+            if (complexEntities.Any())
+            {
+                await GetComplexQueryExecutor().Execute(complexEntities, cancellationToken);
+            }
             UtilizeFoundEntities(entities);
         }
 
