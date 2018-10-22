@@ -69,10 +69,6 @@ namespace DataGeneration
                 {
                     ConsoleExecutor.WriteInfo("Operation was canceled.", ConsoleColor.Red, oce);
                 }
-                catch (Exception e)
-                {
-                    ConsoleExecutor.WriteInfo("Unhandled exception has occurred.", ConsoleColor.DarkRed, e);
-                }
             }
         }
     }
