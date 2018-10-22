@@ -44,7 +44,7 @@ namespace DataGeneration.Entities
             var adjEntity = _entityFactory().GetAdjuster();
             _inputAdjustment.ForEach(action => action(adjEntity));
             IEnumerable<Entity> result = await _getListFactory(adjEntity.Value, ct);
-            var adjResult = result.GetAdjuster();
+            var adjResult = result.GetEnumerableAdjuster();
             _outputAdjustment.ForEach(action => action(adjResult));
             return adjResult.Value.ToArray();
         }

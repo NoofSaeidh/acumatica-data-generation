@@ -19,6 +19,14 @@ namespace DataGeneration.Entities.Emails
 
         protected override void UtilizeFoundEntities(IList<Entity> entities)
         {
+            entities = entities
+                .GetEnumerableAdjuster()
+                .AdjustCast<IEmailEntity>(en => en.Where(e => e.Email != null))
+                .Value
+                .ToList();
+
+            ChangeGenerationCount(entities.Count, "To be equal to found entities count.");
+
             GenerationSettings.RandomizerSettings.LinkEntities = new ConcurrentQueue<Entity>(entities);
         }
 

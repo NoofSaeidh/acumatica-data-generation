@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Concurrent;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
 
 namespace DataGeneration.Entities.Emails
 {
@@ -58,6 +59,8 @@ namespace DataGeneration.Entities.Emails
                         e.Date = incomingEmail.Date.Value.Value.AddDays(1);
                         // todo: mail status
                         // e.MailStatus = 
+
+                        incomingEmail = null;
                     }
                 });
 
@@ -69,15 +72,18 @@ namespace DataGeneration.Entities.Emails
                     var count = f.Random.Int(min, max) * 2;
                     var emails = emailFaker.Generate(count);
 
-
                     if (!LinkEntities.TryTake(out var linkEntity))
                     {
+                        Debug.Assert(linkEntity != null, "linkEntity should not be null.");
                         return null;
                         // or throw exception?
                     }
 
-                    if(linkEntity is IEmailEntity emailEntity)
+                    Debug.Assert(linkEntity is IEmailEntity, "linkEntity is not IEmailEntity. Email will be null!");
+                    if (linkEntity is IEmailEntity emailEntity)
                     {
+                        Debug.Assert(emailEntity.Email != null, "Email should not be null!");
+
                         emails.ForEach(e =>
                         {
                             if ((bool)e.Incoming)
@@ -90,6 +96,7 @@ namespace DataGeneration.Entities.Emails
                             }
                         });
                     }
+
 
                     return new LinkEmails
                     {

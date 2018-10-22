@@ -100,7 +100,28 @@ namespace DataGeneration.Common
             return this;
         }
 
-        public EnumerableAdjuster<T> AdjustAllOfType<TType>(Func<IEnumerable<TType>, IEnumerable<TType>> adjustment)
+        public EnumerableAdjuster<T> AdjustIf(bool condition, Action<EnumerableAdjuster<T>> adjustment, Action<EnumerableAdjuster<T>> elseAdjustment = null)
+        {
+            if (adjustment == null) throw new ArgumentNullException(nameof(adjustment));
+
+            if (condition) adjustment(this);
+            else elseAdjustment?.Invoke(this);
+
+            return this;
+        }
+
+        public EnumerableAdjuster<T> AdjustIf(Func<IEnumerable<T>, bool> predicate, Action<EnumerableAdjuster<T>> adjustment, Action<EnumerableAdjuster<T>> elseAdjustment = null)
+        {
+            if (predicate == null) throw new ArgumentNullException(nameof(predicate));
+            if (adjustment == null) throw new ArgumentNullException(nameof(adjustment));
+
+            if (predicate(Value)) adjustment(this);
+            else elseAdjustment?.Invoke(this);
+
+            return this;
+        }
+
+        public EnumerableAdjuster<T> AdjustCast<TType>(Func<IEnumerable<TType>, IEnumerable<TType>> adjustment)
         {
             if (adjustment == null) throw new ArgumentNullException(nameof(adjustment));
 
@@ -113,6 +134,16 @@ namespace DataGeneration.Common
         {
             if (adjustment == null) throw new ArgumentNullException(nameof(adjustment));
 
+            Value = adjustment(Value.OfType<TType>()).Cast<T>();
+
+            return this;
+        }
+
+        // adjust only of type and union other
+        public EnumerableAdjuster<T> AdjustOfTypeAndUnion<TType>(Func<IEnumerable<TType>, IEnumerable<TType>> adjustment)
+        {
+            if (adjustment == null) throw new ArgumentNullException(nameof(adjustment));
+
             Value = adjustment(Value.OfType<TType>()).Cast<T>().Union(Value);
 
             return this;
@@ -122,6 +153,6 @@ namespace DataGeneration.Common
     public static class AdjustmentExtensions
     {
         public static Adjuster<T> GetAdjuster<T>(this T value) where T : class => new Adjuster<T>(value);
-        public static EnumerableAdjuster<T> GetAdjuster<T>(this IEnumerable<T> value) where T : class => new EnumerableAdjuster<T>(value);
+        public static EnumerableAdjuster<T> GetEnumerableAdjuster<T>(this IEnumerable<T> value) where T : class => new EnumerableAdjuster<T>(value);
     }
 }

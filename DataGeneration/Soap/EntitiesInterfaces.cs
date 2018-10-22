@@ -7,6 +7,14 @@ using System.Threading.Tasks;
 
 namespace DataGeneration.Soap
 {
+    public interface IAdjustReturnBehaviorEntity
+    {
+        // set all required fields to {value}Return to be able to use them 
+        // in other entities interfaces
+        void AdjustReturnBehavior();
+    }
+
+
     // marker that indicates that some properties can be obtained only via additional call
     // e.g.: email for case can be obtained only by obtaining email for linked contact
     public interface IComplexQueryEntity
@@ -17,8 +25,6 @@ namespace DataGeneration.Soap
         // specify entities to return
         void AdjustComplexQuery(ComplexQuery query);
         QueryRequestor QueryRequestor { get; }
-        // set all required fields to {value}Return to be able to use them in UtilizeComplexQueryResult
-        void AdjustReturnBehavior();
     }
 
     public interface INoteIdEntity
@@ -37,7 +43,7 @@ namespace DataGeneration.Soap
     }
 
     #region Entities implementation
-    public partial class Opportunity : INoteIdEntity, IEmailEntity, ICreatedDateEntity
+    public partial class Opportunity : INoteIdEntity, IEmailEntity, ICreatedDateEntity, IAdjustReturnBehaviorEntity
     {
         StringValue IEmailEntity.Email
         {
@@ -58,8 +64,23 @@ namespace DataGeneration.Soap
         }
 
         DateTimeValue ICreatedDateEntity.Date { get => CreatedAt; set => CreatedAt = value;  }
+
+        void IAdjustReturnBehaviorEntity.AdjustReturnBehavior()
+        {
+            if (ContactInformation == null)
+            {
+                ContactInformation = new OpportunityContact
+                {
+                    Email = new StringReturn(),
+                    ReturnBehavior = ReturnBehavior.OnlySpecified
+                };
+            }
+            else if (ContactInformation.Email is null)
+                ContactInformation.Email = new StringReturn();
+        }
     }
-    public partial class Case : INoteIdEntity, IEmailEntity, ICreatedDateEntity, IComplexQueryEntity
+
+    public partial class Case : INoteIdEntity, IEmailEntity, ICreatedDateEntity, IComplexQueryEntity, IAdjustReturnBehaviorEntity
     {
         // todo: need to map
         StringValue IEmailEntity.Email { get; set; }
@@ -79,11 +100,16 @@ namespace DataGeneration.Soap
         }
         void IComplexQueryEntity.UtilizeComplexQueryResult(ComplexQueryResult result)
         {
-            ((IEmailEntity)this).Email = result.OfType<Contact>().FirstOrDefault(c => c.ContactID == this.ContactID)?.Email;
+            ((IEmailEntity)this).Email =
+                result
+                .OfType<Contact>()
+                .FirstOrDefault(c => c.ContactID == this.ContactID)
+                ?.Email;
         }
-        void IComplexQueryEntity.AdjustReturnBehavior()
+        void IAdjustReturnBehaviorEntity.AdjustReturnBehavior()
         {
-            ContactID = new IntReturn();
+            if(ContactID is null)
+                ContactID = new IntReturn();
         }
         #endregion
     }
