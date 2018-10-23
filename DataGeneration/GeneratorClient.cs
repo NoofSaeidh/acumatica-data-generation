@@ -46,10 +46,15 @@ namespace DataGeneration
                 _logger.Fatal(ve, "Cannot start generation, Config is invalid");
                 throw;
             }
-            _logger.Info("Start generation all settings");
             var generatationResults = new List<GenerationResult>();
+            var settingsCollection = Config.GetInjectedGenerationSettingsCollection().ToList();
+            // count == 0 checked in Validate method
+            if (settingsCollection.Count == 1)
+                _logger.Info("Start generation all settings, Count = {count}", settingsCollection.Count);
+            else
+                _logger.Info("Start generation all settings, Count = {count}, {@settings}", settingsCollection.Count, settingsCollection);
             bool stopProcessing = false;
-            foreach (var settings in Config.GetInjectedGenerationSettingsCollection())
+            foreach (var settings in settingsCollection)
             {
                 GenerationResult result;
                 try

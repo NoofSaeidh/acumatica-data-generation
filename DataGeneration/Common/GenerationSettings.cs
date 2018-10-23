@@ -4,15 +4,19 @@ using Newtonsoft.Json;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
+using System.Threading;
 
 namespace DataGeneration.Common
 {
     public abstract class GenerationSettingsBase : IGenerationSettings
     {
+        private static int _id;
+
         public int Count { get; set; }
         public ExecutionTypeSettings ExecutionTypeSettings { get; set; }
         public abstract int? Seed { get; set; }
         public virtual string GenerationType { get; set; }
+        public virtual int Id { get; } = Interlocked.Increment(ref _id);
 
         public abstract GenerationRunner GetGenerationRunner(ApiConnectionConfig apiConnectionConfig);
     }

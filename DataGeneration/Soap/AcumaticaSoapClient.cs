@@ -397,12 +397,12 @@ namespace DataGeneration.Soap
 
         private IDisposable Log(string description, params object[] args)
         {
-            return StopwatchLoggerFactory.Log(_loggerName, description, args);
+            return StopwatchLoggerFactory.LogDispose(_loggerName, description, args);
         }
 
         private IDisposable Log<T>(string description, params object[] args)
         {
-            return StopwatchLoggerFactory.Log(_loggerName, description + ' ' + typeof(T).Name, args);
+            return StopwatchLoggerFactory.LogDispose(_loggerName, description + ' ' + typeof(T).Name, args);
         }
 
         private class LogoutClientImpl : AcumaticaSoapClient, ILoginLogoutApiClient, IDisposable

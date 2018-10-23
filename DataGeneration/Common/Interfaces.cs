@@ -49,6 +49,7 @@ namespace DataGeneration.Common
 
         // get, set seed for randomizer settings
         int? Seed { get; set; }
+        int Id { get; }
 
         ExecutionTypeSettings ExecutionTypeSettings { get; set; }
 

@@ -49,54 +49,64 @@ namespace DataGeneration.Common
 
         // please do not override this (it contains loggers, try catches and stopwatch)
         // instead override RunGenerationSequentRaw (for single thread)
-        // or RunBeforeGeneration (for all threads before entiry generation)
+        // or RunBeforeGeneration (for all threads before entire generation)
         public override async Task RunGeneration(CancellationToken cancellationToken = default)
         {
             ValidateGenerationSettings();
-            Logger.Info("Generation {type} started. Count: {count}. Settings: {@settings}",
-                GenerationSettings.GenerationType, GenerationSettings.Count, GenerationSettings);
-            var stopwatch = new Stopwatch();
+            Logger.Info("Generation with following settings is going to start {@settings}", GenerationSettings);
 
             try
             {
-                stopwatch.Start();
-                using (StopwatchLoggerFactory.Log(LogManager.LoggerNames.GenerationRunner, "Before Generation"))
+                // log only if it takes some time
+                using (StopwatchLoggerFactory.ForceLogDisposeTimeCheck(Logger, TimeSpan.FromSeconds(10),
+                    "Before Generation completed. " + LogArgs.Type_Id, 
+                    GenerationSettings.GenerationType, GenerationSettings.Id))
                 {
                     await RunBeforeGeneration(cancellationToken);
                 }
+
                 if (GenerationSettings.Count == 0)
                 {
-                    Logger.Warn("Generation {type} was not started. No entities could be generated. Count: 0", GenerationSettings.GenerationType);
+                    Logger.Warn("Generation was not started. No entities could be generated. " + LogArgs.Type_Id_Count, 
+                        GenerationSettings.GenerationType, GenerationSettings.Id, GenerationSettings.Count);
                     return;
                 }
-                switch (GenerationSettings.ExecutionTypeSettings.ExecutionType)
+
+                using (StopwatchLoggerFactory.ForceLogStartDispose(Logger,
+                    "Generation started. " + LogArgs.Type_Id_Count,
+                    "Generation completed. " + LogArgs.Type_Id_Count,
+                    GenerationSettings.GenerationType, GenerationSettings.Id, GenerationSettings.Count))
                 {
-                    case ExecutionType.Sequent:
-                        await RunGenerationSequent(GenerationSettings.Count, cancellationToken);
-                        break;
+                    switch (GenerationSettings.ExecutionTypeSettings.ExecutionType)
+                    {
+                        case ExecutionType.Sequent:
+                            await RunGenerationSequent(GenerationSettings.Count, cancellationToken);
+                            break;
 
-                    case ExecutionType.Parallel:
-                        await RunGenerationParallel(cancellationToken);
-                        break;
+                        case ExecutionType.Parallel:
+                            await RunGenerationParallel(cancellationToken);
+                            break;
 
-                    default:
-                        break;
+                        default:
+                            break;
+                    }
                 }
-                stopwatch.Stop();
             }
             catch (OperationCanceledException oce)
             {
-                Logger.Error(oce, "Generation was canceled");
+                Logger.Error(oce, "Generation was canceled. " + LogArgs.Type_Id,
+                    GenerationSettings.GenerationType, GenerationSettings.Id);
                 throw;
             }
             catch (Exception e)
             {
-                Logger.Error(e, "Generation failed");
+                Logger.Error(e, "Generation failed. " + LogArgs.Type_Id,
+                    GenerationSettings.GenerationType, GenerationSettings.Id);
                 throw GenerationException.NewFromEntityType<TEntity>(e);
             }
 
-            Logger.Info("Generation {type} completed. Count: {count}. Time elapsed: {time}",
-                GenerationSettings.GenerationType, GenerationSettings.Count, stopwatch.Elapsed);
+            Logger.Info("Generation completed successfully. " + LogArgs.Type_Id,
+                    GenerationSettings.GenerationType, GenerationSettings.Id);
         }
 
         protected virtual Task RunBeforeGeneration(CancellationToken cancellationToken = default)
@@ -114,7 +124,10 @@ namespace DataGeneration.Common
             var countPerThread = GenerationSettings.Count / threads;
             var remainUnits = GenerationSettings.Count % threads;
 
-            using (StopwatchLoggerFactory.Log(LogManager.LoggerNames.GenerationRunner, "Generation Parallel. {count}, {threads}", GenerationSettings.Count, threads))
+            using (StopwatchLoggerFactory.ForceLogStartDispose(Logger, LogLevel.Debug,
+                "Generation Parallel started. " + LogArgs.Type_Id_Count_Threads,
+                "Generation Parallel completed. " + LogArgs.Type_Id_Count_Threads,
+                GenerationSettings.GenerationType, GenerationSettings.Id, GenerationSettings.Count, threads))
             {
                 for (int i = 0, rem = 1; i < threads; i++)
                 {
@@ -131,7 +144,10 @@ namespace DataGeneration.Common
 
         protected async Task RunGenerationSequent(int count, CancellationToken cancellationToken)
         {
-            using (StopwatchLoggerFactory.Log(LogManager.LoggerNames.GenerationRunner, "Generation Sequent. {count}", count))
+            using (StopwatchLoggerFactory.ForceLogStartDispose(Logger, LogLevel.Debug,
+                "Generation Sequent started. " + LogArgs.Type_Id_Count,
+                "Generation Sequent completed. " + LogArgs.Type_Id_Count,
+                GenerationSettings.GenerationType, GenerationSettings.Id, GenerationSettings.Count))
             {
                 var entities = GenerateRandomizedList(count);
 
@@ -221,6 +237,16 @@ namespace DataGeneration.Common
         }
 
         protected ComplexQueryExecutor GetComplexQueryExecutor() => new ComplexQueryExecutor(GetListFactory);
+
+
+        private static class LogArgs
+        {
+            public const string Type_Id = "Type = {type}, Id = {id}";
+            public const string Type_Id_Count = Type_Id + ", Count = {count}";
+            public const string Type_Id_Count_Threads = Type_Id_Count + ", Threads = {threads}";
+        }
+
+
     }
 
     // provides search in RunBeforeGeneration
