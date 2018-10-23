@@ -11,13 +11,10 @@ using System.Threading.Tasks;
 namespace DataGeneration.Entities.Events
 {
     public class LinkEventsGenerationSettings : 
-        GenerationSettings<OneToManyRelation<Entity, Event>, LinkEventsRandomizerSettings>,
+        GenerationSettings<OneToManyRelation<LinkEntityToEvent, Event>, LinkEventsRandomizerSettings>,
         IEntitiesSearchGenerationSettings
     {
         public override GenerationRunner GetGenerationRunner(ApiConnectionConfig apiConnectionConfig) => new LinkEventsGenerationRunner(apiConnectionConfig, this);
-
-        [Required]
-        public string PxTypeForLinkedEntity { get; set; }
 
         [Required]
         public SearchPattern SearchPattern { get; set; }

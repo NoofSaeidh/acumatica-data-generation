@@ -9,7 +9,7 @@ using System.Diagnostics;
 
 namespace DataGeneration.Entities.Emails
 {
-    public class LinkEmailsRandomizerSettings : RandomizerSettings<OneToManyRelation<Entity, Email>>
+    public class LinkEmailsRandomizerSettings : RandomizerSettings<OneToManyRelation<LinkEntityToEmail, Email>>
     {
         // todo: seems like manual date time doesn't work
         public (DateTime startDate, DateTime endDate)? DateRange { get; set; }
@@ -20,11 +20,14 @@ namespace DataGeneration.Entities.Emails
         [Required]
         public string SystemEmailAddress { get; set; }
 
+        [Required]
+        public string PxTypeForLinkedEntity { get; set; }
+
         // injected
         [JsonIgnore]
         public IProducerConsumerCollection<Entity> LinkEntities { get; set; }
 
-        public override Faker<OneToManyRelation<Entity, Email>> GetFaker()
+        public override Faker<OneToManyRelation<LinkEntityToEmail, Email>> GetFaker()
         {
             // need to create incoming email for each outgoing email
             // so need to persist outgoing and check in each step
@@ -33,6 +36,8 @@ namespace DataGeneration.Entities.Emails
             var emailFaker = GetFaker<Email>()
                 .Rules((f, e) =>
                 {
+                    e.ReturnBehavior = ReturnBehavior.None;
+
                     // create incoming email
                     if (incomingEmail == null)
                     {
@@ -94,8 +99,17 @@ namespace DataGeneration.Entities.Emails
                             }
                         });
                     }
+                    var noteId = linkEntity.GetNoteId().ToString();
+                    if (noteId.IsNullOrEmpty())
+                        throw new InvalidOperationException("NoteId must be not empty for linked entity.");
 
-                    return new OneToManyRelation<Entity, Email>(linkEntity, emails);
+                    var link = new LinkEntityToEmail
+                    {
+                        Type = PxTypeForLinkedEntity,
+                        RelatedEntity = noteId
+                    };
+
+                    return new OneToManyRelation<LinkEntityToEmail, Email>(link, emails);
                 });
         }
     }

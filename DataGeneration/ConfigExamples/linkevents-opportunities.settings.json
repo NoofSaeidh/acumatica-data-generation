@@ -2,8 +2,6 @@
   "$type": "DataGeneration.Entities.Events.LinkEventsGenerationSettings, DataGeneration",
   "#comment": "Create events for opportunities",
   "GenerationType": "Event-Opportunity",
-  "EntityTypeForLinkedEntity": "Opportunity",
-  "PxTypeForLinkedEntity": "PX.Objects.CR.CROpportunity",
   "EntitiesCountProbability": 0.20,
   "SearchPattern":{
     "EntityType":"Opportunity",
@@ -13,6 +11,7 @@
     }
   },
   "RandomizerSettings": {
+    "PxTypeForLinkedEntity": "PX.Objects.CR.CROpportunity",
     "DateRange": {
       "StartDate": "2017-01-01T00:00:00",
       "EndDate": "2018-05-01T00:00:00"

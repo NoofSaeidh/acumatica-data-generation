@@ -10,13 +10,11 @@ using System.Threading.Tasks;
 namespace DataGeneration.Entities.Activities
 {
     public class LinkActivitiesGenerationSettings :
-        GenerationSettings<OneToManyRelation<Entity, Activity>, LinkActivitiesRandomizerSettings>,
+        GenerationSettings<OneToManyRelation<LinkEntityToActivity, Activity>, LinkActivitiesRandomizerSettings>,
         IEntitiesSearchGenerationSettings
     {
         public override GenerationRunner GetGenerationRunner(ApiConnectionConfig apiConnectionConfig) => new LinkActivitiesGenerationRunner(apiConnectionConfig, this);
 
-        [Required]
-        public string PxTypeForLinkedEntity { get; set; }
         [Required]
         public SearchPattern SearchPattern { get; set; }
 

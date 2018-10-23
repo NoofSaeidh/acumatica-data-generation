@@ -2,7 +2,6 @@
   "$type": "DataGeneration.Entities.Activities.LinkActivitiesGenerationSettings, DataGeneration",
   "#comment": "Create activities (phone calls) for cases",
   "GenerationType": "Activity-Case",
-  "PxTypeForLinkedEntity": "PX.Objects.CR.CRCase",
   "SearchPattern": {
     "EntityType": "Case",
     "LinqPattern": {
@@ -11,6 +10,7 @@
     }
   },
   "RandomizerSettings": {
+    "PxTypeForLinkedEntity": "PX.Objects.CR.CRCase",
     "ActivityType": "P",
     "TrackTime": [ true ],
     "TimeSpent": [ "00:30", null ],

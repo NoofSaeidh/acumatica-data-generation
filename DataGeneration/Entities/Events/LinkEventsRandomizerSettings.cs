@@ -4,10 +4,11 @@ using DataGeneration.Soap;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Concurrent;
+using System.ComponentModel.DataAnnotations;
 
 namespace DataGeneration.Entities.Events
 {
-    public class LinkEventsRandomizerSettings : RandomizerSettings<OneToManyRelation<Entity, Event>>
+    public class LinkEventsRandomizerSettings : RandomizerSettings<OneToManyRelation<LinkEntityToEvent, Event>>
     {
         public (DateTime StartDate, DateTime EndDate)? StartTime { get; set; }
         public ProbabilityCollection<bool> TrackTime { get; set; }
@@ -16,15 +17,20 @@ namespace DataGeneration.Entities.Events
         [RequiredCollection(AllowEmpty = false)]
         public ProbabilityCollection<(int min, int max)> ActivityCountPerEntity { get; set; }
 
+        [Required]
+        public string PxTypeForLinkedEntity { get; set; }
+
         // injected
         [JsonIgnore]
         public IProducerConsumerCollection<Entity> LinkEntities { get; set; }
 
-        public override Faker<OneToManyRelation<Entity, Event>> GetFaker()
+        public override Faker<OneToManyRelation<LinkEntityToEvent, Event>> GetFaker()
         {
              var eventFaker = GetFaker<Event>()
                 .Rules((f, e) =>
                 {
+                    e.ReturnBehavior = ReturnBehavior.None;
+
                     e.Body = f.Lorem.Text();
                     e.Summary = f.Lorem.Sentence();
 
@@ -62,7 +68,17 @@ namespace DataGeneration.Entities.Events
                         events.ForEach(e => e.Location = addresop.AddressLine);
                     }
 
-                    return new OneToManyRelation<Entity, Event>(linkEntity, events);
+                    var noteId = linkEntity.GetNoteId().ToString();
+                    if (noteId.IsNullOrEmpty())
+                        throw new InvalidOperationException("NoteId must be not empty for linked entity.");
+
+                    var link = new LinkEntityToEvent
+                    {
+                        Type = PxTypeForLinkedEntity,
+                        RelatedEntity = noteId
+                    };
+
+                    return new OneToManyRelation<LinkEntityToEvent, Event>(link, events);
                 });
 
         }

@@ -10,13 +10,11 @@ using System.Threading.Tasks;
 namespace DataGeneration.Entities.Emails
 {
     public class LinkEmailsGenerationSettings : 
-        GenerationSettings<OneToManyRelation<Entity, Email>, LinkEmailsRandomizerSettings>, 
+        GenerationSettings<OneToManyRelation<LinkEntityToEmail, Email>, LinkEmailsRandomizerSettings>, 
         IEntitiesSearchGenerationSettings
     {
         public override GenerationRunner GetGenerationRunner(ApiConnectionConfig apiConnectionConfig) => new LinkEmailsGenerationRunner(apiConnectionConfig, this);
 
-        [Required]
-        public string PxTypeForLinkedEntity { get; set; }
         [Required]
         public SearchPattern SearchPattern { get; set; }
 

@@ -4,11 +4,12 @@ using DataGeneration.Soap;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Concurrent;
+using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 
 namespace DataGeneration.Entities.Activities
 {
-    public class LinkActivitiesRandomizerSettings : RandomizerSettings<OneToManyRelation<Entity, Activity>>
+    public class LinkActivitiesRandomizerSettings : RandomizerSettings<OneToManyRelation<LinkEntityToActivity, Activity>>
     {
         public (DateTime StartDate, DateTime EndDate)? DateRange { get; set; }
         public ProbabilityCollection<bool> TrackTime { get; set; }
@@ -18,15 +19,20 @@ namespace DataGeneration.Entities.Activities
         [RequiredCollection(AllowEmpty = false)]
         public ProbabilityCollection<(int min, int max)> ActivityCountPerEntity { get; set; }
 
+        [Required]
+        public string PxTypeForLinkedEntity { get; set; }
+
         // injected
         [JsonIgnore]
         public IProducerConsumerCollection<Entity> LinkEntities { get; set; }
 
-        public override Faker<OneToManyRelation<Entity, Activity>> GetFaker()
+        public override Faker<OneToManyRelation<LinkEntityToActivity, Activity>> GetFaker()
         {
             var activityFaker = GetFaker<Activity>()
                 .Rules((f, a) =>
                 {
+                    a.ReturnBehavior = ReturnBehavior.None;
+
                     a.Body = f.Lorem.Text();
                     a.Summary = f.Lorem.Sentence();
                     a.Status = "Completed";
@@ -83,7 +89,17 @@ namespace DataGeneration.Entities.Activities
                         throw new GenerationException("Cannot generate entities relation. No entities to link remain.");
                     }
 
-                    return new OneToManyRelation<Entity, Activity>(linkEntity, activities);
+                    var noteId = linkEntity.GetNoteId().ToString();
+                    if (noteId.IsNullOrEmpty())
+                        throw new InvalidOperationException("NoteId must be not empty for linked entity.");
+
+                    var link = new LinkEntityToActivity
+                    {
+                        Type = PxTypeForLinkedEntity,
+                        RelatedEntity = noteId
+                    };
+
+                    return new OneToManyRelation<LinkEntityToActivity, Activity>(link, activities);
                 });
         }
 

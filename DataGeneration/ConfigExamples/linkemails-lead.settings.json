@@ -2,8 +2,6 @@
   "$type": "DataGeneration.Entities.Emails.LinkEmailsGenerationSettings, DataGeneration",
   "#comment": "Create emails, fetch entities and link emails to those entities.",
   "GenerationEntity": "Email",
-  "PxTypeForLinkedEntity": "PX.Objects.CR.Contact",
-  "EntityTypeForLinkedEntity": "DataGeneration.Soap.Lead",
   "SearchPattern": {
     "EntityType": "DataGeneration.Soap.Lead",
     "CreatedDate": {
@@ -17,6 +15,7 @@
     }
   },
   "RandomizerSettings": {
+    "PxTypeForLinkedEntity": "PX.Objects.CR.Contact",
     "DateRange": [
       "2018-01-02",
       "2018-02-03"

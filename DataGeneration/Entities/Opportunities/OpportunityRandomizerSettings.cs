@@ -31,6 +31,8 @@ namespace DataGeneration.Entities.Opportunities
         public override Faker<Opportunity> GetFaker() => base.GetFaker()
             .Rules((f, o) =>
             {
+                o.ReturnBehavior = ReturnBehavior.None;
+
                 o.ClassID = f.Random.ProbabilityRandomIfAny(OpportunityClasses);
                 o.Subject = f.Lorem.Sentence(2, 10);
 

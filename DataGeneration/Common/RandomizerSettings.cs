@@ -1,6 +1,7 @@
 ﻿using Bogus;
 using DataGeneration.Soap;
 using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace DataGeneration.Common
 {

@@ -60,7 +60,6 @@ namespace DataGeneration.Entities.Opportunities
 
         protected override async VoidTask GenerateSingle(IApiClient client, Opportunity entity, CancellationToken cancellationToken)
         {
-            entity.ReturnBehavior = ReturnBehavior.None;
             await client.PutAsync(entity, cancellationToken);
         }
     }

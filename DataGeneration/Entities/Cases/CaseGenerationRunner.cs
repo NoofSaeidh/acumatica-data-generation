@@ -34,7 +34,6 @@ namespace DataGeneration.Entities.Cases
 
         protected override async VoidTask GenerateSingle(IApiClient client, Case entity, CancellationToken cancellationToken)
         {
-            entity.ReturnBehavior = ReturnBehavior.None;
             await client.PutAsync(entity, cancellationToken);
         }
     }
