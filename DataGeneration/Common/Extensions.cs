@@ -65,6 +65,15 @@ namespace DataGeneration.Common
             }
             return enumerable.Count() == 1 && enumerable.Contains(element);
         }
+        public static bool ContainsOnlyAnyOf<T>(this IEnumerable<T> enumerable, params T[] elements)
+        {
+            foreach (var item in enumerable)
+            {
+                if (!elements.Contains(item))
+                    return false;
+            }
+            return true;
+        }
     }
 
     public static class BogusExtensions

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace DataGeneration.Common
 {
-    public class ValueComparer<T>
+    public static class ValueComparer<T>
     {
         public static IEqualityComparer<T> GenericComparer => EqualityComparer<T>.Default;
         public static IEqualityComparer DefaultComparer => EqualityComparer<object>.Default;

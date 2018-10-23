@@ -93,7 +93,7 @@ namespace DataGeneration
                 if (result.Stopped == true)
                     return false;
 
-                if (result.Executed.ContainsOnly(Args.Config))
+                if (result.Executed.ContainsOnlyAnyOf(Args.Config, Args.Settings))
                     return true;
 
                 return false;

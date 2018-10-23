@@ -207,30 +207,14 @@ namespace DataGeneration.Common
             if (searchPattern == null)
                 throw new ArgumentNullException(nameof(searchPattern));
 
-            var linq = searchPattern.LinqPattern;
 
             var searcher = GetEntitySearcher(searchPattern.EntityType)
-
                 .AdjustInput(adj =>
                     adj.Adjust(e => e.ReturnBehavior = Soap.ReturnBehavior.OnlySpecified)
-                       .AdjustIfIs<Soap.INoteIdEntity>(e => e.NoteID = new Soap.GuidReturn())
-                       .AdjustIf(!(searchPattern.CreatedDate is null), adj_ =>
-                            adj_.AdjustIfIsOrThrow<Soap.ICreatedDateEntity>(e =>
-                                e.Date = searchPattern.CreatedDate)))
+                        // perhaps it is not a better design
+                       .AdjustIfIs<Soap.IAdjustReturnBehaviorEntity>(e => e.AdjustReturnBehavior()));
 
-                .AdjustOutput(adj =>
-                    adj.AdjustIf(linq != null, adj_ =>
-
-                        adj_.AdjustIf(linq.Reverse, adj__ =>
-                                adj__.Adjust(e => e.Reverse()))
-
-                            .AdjustIf(linq.Skip != null, adj__ =>
-                                adj__.Adjust(e => e.Skip(linq.Skip.Value)))
-
-                            .AdjustIf(linq.Take != null, adj__ =>
-                                adj__.Adjust(e => e.Take(linq.Take.Value)))));
-
-
+            searchPattern.AdjustSearcher(searcher);
             searcherAdjustment?.Invoke(searcher);
             
             return await searcher.ExecuteSearch(ct);
@@ -252,7 +236,6 @@ namespace DataGeneration.Common
         protected abstract void UtilizeFoundEntities(IList<Soap.Entity> entities);
         protected virtual void AdjustEntitySearcher(EntitySearcher searcher)
         {
-            searcher.AdjustInput(adj => adj.AdjustIfIs<Soap.IAdjustReturnBehaviorEntity>(e => e.AdjustReturnBehavior()));
         }
 
         protected override async Task RunBeforeGeneration(CancellationToken cancellationToken = default)

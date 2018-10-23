@@ -19,6 +19,8 @@ namespace DataGeneration.Entities.Emails
 
         protected override void UtilizeFoundEntities(IList<Entity> entities)
         {
+            // not in AdjustEntitySearcher because email may be taken (as in case) from other entities 
+            // and it is processed only after search
             entities = entities
                 .GetEnumerableAdjuster()
                 .AdjustCast<IEmailEntity>(en => en.Where(e => e.Email != null))

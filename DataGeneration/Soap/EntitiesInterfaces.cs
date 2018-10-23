@@ -39,7 +39,7 @@ namespace DataGeneration.Soap
 
     public interface ICreatedDateEntity
     {
-        DateTimeValue Date { get; set; }
+        DateTimeValue CreatedDate { get; set; }
     }
 
     #region Entities implementation
@@ -63,8 +63,6 @@ namespace DataGeneration.Soap
             }
         }
 
-        DateTimeValue ICreatedDateEntity.Date { get => CreatedAt; set => CreatedAt = value;  }
-
         void IAdjustReturnBehaviorEntity.AdjustReturnBehavior()
         {
             if (ContactInformation == null)
@@ -77,6 +75,12 @@ namespace DataGeneration.Soap
             }
             else if (ContactInformation.Email is null)
                 ContactInformation.Email = new StringReturn();
+
+            if (NoteID is null)
+                NoteID = new GuidReturn();
+
+            if (CreatedDate is null)
+                CreatedDate = new DateTimeReturn();
         }
     }
 
@@ -84,8 +88,6 @@ namespace DataGeneration.Soap
     {
         // todo: need to map
         StringValue IEmailEntity.Email { get; set; }
-
-        DateTimeValue ICreatedDateEntity.Date { get => CreatedAt; set => CreatedAt = value; }
 
         #region IComplexConstructedEntity
         QueryRequestor IComplexQueryEntity.QueryRequestor { get; } = new QueryRequestor(typeof(Case), Guid.Parse("D237AEE9-6032-4240-AA0B-A3DB0A790870"));
@@ -110,12 +112,28 @@ namespace DataGeneration.Soap
         {
             if(ContactID is null)
                 ContactID = new IntReturn();
+
+            if (NoteID is null)
+                NoteID = new GuidReturn();
+
+            if (CreatedDate is null)
+                CreatedDate = new DateTimeReturn();
         }
         #endregion
     }
-    public partial class Lead : INoteIdEntity, IEmailEntity, ICreatedDateEntity
+    public partial class Lead : INoteIdEntity, IEmailEntity, ICreatedDateEntity, IAdjustReturnBehaviorEntity
     {
-        DateTimeValue ICreatedDateEntity.Date { get; set; } // CreatedAt
+        void IAdjustReturnBehaviorEntity.AdjustReturnBehavior()
+        {
+            if (Email is null)
+                Email = new StringReturn();
+
+            if (NoteID is null)
+                NoteID = new GuidReturn();
+
+            if (CreatedDate is null)
+                CreatedDate = new DateTimeReturn();
+        }
     }
     #endregion
 }

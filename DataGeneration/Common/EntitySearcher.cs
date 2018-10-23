@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace DataGeneration.Entities
+namespace DataGeneration.Common
 {
     // lazy sorting and filtering
     public class EntitySearcher

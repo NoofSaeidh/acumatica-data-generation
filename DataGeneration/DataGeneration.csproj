@@ -79,7 +79,7 @@
     <Compile Include="Common\ApiConnectionConfig.cs" />
     <Compile Include="Common\ComplexQueryExecutor.cs" />
     <Compile Include="Common\SearchPattern.cs" />
-    <Compile Include="Entities\EntitySearcher.cs" />
+    <Compile Include="Common\EntitySearcher.cs" />
     <Compile Include="Common\ProbabilityCollectionSerializationHelpers.cs" />
     <Compile Include="Common\ValueTupleExtensions.cs" />
     <Compile Include="Common\ValueTupleReflectionHelper.cs" />

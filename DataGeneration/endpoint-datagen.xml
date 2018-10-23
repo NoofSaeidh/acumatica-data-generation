@@ -3,23 +3,27 @@
   <TopLevelEntity name="Lead" screen="CR301000">
     <Fields>
       <Field name="NoteID" type="GuidValue" />
+      <Field name="CreatedDate" type="DateTimeValue" />
     </Fields>
     <Mappings>
       <Mapping field="NoteID">
         <To object="Lead" field="NoteID" />
+      </Mapping>
+      <Mapping field="CreatedDate">
+        <To object="Lead" field="CreatedDateTime" />
       </Mapping>
     </Mappings>
   </TopLevelEntity>
   <TopLevelEntity name="Opportunity" screen="CR304000">
     <Fields>
       <Field name="NoteID" type="GuidValue" />
-      <Field name="CreatedAt" type="DateTimeValue" />
+      <Field name="CreatedDate" type="DateTimeValue" />
     </Fields>
     <Mappings>
       <Mapping field="NoteID">
         <To object="Opportunity" field="NoteID" />
       </Mapping>
-      <Mapping field="CreatedAt">
+      <Mapping field="CreatedDate">
         <To object="Opportunity" field="CreatedDateTime" />
       </Mapping>
     </Mappings>
@@ -27,13 +31,13 @@
   <TopLevelEntity name="Case" screen="CR306000">
     <Fields>
       <Field name="NoteID" type="GuidValue" />
-      <Field name="CreatedAt" type="DateTimeValue" />
+      <Field name="CreatedDate" type="DateTimeValue" />
     </Fields>
     <Mappings>
       <Mapping field="NoteID">
         <To object="Case" field="NoteID" />
       </Mapping>
-      <Mapping field="CreatedAt">
+      <Mapping field="CreatedDate">
         <To object="Case" field="CreatedDateTime" />
       </Mapping>
     </Mappings>
