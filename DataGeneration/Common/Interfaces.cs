@@ -1,6 +1,7 @@
 ﻿using DataGeneration.Soap;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Threading;
 using System.Threading.Tasks;
 using VoidTask = System.Threading.Tasks.Task;
@@ -11,7 +12,7 @@ namespace DataGeneration.Common
     ///     Randomizer that can generate entities.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public interface IDataGenerator<T> where T : IEntity
+    public interface IDataGenerator<T>
     {
         T Generate();
         IList<T> GenerateList(int count);
@@ -25,7 +26,7 @@ namespace DataGeneration.Common
     /// to return configured randomizer that generate entities depending on class properties.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public interface IRandomizerSettings<T> : IValidatable where T : IEntity
+    public interface IRandomizerSettings<T> : IValidatable
     {
         int Seed { get; set; }
         IDataGenerator<T> GetDataGenerator();
@@ -44,19 +45,25 @@ namespace DataGeneration.Common
     public interface IGenerationSettings
     {
         int Count { get; set; }
-        string GenerationEntity { get; }
+        string GenerationType { get; }
 
         // get, set seed for randomizer settings
         int? Seed { get; set; }
+        int Id { get; }
 
         ExecutionTypeSettings ExecutionTypeSettings { get; set; }
 
         GenerationRunner GetGenerationRunner(ApiConnectionConfig apiConnectionConfig);
     }
 
-    public interface IGenerationSettings<T> : IGenerationSettings, IValidatable where T : IEntity
+    public interface IGenerationSettings<T> : IGenerationSettings, IValidatable
     {
         IRandomizerSettings<T> RandomizerSettings { get; }
+    }
+
+    public interface IEntitiesSearchGenerationSettings : IGenerationSettings
+    {
+        SearchPattern SearchPattern { get; set; }
     }
 
     public interface IValidatable

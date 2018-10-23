@@ -59,7 +59,7 @@ namespace DataGeneration.Common
             {
                 var loggerName = GetLoggerName(baseLoggerName);
                 if (IsTimeTrackingAvailable(loggerName))
-                    return new StopwatchLogger(LogManager.GetLogger(loggerName));
+                    return new StopwatchLogger(LogManager.GetLogger(loggerName), LogLevel.Debug);
             }
 
             return new NullStopwatchLogger();
@@ -69,7 +69,7 @@ namespace DataGeneration.Common
         /// <summary>
         ///     Make time tracking log only in using statement
         /// </summary>
-        /// <param name="description"></param>
+        /// <param name="onDisposeDescription"></param>
         /// <param name="args"></param>
         /// <returns></returns>
         /// <example>
@@ -78,9 +78,10 @@ namespace DataGeneration.Common
         ///     // do something
         /// }
         /// </example>
-        public static IDisposable Log(string description, params object[] args) => Log(null, description, args);
+        public static IDisposable LogDispose(string onDisposeDescription, params object[] args) => LogDispose(null, onDisposeDescription, args);
 
-        public static IDisposable Log(string baseLoggerName, string description, params object[] args)
+        // log to debug
+        public static IDisposable LogDispose(string baseLoggerName, string onDisposeDescription, params object[] args)
         {
 #if DISABLE_TIMETRACKING
             return new NullStopwatchLogger.NullStopwatchLoggerDisposable();
@@ -89,10 +90,43 @@ namespace DataGeneration.Common
             {
                 var loggerName = GetLoggerName(baseLoggerName);
                 if (IsTimeTrackingAvailable(loggerName))
-                    return new StopwatchLogger.StopwatchLoggerDisposable(LogManager.GetLogger(loggerName), description, args);
+                    return new StopwatchLogger.StopwatchLoggerDisposable(LogManager.GetLogger(loggerName), LogLevel.Debug, onDisposeDescription, args);
             }
             return new NullStopwatchLogger.NullStopwatchLoggerDisposable();
 #endif
+        }
+
+        // log to info
+        public static IDisposable ForceLogDispose(ILogger logger, string onDisposeDescription, params object[] args)
+        {
+            return ForceLogDispose(logger, LogLevel.Info, onDisposeDescription, args);
+        }
+
+        public static IDisposable ForceLogDispose(ILogger logger, LogLevel logLevel, string onDisposeDescription, params object[] args)
+        {
+            return new StopwatchLogger.StopwatchLoggerDisposable(logger, logLevel, onDisposeDescription, args);
+        }
+
+        public static IDisposable ForceLogDisposeTimeCheck(ILogger logger,  TimeSpan minTimeToLog, string onDisposeDescription, params object[] args)
+        {
+            return ForceLogDisposeTimeCheck(logger, LogLevel.Info, minTimeToLog, onDisposeDescription, args);
+        }
+
+        public static IDisposable ForceLogDisposeTimeCheck(ILogger logger, LogLevel logLevel, TimeSpan minTimeToLog, string onDisposeDescription,  params object[] args)
+        {
+            return StopwatchLogger.StopwatchLoggerDisposable.WithTimeCheck(logger, logLevel, onDisposeDescription, minTimeToLog, args);
+        }
+
+        // OnStartDescription and onDisposeDescription uses the same args
+        public static IDisposable ForceLogStartDispose(ILogger logger, string onStartDescription, string onDisposeDescription, params object[] args)
+        {
+            return ForceLogStartDispose(logger, LogLevel.Info, onStartDescription, onDisposeDescription, args);
+        }
+
+        public static IDisposable ForceLogStartDispose(ILogger logger, LogLevel logLevel, string onStartDescription, string onDisposeDescription, params object[] args)
+        {
+            logger.Log(logLevel, onStartDescription, args);
+            return ForceLogDispose(logger, logLevel, onDisposeDescription, args);
         }
     }
 
@@ -114,11 +148,14 @@ namespace DataGeneration.Common
     {
         private readonly ILogger _logger;
         private readonly Stopwatch _stopwatch;
+        private readonly LogLevel _logLevel;
 
-        public StopwatchLogger(ILogger logger)
+        public StopwatchLogger(ILogger logger, LogLevel logLevel)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _stopwatch = new Stopwatch();
+            Debug.Assert(logLevel != null);
+            _logLevel = logLevel;
         }
 
         public IStopwatchLogger Start()
@@ -153,12 +190,12 @@ namespace DataGeneration.Common
 
         private void LogTime(TimeSpan time, string description, params object[] args)
         {
-            LogTime(_logger, time, description, args);
+            LogTime(_logger, _logLevel, time, description, args);
         }
 
-        private static void LogTime(ILogger logger, TimeSpan time, string description, params object[] args)
+        private static void LogTime(ILogger logger, LogLevel level, TimeSpan time, string description, params object[] args)
         {
-            logger.Debug(description + $"; Time elapsed = {time}", args);
+            logger.Log(level, description + $"; Time elapsed = {time}", args);
         }
 
         internal class StopwatchLoggerDisposable : IDisposable
@@ -167,12 +204,14 @@ namespace DataGeneration.Common
             private readonly string _description;
             private readonly object[] _args;
             private readonly ILogger _logger;
+            private readonly LogLevel _logLevel;
 
-            public StopwatchLoggerDisposable(ILogger logger, string description, object[] args)
+            public StopwatchLoggerDisposable(ILogger logger, LogLevel logLevel, string description, object[] args)
             {
                 _description = description;
                 _args = args;
                 _logger = logger;
+                _logLevel = logLevel;
                 _stopwatch = new Stopwatch();
                 _stopwatch.Start();
             }
@@ -180,7 +219,27 @@ namespace DataGeneration.Common
             public void Dispose()
             {
                 _stopwatch.Stop();
-                LogTime(_logger, _stopwatch.Elapsed, _description, _args);
+                LogTime(_logger, _logLevel, _stopwatch.Elapsed, _description, _args);
+            }
+
+            public static StopwatchLoggerDisposable WithTimeCheck(ILogger logger, LogLevel logLevel, string description, TimeSpan minTime, object[] args)
+            {
+                return new WithTimeCheckLogger(logger, logLevel, description, minTime, args);
+            }
+
+            private class WithTimeCheckLogger : StopwatchLoggerDisposable, IDisposable
+            {
+                private readonly TimeSpan _maxTime;
+                public WithTimeCheckLogger(ILogger logger, LogLevel logLevel, string description, TimeSpan maxTime, object[] args) : base(logger, logLevel, description, args)
+                {
+                    _maxTime = maxTime;
+                }
+                public new void Dispose()
+                {
+                    _stopwatch.Stop();
+                    if(_stopwatch.Elapsed > _maxTime)
+                        LogTime(_logger, _logLevel, _stopwatch.Elapsed, _description, _args);
+                }
             }
         }
     }

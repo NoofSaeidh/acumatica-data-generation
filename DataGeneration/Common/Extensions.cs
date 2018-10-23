@@ -25,6 +25,14 @@ namespace DataGeneration.Common
             return false;
         }
 
+        public static bool IsNullOrEmpty<T>(this IEnumerable<T> enumerable)
+        {
+            if (enumerable == null) return true;
+            if (enumerable is ICollection col) return col.Count == 0;
+            if (!enumerable.Any()) return true;
+            return false;
+        }
+
         public static IEnumerable<T> Concat<T>(this IEnumerable<T> enumerable, T element)
         {
             return enumerable.Concat(Enumerable.Repeat(element, 1));
@@ -56,6 +64,15 @@ namespace DataGeneration.Common
                 return collection.Count == 1 && collection.Contains(element);
             }
             return enumerable.Count() == 1 && enumerable.Contains(element);
+        }
+        public static bool ContainsOnlyAnyOf<T>(this IEnumerable<T> enumerable, params T[] elements)
+        {
+            foreach (var item in enumerable)
+            {
+                if (!elements.Contains(item))
+                    return false;
+            }
+            return true;
         }
     }
 

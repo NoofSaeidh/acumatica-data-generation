@@ -15,6 +15,8 @@ namespace DataGeneration.Entities.Leads
         public override Faker<Lead> GetFaker() => base.GetFaker()
             .Rules((f, l) =>
             {
+                l.ReturnBehavior = ReturnBehavior.None;
+
                 l.FirstName = f.Name.FirstName();
                 l.LastName = f.Name.LastName();
                 // replace all possible providers to *.con

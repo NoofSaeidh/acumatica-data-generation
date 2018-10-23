@@ -60,7 +60,7 @@ namespace DataGeneration
                         },
                         EmailsGenerationSettings = new LeadGenerationSettings.EmailsForLeadGenerationSettings
                         {
-                            EmailRandomizerSettings = new EmailRandomizerSettings
+                            EmailRandomizerSettings = new LinkEmailsRandomizerSettings
                             {
                                 DateRange = (DateTime.Parse("01/01/2017"), DateTime.Parse("05/01/2018")),
                             },

@@ -18,6 +18,8 @@ namespace DataGeneration.Entities.Cases
         public override Faker<Case> GetFaker() => base.GetFaker()
             .Rules((f, c) =>
             {
+                c.ReturnBehavior = ReturnBehavior.None;
+
                 c.Subject = f.Lorem.Sentence(5, 15);
                 c.ClassID = f.Random.ProbabilityRandomIfAny(CaseClasses);
 

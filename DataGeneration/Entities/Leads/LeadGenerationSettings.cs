@@ -40,7 +40,7 @@ namespace DataGeneration.Entities.Leads
             public ProbabilityCollection<(string Email, string DisplayName)> SystemAccounts { get; set; }
 
             [Required]
-            public EmailRandomizerSettings EmailRandomizerSettings { get; set; }
+            public LinkEmailsRandomizerSettings EmailRandomizerSettings { get; set; }
 
             public void Validate()
             {

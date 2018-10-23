@@ -1,28 +1,33 @@
 ﻿using DataGeneration.Entities;
+using DataGeneration.Soap;
 using Newtonsoft.Json;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
+using System.Threading;
 
 namespace DataGeneration.Common
 {
     public abstract class GenerationSettingsBase : IGenerationSettings
     {
+        private static int _id;
+
         public int Count { get; set; }
         public ExecutionTypeSettings ExecutionTypeSettings { get; set; }
         public abstract int? Seed { get; set; }
-        public abstract string GenerationEntity { get; }
+        public virtual string GenerationType { get; set; }
+        public virtual int Id { get; } = Interlocked.Increment(ref _id);
 
         public abstract GenerationRunner GetGenerationRunner(ApiConnectionConfig apiConnectionConfig);
     }
 
     public abstract class GenerationSettings<T, TRandomizerSettings> : GenerationSettingsBase, IGenerationSettings<T> 
-        where T : Soap.Entity
+        where T : class
         where TRandomizerSettings : IRandomizerSettings<T>
     {
         public string PxType { get; set; }
 
-        public override string GenerationEntity => typeof(T).Name;
-
+        public override string GenerationType { get => base.GenerationType ?? typeof(T).Name; set => base.GenerationType = value; }
         public override int? Seed
         {
             get => RandomizerSettings?.Seed;

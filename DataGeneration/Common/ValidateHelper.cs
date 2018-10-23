@@ -1,8 +1,9 @@
-﻿using System.Collections;
+﻿using DataGeneration.Common;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace DataGeneration.Common
+namespace System.ComponentModel.DataAnnotations
 {
     public static class ValidateHelper
     {

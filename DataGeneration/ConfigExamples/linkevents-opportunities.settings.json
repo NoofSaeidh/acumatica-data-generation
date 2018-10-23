@@ -1,0 +1,34 @@
+{
+  "$type": "DataGeneration.Entities.Events.LinkEventsGenerationSettings, DataGeneration",
+  "#comment": "Create events for opportunities",
+  "GenerationType": "Event-Opportunity",
+  "EntitiesCountProbability": 0.20,
+  "SearchPattern":{
+    "EntityType":"Opportunity",
+    "LinqPattern":{
+      "Reverse":true,
+      "Take":10
+    }
+  },
+  "RandomizerSettings": {
+    "PxTypeForLinkedEntity": "PX.Objects.CR.CROpportunity",
+    "DateRange": {
+      "StartDate": "2017-01-01T00:00:00",
+      "EndDate": "2018-05-01T00:00:00"
+    },
+    "TrackTime": {
+      "true": 0.5,
+      "false": 0.5
+    },
+    "TimeSpent": {
+      "MinTime": "00:10",
+      "MaxTime": "02:00"
+    },
+    "ActivityCountPerEntity": [
+      {
+        "Probability": 0.2,
+        "Value": [ 1, 1 ]
+      }
+    ]
+  }
+}

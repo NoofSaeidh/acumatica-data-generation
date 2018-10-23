@@ -53,7 +53,7 @@
           }
         }
       },
-      "GenerationEntity": "Lead",
+      "GenerationType": "Lead",
       "RandomizerSettings": {
         "LeadClasses": {
           "LEAD": 0.7,
@@ -71,7 +71,7 @@
     {
       "$type": "DataGeneration.Entities.Activities.ActivityGenerationSettings, DataGeneration",
       "#comment": "Create activities (notes) for opportunities",
-      "GenerationEntity": "Activity",
+      "GenerationType": "Activity",
       "EntityTypeForLinkedEntity": "Opportunity",
       "PxTypeForLinkedEntity": "PX.Objects.CR.CROpportunity",
       "EntitiesCountProbability": 0.2,
@@ -98,7 +98,7 @@
     {
       "$type": "DataGeneration.Entities.Activities.ActivityGenerationSettings, DataGeneration",
       "#comment": "Create activities (work items) for cases",
-      "GenerationEntity": "Activity",
+      "GenerationType": "Activity",
       "EntityTypeForLinkedEntity": "Case",
       "PxTypeForLinkedEntity": "PX.Objects.CR.CRCase",
       "EntitiesCountProbability": 1,
@@ -122,7 +122,7 @@
     {
       "$type": "DataGeneration.Entities.Activities.ActivityGenerationSettings, DataGeneration",
       "#comment": "Create activities (phone calls) for cases",
-      "GenerationEntity": "Activity",
+      "GenerationType": "Activity",
       "EntityTypeForLinkedEntity": "Case",
       "PxTypeForLinkedEntity": "PX.Objects.CR.CRCase",
       "EntitiesCountProbability": 0.2,
@@ -135,7 +135,7 @@
     {
       "$type": "DataGeneration.Entities.Events.EventGenerationSettings, DataGeneration",
       "#comment": "Create events for opportunities",
-      "GenerationEntity": "Activity",
+      "GenerationType": "Activity",
       "EntityTypeForLinkedEntity": "Opportunity",
       "PxTypeForLinkedEntity": "PX.Objects.CR.CROpportunity",
       "EntitiesCountProbability": 0.20,
@@ -157,7 +157,7 @@
     {
       "$type": "DataGeneration.Entities.Opportunities.OpportunityGenerationSettings, DataGeneration",
       "#comment": "Create opportunities. Fetches business accounts and links to it.",
-      "GenerationEntity": "Opportunity",
+      "GenerationType": "Opportunity",
       "Count": 100,
       "RandomizerSettings": {
         "OpportunityAccountTypes": {
@@ -200,7 +200,7 @@
     {
       "$type": "DataGeneration.Entities.Cases.CaseGenerationSettings, DataGeneration",
       "#comment": "Create cases. Fetches business accounts and links to it.",
-      "GenerationEntity": "Case",
+      "GenerationType": "Case",
       "RandomizerSettings": {
         "CaseClasses": {
           "OTHER": 0.2,

@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
 
@@ -58,6 +59,15 @@ namespace DataGeneration
         public void SaveConfig(string path)
         {
             File.WriteAllText(path, JsonConvert.SerializeObject(this, _jsonSettings));
+        }
+
+        public void AddGenerationSettingsFromFile(string path)
+        {
+            var settings = JsonConvert.DeserializeObject<IGenerationSettings>(File.ReadAllText(path), _jsonSettings);
+
+            if (GenerationSettingsCollection == null)
+                GenerationSettingsCollection = new List<IGenerationSettings>();
+            GenerationSettingsCollection.Add(settings);
         }
 
         public static GeneratorConfig ReadConfig(string path)
