@@ -7,13 +7,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataGeneration.Entities.Emails
+namespace DataGeneration.Entities.Activities
 {
-    public class LinkEmailsGenerationSettings : 
-        GenerationSettings<OneToManyRelation<Entity, Email>, LinkEmailsRandomizerSettings>, 
+    public class LinkActivitiesGenerationSettings :
+        GenerationSettings<OneToManyRelation<Entity, Activity>, LinkActivitiesRandomizerSettings>,
         IEntitiesSearchGenerationSettings
     {
-        public override GenerationRunner GetGenerationRunner(ApiConnectionConfig apiConnectionConfig) => new LinkEmailsGenerationRunner(apiConnectionConfig, this);
+        public override GenerationRunner GetGenerationRunner(ApiConnectionConfig apiConnectionConfig) => new LinkActivitiesGenerationRunner(apiConnectionConfig, this);
 
         [Required]
         public string PxTypeForLinkedEntity { get; set; }

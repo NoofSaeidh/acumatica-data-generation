@@ -83,6 +83,9 @@
     <Compile Include="Common\ProbabilityCollectionSerializationHelpers.cs" />
     <Compile Include="Common\ValueTupleExtensions.cs" />
     <Compile Include="Common\ValueTupleReflectionHelper.cs" />
+    <Compile Include="Entities\Activities\LinkActivitiesGenerationRunner.cs" />
+    <Compile Include="Entities\Activities\LinkActivitiesGenerationSettings.cs" />
+    <Compile Include="Entities\Activities\LinkActivitiesRandomizerSettings.cs" />
     <Compile Include="Entities\Cases\CaseGenerationRunner.cs" />
     <Compile Include="Entities\Cases\CaseGenerationSettings.cs" />
     <Compile Include="Entities\Cases\CaseRandomizerSettings.cs" />
@@ -112,12 +115,9 @@
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
     <Compile Include="ConsoleExecutor.cs" />
-    <Compile Include="Entities\Activities\ActivityGenerationRunner.cs" />
-    <Compile Include="Entities\Activities\ActivityGenerationSettings.cs" />
-    <Compile Include="Entities\Activities\ActivityRandomizerSettings.cs" />
-    <Compile Include="Entities\Events\EventGenerationRunner.cs" />
-    <Compile Include="Entities\Events\EventGenerationSettings.cs" />
-    <Compile Include="Entities\Events\EventRandomizerSettings.cs" />
+    <Compile Include="Entities\Events\LinkEventsGenerationRunner.cs" />
+    <Compile Include="Entities\Events\LinkEventsGenerationSettings.cs" />
+    <Compile Include="Entities\Events\LinkEventsRandomizerSettings.cs" />
     <Compile Include="Entities\CrossEntityGenerationHelper.cs" />
     <Compile Include="Entities\EntityHelperExtensions.cs" />
     <Compile Include="Common\LogManager.cs" />
@@ -155,10 +155,15 @@
   <ItemGroup>
     <None Include=".editorconfig" />
     <None Include="App.config" />
-    <None Include="config.example.json" />
+    <None Include="ConfigExamples\config.example.json" />
     <None Include="config.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="ConfigExamples\linkactivities-cases.settings.json" />
+    <None Include="ConfigExamples\linkevents-opportunities.settings.json" />
+    <None Include="ConfigExamples\linkemails-case.settings.json" />
+    <None Include="ConfigExamples\linkemails-lead.settings.json" />
+    <None Include="ConfigExamples\linkemails-opportunities.settings.json" />
     <None Include="Connected Services\Soap.Maint\5.wsdl" />
     <None Include="Connected Services\Soap.Maint\DataGeneration.Soap.Maint.EndpointValidationError.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>

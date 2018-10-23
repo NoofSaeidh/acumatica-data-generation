@@ -1,0 +1,28 @@
+{
+    "$type": "DataGeneration.Entities.Emails.LinkEmailsGenerationSettings, DataGeneration",
+    "#comment": "Create emails, fetch entities and link emails to those entities.",
+    "GenerationEntity": "Email",
+    "PxTypeForLinkedEntity" : "PX.Objects.CR.CRCase",
+    "EntityTypeForLinkedEntity" : "DataGeneration.Soap.Case",
+    "SearchPattern": {
+      "EntityType": "DataGeneration.Soap.Case",
+      "CreatedDate": {
+        "Condition":"Today",
+        "Value": "2018-10-15"
+      }
+    },
+    "RandomizerSettings": {
+      "DateRange": ["2018-01-02", "2018-02-03"],
+      "SystemEmailAddress": "testadmin@acumatica.com",
+      "EmailCountPerEntity":[
+        {
+          "Probability": 0.9,
+          "Value":[ 1, 5 ]
+        },
+        {
+          "Probability": 0.1,
+          "Value":[ 6, 20 ]
+        }
+      ]
+    }
+  }

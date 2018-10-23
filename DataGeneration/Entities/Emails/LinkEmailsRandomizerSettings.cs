@@ -74,9 +74,7 @@ namespace DataGeneration.Entities.Emails
 
                     if (!LinkEntities.TryTake(out var linkEntity))
                     {
-                        Debug.Assert(linkEntity != null, "linkEntity should not be null.");
-                        return null;
-                        // or throw exception?
+                        throw new GenerationException("Cannot generate entities relation. No entities to link remain.");
                     }
 
                     Debug.Assert(linkEntity is IEmailEntity, "linkEntity is not IEmailEntity. Email will be null!");

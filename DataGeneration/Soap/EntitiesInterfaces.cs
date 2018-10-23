@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace DataGeneration.Soap
 {
+    // todo: do smth with adjustreturnbehavior to be more flex and clear
     public interface IAdjustReturnBehaviorEntity
     {
         // set all required fields to {value}Return to be able to use them 
@@ -42,8 +43,18 @@ namespace DataGeneration.Soap
         DateTimeValue CreatedDate { get; set; }
     }
 
+    public interface IAddressLineEntity
+    {
+        StringValue AddressLine { get; set; }
+    }
+
     #region Entities implementation
-    public partial class Opportunity : INoteIdEntity, IEmailEntity, ICreatedDateEntity, IAdjustReturnBehaviorEntity
+    public partial class Opportunity : 
+        INoteIdEntity, 
+        IEmailEntity, 
+        ICreatedDateEntity,
+        IAddressLineEntity,
+        IAdjustReturnBehaviorEntity
     {
         StringValue IEmailEntity.Email
         {
@@ -63,6 +74,24 @@ namespace DataGeneration.Soap
             }
         }
 
+        StringValue IAddressLineEntity.AddressLine
+        {
+            get => Address?.AddressLine1;
+            set
+            {
+                if (Address != null)
+                    Address.AddressLine1 = value;
+                else
+                {
+                    Address = new Address
+                    {
+                        ReturnBehavior = ReturnBehavior.OnlySpecified,
+                        AddressLine1 = value
+                    };
+                }
+            }
+        }
+
         void IAdjustReturnBehaviorEntity.AdjustReturnBehavior()
         {
             if (ContactInformation == null)
@@ -75,6 +104,17 @@ namespace DataGeneration.Soap
             }
             else if (ContactInformation.Email is null)
                 ContactInformation.Email = new StringReturn();
+
+            if (Address == null)
+            {
+                Address = new Address
+                {
+                    AddressLine1 = new StringReturn(),
+                    ReturnBehavior = ReturnBehavior.OnlySpecified
+                };
+            }
+            else if (Address.AddressLine1 is null)
+                Address.AddressLine1 = new StringReturn();
 
             if (NoteID is null)
                 NoteID = new GuidReturn();

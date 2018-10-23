@@ -1,4 +1,5 @@
 ﻿using DataGeneration.Common;
+using DataGeneration.Entities.Activities;
 using DataGeneration.Soap;
 using System;
 using System.Collections.Generic;
@@ -7,16 +8,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataGeneration.Entities.Emails
+namespace DataGeneration.Entities.Events
 {
-    public class LinkEmailsGenerationSettings : 
-        GenerationSettings<OneToManyRelation<Entity, Email>, LinkEmailsRandomizerSettings>, 
+    public class LinkEventsGenerationSettings : 
+        GenerationSettings<OneToManyRelation<Entity, Event>, LinkEventsRandomizerSettings>,
         IEntitiesSearchGenerationSettings
     {
-        public override GenerationRunner GetGenerationRunner(ApiConnectionConfig apiConnectionConfig) => new LinkEmailsGenerationRunner(apiConnectionConfig, this);
+        public override GenerationRunner GetGenerationRunner(ApiConnectionConfig apiConnectionConfig) => new LinkEventsGenerationRunner(apiConnectionConfig, this);
 
         [Required]
         public string PxTypeForLinkedEntity { get; set; }
+
         [Required]
         public SearchPattern SearchPattern { get; set; }
 

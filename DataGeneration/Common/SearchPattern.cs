@@ -1,10 +1,12 @@
 ﻿using DataGeneration.Soap;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
 namespace DataGeneration.Common
 {
     public class SearchPattern
     {
+        [Required]
         public string EntityType { get; set; }
 
         public DateTimeSearch CreatedDate { get; set; }
