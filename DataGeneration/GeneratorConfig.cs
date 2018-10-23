@@ -60,6 +60,15 @@ namespace DataGeneration
             File.WriteAllText(path, JsonConvert.SerializeObject(this, _jsonSettings));
         }
 
+        public void AddGenerationSettingsFromFile(string path)
+        {
+            var settings = JsonConvert.DeserializeObject<IGenerationSettings>(File.ReadAllText(path), _jsonSettings);
+
+            if (GenerationSettingsCollection == null)
+                GenerationSettingsCollection = new List<IGenerationSettings>();
+            GenerationSettingsCollection.Add(settings);
+        }
+
         public static GeneratorConfig ReadConfig(string path)
         {
             return JsonConvert.DeserializeObject<GeneratorConfig>(File.ReadAllText(path), _jsonSettings);

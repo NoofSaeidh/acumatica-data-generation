@@ -14,6 +14,7 @@ namespace DataGeneration
         public static class Args
         {
             public const string Config = "/config";
+            public const string Settings = "/settings";
             public const string Start = "/start";
             public const string UpdateEndpoint = "/update-endpoint";
             public const string SaveEndpoint = "/save-endpoint";
@@ -25,7 +26,8 @@ namespace DataGeneration
                 [Start] = "Start generation. (Default - \"true\" if no args specified, \"false\" if any arg is specified)",
                 [UpdateEndpoint] = "Update endpoint. If value not specified \"datagen-endpoint.xml\" file will be used.",
                 [SaveEndpoint] = "Save endpoint. Values should be in following order {version} {endpoint} {filepath}",
-                [Config] = "Specify config file. If not specified default will be used.",
+                [Config] = "Specify json config file. If not specified default will be used.",
+                [Settings] = "Specify json files with single Generation Settings. All values will be merged to config's GenerationSettingsCollection. Can specify multiple.",
                 [Help] = "Show this help."
             };
         }
@@ -78,6 +80,7 @@ namespace DataGeneration
                 var result = executer
                     .Arg(Args.Help, ShowHelp, stopOnSuccess: true)
                     .Arg_ThrowNoValue(Args.Config, value => _config = new Lazy<GeneratorConfig>(() => GeneratorConfig.ReadConfig(value)))
+                    .Arg_ThrowNoValues(Args.Settings, values => Array.ForEach(values, v => Config.AddGenerationSettingsFromFile(v)))
                     .Arg(Args.UpdateEndpoint, PutEndpoint, () => PutEndpoint(EndpointDatagenFileName))
                     .Arg_ThrowNoValues(Args.SaveEndpoint, GetAndSaveEndpoint)
                     .Arg(Args.Start, () => { }, res => res.StartGeneration = true)
