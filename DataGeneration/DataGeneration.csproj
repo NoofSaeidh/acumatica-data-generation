@@ -123,6 +123,7 @@
     <Compile Include="Common\LogManager.cs" />
     <Compile Include="Common\ProbabilityCollection.cs" />
     <Compile Include="Common\ProbabilityCollectionJsonConverter.cs" />
+    <Compile Include="Common\Relation.cs" />
     <Compile Include="Entities\Leads\LeadGenerationRunner.cs" />
     <Compile Include="Entities\Leads\LeadGenerationSettings.cs" />
     <Compile Include="Common\RandomizerSettings.cs" />

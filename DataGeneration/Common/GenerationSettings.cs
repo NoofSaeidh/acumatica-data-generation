@@ -12,7 +12,7 @@ namespace DataGeneration.Common
         public int Count { get; set; }
         public ExecutionTypeSettings ExecutionTypeSettings { get; set; }
         public abstract int? Seed { get; set; }
-        public abstract string GenerationEntity { get; }
+        public virtual string GenerationType { get; set; }
 
         public abstract GenerationRunner GetGenerationRunner(ApiConnectionConfig apiConnectionConfig);
     }
@@ -23,8 +23,7 @@ namespace DataGeneration.Common
     {
         public string PxType { get; set; }
 
-        public override string GenerationEntity => typeof(T).Name;
-
+        public override string GenerationType { get => base.GenerationType ?? typeof(T).Name; set => base.GenerationType = value; }
         public override int? Seed
         {
             get => RandomizerSettings?.Seed;

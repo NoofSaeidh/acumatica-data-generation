@@ -57,7 +57,7 @@ namespace DataGeneration
                         {
                             var item = result.GenerationResults[i];
                             if (!item.Success)
-                                ConsoleExecutor.WriteInfo($"Generation {i} - {item.GenerationSettings.GenerationEntity} failed.", ConsoleColor.Red, item.Exception);
+                                ConsoleExecutor.WriteInfo($"Generation {i} - {item.GenerationSettings.GenerationType} failed.", ConsoleColor.Red, item.Exception);
                         }
                     }
                 }

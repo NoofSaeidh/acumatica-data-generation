@@ -54,7 +54,7 @@ namespace DataGeneration.Common
         {
             ValidateGenerationSettings();
             Logger.Info("Generation {type} started. Count: {count}. Settings: {@settings}",
-                GenerationSettings.GenerationEntity, GenerationSettings.Count, GenerationSettings);
+                GenerationSettings.GenerationType, GenerationSettings.Count, GenerationSettings);
             var stopwatch = new Stopwatch();
 
             try
@@ -66,7 +66,7 @@ namespace DataGeneration.Common
                 }
                 if (GenerationSettings.Count == 0)
                 {
-                    Logger.Warn("Generation {type} was not started. No entities could be generated. Count: 0");
+                    Logger.Warn("Generation {type} was not started. No entities could be generated. Count: 0", GenerationSettings.GenerationType);
                     return;
                 }
                 switch (GenerationSettings.ExecutionTypeSettings.ExecutionType)
@@ -96,7 +96,7 @@ namespace DataGeneration.Common
             }
 
             Logger.Info("Generation {type} completed. Count: {count}. Time elapsed: {time}",
-                GenerationSettings.GenerationEntity, GenerationSettings.Count, stopwatch.Elapsed);
+                GenerationSettings.GenerationType, GenerationSettings.Count, stopwatch.Elapsed);
         }
 
         protected virtual Task RunBeforeGeneration(CancellationToken cancellationToken = default)

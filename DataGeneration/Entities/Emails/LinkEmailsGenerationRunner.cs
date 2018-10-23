@@ -11,7 +11,7 @@ using VoidTask = System.Threading.Tasks.Task;
 
 namespace DataGeneration.Entities.Emails
 {
-    public class LinkEmailsGenerationRunner : EntitiesSearchGenerationRunner<LinkEmails, LinkEmailsGenerationSettings>
+    public class LinkEmailsGenerationRunner : EntitiesSearchGenerationRunner<OneToManyRelation<Entity, Email>, LinkEmailsGenerationSettings>
     {
         public LinkEmailsGenerationRunner(ApiConnectionConfig apiConnectionConfig, LinkEmailsGenerationSettings generationSettings) : base(apiConnectionConfig, generationSettings)
         {
@@ -32,13 +32,13 @@ namespace DataGeneration.Entities.Emails
             GenerationSettings.RandomizerSettings.LinkEntities = new ConcurrentQueue<Entity>(entities);
         }
 
-        protected override async VoidTask GenerateSingle(IApiClient client, LinkEmails entity, CancellationToken cancellationToken)
+        protected override async VoidTask GenerateSingle(IApiClient client, OneToManyRelation<Entity, Email> entity, CancellationToken cancellationToken)
         {
-            var noteId = entity.LinkEntity.GetNoteId().ToString();
+            var noteId = entity.Left.GetNoteId().ToString();
             if (noteId.IsNullOrEmpty())
                 throw new InvalidOperationException("NoteId must be not empty for linked entity.");
 
-            foreach (var email in entity.Emails)
+            foreach (var email in entity.Right)
             {
                 email.ReturnBehavior = ReturnBehavior.OnlySystem;
                 var resEmail = await client.PutAsync(email, cancellationToken);

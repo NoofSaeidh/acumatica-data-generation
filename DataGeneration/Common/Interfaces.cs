@@ -45,7 +45,7 @@ namespace DataGeneration.Common
     public interface IGenerationSettings
     {
         int Count { get; set; }
-        string GenerationEntity { get; }
+        string GenerationType { get; }
 
         // get, set seed for randomizer settings
         int? Seed { get; set; }

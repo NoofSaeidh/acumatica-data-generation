@@ -9,7 +9,7 @@ using System.Diagnostics;
 
 namespace DataGeneration.Entities.Emails
 {
-    public class LinkEmailsRandomizerSettings : RandomizerSettings<LinkEmails>
+    public class LinkEmailsRandomizerSettings : RandomizerSettings<OneToManyRelation<Entity, Email>>
     {
         // todo: seems like manual date time doesn't work
         public (DateTime startDate, DateTime endDate)? DateRange { get; set; }
@@ -24,7 +24,7 @@ namespace DataGeneration.Entities.Emails
         [JsonIgnore]
         public IProducerConsumerCollection<Entity> LinkEntities { get; set; }
 
-        public override Faker<LinkEmails> GetFaker()
+        public override Faker<OneToManyRelation<Entity, Email>> GetFaker()
         {
             // need to create incoming email for each outgoing email
             // so need to persist outgoing and check in each step
@@ -58,7 +58,7 @@ namespace DataGeneration.Entities.Emails
                         e.From = SystemEmailAddress;
                         e.Date = incomingEmail.Date.Value.Value.AddDays(1);
                         // todo: mail status
-                        // e.MailStatus = 
+                        // e.MailStatus =
 
                         incomingEmail = null;
                     }
@@ -97,43 +97,8 @@ namespace DataGeneration.Entities.Emails
                         });
                     }
 
-
-                    return new LinkEmails
-                    {
-                        Emails = emails,
-                        LinkEntity = linkEntity
-                    };
+                    return new OneToManyRelation<Entity, Email>(linkEntity, emails);
                 });
-
-            //return base
-            //    .GetFaker()
-            //    .Rules((f, e) =>
-            //    {
-
-            //    });
         }
-
-        //    => base.GetFaker()
-        //    .Rules((f, e) =>
-        //    {
-        //        e.Subject = f.Lorem.Sentence();
-        //        e.Body = f.Lorem.Text();
-
-        //        if (DateRange != null)
-        //        {
-        //            var (start, end) = DateRange.Value;
-        //            e.Date = f.Date.Between(start, end);
-        //        }
-
-
-        //    });
-
-        //private Faker<Email> GetOutgoingEmailsFaker() => GetFaker<Email>()
-        //    .Rules((f, e) =>
-        //    {
-        //        f.
-        //    });
-
-        //private Faker<Email> GetIncomingEmailsFaker(Email incomingEmail)
     }
 }
