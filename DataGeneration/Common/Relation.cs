@@ -16,23 +16,20 @@ namespace DataGeneration.Common
 
     public class OneToManyRelation<TLeft, TRight> : IRelation<TLeft, TRight>
     {
-        private readonly ReadOnlyCollection<TLeft> _left;
-        private readonly IEnumerable<TRight> _right;
-
         public OneToManyRelation(TLeft left, params TRight[] right) : this(left, (IEnumerable<TRight>)right)
         {
         }
 
         public OneToManyRelation(TLeft left, IEnumerable<TRight> right)
         {
-            _right = right ?? throw new ArgumentNullException(nameof(right));
-            _left = new ReadOnlyCollection<TLeft>(new TLeft[] { Left = left });
+            Right = right ?? throw new ArgumentNullException(nameof(right));
+            Left = left;
         }
 
 
         public TLeft Left { get; }
-        public IEnumerable<TRight> Right => _right;
+        public IEnumerable<TRight> Right { get; }
 
-        IEnumerable<TLeft> IRelation<TLeft, TRight>.Left => _left;
+        IEnumerable<TLeft> IRelation<TLeft, TRight>.Left => Enumerable.Repeat(Left, 1);
     }
 }
