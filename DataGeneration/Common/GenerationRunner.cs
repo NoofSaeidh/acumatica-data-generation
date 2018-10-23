@@ -114,7 +114,7 @@ namespace DataGeneration.Common
             return Task.CompletedTask;
         }
 
-        protected Task RunGenerationParallel(CancellationToken cancellationToken)
+        protected async Task RunGenerationParallel(CancellationToken cancellationToken)
         {
             var threads = GenerationSettings.ExecutionTypeSettings.ParallelThreads;
             if (GenerationSettings.Count < threads)
@@ -138,7 +138,7 @@ namespace DataGeneration.Common
                     tasks[i] = RunGenerationSequent(currentCount, cancellationToken);
                 }
 
-                return Task.WhenAll(tasks);
+                await Task.WhenAll(tasks);
             }
         }
 
@@ -147,7 +147,7 @@ namespace DataGeneration.Common
             using (StopwatchLoggerFactory.ForceLogStartDispose(Logger, LogLevel.Debug,
                 "Generation Sequent started. " + LogArgs.Type_Id_Count,
                 "Generation Sequent completed. " + LogArgs.Type_Id_Count,
-                GenerationSettings.GenerationType, GenerationSettings.Id, GenerationSettings.Count))
+                GenerationSettings.GenerationType, GenerationSettings.Id, count))
             {
                 var entities = GenerateRandomizedList(count);
 
