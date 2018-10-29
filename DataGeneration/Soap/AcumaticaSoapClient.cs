@@ -119,7 +119,7 @@ namespace DataGeneration.Soap
         public async VoidTask LoginAsync(string name, string password, string company = null, string branch = null, string locale = null, CancellationToken cancellationToken = default)
         {
             await TryCatchAsync(
-                _client.LoginAsync(name, password, company, branch, locale),
+                () => _client.LoginAsync(name, password, company, branch, locale),
                 cancellationToken,
                 new LogArgs("Login to {acumatica}", LogLevel.Debug, _client.Endpoint.Address.Uri)
             );
@@ -136,7 +136,7 @@ namespace DataGeneration.Soap
         public async VoidTask LogoutAsync()
         {
             await TryCatchAsync(
-                _client.LogoutAsync(),
+                () => _client.LogoutAsync(),
                 new LogArgs("Logout from {acumatica}", LogLevel.Debug, _client.Endpoint.Address.Uri)
             );
         }
@@ -156,7 +156,7 @@ namespace DataGeneration.Soap
         public async Task<T> GetAsync<T>(T whereEntity) where T : Entity
         {
             return await TryCatchAsync(
-               _client.GetAsync(whereEntity),
+               () => _client.GetAsync(whereEntity),
                CrudLogArgs("Get", whereEntity)
             );
         }
@@ -164,7 +164,7 @@ namespace DataGeneration.Soap
         public async Task<T> GetAsync<T>(T whereEntity, CancellationToken cancellationToken) where T : Entity
         {
             return await TryCatchAsync(
-               _client.GetAsync(whereEntity),
+               () => _client.GetAsync(whereEntity),
                cancellationToken,
                CrudLogArgs("Get", whereEntity)
             );
@@ -181,7 +181,7 @@ namespace DataGeneration.Soap
         public async Task<IList<T>> GetListAsync<T>(T whereEntity) where T : Entity
         {
             return await TryCatchAsync(
-               _client.GetListAsync(whereEntity),
+               () => _client.GetListAsync(whereEntity),
                CrudLogArgs("Get List", whereEntity)
             );
         }
@@ -189,7 +189,7 @@ namespace DataGeneration.Soap
         public async Task<IList<T>> GetListAsync<T>(T whereEntity, CancellationToken cancellationToken) where T : Entity
         {
             return await TryCatchAsync(
-               _client.GetListAsync(whereEntity),
+               () => _client.GetListAsync(whereEntity),
                cancellationToken,
                CrudLogArgs("Get List", whereEntity)
             );
@@ -206,7 +206,7 @@ namespace DataGeneration.Soap
         public async Task<T> PutAsync<T>(T entity) where T : Entity
         {
             return await TryCatchAsync(
-               _client.PutAsync(entity),
+               () => _client.PutAsync(entity),
                CrudLogArgs("Put", entity)
             );
         }
@@ -214,7 +214,7 @@ namespace DataGeneration.Soap
         public async Task<T> PutAsync<T>(T entity, CancellationToken cancellationToken) where T : Entity
         {
             return await TryCatchAsync(
-               _client.PutAsync(entity),
+               () => _client.PutAsync(entity),
                cancellationToken,
                CrudLogArgs("Put", entity)
             );
@@ -231,7 +231,7 @@ namespace DataGeneration.Soap
         public async VoidTask DeleteAsync<T>(T whereEntity) where T : Entity
         {
             await TryCatchAsync(
-               _client.DeleteAsync(whereEntity),
+               () => _client.DeleteAsync(whereEntity),
                CrudLogArgs("Delete", whereEntity)
             );
         }
@@ -239,7 +239,7 @@ namespace DataGeneration.Soap
         public async VoidTask DeleteAsync<T>(T whereEntity, CancellationToken cancellationToken) where T : Entity
         {
             await TryCatchAsync(
-               _client.DeleteAsync(whereEntity),
+               () => _client.DeleteAsync(whereEntity),
                cancellationToken,
                CrudLogArgs("Delete", whereEntity)
             );
@@ -261,7 +261,7 @@ namespace DataGeneration.Soap
         public async VoidTask InvokeAsync<TEntity, TAction>(TEntity entity, TAction action) where TEntity : Entity where TAction : Action
         {
             await TryCatchAsync(
-                _client.InvokeAsync(entity, action),
+                () => _client.InvokeAsync(entity, action),
                 InvokeArgs(entity, action)
             );
         }
@@ -269,7 +269,7 @@ namespace DataGeneration.Soap
         public async VoidTask InvokeAsync<TEntity, TAction>(TEntity entity, TAction action, CancellationToken cancellationToken) where TEntity : Entity where TAction : Action
         {
             await TryCatchAsync(
-                _client.InvokeAsync(entity, action),
+                () => _client.InvokeAsync(entity, action),
                 cancellationToken,
                 InvokeArgs(entity, action)
             );
@@ -286,7 +286,7 @@ namespace DataGeneration.Soap
         public async Task<IList<File>> GetFilesAsync<T>(T entity) where T : Entity
         {
             return await TryCatchAsync(
-                _client.GetFilesAsync(entity),
+                () => _client.GetFilesAsync(entity),
                 GetFilesArgs(entity)
             );
         }
@@ -294,7 +294,7 @@ namespace DataGeneration.Soap
         public async Task<IList<File>> GetFilesAsync<T>(T entity, CancellationToken cancellationToken) where T : Entity
         {
             return await TryCatchAsync(
-                _client.GetFilesAsync(entity),
+                () => _client.GetFilesAsync(entity),
                 cancellationToken,
                 GetFilesArgs(entity)
             );
@@ -311,7 +311,7 @@ namespace DataGeneration.Soap
         public async VoidTask PutFilesAsync<T>(T entity, IEnumerable<File> files) where T : Entity
         {
             await TryCatchAsync(
-                _client.PutFilesAsync(entity, files.ToArray()),
+                () => _client.PutFilesAsync(entity, files.ToArray()),
                 PutFilesArgs(entity, files)
             );
         }
@@ -319,7 +319,7 @@ namespace DataGeneration.Soap
         public async VoidTask PutFilesAsync<T>(T entity, IEnumerable<File> files, CancellationToken cancellationToken) where T : Entity
         {
             await TryCatchAsync(
-                _client.PutFilesAsync(entity, files.ToArray()),
+                () => _client.PutFilesAsync(entity, files.ToArray()),
                 cancellationToken,
                 PutFilesArgs(entity, files)
             );
@@ -381,31 +381,31 @@ namespace DataGeneration.Soap
             TryCatchPure((Func<object>)(() => { using (Logger(logArgs)) action(); return null; }), logArgs);
         }
 
-        private async Task<T> TryCatchAsync<T>(Task<T> task, LogArgs logArgs)
+        private async Task<T> TryCatchAsync<T>(Func<Task<T>> task, LogArgs logArgs)
         {
-            return await TryCatchPure(async () => { using (Logger(logArgs)) return await task; }, logArgs);
+            return await TryCatchPure(async () => { using (Logger(logArgs)) return await task(); }, logArgs);
         }
 
-        private async VoidTask TryCatchAsync(VoidTask task, LogArgs logArgs)
+        private async VoidTask TryCatchAsync(Func<VoidTask> task, LogArgs logArgs)
         {
-            await TryCatchPure(async () => { using (Logger(logArgs)) await task; }, logArgs);
+            await TryCatchPure(async () => { using (Logger(logArgs)) await task(); }, logArgs);
         }
 
-        private async Task<T> TryCatchAsync<T>(Task<T> task, CancellationToken cancellationToken, LogArgs logArgs)
+        private async Task<T> TryCatchAsync<T>(Func<Task<T>> task, CancellationToken cancellationToken, LogArgs logArgs)
         {
 #if DISABLE_API_CANCELLATION
             return await TryCatchAsync(task, logArgs);
 #else
-            return await TryCatchAsync(task.WithCancellation(cancellationToken), logArgs);
+            return await TryCatchPure(async () => { using (Logger(logArgs)) return await task().WithCancellation(cancellationToken); }, logArgs);
 #endif
         }
 
-        private async VoidTask TryCatchAsync(VoidTask task, CancellationToken cancellationToken, LogArgs logArgs)
+        private async VoidTask TryCatchAsync(Func<VoidTask> task, CancellationToken cancellationToken, LogArgs logArgs)
         {
 #if DISABLE_API_CANCELLATION
             await TryCatchAsync(task, logArgs);
 #else
-            await TryCatchAsync(task.WithCancellation(cancellationToken), logArgs);
+            await TryCatchPure(async () => { using (Logger(logArgs)) await task().WithCancellation(cancellationToken); }, logArgs);
 #endif
         }
 
