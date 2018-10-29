@@ -117,6 +117,12 @@ namespace DataGeneration.Common
         T Put<T>(T entity) where T : Entity;
         Task<T> PutAsync<T>(T entity) where T : Entity;
         Task<T> PutAsync<T>(T entity, CancellationToken cancellationToken) where T : Entity;
+        IList<File> GetFiles<T>(T entity) where T : Entity;
+        Task<IList<File>> GetFilesAsync<T>(T entity) where T : Entity;
+        Task<IList<File>> GetFilesAsync<T>(T entity, CancellationToken cancellationToken) where T : Entity;
+        void PutFiles<T>(T entity, IEnumerable<File> files) where T : Entity;
+        VoidTask PutFilesAsync<T>(T entity, IEnumerable<File> files) where T : Entity;
+        VoidTask PutFilesAsync<T>(T entity, IEnumerable<File> files, CancellationToken cancellationToken) where T : Entity;
     }
 
     // just indicates that client will autologout in dispose

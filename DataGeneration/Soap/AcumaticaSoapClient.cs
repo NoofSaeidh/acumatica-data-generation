@@ -12,6 +12,8 @@ namespace DataGeneration.Soap
 {
     public class AcumaticaSoapClient : IApiClient, IDisposable
     {
+        #region Initialization
+
         private const string _loggerName = Common.LogManager.LoggerNames.ApiClient;
 
         private static ILogger _logger => Common.LogManager.GetLogger(_loggerName);
@@ -77,6 +79,10 @@ namespace DataGeneration.Soap
             return new LogoutClientImpl(endpointSettings);
         }
 
+        #endregion
+
+        #region Login Logout
+
         public void Login(LoginInfo loginInfo)
         {
             if (loginInfo == null)
@@ -89,11 +95,10 @@ namespace DataGeneration.Soap
 
         public void Login(string name, string password, string company = null, string branch = null, string locale = null)
         {
-            _logger.Debug("Login to {acumatica}", _client.Endpoint.Address.Uri);
-            using (Log("Login"))
-            {
-                TryCatch("Login", () => _client.Login(name, password, company, branch, locale));
-            }
+            TryCatch(
+                () => _client.Login(name, password, company, branch, locale),
+                new LogArgs("Login to {acumatica}", LogLevel.Debug, _client.Endpoint.Address.Uri)
+            );
         }
 
         public VoidTask LoginAsync(LoginInfo loginInfo)
@@ -113,296 +118,304 @@ namespace DataGeneration.Soap
 
         public async VoidTask LoginAsync(string name, string password, string company = null, string branch = null, string locale = null, CancellationToken cancellationToken = default)
         {
-            _logger.Debug("Login to {acumatica}", _client.Endpoint.Address.Uri);
-
-            using (Log("Login"))
-            {
-                await TryCatchAsync("Login", _client.LoginAsync(name, password, company, branch, locale), cancellationToken);
-            }
+            await TryCatchAsync(
+                _client.LoginAsync(name, password, company, branch, locale),
+                cancellationToken,
+                new LogArgs("Login to {acumatica}", LogLevel.Debug, _client.Endpoint.Address.Uri)
+            );
         }
 
         public void Logout()
         {
-            _logger.Debug("Logout from {acumatica}", _client.Endpoint.Address.Uri);
-
-            using (Log("Logout"))
-            {
-                TryCatch("Logout", () => _client.Logout());
-            }
+            TryCatch(
+                () => _client.Logout(),
+                new LogArgs("Logout from {acumatica}", LogLevel.Debug, _client.Endpoint.Address.Uri)
+            );
         }
 
         public async VoidTask LogoutAsync()
         {
-            _logger.Debug("Logout from {acumatica}", _client.Endpoint.Address.Uri);
-
-            using (Log("Logout"))
-            {
-                await TryCatchAsync("Logout", _client.LogoutAsync());
-            }
+            await TryCatchAsync(
+                _client.LogoutAsync(),
+                new LogArgs("Logout from {acumatica}", LogLevel.Debug, _client.Endpoint.Address.Uri)
+            );
         }
+
+        #endregion
+
+        #region Crud
 
         public T Get<T>(T whereEntity) where T : Entity
         {
-            using (Log<T>("Get"))
-            {
-                return TryCatch("Get {whereEntity}", () => _client.Get(whereEntity), whereEntity);
-            }
+            return TryCatch(
+                () => _client.Get(whereEntity),
+                CrudLogArgs("Get", whereEntity)
+            );
         }
 
         public async Task<T> GetAsync<T>(T whereEntity) where T : Entity
         {
-            using (Log<T>("Get"))
-            {
-                return await TryCatchAsync("Get {whereEntity}", _client.GetAsync(whereEntity), whereEntity);
-            }
+            return await TryCatchAsync(
+               _client.GetAsync(whereEntity),
+               CrudLogArgs("Get", whereEntity)
+            );
         }
 
         public async Task<T> GetAsync<T>(T whereEntity, CancellationToken cancellationToken) where T : Entity
         {
-            using (Log<T>("Get"))
-            {
-                return await TryCatchAsync("Get {whereEntity}", _client.GetAsync(whereEntity), cancellationToken, whereEntity);
-            }
+            return await TryCatchAsync(
+               _client.GetAsync(whereEntity),
+               cancellationToken,
+               CrudLogArgs("Get", whereEntity)
+            );
         }
 
         public IList<T> GetList<T>(T whereEntity) where T : Entity
         {
-            using (Log<T>("Get List"))
-            {
-                return TryCatch("Get list {whereEntity}", () => _client.GetList(whereEntity), whereEntity);
-            }
+            return TryCatch(
+                () => _client.GetList(whereEntity),
+                CrudLogArgs("Get List", whereEntity)
+            );
         }
 
         public async Task<IList<T>> GetListAsync<T>(T whereEntity) where T : Entity
         {
-            using (Log<T>("Get List"))
-            {
-                return await TryCatchAsync("Get list {whereEntity}", _client.GetListAsync(whereEntity), whereEntity);
-            }
+            return await TryCatchAsync(
+               _client.GetListAsync(whereEntity),
+               CrudLogArgs("Get List", whereEntity)
+            );
         }
 
         public async Task<IList<T>> GetListAsync<T>(T whereEntity, CancellationToken cancellationToken) where T : Entity
         {
-            using (Log<T>("Get List"))
-            {
-                return await TryCatchAsync("Get list {whereEntity}", _client.GetListAsync(whereEntity), cancellationToken, whereEntity);
-            }
+            return await TryCatchAsync(
+               _client.GetListAsync(whereEntity),
+               cancellationToken,
+               CrudLogArgs("Get List", whereEntity)
+            );
         }
 
         public T Put<T>(T entity) where T : Entity
         {
-            using (Log<T>("Put"))
-            {
-                return TryCatch("Put {entity}", () => _client.Put(entity), entity);
-            }
+            return TryCatch(
+                () => _client.Put(entity),
+                CrudLogArgs("Put", entity)
+            );
         }
 
         public async Task<T> PutAsync<T>(T entity) where T : Entity
         {
-            using (Log<T>("Put"))
-            {
-                return await TryCatchAsync("Put {entity}", _client.PutAsync(entity), entity);
-            }
+            return await TryCatchAsync(
+               _client.PutAsync(entity),
+               CrudLogArgs("Put", entity)
+            );
         }
 
         public async Task<T> PutAsync<T>(T entity, CancellationToken cancellationToken) where T : Entity
         {
-            using (Log<T>("Put"))
-            {
-                return await TryCatchAsync("Put {entity}", _client.PutAsync(entity), cancellationToken, entity);
-            }
+            return await TryCatchAsync(
+               _client.PutAsync(entity),
+               cancellationToken,
+               CrudLogArgs("Put", entity)
+            );
         }
 
         public void Delete<T>(T whereEntity) where T : Entity
         {
-            using (Log<T>("Delete"))
-            {
-                TryCatch("Delete {whereEntity}", () => _client.Delete(whereEntity), whereEntity);
-            }
+            TryCatch(
+                () => _client.Delete(whereEntity),
+                CrudLogArgs("Delete", whereEntity)
+            );
         }
 
         public async VoidTask DeleteAsync<T>(T whereEntity) where T : Entity
         {
-            using (Log<T>("Delete"))
-            {
-                await TryCatchAsync("Delete {whereEntity}", _client.DeleteAsync(whereEntity), whereEntity);
-            }
+            await TryCatchAsync(
+               _client.DeleteAsync(whereEntity),
+               CrudLogArgs("Delete", whereEntity)
+            );
         }
 
         public async VoidTask DeleteAsync<T>(T whereEntity, CancellationToken cancellationToken) where T : Entity
         {
-            using (Log<T>("Delete"))
-            {
-                await TryCatchAsync("Delete {whereEntity}", _client.DeleteAsync(whereEntity), cancellationToken, whereEntity);
-            }
+            await TryCatchAsync(
+               _client.DeleteAsync(whereEntity),
+               cancellationToken,
+               CrudLogArgs("Delete", whereEntity)
+            );
         }
+
+        #endregion
+
+        #region Actions
 
         //todo: add wait for all invoke
         public void Invoke<TEntity, TAction>(TEntity entity, TAction action) where TEntity : Entity where TAction : Action
         {
-            using (Log($"Invoke {typeof(TAction).Name} for {typeof(TEntity).Name}"))
-            {
-                TryCatch("Invoke {action} for {entity}", () => _client.Invoke(entity, action), action, entity);
-            }
+            TryCatch(
+                () => _client.Invoke(entity, action),
+                InvokeArgs(entity, action)
+            );
         }
 
         public async VoidTask InvokeAsync<TEntity, TAction>(TEntity entity, TAction action) where TEntity : Entity where TAction : Action
         {
-            using (Log($"Invoke {typeof(TAction).Name} for {typeof(TEntity).Name}"))
-            {
-                await TryCatchAsync("Invoke {action} for {entity}", _client.InvokeAsync(entity, action), action, entity);
-            }
+            await TryCatchAsync(
+                _client.InvokeAsync(entity, action),
+                InvokeArgs(entity, action)
+            );
         }
 
         public async VoidTask InvokeAsync<TEntity, TAction>(TEntity entity, TAction action, CancellationToken cancellationToken) where TEntity : Entity where TAction : Action
         {
-            using (Log($"Invoke {typeof(TAction).Name} for {typeof(TEntity).Name}"))
-            {
-                await TryCatchAsync("Invoke {action} for {entity}", _client.InvokeAsync(entity, action), cancellationToken, action, entity);
-            }
+            await TryCatchAsync(
+                _client.InvokeAsync(entity, action),
+                cancellationToken,
+                InvokeArgs(entity, action)
+            );
         }
 
-        public void Dispose()
+        public IList<File> GetFiles<T>(T entity) where T : Entity
         {
-            _client.Close();
+            return TryCatch(
+                () => _client.GetFiles(entity),
+                GetFilesArgs(entity)
+            );
         }
 
-        private T TryCatch<T>(string descr, Func<T> action, params object[] logDebugArgs)
+        public async Task<IList<File>> GetFilesAsync<T>(T entity) where T : Entity
+        {
+            return await TryCatchAsync(
+                _client.GetFilesAsync(entity),
+                GetFilesArgs(entity)
+            );
+        }
+
+        public async Task<IList<File>> GetFilesAsync<T>(T entity, CancellationToken cancellationToken) where T : Entity
+        {
+            return await TryCatchAsync(
+                _client.GetFilesAsync(entity),
+                cancellationToken,
+                GetFilesArgs(entity)
+            );
+        }
+
+        public void PutFiles<T>(T entity, IEnumerable<File> files) where T : Entity
+        {
+            TryCatch(
+                () => _client.PutFiles(entity, files.ToArray()),
+                PutFilesArgs(entity, files)
+            );
+        }
+
+        public async VoidTask PutFilesAsync<T>(T entity, IEnumerable<File> files) where T : Entity
+        {
+            await TryCatchAsync(
+                _client.PutFilesAsync(entity, files.ToArray()),
+                PutFilesArgs(entity, files)
+            );
+        }
+
+        public async VoidTask PutFilesAsync<T>(T entity, IEnumerable<File> files, CancellationToken cancellationToken) where T : Entity
+        {
+            await TryCatchAsync(
+                _client.PutFilesAsync(entity, files.ToArray()),
+                cancellationToken,
+                PutFilesArgs(entity, files)
+            );
+        }
+
+        #endregion
+
+        #region Try Catch
+
+        private IDisposable Logger(LogArgs args) => StopwatchLoggerFactory.LogDispose(_loggerName, args.Description, args.Args);
+
+        private LogArgs CrudLogArgs<T>(string action, T whereEntity) => new LogArgs(
+            $"{action} {{entityType}}", typeof(T).AsArray(),
+            $"{action} {{entityType}}: {{@entity}}", new object[] { typeof(T), whereEntity });
+
+        private LogArgs InvokeArgs<TEntity, TAction>(TEntity entity, TAction action) => new LogArgs(
+            "Invoke {actionType} on {entityType}", new object[] { typeof(TAction), typeof(TEntity) },
+            "Invoke {actionType} on {entityType}: {@action}, {@entity}", new object[] { typeof(TAction), typeof(TEntity), action, entity });
+
+        private LogArgs GetFilesArgs<T>(T entity) => new LogArgs(
+            "Get Files for {entityType}", typeof(T).AsArray(),
+            "Get Files for {entityType}: {@entity}", new object[] { typeof(T), entity });
+
+        private LogArgs PutFilesArgs<T>(T entity, IEnumerable<File> files) => new LogArgs(
+            "Put Files for {entityType}", typeof(T).AsArray(),
+            "Put Files for {entityType}: {@entity}, {@files}", new object[] { typeof(T), entity, files });
+
+
+        private T TryCatchPure<T>(Func<T> action, LogArgs logArgs)
         {
             try
             {
-                _logger.Trace(descr, logDebugArgs);
+                if (logArgs.LogTrace())
+                    _logger.Log(logArgs.TraceLogLevel, logArgs.TraceDescription, logArgs.TraceArgs);
+
+                // move stopwatchlogger to overrides, to use logdispose with await
                 return action();
             }
             catch (OperationCanceledException oce)
             {
-                _logger.Error(oce, $"Action \"{descr}\" canceled.");
+                _logger.Error(oce, $"{logArgs.Description} canceled.", logArgs.Args);
                 throw;
             }
             catch (Exception e)
             {
-                var text = $"Action \"{descr}\" failed.";
-                _logger.Error(e, text, logDebugArgs);
+                var text = $"{logArgs.Description} failed.";
+                _logger.Error(e, text, logArgs.Args);
                 throw new ApiException(text, e);
             }
         }
 
-        private void TryCatch(string descr, System.Action action, params object[] logDebugArgs)
+        private T TryCatch<T>(Func<T> action, LogArgs logArgs)
         {
-            try
-            {
-                _logger.Trace(descr, logDebugArgs);
-                action();
-            }
-            catch (OperationCanceledException oce)
-            {
-                _logger.Error(oce, $"Action \"{descr}\" canceled.");
-                throw;
-            }
-            catch (Exception e)
-            {
-                var text = $"Action \"{descr}\" failed.";
-                _logger.Error(e, text, logDebugArgs);
-                throw new ApiException(text, e);
-            }
+            return TryCatchPure(() => { using (Logger(logArgs)) return action(); }, logArgs);
         }
 
-        private async Task<T> TryCatchAsync<T>(string descr, Task<T> task, params object[] logDebugArgs)
+        private void TryCatch(System.Action action, LogArgs logArgs)
         {
-            try
-            {
-                _logger.Trace(descr, logDebugArgs);
-                return await task;
-            }
-            catch (OperationCanceledException oce)
-            {
-                _logger.Error(oce, $"Action \"{descr}\" canceled.");
-                throw;
-            }
-            catch (Exception e)
-            {
-                var text = $"Action \"{descr}\" failed.";
-                _logger.Error(e, text, logDebugArgs);
-                throw new ApiException(text, e);
-            }
+            TryCatchPure((Func<object>)(() => { using (Logger(logArgs)) action(); return null; }), logArgs);
         }
 
-        private async VoidTask TryCatchAsync(string descr, VoidTask task, params object[] logDebugArgs)
+        private async Task<T> TryCatchAsync<T>(Task<T> task, LogArgs logArgs)
         {
-            try
-            {
-                _logger.Trace(descr, logDebugArgs);
-                await task;
-            }
-            catch (OperationCanceledException oce)
-            {
-                _logger.Error(oce, $"Action \"{descr}\" canceled.");
-                throw;
-            }
-            catch (Exception e)
-            {
-                var text = $"Action \"{descr}\" failed.";
-                _logger.Error(e, text, logDebugArgs);
-                throw new ApiException(text, e);
-            }
+            return await TryCatchPure(async () => { using (Logger(logArgs)) return await task; }, logArgs);
         }
 
-        private async Task<T> TryCatchAsync<T>(string descr, Task<T> task, CancellationToken cancellationToken, params object[] logDebugArgs)
+        private async VoidTask TryCatchAsync(VoidTask task, LogArgs logArgs)
+        {
+            await TryCatchPure(async () => { using (Logger(logArgs)) await task; }, logArgs);
+        }
+
+        private async Task<T> TryCatchAsync<T>(Task<T> task, CancellationToken cancellationToken, LogArgs logArgs)
         {
 #if DISABLE_API_CANCELLATION
-            return await TryCatchAsync(descr, task, logDebugArgs);
+            return await TryCatchAsync(task, logArgs);
 #else
-            try
-            {
-                _logger.Trace(descr, logDebugArgs);
-                return await task.WithCancellation(cancellationToken);
-            }
-            catch (OperationCanceledException oce)
-            {
-                _logger.Error(oce, $"Action \"{descr}\" canceled.");
-                throw;
-            }
-            catch (Exception e)
-            {
-                var text = $"Action \"{descr}\" failed.";
-                _logger.Error(e, text, logDebugArgs);
-                throw new ApiException(text, e);
-            }
+            return await TryCatchAsync(task.WithCancellation(cancellationToken), logArgs);
 #endif
         }
 
-        private async VoidTask TryCatchAsync(string descr, VoidTask task, CancellationToken cancellationToken, params object[] logDebugArgs)
+        private async VoidTask TryCatchAsync(VoidTask task, CancellationToken cancellationToken, LogArgs logArgs)
         {
 #if DISABLE_API_CANCELLATION
-            await TryCatchAsync(descr, task, logDebugArgs);
+            await TryCatchAsync(task, logArgs);
 #else
-            try
-            {
-                _logger.Trace(descr, logDebugArgs);
-                await task.WithCancellation(cancellationToken);
-            }
-            catch (OperationCanceledException oce)
-            {
-                _logger.Error(oce, $"Action \"{descr}\" canceled.");
-                throw;
-            }
-            catch (Exception e)
-            {
-                var text = $"Action \"{descr}\" failed.";
-                _logger.Error(e, text, logDebugArgs);
-                throw new ApiException(text, e);
-            }
+            await TryCatchAsync(task.WithCancellation(cancellationToken), logArgs);
 #endif
         }
 
-        private IDisposable Log(string description, params object[] args)
-        {
-            return StopwatchLoggerFactory.LogDispose(_loggerName, description, args);
-        }
+        #endregion
 
-        private IDisposable Log<T>(string description, params object[] args)
+        #region Common
+
+        public void Dispose()
         {
-            return StopwatchLoggerFactory.LogDispose(_loggerName, description + ' ' + typeof(T).Name, args);
+            _client.Close();
         }
 
         private class LogoutClientImpl : AcumaticaSoapClient, ILoginLogoutApiClient, IDisposable
@@ -424,5 +437,51 @@ namespace DataGeneration.Soap
                 base.Dispose();
             }
         }
+
+        private class LogArgs
+        {
+            public LogArgs(string description, params object[] args)
+            {
+                Description = description;
+                Args = args;
+                TraceDescription = null;
+                TraceArgs = null;
+                TraceLogLevel = null;
+            }
+
+            public LogArgs(string description, object[] args, string traceDescription, object[] traceArgs)
+                : this(description, args, traceDescription, traceArgs, LogLevel.Trace)
+            {
+
+            }
+
+            public LogArgs(string description, object[] args, string traceDescription, object[] traceArgs, LogLevel traceLogLevel)
+            {
+                Description = description;
+                Args = args;
+                TraceDescription = traceDescription;
+                TraceArgs = traceArgs;
+                TraceLogLevel = traceLogLevel;
+            }
+
+            public LogArgs(string description, LogLevel traceLogLevel, params object[] args)
+            {
+                Description = description;
+                Args = args;
+                TraceDescription = description;
+                TraceArgs = args;
+                TraceLogLevel = traceLogLevel;
+            }
+
+            public readonly string Description;
+            public readonly object[] Args;
+            public readonly string TraceDescription;
+            public readonly object[] TraceArgs;
+            public readonly LogLevel TraceLogLevel;
+
+            public bool LogTrace() => TraceLogLevel != null;
+        }
+
+        #endregion
     }
 }
