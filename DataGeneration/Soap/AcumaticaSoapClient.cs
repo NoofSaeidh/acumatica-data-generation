@@ -97,7 +97,7 @@ namespace DataGeneration.Soap
         {
             TryCatch(
                 () => _client.Login(name, password, company, branch, locale),
-                new LogArgs("Login to {acumatica}", LogLevel.Debug, _client.Endpoint.Address.Uri)
+                LoginArgs()
             );
         }
 
@@ -121,7 +121,7 @@ namespace DataGeneration.Soap
             await TryCatchAsync(
                 () => _client.LoginAsync(name, password, company, branch, locale),
                 cancellationToken,
-                new LogArgs("Login to {acumatica}", LogLevel.Debug, _client.Endpoint.Address.Uri)
+                LoginArgs()
             );
         }
 
@@ -129,7 +129,7 @@ namespace DataGeneration.Soap
         {
             TryCatch(
                 () => _client.Logout(),
-                new LogArgs("Logout from {acumatica}", LogLevel.Debug, _client.Endpoint.Address.Uri)
+                LogoutArgs()
             );
         }
 
@@ -137,7 +137,7 @@ namespace DataGeneration.Soap
         {
             await TryCatchAsync(
                 () => _client.LogoutAsync(),
-                new LogArgs("Logout from {acumatica}", LogLevel.Debug, _client.Endpoint.Address.Uri)
+                LogoutArgs()
             );
         }
 
@@ -329,66 +329,44 @@ namespace DataGeneration.Soap
 
         #region Try Catch
 
-        private IDisposable Logger(LogArgs args) => StopwatchLoggerFactory.LogDispose(_loggerName, args.Description, args.Args);
-
-        private LogArgs CrudLogArgs<T>(string action, T whereEntity) => new LogArgs(
-            $"{action} {{entityType}}", typeof(T).AsArray(),
-            $"{action} {{entityType}}: {{@entity}}", new object[] { typeof(T), whereEntity });
-
-        private LogArgs InvokeArgs<TEntity, TAction>(TEntity entity, TAction action) => new LogArgs(
-            "Invoke {actionType} on {entityType}", new object[] { typeof(TAction), typeof(TEntity) },
-            "Invoke {actionType} on {entityType}: {@action}, {@entity}", new object[] { typeof(TAction), typeof(TEntity), action, entity });
-
-        private LogArgs GetFilesArgs<T>(T entity) => new LogArgs(
-            "Get Files for {entityType}", typeof(T).AsArray(),
-            "Get Files for {entityType}: {@entity}", new object[] { typeof(T), entity });
-
-        private LogArgs PutFilesArgs<T>(T entity, IEnumerable<File> files) => new LogArgs(
-            "Put Files for {entityType}", typeof(T).AsArray(),
-            "Put Files for {entityType}: {@entity}, {@files}", new object[] { typeof(T), entity, files });
-
-
         private T TryCatchPure<T>(Func<T> action, LogArgs logArgs)
         {
             try
             {
-                if (logArgs.LogTrace())
-                    _logger.Log(logArgs.TraceLogLevel, logArgs.TraceDescription, logArgs.TraceArgs);
+                logArgs.StartInfo.Log();
 
                 // move stopwatchlogger to overrides, to use logdispose with await
                 return action();
             }
             catch (OperationCanceledException oce)
             {
-                _logger.Error(oce, $"{logArgs.Description} canceled.", logArgs.Args);
+                logArgs.CancelInfo.Log(oce);
                 throw;
             }
             catch (Exception e)
             {
-                var text = $"{logArgs.Description} failed.";
-                _logger.Error(e, text, logArgs.Args);
-                throw new ApiException(text, e);
+                throw logArgs.FailInfo.LogAndGetException(e);
             }
         }
 
         private T TryCatch<T>(Func<T> action, LogArgs logArgs)
         {
-            return TryCatchPure(() => { using (Logger(logArgs)) return action(); }, logArgs);
+            return TryCatchPure(() => { using (logArgs.CompleteInfo.StopwatchLog()) return action(); }, logArgs);
         }
 
         private void TryCatch(System.Action action, LogArgs logArgs)
         {
-            TryCatchPure((Func<object>)(() => { using (Logger(logArgs)) action(); return null; }), logArgs);
+            TryCatchPure((Func<object>)(() => { using (logArgs.CompleteInfo.StopwatchLog()) action(); return null; }), logArgs);
         }
 
         private async Task<T> TryCatchAsync<T>(Func<Task<T>> task, LogArgs logArgs)
         {
-            return await TryCatchPure(async () => { using (Logger(logArgs)) return await task(); }, logArgs);
+            return await TryCatchPure(async () => { using (logArgs.CompleteInfo.StopwatchLog()) return await task(); }, logArgs);
         }
 
         private async VoidTask TryCatchAsync(Func<VoidTask> task, LogArgs logArgs)
         {
-            await TryCatchPure(async () => { using (Logger(logArgs)) await task(); }, logArgs);
+            await TryCatchPure(async () => { using (logArgs.CompleteInfo.StopwatchLog()) await task(); }, logArgs);
         }
 
         private async Task<T> TryCatchAsync<T>(Func<Task<T>> task, CancellationToken cancellationToken, LogArgs logArgs)
@@ -396,7 +374,7 @@ namespace DataGeneration.Soap
 #if DISABLE_API_CANCELLATION
             return await TryCatchAsync(task, logArgs);
 #else
-            return await TryCatchPure(async () => { using (Logger(logArgs)) return await task().WithCancellation(cancellationToken); }, logArgs);
+            return await TryCatchPure(async () => { using (logArgs.CompleteInfo.StopwatchLog()) return await task().WithCancellation(cancellationToken); }, logArgs);
 #endif
         }
 
@@ -405,9 +383,145 @@ namespace DataGeneration.Soap
 #if DISABLE_API_CANCELLATION
             await TryCatchAsync(task, logArgs);
 #else
-            await TryCatchPure(async () => { using (Logger(logArgs)) await task().WithCancellation(cancellationToken); }, logArgs);
+            await TryCatchPure(async () => { using (logArgs.CompleteInfo.StopwatchLog()) await task().WithCancellation(cancellationToken); }, logArgs);
 #endif
         }
+
+        #endregion
+
+        #region Log
+        private LogArgs CrudLogArgs<T>(string action, T whereEntity)
+            => new LogArgs($"{action} {typeof(T)}", "{@entity}", whereEntity);
+
+        private LogArgs InvokeArgs<TEntity, TAction>(TEntity entity, TAction action)
+            => new LogArgs($"Invoke {typeof(TAction)} on {typeof(TEntity)}", "{@entity}, {@action}", entity, action);
+
+        private LogArgs GetFilesArgs<T>(T entity)
+            => new LogArgs($"Get Files for {typeof(T)}", "{@entity}", entity);
+
+        private LogArgs PutFilesArgs<T>(T entity, IEnumerable<File> files)
+            => new LogArgs($"Put Files for {typeof(T)}", "{@entity}", entity);
+
+        private LogArgs LoginArgs()
+            => new LogArgs("Login", "Url = {url}", _client.Endpoint.Address.Uri) { StartInfoLogLevel = LogLevel.Debug };
+
+        private LogArgs LogoutArgs()
+            => new LogArgs("Logout", "Url = {url}", _client.Endpoint.Address.Uri) { StartInfoLogLevel = LogLevel.Debug };
+
+
+        private class LogArgs
+        {
+            private readonly string _operation;
+            private readonly string _argsLayout;
+            private readonly object[] _args;
+
+            private SingleLogArg _startInfo;
+            private SingleLogArg _completeInfo;
+            private SingleLogArg _failInfo;
+            private SingleLogArg _cancelInfo;
+
+            public LogLevel StartInfoLogLevel;
+            public LogLevel CompleteInfoLogLevel;
+            public LogLevel FailInfoLogLevel;
+            public LogLevel CancelInfoLogLevel;
+
+            public LogArgs(string operation, string argsLayout, params object[] args)
+            {
+                _operation = operation;
+                _argsLayout = argsLayout;
+                _args = args;
+
+                StartInfoLogLevel = LogLevel.Trace;
+                CompleteInfoLogLevel = LogLevel.Debug;
+                FailInfoLogLevel = LogLevel.Error;
+                CancelInfoLogLevel = LogLevel.Error;
+            }
+
+            public LogArgs(string operation, string argsLayout, object[] args,
+                SingleLogArg startInfo = null,
+                SingleLogArg completInfo = null,
+                SingleLogArg failInfo = null,
+                SingleLogArg cancelInfo = null)
+                : this(operation, argsLayout, args)
+            {
+                _startInfo = startInfo;
+                _completeInfo = completInfo;
+                _failInfo = failInfo;
+                _cancelInfo = cancelInfo;
+            }
+
+            public SingleLogArg StartInfo => _startInfo
+                ?? (_startInfo = new SingleLogArg(
+                    $"Operation {_operation} started. " + _argsLayout, StartInfoLogLevel, _args)
+                );
+
+            // tood: perhaps need to handle log args somehow (but not force, because it will affect performance
+            public SingleLogArg CompleteInfo => _completeInfo
+                ?? (_completeInfo = new SingleLogArg(
+                    $"Operation {_operation} completed.", CompleteInfoLogLevel)
+                );
+
+            public SingleLogArg FailInfo => _failInfo
+                ?? (_failInfo = new SingleLogArg(
+                    $"Operation {_operation} failed.", FailInfoLogLevel)
+                );
+
+            public SingleLogArg CancelInfo => _cancelInfo
+                ?? (_cancelInfo = new SingleLogArg(
+                    $"Operation {_operation} canceled.", CompleteInfoLogLevel)
+                );
+        }
+
+        private class SingleLogArg
+        {
+            public readonly string Text;
+            public readonly object[] Args;
+            public readonly LogLevel LogLevel;
+
+            public SingleLogArg(string text, LogLevel logLevel, params object[] args)
+            {
+                Text = text;
+                Args = args;
+                LogLevel = logLevel;
+            }
+
+            public SingleLogArg(string text, params object[] args) : this(text, null, args)
+            {
+            }
+
+            public bool IsEnabled => LogLevel != null;
+
+            public void Log()
+            {
+                if (IsEnabled)
+                    _logger.Log(LogLevel, Text, Args);
+            }
+
+            public void Log(Exception e)
+            {
+                if (IsEnabled)
+                    _logger.Log(LogLevel, e, Text, Args);
+            }
+
+            public ApiException LogAndGetException(Exception e)
+            {
+                if (IsEnabled)
+                    _logger.Log(LogLevel, e, Text, Args);
+                return new ApiException(Text.FormatWith(Args));
+            }
+
+            public IDisposable StopwatchLog()
+            {
+                return StopwatchLoggerFactory.LogDispose(_loggerName, Text, Args);
+            }
+
+
+
+            public static implicit operator SingleLogArg(string text) => new SingleLogArg(text);
+            public static implicit operator SingleLogArg((string text, object arg) log) => new SingleLogArg(log.text, log.arg);
+            public static implicit operator SingleLogArg((string text, object arg1, object arg2) log) => new SingleLogArg(log.text, log.arg1, log.arg2);
+        }
+
 
         #endregion
 
@@ -436,50 +550,6 @@ namespace DataGeneration.Soap
                 }
                 base.Dispose();
             }
-        }
-
-        private class LogArgs
-        {
-            public LogArgs(string description, params object[] args)
-            {
-                Description = description;
-                Args = args;
-                TraceDescription = null;
-                TraceArgs = null;
-                TraceLogLevel = null;
-            }
-
-            public LogArgs(string description, object[] args, string traceDescription, object[] traceArgs)
-                : this(description, args, traceDescription, traceArgs, LogLevel.Trace)
-            {
-
-            }
-
-            public LogArgs(string description, object[] args, string traceDescription, object[] traceArgs, LogLevel traceLogLevel)
-            {
-                Description = description;
-                Args = args;
-                TraceDescription = traceDescription;
-                TraceArgs = traceArgs;
-                TraceLogLevel = traceLogLevel;
-            }
-
-            public LogArgs(string description, LogLevel traceLogLevel, params object[] args)
-            {
-                Description = description;
-                Args = args;
-                TraceDescription = description;
-                TraceArgs = args;
-                TraceLogLevel = traceLogLevel;
-            }
-
-            public readonly string Description;
-            public readonly object[] Args;
-            public readonly string TraceDescription;
-            public readonly object[] TraceArgs;
-            public readonly LogLevel TraceLogLevel;
-
-            public bool LogTrace() => TraceLogLevel != null;
         }
 
         #endregion

@@ -18,6 +18,8 @@ namespace DataGeneration.Common
             return string.IsNullOrEmpty(value);
         }
 
+        public static string FormatWith(this string value, params object[] args) => string.Format(value, args);
+
         public static bool IsNullOrEmpty(this IEnumerable enumerable)
         {
             if (enumerable == null) return true;
