@@ -390,23 +390,24 @@ namespace DataGeneration.Soap
         #endregion
 
         #region Log
+
         private LogArgs CrudLogArgs<T>(string action, T whereEntity)
-            => new LogArgs($"{action} {typeof(T)}", "{@entity}", whereEntity);
+            => new LogArgs($"{action} {typeof(T)}", "{entity}", whereEntity);
 
         private LogArgs InvokeArgs<TEntity, TAction>(TEntity entity, TAction action)
-            => new LogArgs($"Invoke {typeof(TAction)} on {typeof(TEntity)}", "{@entity}, {@action}", entity, action);
+            => new LogArgs($"Invoke {typeof(TAction)} on {typeof(TEntity)}", "{entity}, {action}", entity, action);
 
         private LogArgs GetFilesArgs<T>(T entity)
-            => new LogArgs($"Get Files for {typeof(T)}", "{@entity}", entity);
+            => new LogArgs($"Get Files for {typeof(T)}", "{entity}", entity);
 
         private LogArgs PutFilesArgs<T>(T entity, IEnumerable<File> files)
-            => new LogArgs($"Put Files for {typeof(T)}", "{@entity}", entity);
+            => new LogArgs($"Put Files for {typeof(T)}", "{entity}", entity);
 
         private LogArgs LoginArgs()
-            => new LogArgs("Login", "Url = {url}", _client.Endpoint.Address.Uri) { StartInfoLogLevel = LogLevel.Debug };
+            => new LogArgs("Login", "Url = {url}", _client.Endpoint.Address.Uri);
 
         private LogArgs LogoutArgs()
-            => new LogArgs("Logout", "Url = {url}", _client.Endpoint.Address.Uri) { StartInfoLogLevel = LogLevel.Debug };
+            => new LogArgs("Logout", "Url = {url}", _client.Endpoint.Address.Uri);
 
 
         private class LogArgs
