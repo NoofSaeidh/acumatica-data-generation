@@ -19,37 +19,35 @@ namespace DataGeneration.Common
         {
             var token = JToken.Load(reader);
 
-            var genericParam = objectType.GenericTypeArguments[0];
-            var resultParam = genericParam;
+            var paramType = objectType.GenericTypeArguments[0];
 
-            // todo: perhaps should little review and parse all objects if they have property "Probability" as IProbabilityObject, not only valuetuples
-
-            if (ValueTupleReflectionHelper.IsValueTupleOrNullableType(genericParam, out var _, out var _))
+            // handle tuples
+            // handle objects with Probability property (by structural matching) (including wrapper on tuple)
+            if (ValueTupleReflectionHelper.IsValueTupleOrNullableType(paramType) 
+                || paramType.GetProperty(nameof(IProbabilityObject.Probability)) != null)
             {
-                resultParam = typeof(ValueTupleProbabilityWrapper<>).MakeGenericType(genericParam);
-            }
-
-            if (resultParam.GetInterface(nameof(IProbabilityObject)) != null)
-            {
-                if(token is JArray jArray)
+                if (token is JArray jArray)
                 {
-                    var arType = typeof(IList<>).MakeGenericType(resultParam);
-                    var wrapperType = typeof(ProbabilityObjectCollection<>).MakeGenericType(genericParam);
-                    var wrapper = Activator.CreateInstance(wrapperType, jArray.ToObject(arType, serializer));
+                    var arType = typeof(ProbabilityObjectWrapper<>).MakeGenericType(paramType).MakeArrayType();
+                    var wrapperType = typeof(ProbabilityObjectCollection<>).MakeGenericType(paramType);
+                    var parsedArray = jArray.ToObject(arType, serializer);
+                    var wrapper = Activator.CreateInstance(wrapperType, parsedArray);
                     return wrapperType.GetProperty(nameof(ProbabilityObjectCollection<IProbabilityObject>.ProbabilityCollection)).GetValue(wrapper);
                 }
             }
+            
 
+            //other (simple) cases
             switch (token)
             {
                 case JObject jObject:
                 {
-                    var dictType = typeof(IDictionary<,>).MakeGenericType(genericParam, typeof(decimal?));
+                    var dictType = typeof(IDictionary<,>).MakeGenericType(paramType, typeof(decimal?));
                     return Activator.CreateInstance(objectType, jObject.ToObject(dictType, serializer));
                 }
                 case JArray jArray:
                 {
-                    var arType = typeof(IList<>).MakeGenericType(genericParam);
+                    var arType = typeof(IList<>).MakeGenericType(paramType);
                     return Activator.CreateInstance(objectType, jArray.ToObject(arType, serializer));
                 }
                 default:
