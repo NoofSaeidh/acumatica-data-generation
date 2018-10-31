@@ -11,7 +11,7 @@ namespace DataGeneration
 {
     public class GeneratorClient
     {
-        private static ILogger _logger => Common.LogManager.GetLogger(Common.LogManager.LoggerNames.GenerationClient);
+        private static ILogger _logger { get; } = Common.LogManager.GetLogger(Common.LogManager.LoggerNames.GenerationClient);
 
         static GeneratorClient()
         {

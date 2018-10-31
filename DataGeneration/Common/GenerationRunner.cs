@@ -39,7 +39,7 @@ namespace DataGeneration.Common
 
         public ApiConnectionConfig ApiConnectionConfig { get; }
         public TGenerationSettings GenerationSettings { get; }
-        protected static ILogger Logger => LogManager.GetLogger(LogManager.LoggerNames.GenerationRunner);
+        protected static ILogger Logger { get; } = LogManager.GetLogger(LogManager.LoggerNames.GenerationRunner);
         protected Bogus.Randomizer Randomizer => _randomizer ?? (_randomizer = new Bogus.Randomizer(GenerationSettings.RandomizerSettings.Seed));
 
         protected virtual void ValidateGenerationSettings()

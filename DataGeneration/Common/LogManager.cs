@@ -8,7 +8,7 @@ namespace DataGeneration.Common
     {
         private static readonly ConcurrentDictionary<string, ILogger> _loggers = new ConcurrentDictionary<string, ILogger>();
 
-        public static ILogger DefaultLogger => GetLogger(LoggerNames.Default);
+        public static ILogger DefaultLogger { get; } = GetLogger(LoggerNames.Default);
 
         public static ILogger GetLogger(string loggerName) => _loggers.GetOrAdd(loggerName, name => NLog.LogManager.GetLogger(name));
 
@@ -20,6 +20,7 @@ namespace DataGeneration.Common
             public const string TimeTrackerPattern = "*." + TimeTracker;
             public const string GenerationRunner = "Generation.Runner";
             public const string GenerationClient = "Generation.Client";
+            public const string GenerationRandomizer = "Generation.Randomizer";
         }
     }
 }

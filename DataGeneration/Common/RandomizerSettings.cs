@@ -1,5 +1,6 @@
 ﻿using Bogus;
 using DataGeneration.Soap;
+using NLog;
 using System;
 using System.ComponentModel.DataAnnotations;
 
@@ -35,6 +36,8 @@ namespace DataGeneration.Common
 
     public abstract class RandomizerSettings<T> : RandomizerSettingsBase, IRandomizerSettings<T> where T : class
     {
+        protected static ILogger Logger { get; } = LogManager.GetLogger(LogManager.LoggerNames.GenerationRandomizer);
+
         private IDataGenerator<T> _statefullGenerator;
 
         public IDataGenerator<T> GetStatelessDataGenerator() => new DataGenerator<T>(GetFaker());

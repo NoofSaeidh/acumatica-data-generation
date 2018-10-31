@@ -16,7 +16,7 @@ namespace DataGeneration.Soap
 
         private const string _loggerName = Common.LogManager.LoggerNames.ApiClient;
 
-        private static ILogger _logger => Common.LogManager.GetLogger(_loggerName);
+        private static ILogger _logger { get; } = Common.LogManager.GetLogger(_loggerName);
 
         private readonly DefaultSoapClient _client;
 

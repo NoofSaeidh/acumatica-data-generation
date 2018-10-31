@@ -13,7 +13,7 @@ namespace DataGeneration.Entities
     // !! no null checking in methods !!
     internal class CrossEntityGenerationHelper
     {
-        protected static NLog.ILogger Logger => LogManager.GetLogger(LogManager.LoggerNames.GenerationRunner);
+        protected static NLog.ILogger Logger { get; } = LogManager.GetLogger(LogManager.LoggerNames.GenerationRunner);
 
         internal static async Task<IDictionary<TKey, (string businessAccountId, int[] contactIds)[]>> GetBusinessAccountsWithLinkedContactsFromType<TKey>(
             IApiClient apiClient,
