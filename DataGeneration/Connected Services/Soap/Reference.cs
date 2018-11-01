@@ -59066,6 +59066,8 @@ namespace DataGeneration.Soap {
         
         private StringValue mailStatusField;
         
+        private GuidValue noteIDField;
+        
         private StringValue ownerField;
         
         private GuidValue parentField;
@@ -59218,6 +59220,18 @@ namespace DataGeneration.Soap {
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=11)]
+        public GuidValue NoteID {
+            get {
+                return this.noteIDField;
+            }
+            set {
+                this.noteIDField = value;
+                this.RaisePropertyChanged("NoteID");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=12)]
         public StringValue Owner {
             get {
                 return this.ownerField;
@@ -59229,7 +59243,7 @@ namespace DataGeneration.Soap {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=12)]
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=13)]
         public GuidValue Parent {
             get {
                 return this.parentField;
@@ -59241,7 +59255,7 @@ namespace DataGeneration.Soap {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=13)]
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=14)]
         public StringValue ParentSummary {
             get {
                 return this.parentSummaryField;
@@ -59253,7 +59267,7 @@ namespace DataGeneration.Soap {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=14)]
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=15)]
         public StringValue RelatedEntityDescription {
             get {
                 return this.relatedEntityDescriptionField;
@@ -59265,7 +59279,7 @@ namespace DataGeneration.Soap {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=15)]
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=16)]
         public DateTimeValue StartTime {
             get {
                 return this.startTimeField;
@@ -59277,7 +59291,7 @@ namespace DataGeneration.Soap {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=16)]
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=17)]
         public StringValue Subject {
             get {
                 return this.subjectField;
@@ -59289,7 +59303,7 @@ namespace DataGeneration.Soap {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=17)]
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=18)]
         public TimeActivity TimeActivity {
             get {
                 return this.timeActivityField;
@@ -59301,7 +59315,7 @@ namespace DataGeneration.Soap {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=18)]
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=19)]
         public StringValue To {
             get {
                 return this.toField;
@@ -59313,7 +59327,7 @@ namespace DataGeneration.Soap {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=19)]
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=20)]
         public StringValue Workgroup {
             get {
                 return this.workgroupField;

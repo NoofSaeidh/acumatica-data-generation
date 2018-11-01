@@ -79,6 +79,12 @@ namespace DataGeneration.Common
         }
 
         public static T[] AsArray<T>(this T value) => new T[] { value };
+
+        public static bool HasValue<T>(this T? nullable, out T value) where T : struct
+        {
+            value = nullable.GetValueOrDefault();
+            return nullable.HasValue;
+        }
     }
 
     public static class BogusExtensions
@@ -99,6 +105,8 @@ namespace DataGeneration.Common
                 return default;
             return randomizer.ProbabilityRandom(probabilities);
         }
+
+        public static int Int(this Bogus.Randomizer randomizer, (int, int) value) => randomizer.Int(value.Item1, value.Item2);
     }
 
     public static class TaskExtensions
