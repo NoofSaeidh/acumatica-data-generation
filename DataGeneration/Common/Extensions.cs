@@ -42,7 +42,7 @@ namespace DataGeneration.Common
 
         public static IEnumerable<T> Concat<T>(this IEnumerable<T> enumerable, params T[] elements)
         {
-            return enumerable.Concat(elements);
+            return enumerable.Concat((IEnumerable<T>)elements);
         }
 
         public static ICollection<T> AddMany<T>(this ICollection<T> collection, params T[] elements)
