@@ -1711,6 +1711,7 @@
               <s:element minOccurs="0" maxOccurs="1" name="Incoming" nillable="true" type="q74:BooleanValue" />
               <s:element minOccurs="0" maxOccurs="1" name="Internal" nillable="true" type="q74:BooleanValue" />
               <s:element minOccurs="0" maxOccurs="1" name="MailStatus" nillable="true" type="q74:StringValue" />
+              <s:element minOccurs="0" maxOccurs="1" name="NoteID" nillable="true" type="q74:GuidValue" />
               <s:element minOccurs="0" maxOccurs="1" name="Owner" nillable="true" type="q74:StringValue" />
               <s:element minOccurs="0" maxOccurs="1" name="Parent" nillable="true" type="q74:GuidValue" />
               <s:element minOccurs="0" maxOccurs="1" name="ParentSummary" nillable="true" type="q74:StringValue" />

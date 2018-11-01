@@ -4,12 +4,15 @@ using DataGeneration.Soap;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
+using System.Linq;
+using System.Text;
 
 namespace DataGeneration.Entities.Emails
 {
-    public class LinkEmailsRandomizerSettings : RandomizerSettings<OneToManyRelation<LinkEntityToEmail, Email>>
+    public class LinkEmailsRandomizerSettings : RandomizerSettings<OneToManyRelation<LinkEntityToEmail, OneToManyRelation<Email, File>>>
     {
         // todo: seems like manual date time doesn't work
         public (DateTime startDate, DateTime endDate)? DateRange { get; set; }
@@ -23,11 +26,24 @@ namespace DataGeneration.Entities.Emails
         [Required]
         public string PxTypeForLinkedEntity { get; set; }
 
+        public string AttachmentLocation { get; set; }
+
+        public ProbabilityCollection<(int min, int max)> AttachmentsCount { get; set; }
+
+        // also used as count of combination of paragraphs and embedded images
+        public ProbabilityCollection<(int min, int max)> ParagraphsCount { get; set; }
+
+        // for RunBeforeGeneration -> to inject into EmbeddedFiles
+        public int? BaseEntityEmbeddedImagesAttachedCount { get; set; }
+
         // injected
         [JsonIgnore]
         public IProducerConsumerCollection<Entity> LinkEntities { get; set; }
 
-        public override Faker<OneToManyRelation<LinkEntityToEmail, Email>> GetFaker()
+        [JsonIgnore]
+        public OneToManyRelation<Email, File> EmbeddedFilesTags { get; set; }
+
+        public override Faker<OneToManyRelation<LinkEntityToEmail, OneToManyRelation<Email, File>>> GetFaker()
         {
             // need to create incoming email for each outgoing email
             // so need to persist outgoing and check in each step
@@ -38,11 +54,27 @@ namespace DataGeneration.Entities.Emails
                 {
                     e.ReturnBehavior = ReturnBehavior.None;
 
+                    var paragraphs = f.Random.Int(f.Random.ProbabilityRandomIfAny(ParagraphsCount));
+
+                    if (EmbeddedFilesTags != null && paragraphs > 0)
+                    {
+                        // don't want to expose this
+                        var heights = new int[] { 100, 150, 200 };
+                        var widths = new int[] { 100, 150, 200 };
+                        var imgSource = EmbeddedFilesTags.Right.Select(file =>
+                            (f.Lorem.Paragraphs(), file.Name, file.Name.Replace(".jpg", ""),
+                                f.PickRandom(heights), f.PickRandom(widths))).Take(paragraphs);
+                        e.Body = GenerateHtmlBodyWithImgs(EmbeddedFilesTags.Left.NoteID.Value.ToString(), imgSource);
+                    }
+                    else if (paragraphs > 0)
+                        e.Body = EncodeText(f.Lorem.Paragraphs(paragraphs));
+                    else
+                        e.Bcc = EncodeText(f.Lorem.Paragraphs());
+
                     // create incoming email
                     if (incomingEmail == null)
                     {
                         e.Incoming = true;
-                        e.Body = f.Lorem.Text();
                         e.To = SystemEmailAddress;
                         e.Subject = f.Lorem.Sentence(3, 10);
 
@@ -58,7 +90,6 @@ namespace DataGeneration.Entities.Emails
                     else
                     {
                         e.Incoming = false;
-                        e.Body = f.Lorem.Text();
                         e.Subject = $"RE: {incomingEmail.Subject}";
                         e.From = SystemEmailAddress;
                         e.Date = incomingEmail.Date.Value.Value.AddDays(1);
@@ -68,6 +99,14 @@ namespace DataGeneration.Entities.Emails
                         incomingEmail = null;
                     }
                 });
+
+            var files = GetEndlessAttachementsFiles();
+            File[] getFiles(Faker faker)
+            {
+                var (min, max) = faker.Random.ProbabilityRandomIfAny(AttachmentsCount);
+                var count = faker.Random.Int(min, max);
+                return files(faker).Take(count).ToArray();
+            }
 
             return base
                 .GetFaker()
@@ -109,8 +148,79 @@ namespace DataGeneration.Entities.Emails
                         RelatedEntity = noteId
                     };
 
-                    return new OneToManyRelation<LinkEntityToEmail, Email>(link, emails);
+                    var relations = emails.Select(e => new OneToManyRelation<Email, File>(e, getFiles(f))).ToArray();
+
+                    return new OneToManyRelation<LinkEntityToEmail, OneToManyRelation<Email, File>>(link, relations);
                 });
+        }
+
+        // return function to not to check initialization and create loader each iteration and it need faker
+        private Func<Faker, IEnumerable<File>> GetEndlessAttachementsFiles()
+        {
+            if (AttachmentLocation == null)
+            {
+                Logger.Info($"{nameof(AttachmentLocation)} is null, no images will be generated");
+                return _ => Enumerable.Empty<File>();
+            }
+            if (AttachmentsCount == null)
+                return _ => Enumerable.Empty<File>();
+
+            FileLoader fileLoader = new CachedFileLoader(AttachmentLocation);
+            var imageFiles = fileLoader.GetAllFiles();
+            if (imageFiles.Length == 0)
+                throw new InvalidOperationException($"Directory {AttachmentLocation} doesn't contain files.");
+            Logger.Info("Found files count {count}", imageFiles.Length);
+
+            IEnumerable<File> result(Faker faker)
+            {
+                while (true)
+                {
+                    var file = faker.PickRandom(imageFiles);
+                    var imageContent = fileLoader.LoadFile(file);
+                    var resFile = new File
+                    {
+                        Content = imageContent,
+                        Name = file.Name
+                    };
+                    yield return resFile;
+                }
+            }
+            return result;
+        }
+
+        protected string GetImgTag(string noteId, string imgName, string title, int width, int height)
+        {
+            return
+                $"<img src=\"Email Activity ({noteId})\\{imgName}\" " +
+                      "objtype=\"attached\" " +
+                      "data-convert=\"view\" " +
+                     $"title=\"{title}\" " +
+                     $"width=\"{width}\" " +
+                     $"height=\"{height}\">";
+        }
+
+        protected string GenerateHtmlBodyWithImgs(
+            string noteId, 
+            IEnumerable<(string beforeText, string imgName, string title, int width, int height)> textWithImages)
+        {
+            var builder = new StringBuilder();
+            foreach (var (text, imgName, title, width, height) in textWithImages)
+            {
+                builder.Append(EncodeText(text));
+                builder.Append(EncodeToPTag(GetImgTag(noteId, imgName, title, width, height)));
+            }
+            return builder.ToString();
+        }
+
+        protected string EncodeText(string text)
+        {
+            var splitedText = text.Replace("\r\n", "\n").Split('\n');
+            return string.Join(" ", splitedText.Select(t => EncodeToPTag(t.IsNullOrWhiteSpace() ? "<br>" : t)));
+        }
+
+        private string EncodeToPTag(string text)
+        {
+            return $"<p class=\"richp\">{text}</p>";
         }
     }
 }

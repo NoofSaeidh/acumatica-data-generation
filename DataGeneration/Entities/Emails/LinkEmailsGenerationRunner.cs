@@ -11,7 +11,7 @@ using VoidTask = System.Threading.Tasks.Task;
 
 namespace DataGeneration.Entities.Emails
 {
-    public class LinkEmailsGenerationRunner : EntitiesSearchGenerationRunner<OneToManyRelation<LinkEntityToEmail, Email>, LinkEmailsGenerationSettings>
+    public class LinkEmailsGenerationRunner : EntitiesSearchGenerationRunner<OneToManyRelation<LinkEntityToEmail, OneToManyRelation<Email, File>>, LinkEmailsGenerationSettings>
     {
         public LinkEmailsGenerationRunner(ApiConnectionConfig apiConnectionConfig, LinkEmailsGenerationSettings generationSettings) : base(apiConnectionConfig, generationSettings)
         {
@@ -32,12 +32,75 @@ namespace DataGeneration.Entities.Emails
             GenerationSettings.RandomizerSettings.LinkEntities = new ConcurrentQueue<Entity>(entities);
         }
 
-        protected override async VoidTask GenerateSingle(IApiClient client, OneToManyRelation<LinkEntityToEmail, Email> entity, CancellationToken cancellationToken)
+        protected override async VoidTask RunBeforeGeneration(CancellationToken cancellationToken = default)
         {
-            foreach (var email in entity.Right)
+            await base.RunBeforeGeneration(cancellationToken);
+
+            GenerationSettings.RandomizerSettings.EmbeddedFilesTags = await PutEmbeddedFiles(cancellationToken);
+        }
+
+        protected override async VoidTask GenerateSingle(IApiClient client, OneToManyRelation<LinkEntityToEmail, OneToManyRelation<Email, File>> entity, CancellationToken cancellationToken)
+        {
+            foreach (var relation in entity.Right)
             {
-                await client.InvokeAsync(await client.PutAsync(email, cancellationToken), entity.Left, cancellationToken);
+                var email = await client.PutAsync(relation.Left, cancellationToken);
+                await client.InvokeAsync(email, entity.Left, cancellationToken);
+                if (!relation.Right.IsNullOrEmpty())
+                {
+                    await client.PutFilesAsync(email, relation.Right, cancellationToken);
+                }
             }
         }
+
+        #region Embedded images
+
+        protected async Task<OneToManyRelation<Email, File>> PutEmbeddedFiles(CancellationToken ct)
+        {
+            // create base entity (email) for linked images for all other emails
+            if (GenerationSettings.RandomizerSettings.AttachmentLocation == null
+                || !GenerationSettings.RandomizerSettings.BaseEntityEmbeddedImagesAttachedCount.HasValue(out var count)
+                || count <= 0)
+                return null;
+            var loader = new FileLoader(GenerationSettings.RandomizerSettings.AttachmentLocation);
+            var randomizer = GenerationSettings.RandomizerSettings.GetRandomizer();
+            var files = randomizer.Shuffle(loader.GetAllFiles("*.jpg"))
+                // exclude files with the same names
+                .GroupBy(f => f.Name)
+                .Take(count)
+                .Select(f => new File { Name = f.First().Name, Content = loader.LoadFile(f.First()) })
+                .ToArray();
+            using (var client = await GetLoginLogoutClient(ct))
+            {
+                var email = await client.PutAsync(new Email
+                {
+                    Subject = "Base email for storing images " + Guid.NewGuid().ToString(),
+                    From = "a@a.a",
+                    To = "a@a.a",
+                    ReturnBehavior = ReturnBehavior.All
+                }, ct);
+
+                try
+                {
+                    await client.PutFilesAsync(email, files, ct);
+                }
+                finally
+                {
+                    try
+                    {
+                        // first just sets status of email, second fully deletes
+                        await client.DeleteAsync(email);
+                        await client.DeleteAsync(email);
+                    }
+                    catch (Exception e)
+                    {
+                        Logger.Error(e, "Cannot delete temp entity, {entity}", email);
+                    }
+                }
+
+                return new OneToManyRelation<Email, File>(email, files);
+            }
+        }
+
+        #endregion
     }
 }

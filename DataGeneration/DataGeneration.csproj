@@ -78,6 +78,7 @@
     <Compile Include="Common\Adjuster.cs" />
     <Compile Include="Common\ApiConnectionConfig.cs" />
     <Compile Include="Common\ComplexQueryExecutor.cs" />
+    <Compile Include="Common\FileLoader.cs" />
     <Compile Include="Common\SearchPattern.cs" />
     <Compile Include="Common\EntitySearcher.cs" />
     <Compile Include="Common\ProbabilityCollectionSerializationHelpers.cs" />

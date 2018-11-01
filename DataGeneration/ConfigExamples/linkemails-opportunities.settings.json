@@ -1,11 +1,11 @@
 {
   "$type": "DataGeneration.Entities.Emails.LinkEmailsGenerationSettings, DataGeneration",
   "#comment": "Create emails, fetch entities and link emails to those entities.",
-  "GenerationEntity": "Email",
+  "GenerationType": "Emails for Opportunity",
   "SearchPattern": {
     "EntityType": "DataGeneration.Soap.Opportunity",
     "CreatedDate": {
-      "Condition": "IsGreaterThanOrEqualsTo",
+      "Condition": "Today",
       "Value": "2018-10-1"
     },
     "LinqPattern": {
@@ -26,6 +26,14 @@
         "Probability": 0.9,
         "Value": [ 1, 5 ]
       }
+    ],
+    "BaseEntityEmbeddedImagesAttachedCount": 100,
+    "AttachmentLocation": "D:\\_root\\45293_screenshots",
+    "AttachmentsCount": [
+      [ 1, 5 ]
+    ],
+    "ParagraphsCount": [
+      [ 1, 5 ]
     ]
   }
 }

@@ -18,6 +18,8 @@ namespace DataGeneration.Common
             return string.IsNullOrEmpty(value);
         }
 
+        public static string FormatWith(this string value, params object[] args) => string.Format(value, args);
+
         public static bool IsNullOrEmpty(this IEnumerable enumerable)
         {
             if (enumerable == null) return true;
@@ -65,6 +67,7 @@ namespace DataGeneration.Common
             }
             return enumerable.Count() == 1 && enumerable.Contains(element);
         }
+
         public static bool ContainsOnlyAnyOf<T>(this IEnumerable<T> enumerable, params T[] elements)
         {
             foreach (var item in enumerable)
@@ -73,6 +76,14 @@ namespace DataGeneration.Common
                     return false;
             }
             return true;
+        }
+
+        public static T[] AsArray<T>(this T value) => new T[] { value };
+
+        public static bool HasValue<T>(this T? nullable, out T value) where T : struct
+        {
+            value = nullable.GetValueOrDefault();
+            return nullable.HasValue;
         }
     }
 
@@ -94,6 +105,8 @@ namespace DataGeneration.Common
                 return default;
             return randomizer.ProbabilityRandom(probabilities);
         }
+
+        public static int Int(this Bogus.Randomizer randomizer, (int, int) value) => randomizer.Int(value.Item1, value.Item2);
     }
 
     public static class TaskExtensions

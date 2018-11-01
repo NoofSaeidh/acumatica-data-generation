@@ -42,4 +42,14 @@
       </Mapping>
     </Mappings>
   </TopLevelEntity>
+  <TopLevelEntity name="Email" screen="CR306015">
+    <Fields>
+      <Field name="NoteID" type="GuidValue" />
+    </Fields>
+    <Mappings>
+      <Mapping field="NoteID">
+        <To object="Message" field="NoteID" />
+      </Mapping>
+    </Mappings>
+  </TopLevelEntity>
 </Endpoint>

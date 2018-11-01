@@ -14,7 +14,15 @@ namespace DataGeneration.Common
         public Faker<T> Faker { get; }
 
         public virtual T Generate() => Faker.Generate();
-        public virtual IList<T> GenerateList(int count) => Faker.Generate(count);
+        public virtual IList<T> GenerateList(int count)
+        {
+            using (StopwatchLoggerFactory.LogDispose(nameof(DataGenerator<T>),
+                "GenerateList completed, Count = {count}", count))
+            {
+                return Faker.Generate(count);
+            }
+        }
+
         public virtual IEnumerable<T> GenerateEnumeration() => Faker.GenerateForever();
     }
 }
