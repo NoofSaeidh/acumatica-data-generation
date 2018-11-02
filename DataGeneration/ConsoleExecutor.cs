@@ -1,5 +1,5 @@
-﻿using DataGeneration.Maint;
-using DataGeneration.Common;
+﻿using DataGeneration.Common;
+using DataGeneration.Maint;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -16,16 +16,16 @@ namespace DataGeneration
             public const string Config = "/config";
             public const string Settings = "/settings";
             public const string Start = "/start";
-            public const string UpdateEndpoint = "/update-endpoint";
-            public const string SaveEndpoint = "/save-endpoint";
+            public const string PutEndpoint = "/put-endpoint";
+            public const string GetEndpoint = "/get-endpoint";
             public const string Help = "/?";
             internal const string _Default = "_default";
 
             public static readonly Dictionary<string, string> AvailableArgsHelp = new Dictionary<string, string>
             {
                 [Start] = "Start generation. (Default - \"true\" if no args specified, \"false\" if any arg is specified)",
-                [UpdateEndpoint] = "Update endpoint. If value not specified \"datagen-endpoint.xml\" file will be used.",
-                [SaveEndpoint] = "Save endpoint. Values should be in following order {version} {endpoint} {filepath}",
+                [PutEndpoint] = "Put endpoint to Acumatica from file. If value not specified \"datagen-endpoint.xml\" file will be used.",
+                [GetEndpoint] = "Get endpoint from Acumatica and save to the file. Values should be in following order {version} {endpoint} {filepath}",
                 [Config] = "Specify json config file. If not specified default will be used.",
                 [Settings] = "Specify json files with single Generation Settings. All values will be merged to config's GenerationSettingsCollection. Can specify multiple.",
                 [Help] = "Show this help."
@@ -71,24 +71,23 @@ namespace DataGeneration
         /// <returns>Specifies to start datageneration.</returns>
         public bool ExecuteArgs(IEnumerable<string> args)
         {
-            var executer = new ArgsExecutor(args);
-            if (executer.IsEmpty)
+            if (args.IsNullOrEmpty())
                 return true;
 
             try
             {
-                var result = executer
+                var result = new ArgsExecutor(args)
                     .Arg(Args.Help, ShowHelp, stopOnSuccess: true)
                     .Arg_ThrowNoValue(Args.Config, value => _config = new Lazy<GeneratorConfig>(() => GeneratorConfig.ReadConfig(value)))
                     .Arg_ThrowNoValues(Args.Settings, values => Array.ForEach(values, v => Config.AddGenerationSettingsFromFile(v)))
-                    .Arg(Args.UpdateEndpoint, PutEndpoint, () => PutEndpoint(EndpointDatagenFileName))
-                    .Arg_ThrowNoValues(Args.SaveEndpoint, GetAndSaveEndpoint)
+                    .Arg(Args.PutEndpoint, PutEndpoint, () => PutEndpoint(EndpointDatagenFileName))
+                    .Arg_ThrowNoValues(Args.GetEndpoint, GetAndSaveEndpoint)
                     .Arg(Args.Start, () => { }, res => res.StartGeneration = true)
                     .Default(WrongArgumentsSpecified)
                     .Result;
 
-                if (result.StartGeneration.HasValue)
-                    return (bool)result.StartGeneration;
+                if (result.StartGeneration.HasValue(out var startGeneration))
+                    return startGeneration;
 
                 if (result.Stopped == true)
                     return false;
@@ -101,13 +100,21 @@ namespace DataGeneration
             catch (ArgsExecutionException aee)
             {
                 WriteInfo(aee.Message, ConsoleColor.Red, aee);
-                return false;
+            }
+            catch (ArgsException ae)
+            {
+                WriteInfo(ae.Message, ConsoleColor.Red);
+                ShowHelp();
+            }
+            catch (InvalidOperationException ioe)
+            {
+                WriteInfo(ioe.Message, ConsoleColor.Red, ioe);
             }
             catch (Exception e)
             {
                 WriteInfo("Unexpected exception occurred.", ConsoleColor.Red, e);
-                return false;
             }
+            return false;
         }
 
         private void ShowHelp()
@@ -185,8 +192,14 @@ namespace DataGeneration
 
             public ArgsExecutor(IEnumerable<string> args)
             {
+                if (args == null)
+                    throw new ArgumentNullException(nameof(args));
+
+                // set key by order. 
+                // if first is option, all next will be values until next option is found (starts with '/')
                 string key = null;
-                _args = args?.Where(a => !string.IsNullOrWhiteSpace(a))
+                var groups = args
+                    .Where(a => !string.IsNullOrWhiteSpace(a))
                     .Select(a =>
                     {
                         var arg = a.Trim();
@@ -201,12 +214,21 @@ namespace DataGeneration
                         }
                         return new { key, value };
                     })
-                    .GroupBy(a => a.key)
+                    .GroupBy(a => a.key);
+
+                var firstGroup = groups.FirstOrDefault();
+                if (firstGroup == null)
+                    throw new ArgsException("Options cannot be parsed. All of options are null or white spaces.");
+                // args started not with option (/option)
+                if (firstGroup.Key == null)
+                    throw new ArgsException("Options must start from option, not a value.");
+
+                _args = groups
                     .ToDictionary(
-                        a => a.Key,
-                        a =>
+                        g => g.Key,
+                        g =>
                         {
-                            var vals = a
+                            var vals = g
                                 .Select(aa => aa.value)
                                 .Where(aa => aa != null)
                                 .ToArray();
@@ -306,9 +328,6 @@ namespace DataGeneration
                 return this;
             }
 
-            // if no options
-            public bool IsEmpty => _args == null || !_args.Any();
-
             public ArgsExecutionResult Result { get; }
             private bool Stopped
             {
@@ -329,7 +348,7 @@ namespace DataGeneration
             public List<string> Executed { get; } = new List<string>();
         }
 
-        private class ArgsExecutionException : Exception
+        private class ArgsExecutionException : ArgsException
         {
             public ArgsExecutionException(string message) : base(message)
             {
@@ -338,6 +357,17 @@ namespace DataGeneration
             public ArgsExecutionException(string message, Exception innerException) : base(message, innerException)
             {
 
+            }
+        }
+
+        private class ArgsException : Exception
+        {
+            public ArgsException(string message) : base(message)
+            {
+            }
+
+            public ArgsException(string message, Exception innerException) : base(message, innerException)
+            {
             }
         }
         #endregion
