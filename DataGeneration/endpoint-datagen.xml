@@ -50,6 +50,9 @@
       <Mapping field="NoteID">
         <To object="Message" field="NoteID" />
       </Mapping>
+      <Mapping field="Date">
+        <To object="CurrentMessage: 1" field="StartDate" />
+      </Mapping>
     </Mappings>
   </TopLevelEntity>
 </Endpoint>
