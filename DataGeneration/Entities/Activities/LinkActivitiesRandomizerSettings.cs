@@ -26,7 +26,7 @@ namespace DataGeneration.Entities.Activities
         [JsonIgnore]
         public IProducerConsumerCollection<Entity> LinkEntities { get; set; }
 
-        public override Faker<OneToManyRelation<LinkEntityToActivity, Activity>> GetFaker()
+        protected override Faker<OneToManyRelation<LinkEntityToActivity, Activity>> GetFaker()
         {
             var activityFaker = GetFaker<Activity>()
                 .Rules((f, a) =>

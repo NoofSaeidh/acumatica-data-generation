@@ -15,7 +15,7 @@ namespace DataGeneration.Entities.Cases
         [JsonIgnore]
         public (string businessAccountId, int[] contactIds)[] BusinessAccounts { get; set; }
 
-        public override Faker<Case> GetFaker() => base.GetFaker()
+        protected override Faker<Case> GetFaker() => base.GetFaker()
             .Rules((f, c) =>
             {
                 c.ReturnBehavior = ReturnBehavior.None;

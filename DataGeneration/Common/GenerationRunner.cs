@@ -187,7 +187,7 @@ namespace DataGeneration.Common
             return await ApiClientFactory(ApiConnectionConfig, cancellationToken);
         }
 
-        protected IList<TEntity> GenerateRandomizedList(int count) => GenerationSettings.RandomizerSettings.GetDataGenerator().GenerateList(count);
+        protected virtual IList<TEntity> GenerateRandomizedList(int count) => GenerationSettings.RandomizerSettings.GetDataGenerator().GenerateList(count);
 
         protected void ChangeGenerationCount(int count, string message,
             [CallerMemberName] string memberName = "",
@@ -259,6 +259,9 @@ namespace DataGeneration.Common
         {
         }
 
+        // override to true if no need to GetEntities in RunBeforeGeneration
+        protected virtual bool SkipEntitiesSearch => false;
+
         protected abstract void UtilizeFoundEntities(IList<Soap.Entity> entities);
         protected virtual void AdjustEntitySearcher(EntitySearcher searcher)
         {
@@ -267,6 +270,9 @@ namespace DataGeneration.Common
         protected override async Task RunBeforeGeneration(CancellationToken cancellationToken = default)
         {
             await base.RunBeforeGeneration(cancellationToken);
+
+            if (SkipEntitiesSearch)
+                return;
 
             var entities = await GetEntities(GenerationSettings.SearchPattern, AdjustEntitySearcher, cancellationToken);
             var complexEntities = entities.OfType<Soap.IComplexQueryEntity>();

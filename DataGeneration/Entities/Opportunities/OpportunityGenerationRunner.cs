@@ -1,5 +1,6 @@
 ﻿using DataGeneration.Common;
 using DataGeneration.Soap;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -8,12 +9,14 @@ using VoidTask = System.Threading.Tasks.Task;
 
 namespace DataGeneration.Entities.Opportunities
 {
-    public class OpportunityGenerationRunner : GenerationRunner<Opportunity, OpportunityGenerationSettings>
+    public class OpportunityGenerationRunner : EntitiesSearchGenerationRunner<Opportunity, OpportunityGenerationSettings>
     {
         public OpportunityGenerationRunner(ApiConnectionConfig apiConnectionConfig, OpportunityGenerationSettings generationSettings)
             : base(apiConnectionConfig, generationSettings)
         {
         }
+
+        protected override bool SkipEntitiesSearch => !GenerationSettings.RandomizerSettings.UseExistingOpportunities;
 
         protected override async VoidTask RunBeforeGeneration(CancellationToken cancellationToken = default)
         {
@@ -39,20 +42,20 @@ namespace DataGeneration.Entities.Opportunities
             );
         }
 
-        private async Task<IList<string>> GetInventoryIds(IApiClient client, CancellationToken cancellationToken)
+        private async Task<IList<string>> GetInventoryIds(IApiClient client, CancellationToken ct)
         {
             var nonstock = client.GetListAsync(new NonStockItem
             {
                 InventoryID = new StringReturn(),
                 ItemStatus = new StringSearch("Active"),
                 ReturnBehavior = ReturnBehavior.OnlySpecified
-            });
+            }, ct);
             var stock = client.GetListAsync(new StockItem
             {
                 InventoryID = new StringReturn(),
                 ItemStatus = new StringSearch("Active"),
                 ReturnBehavior = ReturnBehavior.OnlySpecified
-            });
+            }, ct);
             return (await nonstock).Select(i => i.InventoryID.Value)
                 .Concat((await stock).Select(i => i.InventoryID.Value))
                 .ToArray();
@@ -61,6 +64,12 @@ namespace DataGeneration.Entities.Opportunities
         protected override async VoidTask GenerateSingle(IApiClient client, Opportunity entity, CancellationToken cancellationToken)
         {
             await client.PutAsync(entity, cancellationToken);
+        }
+
+        protected override void UtilizeFoundEntities(IList<Entity> entities)
+        {
+            GenerationSettings.RandomizerSettings.ExistingOpportunities = 
+                new ConcurrentQueue<Opportunity>(entities.Cast<Opportunity>());
         }
     }
 }

@@ -43,7 +43,7 @@ namespace DataGeneration.Entities.Emails
         [JsonIgnore]
         public OneToManyRelation<Email, File> EmbeddedFilesTags { get; set; }
 
-        public override Faker<OneToManyRelation<LinkEntityToEmail, OneToManyRelation<Email, File>>> GetFaker()
+        protected override Faker<OneToManyRelation<LinkEntityToEmail, OneToManyRelation<Email, File>>> GetFaker()
         {
             // need to create incoming email for each outgoing email
             // so need to persist outgoing and check in each step

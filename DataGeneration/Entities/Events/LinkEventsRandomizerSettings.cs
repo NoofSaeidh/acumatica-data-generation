@@ -24,7 +24,7 @@ namespace DataGeneration.Entities.Events
         [JsonIgnore]
         public IProducerConsumerCollection<Entity> LinkEntities { get; set; }
 
-        public override Faker<OneToManyRelation<LinkEntityToEvent, Event>> GetFaker()
+        protected override Faker<OneToManyRelation<LinkEntityToEvent, Event>> GetFaker()
         {
              var eventFaker = GetFaker<Event>()
                 .Rules((f, e) =>

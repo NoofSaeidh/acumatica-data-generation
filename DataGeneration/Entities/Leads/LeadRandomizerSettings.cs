@@ -12,25 +12,51 @@ namespace DataGeneration.Entities.Leads
 
         public ProbabilityCollection<string> Statuses { get; set; }
 
-        public override Faker<Lead> GetFaker() => base.GetFaker()
+        protected override Faker<Lead> GetFaker() => base.GetFaker()
             .Rules((f, l) =>
             {
+                var person = new LeadPerson(f.Random);
+
                 l.ReturnBehavior = ReturnBehavior.None;
 
-                l.FirstName = f.Name.FirstName();
-                l.LastName = f.Name.LastName();
-                // replace all possible providers to *.con
-                var email = f.Internet.Email(l.FirstName, l.LastName).Split('.');
-                email[email.Length - 1] = "con";
-                l.Email = string.Join(".", email);
+                l.FirstName = person.FirstName;
+                l.LastName = person.LastName;
+                l.Email = person.Email;
                 l.Address = new Address
                 {
-                    Country = f.Address.CountryCode(Bogus.DataSets.Iso3166Format.Alpha2)
+                    Country = person.Address.CountryCode,
                 };
-                l.CompanyName = f.Company.CompanyName();
+                l.CompanyName = person.Company.Name;
 
                 l.LeadClass = f.Random.ProbabilityRandomIfAny(LeadClasses);
                 l.Status = f.Random.ProbabilityRandomIfAny(Statuses);
             });
+
+        private class LeadPerson : Person
+        {
+            public LeadPerson(Randomizer randomizer)
+            {
+                Random = randomizer;
+            }
+
+            protected override void Populate()
+            {
+                base.Populate();
+
+                Address = new LeadCardAddress
+                {
+                    CountryCode = Random.ArrayElement(new string[] { "US", DsAddress.CountryCode() })
+                };
+
+                Email = DsInternet.Email(FirstName, LastName, ".test");
+            }
+
+            public new LeadCardAddress Address;
+
+            public class LeadCardAddress
+            {
+                public string CountryCode;
+            }
+        }
     }
 }
