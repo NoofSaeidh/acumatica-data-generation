@@ -52,8 +52,7 @@ namespace DataGeneration.Entities.Events
                 .GetFaker()
                 .CustomInstantiator(f =>
                 {
-                    var (min, max) = f.Random.ProbabilityRandom(ActivityCountPerEntity);
-                    var count = f.Random.Int(min, max);
+                    var count = f.Random.Int(f.Random.ProbabilityRandom(ActivityCountPerEntity));
                     var events = eventFaker.Generate(count);
 
                     if (!LinkEntities.TryTake(out var linkEntity))

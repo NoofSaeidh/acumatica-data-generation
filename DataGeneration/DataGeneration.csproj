@@ -169,6 +169,8 @@
     <None Include="ConfigExamples\linkemails-case.settings.json" />
     <None Include="ConfigExamples\linkemails-lead.settings.json" />
     <None Include="ConfigExamples\linkemails-opportunities.settings.json" />
+    <None Include="ConfigExamples\opportunities-forconverted.settings.json" />
+    <None Include="ConfigExamples\opportunities.settings.json" />
     <None Include="Connected Services\Soap.Maint\5.wsdl" />
     <None Include="Connected Services\Soap.Maint\DataGeneration.Soap.Maint.EndpointValidationError.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>

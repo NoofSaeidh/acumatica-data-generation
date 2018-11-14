@@ -288,7 +288,7 @@ namespace DataGeneration.Common
         protected override void ValidateGenerationSettings()
         {
             base.ValidateGenerationSettings();
-            if (GenerationSettings.SearchPattern is null)
+            if (!SkipEntitiesSearch && GenerationSettings.SearchPattern is null)
                 throw new ValidationException($"Property {nameof(SearchPattern)} of {nameof(GenerationSettings)} must be not null in order to search entities in {nameof(RunBeforeGeneration)}");
         }
     }

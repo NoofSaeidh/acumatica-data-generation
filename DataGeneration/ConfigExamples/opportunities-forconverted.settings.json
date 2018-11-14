@@ -1,7 +1,7 @@
 {
   "$type": "DataGeneration.Entities.Opportunities.OpportunityGenerationSettings, DataGeneration",
   "#comment": "Fetches existing opportunities and fill it. It needed for converted opportunities from leads.",
-  "GenerationType": "Opportunity",
+  "GenerationType": "Opportunities for existing",
   "SearchPattern": {
     "EntityType": "Opportunity",
     "CreatedDate": {

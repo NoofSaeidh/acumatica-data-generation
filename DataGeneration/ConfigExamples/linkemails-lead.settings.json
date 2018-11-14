@@ -1,7 +1,7 @@
 {
   "$type": "DataGeneration.Entities.Emails.LinkEmailsGenerationSettings, DataGeneration",
   "#comment": "Create emails, fetch entities and link emails to those entities.",
-  "GenerationType": "Link Emails",
+  "GenerationType": "Emails for Leads",
   "SearchPattern": {
     "EntityType": "DataGeneration.Soap.Lead",
     "#comment": "todo: don't forget adjust this!",
