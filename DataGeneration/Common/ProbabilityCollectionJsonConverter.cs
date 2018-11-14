@@ -28,7 +28,15 @@ namespace DataGeneration.Common
             {
                 if (token is JArray jArray)
                 {
-                    var arType = typeof(ProbabilityObjectWrapper<>).MakeGenericType(paramType).MakeArrayType();
+                    Type arType;
+                    if(paramType.GetInterface(nameof(IProbabilityObject)) != null)
+                    {
+                        arType = paramType.MakeArrayType();
+                    }
+                    else
+                    {
+                        arType = typeof(ProbabilityObjectWrapper<>).MakeGenericType(paramType).MakeArrayType();
+                    }
                     var wrapperType = typeof(ProbabilityObjectCollection<>).MakeGenericType(paramType);
                     var parsedArray = jArray.ToObject(arType, serializer);
                     var wrapper = Activator.CreateInstance(wrapperType, parsedArray);

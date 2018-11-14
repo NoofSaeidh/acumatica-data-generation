@@ -4,6 +4,7 @@
   "GenerationType": "Activity-Case",
   "SearchPattern": {
     "EntityType": "Case",
+    "#comment": "todo: don't forget adjust this!",
     "LinqPattern": {
       "Reverse": true,
       "Take": 10

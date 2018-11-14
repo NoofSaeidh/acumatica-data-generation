@@ -1,5 +1,6 @@
 ﻿using Bogus;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -28,24 +29,23 @@ namespace DataGeneration.Common
     }
 
 
-    public class SourceCollectionDataGenerator<T> : IDataGenerator<T>
+    public class ConsumerCollectionDataGenerator<T> : IDataGenerator<T>
     {
-        private T[] _array;
-        public SourceCollectionDataGenerator(IEnumerable<T> items)
+        private IProducerConsumerCollection<T> _items;
+        public ConsumerCollectionDataGenerator(IProducerConsumerCollection<T> items)
         {
-            _array = items?.ToArray() ?? throw new ArgumentNullException(nameof(items));
+            _items = items ?? throw new ArgumentNullException(nameof(items));
         }
 
-        public IList<T> GenerateList(int count)
+        public IList<T> GenerateList(int count) => GenerateEnumeration().Take(count).ToArray();
+        public T Generate() => GenerateEnumeration().First();
+        public IEnumerable<T> GenerateEnumeration()
         {
-            if (_array.Length < count)
-                throw new InvalidOperationException(
-                    $"Cannot return so much entities. " +
-                    $"Requested count: {count}, available count: {_array.Length}.");
-            return _array;
+            while(_items.TryTake(out var item))
+            {
+                yield return item;
+            }
+            throw new GenerationException("Cannot get item. No items remain.");
         }
-
-        public T Generate() => throw new NotSupportedException();
-        public IEnumerable<T> GenerateEnumeration() => _array;
     }
 }

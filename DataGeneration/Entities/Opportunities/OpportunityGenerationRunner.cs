@@ -20,6 +20,7 @@ namespace DataGeneration.Entities.Opportunities
 
         protected override async VoidTask RunBeforeGeneration(CancellationToken cancellationToken = default)
         {
+            await base.RunBeforeGeneration(cancellationToken);
             using (var client = await GetLoginLogoutClient())
             {
                 if (GenerationSettings.RandomizerSettings.FetchBusinessAccounts)
@@ -68,8 +69,34 @@ namespace DataGeneration.Entities.Opportunities
 
         protected override void UtilizeFoundEntities(IList<Entity> entities)
         {
-            GenerationSettings.RandomizerSettings.ExistingOpportunities = 
-                new ConcurrentQueue<Opportunity>(entities.Cast<Opportunity>());
+             var queue = new ConcurrentQueue<Opportunity>(
+                    entities.Cast<Opportunity>()
+                            .Select(o =>
+                            {
+                                return new Opportunity
+                                {
+                                    OpportunityID = new StringSearch { Value = o.OpportunityID.Value }
+                                };
+                            }));
+
+            ChangeGenerationCount(queue.Count, "To be equal to existing opportunities count.");
+            GenerationSettings.RandomizerSettings.ExistingOpportunities = queue;
+        }
+
+        protected override void AdjustEntitySearcher(EntitySearcher searcher)
+        {
+            base.AdjustEntitySearcher(searcher);
+
+            searcher.AdjustInput(a =>
+                        a.AdjustIfIsOrThrow<Opportunity>(o =>
+                        {
+                            // adjust in AdjustReturnBehavior() but not needed
+                            o.ContactInformation = null;
+                            o.Address = null;
+                            o.NoteID = null;
+
+                            o.OpportunityID = new StringReturn();
+                        }));
         }
     }
 }

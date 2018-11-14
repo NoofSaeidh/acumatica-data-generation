@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DataGeneration.Entities.Leads
 {
-    public class LeadGenerationSettings : GenerationSettings<Lead, LeadRandomizerSettings>
+    public class LeadGenerationSettings : GenerationSettings<LeadWrapper, LeadRandomizerSettings>
     {
         public override GenerationRunner GetGenerationRunner(ApiConnectionConfig apiConnectionConfig) => new LeadGenerationRunner(apiConnectionConfig, this);
     }

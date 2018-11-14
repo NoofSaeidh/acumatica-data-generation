@@ -4,7 +4,7 @@ using DataGeneration.Soap;
 
 namespace DataGeneration.Entities.Leads
 {
-    public class LeadRandomizerSettings : RandomizerSettings<Lead>
+    public class LeadRandomizerSettings : RandomizerSettings<LeadWrapper>
     {
         // todo: should include, instead of Bogus random country code?
         // public ProbabilityCollection<string> CountryCodes { get; set; }
@@ -12,25 +12,45 @@ namespace DataGeneration.Entities.Leads
 
         public ProbabilityCollection<string> Statuses { get; set; }
 
-        protected override Faker<Lead> GetFaker() => base.GetFaker()
-            .Rules((f, l) =>
-            {
-                var person = new LeadPerson(f.Random);
+        public ProbabilityCollection<string> ConvertProbabilitiesByStatus { get; set; }
 
-                l.ReturnBehavior = ReturnBehavior.None;
 
-                l.FirstName = person.FirstName;
-                l.LastName = person.LastName;
-                l.Email = person.Email;
-                l.Address = new Address
+        protected override Faker<LeadWrapper> GetFaker()
+        {
+            var leadFaker = GetFaker<Lead>()
+                .Rules((f, l) =>
                 {
-                    Country = person.Address.CountryCode,
-                };
-                l.CompanyName = person.Company.Name;
+                    var person = new LeadPerson(f.Random);
 
-                l.LeadClass = f.Random.ProbabilityRandomIfAny(LeadClasses);
-                l.Status = f.Random.ProbabilityRandomIfAny(Statuses);
-            });
+                    l.ReturnBehavior = ReturnBehavior.None;
+
+                    l.FirstName = person.FirstName;
+                    l.LastName = person.LastName;
+                    l.Email = person.Email;
+                    l.Address = new Address
+                    {
+                        Country = person.Address.CountryCode,
+                    };
+                    l.CompanyName = person.Company.Name;
+
+                    l.LeadClass = f.Random.ProbabilityRandomIfAny(LeadClasses);
+                    l.Status = f.Random.ProbabilityRandomIfAny(Statuses);
+                });
+
+            return base.GetFaker()
+                       .CustomInstantiator(f =>
+                       {
+                           var lead = leadFaker.Generate();
+
+                           bool convert = false;
+                           if (ConvertProbabilitiesByStatus.TryGetValue(lead.Status, out var probability))
+                           {
+                               convert = f.Random.Bool((float)probability);
+                           }
+
+                           return new LeadWrapper(lead, convert);
+                       });
+        }
 
         private class LeadPerson : Person
         {
@@ -48,7 +68,7 @@ namespace DataGeneration.Entities.Leads
                     CountryCode = Random.ArrayElement(new string[] { "US", DsAddress.CountryCode() })
                 };
 
-                Email = DsInternet.Email(FirstName, LastName, ".test");
+                Email = DsInternet.Email(FirstName, LastName, DsInternet.DomainWord() + ".test");
             }
 
             public new LeadCardAddress Address;

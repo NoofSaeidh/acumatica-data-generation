@@ -69,7 +69,9 @@ namespace DataGeneration.Entities.Emails
                     else if (paragraphs > 0)
                         e.Body = EncodeText(f.Lorem.Paragraphs(paragraphs));
                     else
-                        e.Bcc = EncodeText(f.Lorem.Paragraphs());
+                        e.Body = EncodeText(f.Lorem.Paragraphs());
+
+                    e.MailStatus = "Processed";
 
                     // create incoming email
                     if (incomingEmail == null)
@@ -93,16 +95,20 @@ namespace DataGeneration.Entities.Emails
                         e.Subject = $"RE: {incomingEmail.Subject}";
                         e.From = SystemEmailAddress;
                         e.Date = incomingEmail.Date.Value.Value.AddDays(1);
-                        // todo: mail status
-                        // e.MailStatus =
 
                         incomingEmail = null;
                     }
                 });
 
             var files = GetEndlessAttachementsFiles();
-            File[] getFiles(Faker faker)
+            File[] getFiles(Email email, Faker faker)
             {
+                // but maybe should generate for every type
+                if(email.Incoming == false)
+                {
+                    return new File[0];
+                }
+
                 var (min, max) = faker.Random.ProbabilityRandomIfAny(AttachmentsCount);
                 var count = faker.Random.Int(min, max);
                 return files(faker).Take(count).ToArray();
@@ -148,7 +154,7 @@ namespace DataGeneration.Entities.Emails
                         RelatedEntity = noteId
                     };
 
-                    var relations = emails.Select(e => new OneToManyRelation<Email, File>(e, getFiles(f))).ToArray();
+                    var relations = emails.Select(e => new OneToManyRelation<Email, File>(e, getFiles(e, f))).ToArray();
 
                     return new OneToManyRelation<LinkEntityToEmail, OneToManyRelation<Email, File>>(link, relations);
                 });

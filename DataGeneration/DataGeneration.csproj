@@ -47,6 +47,9 @@
     <Prefer32Bit>false</Prefer32Bit>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>icon.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Bogus, Version=24.3.1.0, Culture=neutral, PublicKeyToken=fa1bb3f3f218129a, processorArchitecture=MSIL">
       <HintPath>..\packages\Bogus.24.3.1\lib\net40\Bogus.dll</HintPath>
@@ -131,9 +134,7 @@
     <Compile Include="Common\ValueTupleJsonConverter.cs" />
     <Compile Include="Entities\Emails\LinkEmailsRandomizerSettings.cs" />
     <Compile Include="Entities\Emails\Enums.cs" />
-    <Compile Include="Entities\Leads\LeadToOpportunityGenerationRunner.cs" />
-    <Compile Include="Entities\Leads\LeadToOpportunityGenerationSettings.cs" />
-    <Compile Include="Entities\Leads\LeadToOpportunityRandomizerSettings.cs" />
+    <Compile Include="Entities\Leads\LeadWrapper.cs" />
     <Compile Include="Entities\Opportunities\Enums.cs" />
     <Compile Include="Entities\Opportunities\OpportunityGenerationRunner.cs" />
     <Compile Include="Entities\Opportunities\OpportunityGenerationSettings.cs" />
@@ -162,6 +163,7 @@
     <None Include="config.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="ConfigExamples\leads.settings.json" />
     <None Include="ConfigExamples\linkactivities-cases.settings.json" />
     <None Include="ConfigExamples\linkevents-opportunities.settings.json" />
     <None Include="ConfigExamples\linkemails-case.settings.json" />
@@ -237,6 +239,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="icon.ico" />
     <Content Include="endpoint-datagen.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

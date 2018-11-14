@@ -31,7 +31,6 @@ namespace DataGeneration.Entities.Opportunities
         [JsonIgnore]
         public bool FetchInventoryIds => OpportunityProductsSettings?.AsList.Any(i => i?.ProductsCounts != null) ?? false;
 
-
         protected override Faker<Opportunity> GetFaker()
         {
             var faker = base
@@ -52,7 +51,7 @@ namespace DataGeneration.Entities.Opportunities
                             o.ManualAmount = true;
                             if (productsSettings.Amounts.TryGetValues(out var amin, out var amax))
                             {
-                                o.Amount = f.Random.Decimal(amin, amax);
+                                o.Amount = decimal.Round(f.Random.Decimal(amin, amax), 2);
                             }
                         }
                         else if (productsSettings.ProductsCounts.TryGetValues(out var pmin, out var pmax)
@@ -128,9 +127,14 @@ namespace DataGeneration.Entities.Opportunities
 
             if(UseExistingOpportunities)
             {
+                if (ExistingOpportunities == null)
+                    throw new InvalidOperationException($"Property {nameof(UseExistingOpportunities)} is not specified.");
+
                 return GetFaker<Opportunity>()
                     .CustomInstantiator(f =>
                     {
+                        // todo: rewrite all this try takes to use ConsumerCollectionDataGenerator -> 
+                        // in overridden GetDataGenerator method
                         if (!ExistingOpportunities.TryTake(out var opportunity))
                         {
                             throw new GenerationException("Cannot fill existing entity. No opportunities remain.");

@@ -3,11 +3,12 @@
   "#comment": "Create events for opportunities",
   "GenerationType": "Event-Opportunity",
   "EntitiesCountProbability": 0.20,
-  "SearchPattern":{
-    "EntityType":"Opportunity",
-    "LinqPattern":{
-      "Reverse":true,
-      "Take":10
+  "SearchPattern": {
+    "EntityType": "Opportunity",
+    "#comment": "todo: don't forget adjust this!",
+    "LinqPattern": {
+      "Reverse": true,
+      "Take": 10
     }
   },
   "RandomizerSettings": {

@@ -4,6 +4,7 @@
   "GenerationType": "Emails for Opportunity",
   "SearchPattern": {
     "EntityType": "DataGeneration.Soap.Opportunity",
+    "#comment": "todo: don't forget adjust this!",
     "CreatedDate": {
       "Condition": "Today",
       "Value": "2018-10-1"

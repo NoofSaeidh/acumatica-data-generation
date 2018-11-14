@@ -5,6 +5,7 @@
   "SearchPattern": {
     "EntityType": "DataGeneration.Soap.Case",
     "CreatedDate": {
+      "#comment": "todo: don't forget adjust this!",
       "Condition": "Today",
       "Value": "2018-10-15"
     }

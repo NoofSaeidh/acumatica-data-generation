@@ -10,6 +10,7 @@ namespace DataGeneration
     {
         public static void Main(string[] args)
         {
+            Console.Title = "Data Generation";
             var executor = new ConsoleExecutor();
             try
             {

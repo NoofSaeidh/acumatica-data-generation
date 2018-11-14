@@ -194,8 +194,10 @@ namespace DataGeneration.Common
             [CallerFilePath] string sourceFilePath = "",
             [CallerLineNumber] int sourceLineNumber = 0)
         {
+            var originCount = GenerationSettings.Count;
             GenerationSettings.Count = count;
-            Logger.Info("Count changed to {count}; Reason: {message}; caller: {callerinfo}", count, message, $"{memberName} at {sourceFilePath}:{sourceLineNumber}");
+            Logger.Info("Count changed from {originCount} to {count}. Reason: {message}, caller: {callerinfo}", 
+                originCount, count, message, $"{memberName} at {sourceFilePath}:{sourceLineNumber}");
         }
 
         private async Task<IEnumerable<Soap.Entity>> GetListFactory(Soap.Entity entity, CancellationToken ct)
