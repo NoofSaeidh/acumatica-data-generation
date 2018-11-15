@@ -19,7 +19,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;DISABLE_API_CANCELLATION</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -28,7 +28,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>TRACE;DISABLE_API_CANCELLATION</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -47,15 +47,18 @@
     <Prefer32Bit>false</Prefer32Bit>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>icon.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Bogus, Version=23.0.3.0, Culture=neutral, PublicKeyToken=fa1bb3f3f218129a, processorArchitecture=MSIL">
-      <HintPath>..\packages\Bogus.23.0.3\lib\net40\Bogus.dll</HintPath>
+    <Reference Include="Bogus, Version=24.3.1.0, Culture=neutral, PublicKeyToken=fa1bb3f3f218129a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Bogus.24.3.1\lib\net40\Bogus.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
-      <HintPath>..\packages\NLog.4.5.10\lib\net45\NLog.dll</HintPath>
+      <HintPath>..\packages\NLog.4.5.11\lib\net45\NLog.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -131,7 +134,7 @@
     <Compile Include="Common\ValueTupleJsonConverter.cs" />
     <Compile Include="Entities\Emails\LinkEmailsRandomizerSettings.cs" />
     <Compile Include="Entities\Emails\Enums.cs" />
-    <Compile Include="Entities\Leads\Enums.cs" />
+    <Compile Include="Entities\Leads\LeadWrapper.cs" />
     <Compile Include="Entities\Opportunities\Enums.cs" />
     <Compile Include="Entities\Opportunities\OpportunityGenerationRunner.cs" />
     <Compile Include="Entities\Opportunities\OpportunityGenerationSettings.cs" />
@@ -156,15 +159,21 @@
   <ItemGroup>
     <None Include=".editorconfig" />
     <None Include="App.config" />
+    <None Include="ConfigExamples\cases.settings.json" />
     <None Include="ConfigExamples\config.example.json" />
     <None Include="config.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="ConfigExamples\linkactivities-cases.settings.json" />
-    <None Include="ConfigExamples\linkevents-opportunities.settings.json" />
-    <None Include="ConfigExamples\linkemails-case.settings.json" />
-    <None Include="ConfigExamples\linkemails-lead.settings.json" />
-    <None Include="ConfigExamples\linkemails-opportunities.settings.json" />
+    <None Include="ConfigExamples\leads.settings.json" />
+    <None Include="ConfigExamples\link-work-items-cases.settings.json" />
+    <None Include="ConfigExamples\link-phone-calls-cases.settings.json" />
+    <None Include="ConfigExamples\link-notes-opportunities.settings.json" />
+    <None Include="ConfigExamples\link-events-opportunities.settings.json" />
+    <None Include="ConfigExamples\link-emails-cases.settings.json" />
+    <None Include="ConfigExamples\link-emails-leads.settings.json" />
+    <None Include="ConfigExamples\link-emails-opportunities.settings.json" />
+    <None Include="ConfigExamples\opportunities-forconverted.settings.json" />
+    <None Include="ConfigExamples\opportunities.settings.json" />
     <None Include="Connected Services\Soap.Maint\5.wsdl" />
     <None Include="Connected Services\Soap.Maint\DataGeneration.Soap.Maint.EndpointValidationError.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
@@ -235,6 +244,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="icon.ico" />
     <Content Include="endpoint-datagen.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

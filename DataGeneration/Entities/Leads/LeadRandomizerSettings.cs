@@ -4,7 +4,7 @@ using DataGeneration.Soap;
 
 namespace DataGeneration.Entities.Leads
 {
-    public class LeadRandomizerSettings : RandomizerSettings<Lead>
+    public class LeadRandomizerSettings : RandomizerSettings<LeadWrapper>
     {
         // todo: should include, instead of Bogus random country code?
         // public ProbabilityCollection<string> CountryCodes { get; set; }
@@ -12,25 +12,71 @@ namespace DataGeneration.Entities.Leads
 
         public ProbabilityCollection<string> Statuses { get; set; }
 
-        public override Faker<Lead> GetFaker() => base.GetFaker()
-            .Rules((f, l) =>
-            {
-                l.ReturnBehavior = ReturnBehavior.None;
+        public ProbabilityCollection<string> ConvertProbabilitiesByStatus { get; set; }
 
-                l.FirstName = f.Name.FirstName();
-                l.LastName = f.Name.LastName();
-                // replace all possible providers to *.con
-                var email = f.Internet.Email(l.FirstName, l.LastName).Split('.');
-                email[email.Length - 1] = "con";
-                l.Email = string.Join(".", email);
-                l.Address = new Address
+
+        protected override Faker<LeadWrapper> GetFaker()
+        {
+            var leadFaker = GetFaker<Lead>()
+                .Rules((f, l) =>
                 {
-                    Country = f.Address.CountryCode(Bogus.DataSets.Iso3166Format.Alpha2)
-                };
-                l.CompanyName = f.Company.CompanyName();
+                    var person = new LeadPerson(f.Random);
 
-                l.LeadClass = f.Random.ProbabilityRandomIfAny(LeadClasses);
-                l.Status = f.Random.ProbabilityRandomIfAny(Statuses);
-            });
+                    l.ReturnBehavior = ReturnBehavior.None;
+
+                    l.FirstName = person.FirstName;
+                    l.LastName = person.LastName;
+                    l.Email = person.Email;
+                    l.Address = new Address
+                    {
+                        Country = person.Address.CountryCode,
+                    };
+                    l.CompanyName = person.Company.Name;
+
+                    l.LeadClass = f.Random.ProbabilityRandomIfAny(LeadClasses);
+                    l.Status = f.Random.ProbabilityRandomIfAny(Statuses);
+                });
+
+            return base.GetFaker()
+                       .CustomInstantiator(f =>
+                       {
+                           var lead = leadFaker.Generate();
+
+                           bool convert = false;
+                           if (ConvertProbabilitiesByStatus.TryGetValue(lead.Status, out var probability))
+                           {
+                               convert = f.Random.Bool((float)probability);
+                           }
+
+                           return new LeadWrapper(lead, convert);
+                       });
+        }
+
+        private class LeadPerson : Person
+        {
+            public LeadPerson(Randomizer randomizer)
+            {
+                Random = randomizer;
+            }
+
+            protected override void Populate()
+            {
+                base.Populate();
+
+                Address = new LeadCardAddress
+                {
+                    CountryCode = Random.ArrayElement(new string[] { "US", DsAddress.CountryCode() })
+                };
+
+                Email = DsInternet.Email(FirstName, LastName, DsInternet.DomainWord() + ".test");
+            }
+
+            public new LeadCardAddress Address;
+
+            public class LeadCardAddress
+            {
+                public string CountryCode;
+            }
+        }
     }
 }

@@ -1,0 +1,32 @@
+{
+  "$type": "DataGeneration.Entities.Activities.LinkActivitiesGenerationSettings, DataGeneration",
+  "#comment": "Create activities (work items) for cases",
+  "GenerationType": "Work items for Cases",
+  "SearchPattern": {
+    "EntityType": "Case",
+    "#comment": "todo: don't forget adjust this!",
+    "LinqPattern": {
+      "Reverse": true,
+      "Take": 10
+    }
+  },
+  "RandomizerSettings": {
+    "PxTypeForLinkedEntity": "PX.Objects.CR.CRCase",
+    "ActivityType": "W",
+    "DateRange": [ "2017-01-01", "2018-05-01" ],
+    "TrackTime": {
+      "true": 0.5,
+      "false": 0.5
+    },
+    "TimeSpent": {
+      "MinTime": "00:10",
+      "MaxTime": "02:00"
+    },
+    "ActivityCountPerEntity": [
+      {
+        "Probability": 0.2,
+        "Value": [ 1, 1 ]
+      }
+    ]
+  }
+}

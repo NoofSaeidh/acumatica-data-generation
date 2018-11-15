@@ -11,11 +11,12 @@ namespace DataGeneration.Entities.Cases
         public ProbabilityCollection<CaseStatusType> CaseStatusTypes { get; set; }
         public ProbabilityCollection<(string priority, string severity)> PrioritiesAndSeverities { get; set; }
 
+        // todo: use EntitiesSearchGenerationRunner for this
         // assigned in RunBeforeGeneration
         [JsonIgnore]
         public (string businessAccountId, int[] contactIds)[] BusinessAccounts { get; set; }
 
-        public override Faker<Case> GetFaker() => base.GetFaker()
+        protected override Faker<Case> GetFaker() => base.GetFaker()
             .Rules((f, c) =>
             {
                 c.ReturnBehavior = ReturnBehavior.None;

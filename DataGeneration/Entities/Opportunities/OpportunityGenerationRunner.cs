@@ -1,5 +1,6 @@
 ﻿using DataGeneration.Common;
 using DataGeneration.Soap;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -8,15 +9,18 @@ using VoidTask = System.Threading.Tasks.Task;
 
 namespace DataGeneration.Entities.Opportunities
 {
-    public class OpportunityGenerationRunner : GenerationRunner<Opportunity, OpportunityGenerationSettings>
+    public class OpportunityGenerationRunner : EntitiesSearchGenerationRunner<Opportunity, OpportunityGenerationSettings>
     {
         public OpportunityGenerationRunner(ApiConnectionConfig apiConnectionConfig, OpportunityGenerationSettings generationSettings)
             : base(apiConnectionConfig, generationSettings)
         {
         }
 
+        protected override bool SkipEntitiesSearch => !GenerationSettings.RandomizerSettings.UseExistingOpportunities;
+
         protected override async VoidTask RunBeforeGeneration(CancellationToken cancellationToken = default)
         {
+            await base.RunBeforeGeneration(cancellationToken);
             using (var client = await GetLoginLogoutClient())
             {
                 if (GenerationSettings.RandomizerSettings.FetchBusinessAccounts)
@@ -39,20 +43,20 @@ namespace DataGeneration.Entities.Opportunities
             );
         }
 
-        private async Task<IList<string>> GetInventoryIds(IApiClient client, CancellationToken cancellationToken)
+        private async Task<IList<string>> GetInventoryIds(IApiClient client, CancellationToken ct)
         {
             var nonstock = client.GetListAsync(new NonStockItem
             {
                 InventoryID = new StringReturn(),
                 ItemStatus = new StringSearch("Active"),
                 ReturnBehavior = ReturnBehavior.OnlySpecified
-            });
+            }, ct);
             var stock = client.GetListAsync(new StockItem
             {
                 InventoryID = new StringReturn(),
                 ItemStatus = new StringSearch("Active"),
                 ReturnBehavior = ReturnBehavior.OnlySpecified
-            });
+            }, ct);
             return (await nonstock).Select(i => i.InventoryID.Value)
                 .Concat((await stock).Select(i => i.InventoryID.Value))
                 .ToArray();
@@ -60,7 +64,51 @@ namespace DataGeneration.Entities.Opportunities
 
         protected override async VoidTask GenerateSingle(IApiClient client, Opportunity entity, CancellationToken cancellationToken)
         {
+            // AC-122395 -> 
+            // if set Lost or Won status, ContactInformation becomes disabled
+            // have to set email first, and then change status.
+            if (entity.ContactInformation != null 
+                && (entity.Status == "Lost" || entity.Status == "Won"))
+            {
+                var status = entity.Status;
+                entity.Status = "New";
+                entity = await client.PutAsync(entity, cancellationToken);
+                entity.Status = status;
+            }
+
             await client.PutAsync(entity, cancellationToken);
+        }
+
+        protected override void UtilizeFoundEntities(IList<Entity> entities)
+        {
+             var queue = new ConcurrentQueue<Opportunity>(
+                    entities.Cast<Opportunity>()
+                            .Select(o =>
+                            {
+                                return new Opportunity
+                                {
+                                    OpportunityID = new StringSearch { Value = o.OpportunityID.Value }
+                                };
+                            }));
+
+            ChangeGenerationCount(queue.Count, "To be equal to existing opportunities count.");
+            GenerationSettings.RandomizerSettings.ExistingOpportunities = queue;
+        }
+
+        protected override void AdjustEntitySearcher(EntitySearcher searcher)
+        {
+            base.AdjustEntitySearcher(searcher);
+
+            searcher.AdjustInput(a =>
+                        a.AdjustIfIsOrThrow<Opportunity>(o =>
+                        {
+                            // adjust in AdjustReturnBehavior() but not needed
+                            o.ContactInformation = null;
+                            o.Address = null;
+                            o.NoteID = null;
+
+                            o.OpportunityID = new StringReturn();
+                        }));
         }
     }
 }

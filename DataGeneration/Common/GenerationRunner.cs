@@ -187,15 +187,17 @@ namespace DataGeneration.Common
             return await ApiClientFactory(ApiConnectionConfig, cancellationToken);
         }
 
-        protected IList<TEntity> GenerateRandomizedList(int count) => GenerationSettings.RandomizerSettings.GetDataGenerator().GenerateList(count);
+        protected virtual IList<TEntity> GenerateRandomizedList(int count) => GenerationSettings.RandomizerSettings.GetDataGenerator().GenerateList(count);
 
         protected void ChangeGenerationCount(int count, string message,
             [CallerMemberName] string memberName = "",
             [CallerFilePath] string sourceFilePath = "",
             [CallerLineNumber] int sourceLineNumber = 0)
         {
+            var originCount = GenerationSettings.Count;
             GenerationSettings.Count = count;
-            Logger.Info("Count changed to {count}; Reason: {message}; caller: {callerinfo}", count, message, $"{memberName} at {sourceFilePath}:{sourceLineNumber}");
+            Logger.Info("Count changed from {originCount} to {count}. Reason: {message}, caller: {callerinfo}", 
+                originCount, count, message, $"{memberName} at {sourceFilePath}:{sourceLineNumber}");
         }
 
         private async Task<IEnumerable<Soap.Entity>> GetListFactory(Soap.Entity entity, CancellationToken ct)
@@ -259,6 +261,9 @@ namespace DataGeneration.Common
         {
         }
 
+        // override to true if no need to GetEntities in RunBeforeGeneration
+        protected virtual bool SkipEntitiesSearch => false;
+
         protected abstract void UtilizeFoundEntities(IList<Soap.Entity> entities);
         protected virtual void AdjustEntitySearcher(EntitySearcher searcher)
         {
@@ -267,6 +272,9 @@ namespace DataGeneration.Common
         protected override async Task RunBeforeGeneration(CancellationToken cancellationToken = default)
         {
             await base.RunBeforeGeneration(cancellationToken);
+
+            if (SkipEntitiesSearch)
+                return;
 
             var entities = await GetEntities(GenerationSettings.SearchPattern, AdjustEntitySearcher, cancellationToken);
             var complexEntities = entities.OfType<Soap.IComplexQueryEntity>();
@@ -280,7 +288,7 @@ namespace DataGeneration.Common
         protected override void ValidateGenerationSettings()
         {
             base.ValidateGenerationSettings();
-            if (GenerationSettings.SearchPattern is null)
+            if (!SkipEntitiesSearch && GenerationSettings.SearchPattern is null)
                 throw new ValidationException($"Property {nameof(SearchPattern)} of {nameof(GenerationSettings)} must be not null in order to search entities in {nameof(RunBeforeGeneration)}");
         }
     }

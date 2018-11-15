@@ -43,10 +43,18 @@ namespace DataGeneration.Entities.Emails
         {
             foreach (var relation in entity.Right)
             {
-                var email = await client.PutAsync(relation.Left, cancellationToken);
-                await client.InvokeAsync(email, entity.Left, cancellationToken);
-                if (!relation.Right.IsNullOrEmpty())
+                if (relation.Right.IsNullOrEmpty())
                 {
+                    await client.InvokeAsync(
+                        await client.PutAsync(relation.Left, cancellationToken), 
+                        entity.Left, 
+                        cancellationToken
+                    );
+                }
+                else
+                {
+                    var email = await client.PutAsync(relation.Left, cancellationToken);
+                    await client.InvokeAsync(email, entity.Left, cancellationToken);
                     await client.PutFilesAsync(email, relation.Right, cancellationToken);
                 }
             }

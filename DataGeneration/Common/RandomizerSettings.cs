@@ -21,17 +21,6 @@ namespace DataGeneration.Common
         public static Randomizer GetRandomizer(int seed) => new Randomizer(seed);
         public static Randomizer GetRandomizer<T>(IRandomizerSettings<T> randomizer) where T : Entity  
             => GetRandomizer(randomizer?.Seed ?? throw new ArgumentNullException(nameof(randomizer)));
-
-        public static Faker<T> GetFaker<T>(IRandomizerSettings<T> randomizer) where T : Entity
-        {
-            if (randomizer == null)
-                throw new ArgumentNullException(nameof(randomizer));
-            if(randomizer.GetDataGenerator() is DataGenerator<T> dg)
-            {
-                return dg.Faker;
-            }
-            throw new NotSupportedException($"Randomizer should return {typeof(DataGenerator<T>)} for {nameof(randomizer.GetDataGenerator)} method in order to get faker.");
-        }
     }
 
     public abstract class RandomizerSettings<T> : RandomizerSettingsBase, IRandomizerSettings<T> where T : class
@@ -40,15 +29,15 @@ namespace DataGeneration.Common
 
         private IDataGenerator<T> _statefullGenerator;
 
-        public IDataGenerator<T> GetStatelessDataGenerator() => new DataGenerator<T>(GetFaker());
+        public virtual IDataGenerator<T> GetStatelessDataGenerator() => new FakerDataGenerator<T>(GetFaker());
 
         /// <summary>
         ///     The same as <see cref="GetStatelessDataGenerator"/> but after first call it will persist in memory,
         /// and use the same generator at each call.
-        /// This required to generate unique data from diferent places with the same seed.
-        /// This method is prefered.
+        /// This required to generate unique data from different places with the same seed.
+        /// This method is preferred.
         /// </summary>
-        /// <param name="forceInitialize">Indicate should statefull generator be reinitialized.
+        /// <param name="forceInitialize">Indicate should state full generator be reinitialized.
         /// You should specify true if any property was changed.</param>
         /// <returns></returns>
         public IDataGenerator<T> GetStatefullDataGenerator(bool forceInitialize = false)
@@ -60,17 +49,17 @@ namespace DataGeneration.Common
 
         IDataGenerator<T> IRandomizerSettings<T>.GetDataGenerator() => GetStatefullDataGenerator();
 
-        public virtual Faker<T> GetFaker()
+        protected virtual Faker<T> GetFaker()
         {
-            ValidateHelper.ValidateObject(this);
+            Validate();
             return GetFaker<T>();
         }
-        
-        public Faker<TOut> GetFaker<TOut>() where TOut : class
+
+        protected Faker<TOut> GetFaker<TOut>() where TOut : class
         {
             return new Faker<TOut>().UseSeed(Seed);
         }
 
-        public void Validate() => ValidateHelper.ValidateObject(this);
+        public virtual void Validate() => ValidateHelper.ValidateObject(this);
     }
 }

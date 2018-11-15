@@ -1,13 +1,16 @@
 {
   "$type": "DataGeneration.Entities.Events.LinkEventsGenerationSettings, DataGeneration",
   "#comment": "Create events for opportunities",
-  "GenerationType": "Event-Opportunity",
-  "EntitiesCountProbability": 0.20,
-  "SearchPattern":{
-    "EntityType":"Opportunity",
-    "LinqPattern":{
-      "Reverse":true,
-      "Take":10
+  "GenerationType": "Events for Opportunities",
+  "SearchPattern": {
+    "EntityType": "Opportunity",
+    "#comment": "todo: don't forget adjust this!",
+    "CreatedDate": {
+      "Condition": "Today"
+    },
+    "LinqPattern": {
+      "Reverse": true,
+      "Take": 10
     }
   },
   "RandomizerSettings": {

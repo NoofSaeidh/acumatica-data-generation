@@ -1,35 +1,40 @@
 {
   "$type": "DataGeneration.Entities.Emails.LinkEmailsGenerationSettings, DataGeneration",
   "#comment": "Create emails, fetch entities and link emails to those entities.",
-  "GenerationEntity": "Email",
+  "GenerationType": "Emails for Opportunities",
   "SearchPattern": {
-    "EntityType": "DataGeneration.Soap.Lead",
+    "EntityType": "DataGeneration.Soap.Opportunity",
+    "#comment": "todo: don't forget adjust this!",
     "CreatedDate": {
       "Condition": "Today",
-      "Value": "2018-10-15"
+      "Value": "2018-10-1"
     },
     "LinqPattern": {
       "Reverse": true,
       "Skip": 0,
-      "Take": 1
+      "Take": 10
     }
   },
   "RandomizerSettings": {
-    "PxTypeForLinkedEntity": "PX.Objects.CR.Contact",
+    "PxTypeForLinkedEntity": "PX.Objects.CR.CROpportunity",
     "DateRange": [
-      "2018-01-02",
-      "2018-02-03"
+      "2017-01-01",
+      "2018-05-01"
     ],
     "SystemEmailAddress": "testadmin@acumatica.com",
     "EmailCountPerEntity": [
       {
         "Probability": 0.9,
         "Value": [ 1, 5 ]
-      },
-      {
-        "Probability": 0.1,
-        "Value": [ 6, 20 ]
       }
+    ],
+    "BaseEntityEmbeddedImagesAttachedCount": 100,
+    "AttachmentLocation": "D:\\_root\\45293_screenshots",
+    "AttachmentsCount": [
+      [ 1, 5 ]
+    ],
+    "ParagraphsCount": [
+      [ 1, 5 ]
     ]
   }
 }
