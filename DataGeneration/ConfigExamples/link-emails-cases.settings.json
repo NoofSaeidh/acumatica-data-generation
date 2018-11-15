@@ -1,7 +1,7 @@
 {
   "$type": "DataGeneration.Entities.Emails.LinkEmailsGenerationSettings, DataGeneration",
   "#comment": "Create emails, fetch entities and link emails to those entities.",
-  "GenerationEntity": "Emails for Cases",
+  "GenerationType": "Emails for Cases",
   "SearchPattern": {
     "EntityType": "DataGeneration.Soap.Case",
     "CreatedDate": {
@@ -23,6 +23,15 @@
         "Probability": 0.1,
         "Value": [ 6, 20 ]
       }
+    ],
+    "BaseEntityEmbeddedImagesAttachedCount": 100,
+    "#comment": "todo: don't forget adjust this!",
+    "AttachmentLocation": "D:\\_root\\45293_screenshots",
+    "AttachmentsCount": [
+      [ 1, 5 ]
+    ],
+    "ParagraphsCount": [
+      [ 1, 5 ]
     ]
   }
 }

@@ -1,13 +1,10 @@
 {
-  "$type": "DataGeneration.Entities.Events.LinkEventsGenerationSettings, DataGeneration",
-  "#comment": "Create events for opportunities",
-  "GenerationType": "Events for Opportunities",
+  "$type": "DataGeneration.Entities.Activities.LinkActivitiesGenerationSettings, DataGeneration",
+  "#comment": "Create activities (notes) for opportunities",
+  "GenerationType": "Notes for Opportunities",
   "SearchPattern": {
     "EntityType": "Opportunity",
     "#comment": "todo: don't forget adjust this!",
-    "CreatedDate": {
-      "Condition": "Today"
-    },
     "LinqPattern": {
       "Reverse": true,
       "Take": 10
@@ -15,10 +12,7 @@
   },
   "RandomizerSettings": {
     "PxTypeForLinkedEntity": "PX.Objects.CR.CROpportunity",
-    "DateRange": {
-      "StartDate": "2017-01-01T00:00:00",
-      "EndDate": "2018-05-01T00:00:00"
-    },
+    "ActivityType": "N",
     "TrackTime": {
       "true": 0.5,
       "false": 0.5
@@ -27,14 +21,11 @@
       "MinTime": "00:10",
       "MaxTime": "02:00"
     },
+    "DateRange": ["2017-01-01", "2018-05-01"],
     "ActivityCountPerEntity": [
       {
         "Probability": 0.2,
         "Value": [ 1, 1 ]
-      },
-      {
-        "Probability": 0.8,
-        "Value": [ 0, 0 ]
       }
     ]
   }

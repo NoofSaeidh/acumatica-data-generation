@@ -1,7 +1,7 @@
 {
   "$type": "DataGeneration.Entities.Activities.LinkActivitiesGenerationSettings, DataGeneration",
   "#comment": "Create activities (phone calls) for cases",
-  "GenerationType": "Activity-Case",
+  "GenerationType": "Phone calls for Cases",
   "SearchPattern": {
     "EntityType": "Case",
     "#comment": "todo: don't forget adjust this!",

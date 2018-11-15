@@ -1,4 +1,6 @@
-//  "!DO NOT USE IT. IT IS OBSOLETE!"
+// OBSOLETE!
+// Do not use itself. GenerationSettingsCollection mostly obsolete,
+// use settings from other files
 {
   "ApiConnectionConfig": {
     "EndpointSettings": {

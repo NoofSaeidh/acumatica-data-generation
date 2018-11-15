@@ -159,17 +159,19 @@
   <ItemGroup>
     <None Include=".editorconfig" />
     <None Include="App.config" />
+    <None Include="ConfigExamples\cases.settings.json" />
     <None Include="ConfigExamples\config.example.json" />
     <None Include="config.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="ConfigExamples\leads.settings.json" />
-    <None Include="ConfigExamples\linkactivities-cases.settings.json" />
-    <None Include="ConfigExamples\linkactivities-opportunities.settings.json" />
-    <None Include="ConfigExamples\linkevents-opportunities.settings.json" />
-    <None Include="ConfigExamples\linkemails-case.settings.json" />
-    <None Include="ConfigExamples\linkemails-lead.settings.json" />
-    <None Include="ConfigExamples\linkemails-opportunities.settings.json" />
+    <None Include="ConfigExamples\link-work-items-cases.settings.json" />
+    <None Include="ConfigExamples\link-phone-calls-cases.settings.json" />
+    <None Include="ConfigExamples\link-notes-opportunities.settings.json" />
+    <None Include="ConfigExamples\link-events-opportunities.settings.json" />
+    <None Include="ConfigExamples\link-emails-cases.settings.json" />
+    <None Include="ConfigExamples\link-emails-leads.settings.json" />
+    <None Include="ConfigExamples\link-emails-opportunities.settings.json" />
     <None Include="ConfigExamples\opportunities-forconverted.settings.json" />
     <None Include="ConfigExamples\opportunities.settings.json" />
     <None Include="Connected Services\Soap.Maint\5.wsdl" />

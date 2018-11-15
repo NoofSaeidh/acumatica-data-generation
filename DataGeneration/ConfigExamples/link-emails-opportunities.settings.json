@@ -26,10 +26,6 @@
       {
         "Probability": 0.9,
         "Value": [ 1, 5 ]
-      },
-      {
-        "Probability": 0.1,
-        "Value": [ 0, 0 ]
       }
     ],
     "BaseEntityEmbeddedImagesAttachedCount": 100,
