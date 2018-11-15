@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -96,7 +97,12 @@ namespace DataGeneration.Common
 
             if (!probabilities.HasDefinedProbabilities)
                 return randomizer.ListItem(probabilities.AsList.ToList());
-            return randomizer.WeightedRandom(probabilities.AsList.ToArray(), probabilities.Probabilities.Select(x => (float)x).ToArray());
+
+            var itemsWithProbs = probabilities.GetItemsWithProbabilities(true).ToArray();
+            var items = itemsWithProbs.Select(i => i.Key).ToArray();
+            var weights = itemsWithProbs.Select(i => (float)i.Value).ToArray();
+
+            return randomizer.WeightedRandom(items, weights);
         }
 
         public static T ProbabilityRandomIfAny<T>(this Bogus.Randomizer randomizer, ProbabilityCollection<T> probabilities)

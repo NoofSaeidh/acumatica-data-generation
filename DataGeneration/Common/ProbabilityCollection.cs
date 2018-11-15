@@ -83,6 +83,14 @@ namespace DataGeneration.Common
 
         public bool IsReadOnly => false;
 
+        public IEnumerable<KeyValuePair<T, decimal>> GetItemsWithProbabilities(bool addDefaultForFreeProbability = true)
+        {
+            var items = EnumerateProbabilities();
+            if (addDefaultForFreeProbability && FreeProbability != 0)
+                items = items.Concat(new KeyValuePair<T, decimal>(default, FreeProbability));
+            return items;
+        }
+
         public IList<decimal> Probabilities
         {
             get
