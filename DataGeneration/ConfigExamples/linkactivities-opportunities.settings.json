@@ -21,6 +21,7 @@
       "MinTime": "00:10",
       "MaxTime": "02:00"
     },
+    "DateRange": ["2017-01-01", "2018-05-01"],
     "ActivityCountPerEntity": [
       {
         "Probability": 0.2,

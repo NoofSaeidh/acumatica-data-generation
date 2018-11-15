@@ -165,6 +165,7 @@
     </None>
     <None Include="ConfigExamples\leads.settings.json" />
     <None Include="ConfigExamples\linkactivities-cases.settings.json" />
+    <None Include="ConfigExamples\linkactivities-opportunities.settings.json" />
     <None Include="ConfigExamples\linkevents-opportunities.settings.json" />
     <None Include="ConfigExamples\linkemails-case.settings.json" />
     <None Include="ConfigExamples\linkemails-lead.settings.json" />

@@ -64,6 +64,18 @@ namespace DataGeneration.Entities.Opportunities
 
         protected override async VoidTask GenerateSingle(IApiClient client, Opportunity entity, CancellationToken cancellationToken)
         {
+            // AC-122395 -> 
+            // if set Lost or Won status, ContactInformation becomes disabled
+            // have to set email first, and then change status.
+            if (entity.ContactInformation != null 
+                && (entity.Status == "Lost" || entity.Status == "Won"))
+            {
+                var status = entity.Status;
+                entity.Status = "New";
+                entity = await client.PutAsync(entity, cancellationToken);
+                entity.Status = status;
+            }
+
             await client.PutAsync(entity, cancellationToken);
         }
 
