@@ -86,6 +86,14 @@ namespace DataGeneration.Common
             value = nullable.GetValueOrDefault();
             return nullable.HasValue;
         }
+
+        public static bool SetIfHasValue<T>(this T? nullable, ref T setter) where T : struct
+        {
+            if (!nullable.HasValue(out var v))
+                return false;
+            setter = v;
+            return true;
+        }
     }
 
     public static class BogusExtensions

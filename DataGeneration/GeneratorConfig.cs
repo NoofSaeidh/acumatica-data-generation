@@ -1,4 +1,5 @@
 ﻿using DataGeneration.Common;
+using DataGeneration.GenerationInfo;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System;
@@ -9,7 +10,7 @@ using System.Linq;
 
 namespace DataGeneration
 {
-    public class GeneratorConfig : IValidatable
+    public partial class GeneratorConfig : IValidatable
     {
         #region Static fields
 
@@ -29,30 +30,16 @@ namespace DataGeneration
 
         #endregion Static fields
 
+        [Required]
         public ApiConnectionConfig ApiConnectionConfig { get; set; }
 
-        [RequiredCollection]
-        public ICollection<IGenerationSettings> GenerationSettingsCollection { get; set; }
-
-        // provide ability to multiply GenerationSettings for each injection
-        public ICollection<Injection> GenerationSettingsInjections { get; set; }
-
-        // if true processing will be stopped if any generation option will fail
-        // ignored for validation exceptions
-        public bool StopProccesingAtExeception { get; set; }
-
-        // inject all injected props to GenerationSettingsCollection (now only InjectExecutionSettings)
-        // work only if items in GenerationSettingsCollection inherited from GenerationSettingsBase
-        public IEnumerable<IGenerationSettings> GetInjectedGenerationSettingsCollection()
+        //[RequiredCollection(AllowEmpty = false)]
+        public ICollection<GenerationLaunchSettings> GetAllLaunches()
         {
-            if (GenerationSettingsCollection.IsNullOrEmpty())
-                return GenerationSettingsCollection;
-
-            if (GenerationSettingsInjections.IsNullOrEmpty())
-                return GenerationSettingsCollection.ToList();
-
-            return GenerationSettingsCollection.SelectMany(s => Injection.Inject(GenerationSettingsInjections, s));
+            throw new NotImplementedException();
         }
+
+        public GenerationLaunchSettings NestedSettings { get; set; }
 
         #region Common methods
 
@@ -61,14 +48,14 @@ namespace DataGeneration
             File.WriteAllText(path, JsonConvert.SerializeObject(this, _jsonSettings));
         }
 
-        public void AddGenerationSettingsFromFile(string path)
-        {
-            var settings = JsonConvert.DeserializeObject<IGenerationSettings>(File.ReadAllText(path), _jsonSettings);
+        //public void AddGenerationSettingsFromFile(string path)
+        //{
+        //    var settings = JsonConvert.DeserializeObject<IGenerationSettings>(File.ReadAllText(path), _jsonSettings);
 
-            if (GenerationSettingsCollection == null)
-                GenerationSettingsCollection = new List<IGenerationSettings>();
-            GenerationSettingsCollection.Add(settings);
-        }
+        //    if (GenerationSettingsCollection == null)
+        //        GenerationSettingsCollection = new List<IGenerationSettings>();
+        //    GenerationSettingsCollection.Add(settings);
+        //}
 
         public static GeneratorConfig ReadConfig(string path)
         {
@@ -80,48 +67,7 @@ namespace DataGeneration
             ValidateHelper.ValidateObject(this);
         }
 
-        public class Injection
-        {
-            public ExecutionTypeSettings? ExecutionTypeSettings { get; set; }
-            public int? Count { get; set; }
-            public int? Seed { get; set; }
-
-            public static IEnumerable<IGenerationSettings> Inject(IEnumerable<Injection> injections, IGenerationSettings generationSettings)
-            {
-                if (injections == null)
-                    throw new ArgumentNullException(nameof(injections));
-                if (generationSettings == null)
-                    throw new ArgumentNullException(nameof(generationSettings));
-
-                // check if there are no injections to return single setting
-                bool empty = false;
-
-                foreach (var injection in injections)
-                {
-                    if (injection.Count == 0
-                        && injection.ExecutionTypeSettings == null
-                        && injection.Seed == null)
-                    {
-                        empty = true;
-                        continue;
-                    }
-
-                    var res = generationSettings.Copy();
-                    if (injection.Count != null)
-                        res.Count = injection.Count.Value;
-                    if (injection.ExecutionTypeSettings != null)
-                        res.ExecutionTypeSettings = injection.ExecutionTypeSettings.Value;
-                    if (injection.Seed != null)
-                        res.Seed = injection.Seed;
-
-                    yield return res;
-                }
-
-                if (empty)
-                    yield return generationSettings;
-            }
-        }
-
         #endregion Common methods
+
     }
 }

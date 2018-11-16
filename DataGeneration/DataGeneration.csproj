@@ -77,6 +77,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GenerationInfo\AllLaunchesResult.cs" />
+    <Compile Include="GenerationInfo\GenerationLaunchSettings.cs" />
+    <Compile Include="GenerationInfo\GenerationSettingsInjection.cs" />
+    <Compile Include="GenerationInfo\AllGenerationsResult.cs" />
     <Compile Include="Common\AcumaticaTimeHelper.cs" />
     <Compile Include="Common\Adjuster.cs" />
     <Compile Include="Common\ApiConnectionConfig.cs" />
@@ -140,9 +144,11 @@
     <Compile Include="Entities\Opportunities\OpportunityGenerationSettings.cs" />
     <Compile Include="Entities\Opportunities\OpportunityRandomizerSettings.cs" />
     <Compile Include="Examples.cs" />
+    <Compile Include="GenerationInfo\GenerationResult.cs" />
     <Compile Include="GeneratorConfig.cs" />
     <Compile Include="GeneratorClient.cs" />
     <Compile Include="Common\EndpointSettings.cs" />
+    <Compile Include="GenerationInfo\LaunchCluster.cs" />
     <Compile Include="Maint\MaintenanceClient.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -247,6 +253,7 @@
     <Content Include="icon.ico" />
     <Content Include="endpoint-datagen.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

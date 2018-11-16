@@ -1,4 +1,5 @@
 ﻿using DataGeneration.Common;
+using DataGeneration.GenerationInfo;
 using NLog;
 using System;
 using System.Collections.Generic;
@@ -19,49 +20,73 @@ namespace DataGeneration
             System.Net.ServicePointManager.DefaultConnectionLimit = 42;
         }
 
-        public GeneratorClient(GeneratorConfig config)
+        public async Task<AllLaunchesResult> GenerateAll(
+            GeneratorConfig config, 
+            CancellationToken ct = default)
         {
-            Config = config ?? throw new ArgumentNullException(nameof(config));
-            if (Config.ApiConnectionConfig == null) throw new ArgumentException($"Property {nameof(Config.ApiConnectionConfig)}" +
-                 $" of argument {nameof(config)} must not be null.");
-        }
+            if (config == null)
+                throw new ArgumentNullException(nameof(config));
 
-        public GeneratorConfig Config { get; }
-
-        /// <summary>
-        ///     Start generation all options defined in <see cref="Config"/>.
-        /// </summary>
-        /// <param name="cancellationToken"></param>
-        /// <returns>Generation result for each generation setting.</returns>
-        /// <exception cref="ValidationException">Config is invalid.</exception>
-        /// <exception cref="OperationCanceledException">Operation was canceled.</exception>
-        public async Task<AllGenerationsResult> GenerateAllOptions(CancellationToken cancellationToken = default)
-        {
             try
             {
-                Config.Validate();
+                config.Validate();
             }
             catch (ValidationException ve)
             {
                 _logger.Fatal(ve, "Cannot start generation, Config is invalid");
                 throw;
             }
+
+            var launches = config.GetAllLaunches().ToList();
+
+            _logger.Info("Start generation all settings for all launches, " +
+                "Lunch count {count}, Config = {@config}, Launches = {@launches}",
+                launches.Count, config, launches);
+
+            var results = new List<AllGenerationsResult>(launches.Count);
+            foreach (var launch in launches)
+            {
+                results.Add(await Generate(config, launch, ct));
+            }
+            return new AllLaunchesResult(results);
+        }
+
+        protected async Task<AllGenerationsResult> Generate(
+            GeneratorConfig config, 
+            GenerationLaunchSettings launchSettings, 
+            CancellationToken ct = default)
+        {
+            if (config == null)
+                throw new ArgumentNullException(nameof(config));
+            if (launchSettings == null)
+                throw new ArgumentNullException(nameof(launchSettings));
+
+            try
+            {
+                config.Validate();
+                launchSettings.Validate();
+            }
+            catch (ValidationException ve)
+            {
+                _logger.Fatal(ve, "Cannot start generation, configuration is invalid");
+                throw;
+            }
+
             var generatationResults = new List<GenerationResult>();
-            var settingsCollection = Config.GetInjectedGenerationSettingsCollection().ToList();
-            // count == 0 checked in Validate method
-            if (settingsCollection.Count == 1)
-                _logger.Info("Start generation all settings, Count = {count}", settingsCollection.Count);
-            else
-                _logger.Info("Start generation all settings, Count = {count}, {@settings}", settingsCollection.Count, settingsCollection);
+            var settingsCollection = launchSettings.GetPreparedGenerationSettings().ToList();
+
+            _logger.Info("Start generation all settings for launch, Count = {count}, Id = {id}, Launch = {@launch}",
+                settingsCollection.Count, launchSettings.Id, launchSettings);
+
             bool stopProcessing = false;
             foreach (var settings in settingsCollection)
             {
                 GenerationResult result;
                 try
                 {
-                    cancellationToken.ThrowIfCancellationRequested();
+                    ct.ThrowIfCancellationRequested();
 
-                    await settings.GetGenerationRunner(Config.ApiConnectionConfig).RunGeneration(cancellationToken).ConfigureAwait(false);
+                    await settings.GetGenerationRunner(config.ApiConnectionConfig).RunGeneration(ct).ConfigureAwait(false);
                     result = new GenerationResult(settings);
                 }
                 catch (OperationCanceledException oce)
@@ -73,7 +98,7 @@ namespace DataGeneration
                 {
                     _logger.Error(ge, "Generation failed");
                     result = new GenerationResult(settings, ge);
-                    if (Config.StopProccesingAtExeception)
+                    if (launchSettings.StopProccesingAtExeception)
                         stopProcessing = true;
                 }
                 catch (ValidationException ve)
@@ -91,35 +116,8 @@ namespace DataGeneration
                 if (stopProcessing)
                     break;
             }
-            _logger.Info("Generation all settings completed");
+            _logger.Info("Generation all settings for launch completed");
             return new AllGenerationsResult(generatationResults, stopProcessing);
         }
-    }
-
-    public class AllGenerationsResult
-    {
-        internal AllGenerationsResult(IEnumerable<GenerationResult> generationResults, bool processingStopped = false)
-        {
-            GenerationResults = generationResults.ToArray();
-            ProcessingStopped = processingStopped;
-        }
-
-        public bool ProcessingStopped { get; }
-        public bool AllSucceeded => GenerationResults.All(g => g.Success);
-        public bool AllFailed => GenerationResults.All(g => !g.Success);
-        public GenerationResult[] GenerationResults { get; }
-    }
-
-    public class GenerationResult
-    {
-        internal GenerationResult(IGenerationSettings generationSettings, Exception exception = null)
-        {
-            GenerationSettings = generationSettings;
-            Exception = exception;
-        }
-
-        public IGenerationSettings GenerationSettings { get; }
-        public Exception Exception { get; }
-        public bool Success => Exception == null;
     }
 }
