@@ -1,4 +1,5 @@
 ﻿using DataGeneration.Common;
+using NLog;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -9,6 +10,8 @@ namespace DataGeneration
 {
     public class Program
     {
+        private static readonly ILogger _logger = Common.LogManager.DefaultLogger;
+
         public static void Main(string[] args)
         {
             Console.Title = "Data Generation";
@@ -22,7 +25,7 @@ namespace DataGeneration
             }
             catch(Exception e)
             {
-                LogManager.DefaultLogger.Fatal(e, "Unexpected exception has occurred");
+                _logger.Fatal(e, "Unexpected exception has occurred");
                 ConsoleExecutor.WriteInfo("Unexpected exception has occurred.", ConsoleColor.DarkRed, e);
             }
         }
@@ -47,33 +50,46 @@ namespace DataGeneration
                         .ConfigureAwait(false);
 
                     if (result.AllSucceeded)
+                    {
                         ConsoleExecutor.WriteInfo("All generations completed successfully.", ConsoleColor.Green);
+                        _logger.Info("All generations completed successfully.");
+                    }
                     else
                     {
                         if (result.AllFailed)
+                        {
                             ConsoleExecutor.WriteInfo("All generations completed unsuccessfully.", ConsoleColor.Red);
+                            _logger.Error("All generations completed unsuccessfully");
+                        }
                         else
+                        {
                             ConsoleExecutor.WriteInfo("Some generations completed unsuccessfully.", ConsoleColor.Yellow);
-
-                        foreach (var item in 
-                            result
+                            _logger.Warn("Some generations completed unsuccessfully");
+                        }
+                        var errorResults = result
                             .GenerationResults
                             .SelectMany(g => g.GenerationResults)
-                            .Where(g => !g.Success))
+                            .Where(g => !g.Success)
+                            .ToList();
+                        foreach (var item in errorResults)
                         {
-                            ConsoleExecutor.WriteInfo($"Generation {item.GenerationSettings.Id} - {item.GenerationSettings.GenerationType} failed.", 
-                                ConsoleColor.Red, 
+                            ConsoleExecutor.WriteInfo($"Generation {item.GenerationSettings.Id} - {item.GenerationSettings.GenerationType} failed.",
+                                ConsoleColor.Red,
                                 item.Exception.Message);
                         }
+                        _logger.Warn("All results with errors: {@results}", errorResults);
                     }
                 }
                 catch (ValidationException ve)
                 {
                     ConsoleExecutor.WriteInfo("Validation failed.", ConsoleColor.Red, ve);
+                    _logger.Fatal(ve, "Validation failed");
+
                 }
                 catch (OperationCanceledException oce)
                 {
-                    ConsoleExecutor.WriteInfo("Operation was canceled.", ConsoleColor.Red, oce);
+                    ConsoleExecutor.WriteInfo("Operation was canceled", ConsoleColor.Red, oce);
+                    _logger.Error(oce, "Operation was canceled");
                 }
             }
         }
