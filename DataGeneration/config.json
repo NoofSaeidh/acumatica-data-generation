@@ -23,7 +23,7 @@
       "configs/cases.settings.json",
       "configs/link-emails-cases.settings.json",
       "configs/link-phone-calls-cases.settings.json",
-      "configs/link-work-items-cases.settings.json",
+      "configs/link-work-items-cases.settings.json"
     ],
     "Multiplier": 10,
     "LaunchInjections": [
@@ -43,7 +43,7 @@
         "Type": "Replace",
         "Value": {
           "ExecutionType": "Parallel",
-          "IgnoreProcessingErrors": false,
+          "IgnoreProcessingErrors": true,
           "ParallelThreads": 8
         }
       },
@@ -75,6 +75,6 @@
           "Take": 1000
         }
       }
-    ],
+    ]
   }
 }
