@@ -45,7 +45,7 @@ namespace DataGeneration
         private Lazy<GeneratorConfig> _config = new Lazy<GeneratorConfig>(() => GeneratorConfig.ReadConfig(ConfigFileName));
         public GeneratorConfig Config => _config.Value;
 
-        public static void WriteInfo(string line, ConsoleColor color = ConsoleColor.Gray, Exception e = null)
+        public static void WriteInfo(string line, ConsoleColor color = ConsoleColor.Gray, object exception = null)
         {
             Console.ForegroundColor = color;
 
@@ -58,8 +58,8 @@ namespace DataGeneration
             Console.WriteLine(getLine(line));
             Console.WriteLine(limitLine);
             Console.WriteLine();
-            if (e != null)
-                Console.WriteLine(e);
+            if (exception != null)
+                Console.WriteLine(exception);
 
             Console.ForegroundColor = ConsoleColor.Gray;
         }

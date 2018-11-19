@@ -329,14 +329,15 @@ namespace DataGeneration.Soap
 
         #region Try Catch
 
-        private T TryCatchPure<T>(Func<T> action, LogArgs logArgs)
+        private void TryCatch(System.Action action, LogArgs logArgs)
         {
             try
             {
                 logArgs.StartInfo.Log();
-
-                // move stopwatchlogger to overrides, to use logdispose with await
-                return action();
+                using (logArgs.CompleteInfo.StopwatchLog())
+                {
+                    action();
+                }
             }
             catch (OperationCanceledException oce)
             {
@@ -351,22 +352,65 @@ namespace DataGeneration.Soap
 
         private T TryCatch<T>(Func<T> action, LogArgs logArgs)
         {
-            return TryCatchPure(() => { using (logArgs.CompleteInfo.StopwatchLog()) return action(); }, logArgs);
-        }
-
-        private void TryCatch(System.Action action, LogArgs logArgs)
-        {
-            TryCatchPure((Func<object>)(() => { using (logArgs.CompleteInfo.StopwatchLog()) action(); return null; }), logArgs);
-        }
-
-        private async Task<T> TryCatchAsync<T>(Func<Task<T>> task, LogArgs logArgs)
-        {
-            return await TryCatchPure(async () => { using (logArgs.CompleteInfo.StopwatchLog()) return await task(); }, logArgs);
+            try
+            {
+                logArgs.StartInfo.Log();
+                using (logArgs.CompleteInfo.StopwatchLog())
+                {
+                    return action();
+                }
+            }
+            catch (OperationCanceledException oce)
+            {
+                logArgs.CancelInfo.Log(oce);
+                throw;
+            }
+            catch (Exception e)
+            {
+                throw logArgs.FailInfo.LogAndGetException(e);
+            }
         }
 
         private async VoidTask TryCatchAsync(Func<VoidTask> task, LogArgs logArgs)
         {
-            await TryCatchPure(async () => { using (logArgs.CompleteInfo.StopwatchLog()) await task(); }, logArgs);
+            try
+            {
+                logArgs.StartInfo.Log();
+                using (logArgs.CompleteInfo.StopwatchLog())
+                {
+                    await task();
+                }
+            }
+            catch (OperationCanceledException oce)
+            {
+                logArgs.CancelInfo.Log(oce);
+                throw;
+            }
+            catch (Exception e)
+            {
+                throw logArgs.FailInfo.LogAndGetException(e);
+            }
+        }
+
+        private async Task<T> TryCatchAsync<T>(Func<Task<T>> task, LogArgs logArgs)
+        {
+            try
+            {
+                logArgs.StartInfo.Log();
+                using (logArgs.CompleteInfo.StopwatchLog())
+                {
+                    return await task();
+                }
+            }
+            catch (OperationCanceledException oce)
+            {
+                logArgs.CancelInfo.Log(oce);
+                throw;
+            }
+            catch (Exception e)
+            {
+                throw logArgs.FailInfo.LogAndGetException(e);
+            }
         }
 
         private async Task<T> TryCatchAsync<T>(Func<Task<T>> task, CancellationToken cancellationToken, LogArgs logArgs)
