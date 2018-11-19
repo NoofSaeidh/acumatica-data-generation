@@ -37,15 +37,15 @@ namespace DataGeneration
             System.Net.ServicePointManager.DefaultConnectionLimit = config.DefaultConnectionLimit ?? _defaultConnectLimit;
 
 
-            var launches = config.GetAllLaunches().ToList();
+            var launches = config.GetAllLaunches(out var unqiueCount).ToList();
 
             var results = new List<AllGenerationsResult>(launches.Count);
             using (StopwatchLoggerFactory.ForceLogStartDispose(
                 _logger,
                 "Start generation all settings for all launches, " +
-                "Lunches count {count}, Config = {@config}, Launches = {@launches}",
+                "Lunches count {count}, Config = {@config}",
                 "Generation for all launches completed",
-                launches.Count, config, launches))
+                launches.Count, config))
             {
                 foreach (var launch in launches)
                 {
@@ -83,7 +83,7 @@ namespace DataGeneration
             using (StopwatchLoggerFactory.ForceLogStartDispose(
                 _logger,
                 "Start generation all settings for launch, " +
-                "Count = {count}, Id = {id}, Launch = {@launch}",
+                "Count = {count}, Id = {id}",
                 "Generation all settings for launch completed, " +
                 "Count = {count}, Id = {id}",
                 settingsCollection.Count, launchSettings.Id, launchSettings))
@@ -107,7 +107,7 @@ namespace DataGeneration
                     {
                         _logger.Error(ge, "Generation failed");
                         result = new GenerationResult(settings, ge);
-                        if (launchSettings.StopProccesingAtExeception)
+                        if (launchSettings.StopProcessingAtException)
                             stopProcessing = true;
                     }
                     catch (ValidationException ve)

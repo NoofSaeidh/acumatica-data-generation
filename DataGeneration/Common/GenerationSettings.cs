@@ -16,7 +16,9 @@ namespace DataGeneration.Common
         public ExecutionTypeSettings ExecutionTypeSettings { get; set; }
         public abstract int? Seed { get; set; }
         public virtual string GenerationType { get; set; }
-        public virtual int Id { get; } = Interlocked.Increment(ref _id);
+        // copy method ignores this
+        // so setter used in injections
+        public virtual int Id { get; internal set; } = Interlocked.Increment(ref _id);
 
         public abstract GenerationRunner GetGenerationRunner(ApiConnectionConfig apiConnectionConfig);
     }

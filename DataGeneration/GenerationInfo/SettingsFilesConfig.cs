@@ -14,41 +14,45 @@ namespace DataGeneration.GenerationInfo
     {
         [Required]
         public ICollection<string> Files { get; set; }
+        public ICollection<JsonInjection<LaunchSettings>> LaunchInjections { get; set; }
         public ICollection<JsonInjection<IGenerationSettings>> SettingsInjections { get; set; }
-        // multuplies launch and apply to settings
-        public ICollection<ICollection<JsonInjection<LaunchSettings>>> LaunchMultiplier { get; set; }
+        // multuplies launches
+        public int? Multiplier { get; set; }
 
         public IEnumerable<LaunchSettings> GetAllLaunchSettings()
         {
             Validate();
             var settings = Files
-                .Select(f =>
-                {
-                    var s = JsonConvert.DeserializeObject<IGenerationSettings>(File.ReadAllText(f), GeneratorConfig.ConfigJsonSettings);
-                    if (SettingsInjections != null)
-                    {
-                        JsonInjection.Inject(s, SettingsInjections);
-                    }
-                    return s;
-                }).ToList();
+                .Select(f => JsonConvert.DeserializeObject<IGenerationSettings>(
+                                    File.ReadAllText(f),
+                                    GeneratorConfig.ConfigJsonSettings))
+                .ToList();
+
             var launch = new LaunchSettings
             {
-                GenerationSettings = settings
+                GenerationSettings = settings,
+                Injections = SettingsInjections
             };
 
-            if (LaunchMultiplier != null)
+            if (LaunchInjections != null)
+                JsonInjection.Inject(launch, LaunchInjections);
+
+            if (Multiplier.HasValue(out var multipl))
             {
-                foreach (var item in LaunchMultiplier)
-                {
-                    if (item == null || item.Count == 0)
-                        continue;
-                    var copy = launch.Copy();
-                    JsonInjection.Inject(copy, item);
-                    yield return copy;
-                }
+                if (multipl <= 0)
+                    throw new InvalidOperationException($"{nameof(Multiplier)} must be null or positive integer.");
+                // copy method ignores Id field, so need to adjust this
+                return Enumerable
+                    .Range(0, multipl)
+                    .Select(i =>
+                    {
+                        var newLaunch = launch.Copy();
+                        newLaunch.Id = i++;
+                        return newLaunch;
+                    });
             }
             else
-                yield return launch;
+                return launch.AsArray();
         }
 
         public void Validate()

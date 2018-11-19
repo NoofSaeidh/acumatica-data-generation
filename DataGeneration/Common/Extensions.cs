@@ -81,6 +81,27 @@ namespace DataGeneration.Common
 
         public static T[] AsArray<T>(this T value) => new T[] { value };
 
+        public static IEnumerable<T> AsEnumerable<T>(this T value) => Enumerable.Repeat(value, 1);
+
+        public static IEnumerable<T> ForEach<T>(this IEnumerable<T> source, Action<T> action)
+        {
+            if(source is List<T> list)
+            {
+                list.ForEach(action);
+                return list;
+            }
+            if(source is T[] array)
+            {
+                Array.ForEach(array, action);
+                return array;
+            }
+            return source.Select(i =>
+            {
+                action(i);
+                return i;
+            });
+        }
+
         public static bool HasValue<T>(this T? nullable, out T value) where T : struct
         {
             value = nullable.GetValueOrDefault();

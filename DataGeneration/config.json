@@ -10,23 +10,71 @@
       "Password": "123"
     }
   },
-  "StopProccesingAtExeception": true,
   "DefaultConnectionLimit": 10,
-  "SettingsInjections": [
-    {
-      "Path": "",
-      "Type": "Patch",
-      "Properties": {
-        "Count": 10,
-        "ExecutionTypeSettings": {
+  "SettingsFiles": {
+    "Files": [
+      "configs/leads.settings.json",
+      "configs/opportunities-forconverted.settings.json",
+      "configs/link-emails-leads.settings.json",
+      "configs/opportunities.settings.json",
+      "configs/link-emails-opportunities.settings.json",
+      "configs/link-notes-opportunities.settings.json",
+      "configs/link-events-opportunities.settings.json",
+      "configs/cases.settings.json",
+      "configs/link-emails-cases.settings.json",
+      "configs/link-phone-calls-cases.settings.json",
+      "configs/link-work-items-cases.settings.json",
+    ],
+    "Multiplier": 10,
+    "LaunchInjections": [
+      {
+        "Path": "StopProcessingAtException",
+        "Value": false
+      }
+    ],
+    "SettingsInjections": [
+      {
+        "Path": "Count",
+        "Type": "Replace", // default
+        "Value": 5
+      },
+      {
+        "Path": "ExecutionTypeSettings",
+        "Type": "Replace",
+        "Value": {
           "ExecutionType": "Parallel",
           "IgnoreProcessingErrors": false,
           "ParallelThreads": 8
         }
+      },
+      {
+        "Path": "RandomizerSettings",
+        "Type": "Patch",
+        "PropertyNotFound": "Ignore",
+        "Value": {
+          "BaseEntityEmbeddedImagesAttachedCount": 100,
+          "AttachmentsLocation": "\\\\attachments-path\\"
+        }
+      },
+      // devided for opportunities-forconverted, because there are different count
+      {
+        "Path": "SearchPattern.CreatedDate",
+        "Type": "Add",
+        "PropertyNotFound": "Ignore",
+        "Value": {
+          "Condition": "IsGreaterThan",
+          "Value": "2018-11-19"
+        }
+      },
+      {
+        "Path": "SearchPattern.LinqPattern",
+        "Type": "Add",
+        "PropertyNotFound": "Ignore",
+        "Value": {
+          "Reverse": true,
+          "Take": 1000
+        }
       }
-    }
-  ],
-  "NestedSettings": {
-    // settings should be here. if no need delete all this object, or generation will fail
+    ],
   }
 }

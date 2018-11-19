@@ -12,15 +12,17 @@ namespace DataGeneration.GenerationInfo
     public class LaunchSettings : IValidatable
     {
         private static int _id;
-        public virtual int Id { get; } = Interlocked.Increment(ref _id);
+        // copy method ignores this
+        // so setter used in injections
+        public virtual int Id { get; internal set; } = Interlocked.Increment(ref _id);
 
         [RequiredCollection(AllowEmpty = false)]
         public ICollection<IGenerationSettings> GenerationSettings { get; set; }
-        public ICollection<JsonInjection> Injections { get; set; }
+        public ICollection<JsonInjection<IGenerationSettings>> Injections { get; set; }
 
         // if true processing will be stopped if any generation option will fail
         // ignored for validation exceptions
-        public bool StopProccesingAtExeception { get; set; }
+        public bool StopProcessingAtException { get; set; }
 
         public IEnumerable<IGenerationSettings> GetPreparedGenerationSettings()
         {
@@ -28,10 +30,7 @@ namespace DataGeneration.GenerationInfo
             var settings = GenerationSettings.Select(g => g.Copy());
             if (Injections != null)
             {
-                foreach (var setting in settings)
-                {
-                    JsonInjection.Inject(setting, Injections);
-                }
+                settings = settings.ForEach(s => JsonInjection.Inject(s, Injections));
             }
             return settings;
         }

@@ -17,11 +17,9 @@ namespace DataGeneration.GenerationInfo
 
         public InjectionType Type { get; set; }
 
-        public PropertiesInjectionSettings PropertiesInjectionSettings { get; set; }
+        public PropertyNotFoundAction PropertyNotFound { get; set; }
 
         public JToken Value { get; set; }
-
-        public JObject Properties { get; set; }
 
         public List<JsonInjection> Inner { get; set; }
 
@@ -30,7 +28,13 @@ namespace DataGeneration.GenerationInfo
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
 
-            var originalValue = GetPropertyValueByPath(source, Path, out var propertyName, out var parent);
+            var originalValue = GetPropertyValueByPath(source, Path, out var propertyName, out var parent, out var notFound);
+            if(notFound)
+            {
+                if (PropertyNotFound == PropertyNotFoundAction.Throw)
+                    throw new InvalidOperationException($"Cannot find property by specified path. Path = {Path}, Source = {source}.");
+                return;
+            }
             var newValue = originalValue;
             switch (Type)
             {
@@ -42,8 +46,10 @@ namespace DataGeneration.GenerationInfo
                 }
                 case InjectionType.Patch:
                 {
+                    if (Value == null)
+                        throw new InvalidOperationException("Patch cannot be applied with null value.");
                     if (originalValue != null)
-                        ApplyProperties(originalValue, Properties);
+                        Patch(originalValue, Value);
 
                     break;
                 }
@@ -52,7 +58,7 @@ namespace DataGeneration.GenerationInfo
                     if (originalValue != null)
                         goto case InjectionType.Patch;
                     else
-                        goto case InjectionType.Add;
+                        goto case InjectionType.Replace;
                 }
                 case InjectionType.Replace:
                 {
@@ -62,7 +68,6 @@ namespace DataGeneration.GenerationInfo
                     else
                         SetPropertyNewValue(parent, propertyName, out newValue);
 
-                    ApplyProperties(newValue, Properties);
                     break;
                 }
                 case InjectionType.Remove:
@@ -93,45 +98,62 @@ namespace DataGeneration.GenerationInfo
             }
         }
 
-        private void ApplyProperties(object source, JObject properties)
+        private void Patch(object source, JToken value)
         {
-            if (properties == null || properties.Count == 0)
+            if (value == null)
                 return;
 
-            JsonConvert.PopulateObject(properties.ToString(), source, GeneratorConfig.ConfigJsonSettings);
+            JsonConvert.PopulateObject(value.ToString(), source, GeneratorConfig.ConfigJsonSettings);
         }
 
-        private object GetPropertyValueByPath(object source, string path, out string propertyName, out object parent)
+        private object GetPropertyValueByPath(object source, string path, out string propertyName, out object parent, out bool notFound)
         {
+            parent = source;
+
             if(path.IsNullOrEmpty())
             {
-                parent = null;
                 propertyName = null;
-                return source;
+                notFound = false;
+                return null;
             }
 
             var paths = Path.Split('.');
-            object result = null;
+            object result = source;
             for (int i = 0; i < paths.Length; i++)
             {
-                if (result == null && i != 0)
-                    throw new InvalidOperationException($"Cannot get property of source by specified path. " +
-                        $"Path = {path}. Source = {source}.");
-
-                var tmp = GetPropertyValue(source, paths[i]);
-                source = result;
+                if(result == null)
+                {
+                    notFound = true;
+                    propertyName = null;
+                    return null;
+                }
+                var tmp = GetPropertyValue(result, paths[i], out var notFound_);
+                if (notFound_)
+                {
+                    notFound = true;
+                    propertyName = null;
+                    return null;
+                }
+                parent = result;
                 result = tmp;
             }
             propertyName = paths[paths.Length - 1];
-            parent = source;
+            notFound = false;
             return result;
         }
 
-        private object GetPropertyValue(object source, string propertyName)
+        private object GetPropertyValue(object source, string propertyName, out bool notFound)
         {
             try
             {
-                return source.GetType().GetProperty(propertyName).GetValue(source);
+                var property = source.GetType().GetProperty(propertyName);
+                if(property == null)
+                {
+                    notFound = true;
+                    return null;
+                }
+                notFound = false;
+                return property.GetValue(source);
             }
             catch (Exception e)
             {
@@ -149,7 +171,7 @@ namespace DataGeneration.GenerationInfo
                 // todo: refactor this
                 var v = value.ToObject(prop.PropertyType, _jsonSerializer);
 
-                prop.SetValue(source, value);
+                prop.SetValue(source, v);
             }
             catch (Exception e)
             {
@@ -185,16 +207,16 @@ namespace DataGeneration.GenerationInfo
 
     public enum InjectionType
     {
-        Add, // if null - add, otherwise - do nothing
-        Patch, // patch only properties
-        PatchOrAdd, // add if origin value is null
-        Replace,
-        Remove,
+        Replace = 0,
+        Add = 1, // if null - add, otherwise - do nothing
+        Patch = 2, // patch only properties
+        PatchOrAdd = 3, // add if origin value is null
+        Remove = 4,
     }
 
-    public enum PropertiesInjectionSettings
+    public enum PropertyNotFoundAction
     {
-        IgnoreMissmatch = 0,
-        ThrowOnMissmatch = 1,
+        Throw = 0,
+        Ignore = 1,
     }
 }

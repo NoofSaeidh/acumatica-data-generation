@@ -65,11 +65,11 @@ namespace DataGeneration.Entities.Emails
         protected async Task<OneToManyRelation<Email, File>> PutEmbeddedFiles(CancellationToken ct)
         {
             // create base entity (email) for linked images for all other emails
-            if (GenerationSettings.RandomizerSettings.AttachmentLocation == null
+            if (GenerationSettings.RandomizerSettings.AttachmentsLocation == null
                 || !GenerationSettings.RandomizerSettings.BaseEntityEmbeddedImagesAttachedCount.HasValue(out var count)
                 || count <= 0)
                 return null;
-            var loader = new FileLoader(GenerationSettings.RandomizerSettings.AttachmentLocation);
+            var loader = new FileLoader(GenerationSettings.RandomizerSettings.AttachmentsLocation);
             var randomizer = GenerationSettings.RandomizerSettings.GetRandomizer();
             var files = randomizer.Shuffle(loader.GetAllFiles("*.jpg"))
                 // exclude files with the same names

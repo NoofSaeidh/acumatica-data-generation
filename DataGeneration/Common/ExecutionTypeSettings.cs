@@ -23,6 +23,9 @@ namespace DataGeneration.Common
         // process all entities even if one failed.
         public bool IgnoreProcessingErrors { get; }
 
+        public override string ToString() => ExecutionType.ToString()
+            + (ExecutionType == ExecutionType.Parallel ? " Threads = " + ParallelThreads : null);
+
         public static ExecutionTypeSettings Sequent(bool ignoreErrorsForEntities = false)
         {
             return new ExecutionTypeSettings(ExecutionType.Sequent, ignoreErrorsForEntities);

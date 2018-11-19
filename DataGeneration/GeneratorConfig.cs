@@ -36,14 +36,24 @@ namespace DataGeneration
         // hack: set it not much bigger that count of used threads
         public int? DefaultConnectionLimit { get; set; }
 
-        public ICollection<LaunchSettings> GetAllLaunches()
+        public ICollection<LaunchSettings> GetAllLaunches(out int uniqueLaunchesCount)
         {
             Validate();
+            uniqueLaunchesCount = 0;
             var result = new List<LaunchSettings>();
             if (NestedSettings != null)
+            {
+                uniqueLaunchesCount++;
                 result.Add(NestedSettings);
+            }
             if (SettingsFiles != null)
+            {
+                if(SettingsFiles.Multiplier.HasValue(out var multiplier))
+                {
+                    uniqueLaunchesCount += multiplier;
+                }
                 result.AddRange(SettingsFiles.GetAllLaunchSettings());
+            }
             return result;
         }
 

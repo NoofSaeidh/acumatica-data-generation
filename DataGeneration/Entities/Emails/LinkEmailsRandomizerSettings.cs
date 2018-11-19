@@ -26,7 +26,7 @@ namespace DataGeneration.Entities.Emails
         [Required]
         public string PxTypeForLinkedEntity { get; set; }
 
-        public string AttachmentLocation { get; set; }
+        public string AttachmentsLocation { get; set; }
 
         public ProbabilityCollection<(int min, int max)> AttachmentsCount { get; set; }
 
@@ -163,18 +163,18 @@ namespace DataGeneration.Entities.Emails
         // return function to not to check initialization and create loader each iteration and it need faker
         private Func<Faker, IEnumerable<File>> GetEndlessAttachementsFiles()
         {
-            if (AttachmentLocation == null)
+            if (AttachmentsLocation == null)
             {
-                Logger.Info($"{nameof(AttachmentLocation)} is null, no images will be generated");
+                Logger.Info($"{nameof(AttachmentsLocation)} is null, no images will be generated");
                 return _ => Enumerable.Empty<File>();
             }
             if (AttachmentsCount == null)
                 return _ => Enumerable.Empty<File>();
 
-            FileLoader fileLoader = new CachedFileLoader(AttachmentLocation);
+            FileLoader fileLoader = new CachedFileLoader(AttachmentsLocation);
             var imageFiles = fileLoader.GetAllFiles();
             if (imageFiles.Length == 0)
-                throw new InvalidOperationException($"Directory {AttachmentLocation} doesn't contain files.");
+                throw new InvalidOperationException($"Directory {AttachmentsLocation} doesn't contain files.");
             Logger.Info("Found files count {count}", imageFiles.Length);
 
             IEnumerable<File> result(Faker faker)
