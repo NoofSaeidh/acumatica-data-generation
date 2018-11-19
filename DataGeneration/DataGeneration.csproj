@@ -37,10 +37,10 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release-Optimized|AnyCPU'">
     <OutputPath>bin\Release-Optimized\</OutputPath>
-    <DefineConstants>DISABLE_TIMETRACKING;DISABLE_API_CANCELLATION</DefineConstants>
+    <DefineConstants>TRACE;DISABLE_TIMETRACKING;DISABLE_API_CANCELLATION</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
     <LangVersion>latest</LangVersion>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
