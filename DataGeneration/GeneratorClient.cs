@@ -14,16 +14,13 @@ namespace DataGeneration
     {
         private static ILogger _logger { get; } = Common.LogManager.GetLogger(Common.LogManager.LoggerNames.GenerationClient);
 
-        static GeneratorClient()
-        {
-            // hack: set it not much bigger that count of used threads
-            System.Net.ServicePointManager.DefaultConnectionLimit = 42;
-        }
+        private static int _defaultConnectLimit = 8;
 
         public async Task<AllLaunchesResult> GenerateAll(
             GeneratorConfig config, 
             CancellationToken ct = default)
         {
+
             if (config == null)
                 throw new ArgumentNullException(nameof(config));
 
@@ -37,23 +34,30 @@ namespace DataGeneration
                 throw;
             }
 
+            System.Net.ServicePointManager.DefaultConnectionLimit = config.DefaultConnectionLimit ?? _defaultConnectLimit;
+
+
             var launches = config.GetAllLaunches().ToList();
 
-            _logger.Info("Start generation all settings for all launches, " +
-                "Lunch count {count}, Config = {@config}, Launches = {@launches}",
-                launches.Count, config, launches);
-
             var results = new List<AllGenerationsResult>(launches.Count);
-            foreach (var launch in launches)
+            using (StopwatchLoggerFactory.ForceLogStartDispose(
+                _logger,
+                "Start generation all settings for all launches, " +
+                "Lunches count {count}, Config = {@config}, Launches = {@launches}",
+                "Generation for all launches completed",
+                launches.Count, config, launches))
             {
-                results.Add(await Generate(config, launch, ct));
+                foreach (var launch in launches)
+                {
+                    results.Add(await Generate(config, launch, ct));
+                }
             }
             return new AllLaunchesResult(results);
         }
 
         protected async Task<AllGenerationsResult> Generate(
             GeneratorConfig config, 
-            GenerationLaunchSettings launchSettings, 
+            LaunchSettings launchSettings, 
             CancellationToken ct = default)
         {
             if (config == null)
@@ -75,48 +79,53 @@ namespace DataGeneration
             var generatationResults = new List<GenerationResult>();
             var settingsCollection = launchSettings.GetPreparedGenerationSettings().ToList();
 
-            _logger.Info("Start generation all settings for launch, Count = {count}, Id = {id}, Launch = {@launch}",
-                settingsCollection.Count, launchSettings.Id, launchSettings);
-
             bool stopProcessing = false;
-            foreach (var settings in settingsCollection)
+            using (StopwatchLoggerFactory.ForceLogStartDispose(
+                _logger,
+                "Start generation all settings for launch, " +
+                "Count = {count}, Id = {id}, Launch = {@launch}",
+                "Generation all settings for launch completed, " +
+                "Count = {count}, Id = {id}",
+                settingsCollection.Count, launchSettings.Id, launchSettings))
             {
-                GenerationResult result;
-                try
+                foreach (var settings in settingsCollection)
                 {
-                    ct.ThrowIfCancellationRequested();
+                    GenerationResult result;
+                    try
+                    {
+                        ct.ThrowIfCancellationRequested();
 
-                    await settings.GetGenerationRunner(config.ApiConnectionConfig).RunGeneration(ct).ConfigureAwait(false);
-                    result = new GenerationResult(settings);
+                        await settings.GetGenerationRunner(config.ApiConnectionConfig).RunGeneration(ct).ConfigureAwait(false);
+                        result = new GenerationResult(settings);
+                    }
+                    catch (OperationCanceledException oce)
+                    {
+                        _logger.Fatal(oce, "Operation was canceled");
+                        throw;
+                    }
+                    catch (GenerationException ge)
+                    {
+                        _logger.Error(ge, "Generation failed");
+                        result = new GenerationResult(settings, ge);
+                        if (launchSettings.StopProccesingAtExeception)
+                            stopProcessing = true;
+                    }
+                    catch (ValidationException ve)
+                    {
+                        _logger.Error(ve, "Generation not started because of invalid configuration");
+                        result = new GenerationResult(settings, ve);
+                    }
+                    // this should not happen
+                    catch (Exception e)
+                    {
+                        _logger.Fatal(e, "Generation failed with unexpected error");
+                        throw;
+                    }
+                    generatationResults.Add(result);
+                    if (stopProcessing)
+                        break;
                 }
-                catch (OperationCanceledException oce)
-                {
-                    _logger.Fatal(oce, "Operation was canceled");
-                    throw;
-                }
-                catch (GenerationException ge)
-                {
-                    _logger.Error(ge, "Generation failed");
-                    result = new GenerationResult(settings, ge);
-                    if (launchSettings.StopProccesingAtExeception)
-                        stopProcessing = true;
-                }
-                catch (ValidationException ve)
-                {
-                    _logger.Error(ve, "Generation not started because of invalid configuration");
-                    result = new GenerationResult(settings, ve);
-                }
-                // this should not happen
-                catch (Exception e)
-                {
-                    _logger.Fatal(e, "Generation failed with unexpected error");
-                    throw;
-                }
-                generatationResults.Add(result);
-                if (stopProcessing)
-                    break;
             }
-            _logger.Info("Generation all settings for launch completed");
             return new AllGenerationsResult(generatationResults, stopProcessing);
         }
     }

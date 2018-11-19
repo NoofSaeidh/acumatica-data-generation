@@ -9,14 +9,14 @@ using System.Threading.Tasks;
 
 namespace DataGeneration.GenerationInfo
 {
-    public class GenerationLaunchSettings : IValidatable
+    public class LaunchSettings : IValidatable
     {
         private static int _id;
         public virtual int Id { get; } = Interlocked.Increment(ref _id);
 
         [RequiredCollection(AllowEmpty = false)]
         public ICollection<IGenerationSettings> GenerationSettings { get; set; }
-        public GenerationSettingsInjection Injection { get; set; }
+        public ICollection<JsonInjection> Injections { get; set; }
 
         // if true processing will be stopped if any generation option will fail
         // ignored for validation exceptions
@@ -25,10 +25,15 @@ namespace DataGeneration.GenerationInfo
         public IEnumerable<IGenerationSettings> GetPreparedGenerationSettings()
         {
             Validate();
-            if (Injection != null)
-                return Injection.Inject(GenerationSettings);
-
-            return GenerationSettings.Select(g => g);
+            var settings = GenerationSettings.Select(g => g.Copy());
+            if (Injections != null)
+            {
+                foreach (var setting in settings)
+                {
+                    JsonInjection.Inject(setting, Injections);
+                }
+            }
+            return settings;
         }
 
         public void Validate()

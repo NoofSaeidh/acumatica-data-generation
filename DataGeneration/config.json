@@ -11,70 +11,22 @@
     }
   },
   "StopProccesingAtExeception": true,
-  "GenerationSettingsCollection": [
+  "DefaultConnectionLimit": 10,
+  "SettingsInjections": [
     {
-      "$type": "DataGeneration.Entities.Leads.LeadGenerationSettings, DataGeneration",
-      "ExecutionTypeSettings": {
-        "ExecutionType": "Parallel",
-        "ParallelThreads": 4,
-        "IgnoreProcessingErrors": true
-      },
-      "PxType": "PX.Object.CR.Contact",
-      "ConvertByStatuses": {
-        "New": {
-          "ToOpportunity": 0.5
-        },
-        "Open": {
-          "ToOpportunity": 0.5
-        }
-      },
-      "EmailsGenerationSettings": {
-        "EmailsForSingleLeadCounts": {
-          "0": 0.3,
-          "1": null,
-          "2": null,
-          "3": null,
-          "4": null,
-          "5": null
-        },
-        "SystemAccounts": [
-          [
-            "testadmin@acumatica.con",
-            "System Email Account"
-          ]
-        ],
-        "EmailRandomizerSettings": {
-          "DateRange": {
-            "StartDate": "2017-01-01T00:00:00",
-            "EndDate": "2018-05-01T00:00:00"
-          }
-        }
-      },
-      "GenerationEntity": "Lead",
-      "RandomizerSettings": {
-        "$type": "DataGeneration.Entities.Leads.LeadRandomizerSettings, DataGeneration",
-        "LeadClasses": {
-          "LEAD": 0.7,
-          "LEADBUS": 0.15,
-          "LEADBUSSVC": 0.15
-        },
-        "Statuses": {
-          "New": 0.2,
-          "Open": 0.5,
-          "Suspended": 0.1,
-          "Lost": 0.2
+      "Path": "",
+      "Type": "Patch",
+      "Properties": {
+        "Count": 10,
+        "ExecutionTypeSettings": {
+          "ExecutionType": "Parallel",
+          "IgnoreProcessingErrors": false,
+          "ParallelThreads": 8
         }
       }
     }
   ],
-  "GenerationSettingsInjections": [
-    {
-      "ExecutionTypeSettings": {
-        "ExecutionType": "Parallel",
-        "ParallelThreads": 4,
-        "IgnoreProcessingErrors": false
-      },
-      "Count": 1000
-    }
-  ]
+  "NestedSettings": {
+    // settings should be here. if no need delete all this object, or generation will fail
+  }
 }

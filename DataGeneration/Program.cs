@@ -1,6 +1,7 @@
 ﻿using DataGeneration.Common;
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -41,8 +42,8 @@ namespace DataGeneration
                 };
                 try
                 {
-                    var result = await new GeneratorClient(config)
-                        .GenerateAllOptions(tokenSource.Token)
+                    var result = await new GeneratorClient()
+                        .GenerateAll(config, tokenSource.Token)
                         .ConfigureAwait(false);
 
                     if (result.AllSucceeded)
@@ -54,11 +55,15 @@ namespace DataGeneration
                         else
                             ConsoleExecutor.WriteInfo("Some generations completed unsuccessfully.", ConsoleColor.Yellow);
 
-                        for (var i = 0; i < result.GenerationResults.Length; i++)
+                        foreach (var item in 
+                            result
+                            .GenerationResults
+                            .SelectMany(g => g.GenerationResults)
+                            .Where(g => !g.Success))
                         {
-                            var item = result.GenerationResults[i];
-                            if (!item.Success)
-                                ConsoleExecutor.WriteInfo($"Generation {i} - {item.GenerationSettings.GenerationType} failed.", ConsoleColor.Red, item.Exception.Message);
+                            ConsoleExecutor.WriteInfo($"Generation {item.GenerationSettings.Id} - {item.GenerationSettings.GenerationType} failed.", 
+                                ConsoleColor.Red, 
+                                item.Exception.Message);
                         }
                     }
                 }
