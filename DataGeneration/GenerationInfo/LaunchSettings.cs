@@ -11,6 +11,9 @@ namespace DataGeneration.GenerationInfo
 {
     public class LaunchSettings : IValidatable
     {
+        private static int _generationId;
+        private static int GetGenerationId() => Interlocked.Increment(ref _generationId);
+
         private static int _id;
         // copy method ignores this
         // so setter used in injections
@@ -30,7 +33,12 @@ namespace DataGeneration.GenerationInfo
             var settings = GenerationSettings.Select(g => g.Copy());
             if (Injections != null)
             {
-                settings = settings.ForEach(s => JsonInjection.Inject(s, Injections));
+                settings = settings.ForEach(s =>
+                {
+                    JsonInjection.Inject(s, Injections);
+                    if(s is GenerationSettingsBase gs)
+                        gs.Id = GetGenerationId();
+                });
             }
             return settings;
         }
