@@ -172,8 +172,9 @@ namespace DataGeneration.Common
                         }
                         catch (Exception e)
                         {
-                            Logger.Fatal(e, "Unexpected exception has occurred");
-                            throw;
+                            Logger.Error(e, "Unexpected exception has occurred while processing {entity}", typeof(TEntity));
+                            if (!GenerationSettings.ExecutionTypeSettings.IgnoreProcessingErrors)
+                                throw;
                         }
                     }
                 }

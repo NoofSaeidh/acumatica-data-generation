@@ -116,7 +116,9 @@ namespace DataGeneration
                     catch (Exception e)
                     {
                         _logger.Fatal(e, "Generation failed with unexpected error");
-                        throw;
+                        result = new GenerationResult(settings, e);
+                        if (launchSettings.StopProcessingAtException)
+                            stopProcessing = true;
                     }
                     generatationResults.Add(result);
                     if (stopProcessing)
