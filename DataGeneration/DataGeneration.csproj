@@ -145,6 +145,7 @@
     <Compile Include="Entities\Opportunities\OpportunityRandomizerSettings.cs" />
     <Compile Include="Examples.cs" />
     <Compile Include="GenerationInfo\GenerationResult.cs" />
+    <Compile Include="GenerationInfo\ServicePointSettings.cs" />
     <Compile Include="GenerationInfo\SettingsFilesConfig.cs" />
     <Compile Include="GeneratorConfig.cs" />
     <Compile Include="GeneratorClient.cs" />

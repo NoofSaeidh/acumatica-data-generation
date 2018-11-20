@@ -3,14 +3,18 @@
     "EndpointSettings": {
       "AcumaticaBaseUrl": "http://localhost:444",
       "EndpointName": "datagen",
-      "EndpointVersion": "18.200.001"
+      "EndpointVersion": "18.200.001",
+      "Timeout": "00:01:00"
     },
     "LoginInfo": {
       "Username": "admin",
       "Password": "123"
     }
   },
-  "DefaultConnectionLimit": 10,
+  "ServicePointSettings": {
+    "Expect100Continue": false,
+    "DefaultConnectionLimit": 16
+  },
   "SettingsFiles": {
     "Files": [
       "configs/leads.settings.json",

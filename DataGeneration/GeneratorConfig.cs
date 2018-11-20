@@ -33,8 +33,7 @@ namespace DataGeneration
         [Required]
         public ApiConnectionConfig ApiConnectionConfig { get; set; }
 
-        // hack: set it not much bigger that count of used threads
-        public int? DefaultConnectionLimit { get; set; }
+        public ServicePointSettings ServicePointSettings { get; set; }
 
         public ICollection<LaunchSettings> GetAllLaunches(out int uniqueLaunchesCount)
         {

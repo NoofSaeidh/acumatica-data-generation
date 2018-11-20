@@ -14,8 +14,6 @@ namespace DataGeneration
     {
         private static ILogger _logger { get; } = Common.LogManager.GetLogger(Common.LogManager.LoggerNames.GenerationClient);
 
-        private static int _defaultConnectLimit = 8;
-
         public async Task<AllLaunchesResult> GenerateAll(
             GeneratorConfig config, 
             CancellationToken ct = default)
@@ -34,8 +32,7 @@ namespace DataGeneration
                 throw;
             }
 
-            System.Net.ServicePointManager.DefaultConnectionLimit = config.DefaultConnectionLimit ?? _defaultConnectLimit;
-
+            config.ServicePointSettings?.ApplySettings();
 
             var launches = config.GetAllLaunches(out var unqiueCount).ToList();
 

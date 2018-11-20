@@ -23,6 +23,7 @@ namespace DataGeneration.Common
         public string AcumaticaBaseUrl { get; }
         public string EndpointName { get; }
         public string EndpointVersion { get; }
+        public TimeSpan? Timeout { get; set; }
 
         [JsonIgnore]
         public Uri EndpointUrl => new Uri(AcumaticaBaseUrl.TrimEnd('/') + $"/{EndpointPart}/{EndpointName}/{EndpointVersion}/");
@@ -47,7 +48,10 @@ namespace DataGeneration.Common
                     {
                         AllowCookies = true,
                         MaxReceivedMessageSize = int.MaxValue,
-                        SendTimeout = TimeSpan.FromHours(1)
+                        SendTimeout = Timeout ?? TimeSpan.FromMinutes(1),
+                        CloseTimeout = Timeout ?? TimeSpan.FromMinutes(1),
+                        OpenTimeout = Timeout ?? TimeSpan.FromMinutes(1),
+                        ReceiveTimeout = Timeout ?? TimeSpan.FromMinutes(1),
                     };
                 }
                 case "https":
@@ -56,7 +60,10 @@ namespace DataGeneration.Common
                     {
                         AllowCookies = true,
                         MaxReceivedMessageSize = int.MaxValue,
-                        SendTimeout = TimeSpan.FromHours(1)
+                        SendTimeout = Timeout ?? TimeSpan.FromMinutes(1),
+                        CloseTimeout = Timeout ?? TimeSpan.FromMinutes(1),
+                        OpenTimeout = Timeout ?? TimeSpan.FromMinutes(1),
+                        ReceiveTimeout = Timeout ?? TimeSpan.FromMinutes(1),
                     };
                 }
                 default:
