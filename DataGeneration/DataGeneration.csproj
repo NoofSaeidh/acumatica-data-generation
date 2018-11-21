@@ -78,6 +78,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GenerationInfo\AllLaunchesResult.cs" />
+    <Compile Include="GenerationInfo\GenerationSubscriptionManager.cs" />
+    <Compile Include="GenerationInfo\GenerationSubscriptionSettings.cs" />
     <Compile Include="GenerationInfo\LaunchSettings.cs" />
     <Compile Include="GenerationInfo\JsonInjection.cs" />
     <Compile Include="GenerationInfo\AllGenerationsResult.cs" />

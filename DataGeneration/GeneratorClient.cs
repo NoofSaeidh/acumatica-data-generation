@@ -92,7 +92,9 @@ namespace DataGeneration
                     {
                         ct.ThrowIfCancellationRequested();
 
-                        await settings.GetGenerationRunner(config.ApiConnectionConfig).RunGeneration(ct).ConfigureAwait(false);
+                        var runner = settings.GetGenerationRunner(config.ApiConnectionConfig);
+                        config.SubscriptionManager?.SubscribeGenerationRunner(runner);
+                        await runner.RunGeneration(ct).ConfigureAwait(false);
                         result = new GenerationResult(settings);
                     }
                     catch (OperationCanceledException oce)

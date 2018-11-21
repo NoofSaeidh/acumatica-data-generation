@@ -22,7 +22,48 @@ namespace DataGeneration.Common
             set => _apiClientFactory = value;
         }
 
+        protected static ILogger Logger { get; } = LogManager.GetLogger(LogManager.LoggerNames.GenerationRunner);
+
         public abstract Task RunGeneration(CancellationToken cancellationToken = default);
+
+        #region Events
+        public event EventHandler<RunBeforeGenerationStartedEventArgs> RunBeforeGenerationStarted;
+        public event EventHandler<RunGenerationStartedEventArgs> RunGenerationStarted;
+        public event EventHandler<RunGenerationCompletedEventArgs> RunGenerationCompleted;
+        protected virtual void OnRunBeforeGenerationStarted(RunBeforeGenerationStartedEventArgs e)
+        {
+            try
+            {
+                RunBeforeGenerationStarted?.Invoke(this, e);
+            }
+            catch(Exception ex)
+            {
+                Logger.Error(ex, $"{nameof(RunBeforeGenerationStarted)} event failed.");
+            }
+        }
+        protected virtual void OnRunGenerationStarted(RunGenerationStartedEventArgs e)
+        {
+            try
+            {
+                RunGenerationStarted?.Invoke(this, e);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex, $"{nameof(RunGenerationStarted)} event failed.");
+            }
+        }
+        protected virtual void OnRunGenerationCompleted(RunGenerationCompletedEventArgs e)
+        {
+            try
+            {
+                RunGenerationCompleted?.Invoke(this, e);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex, $"{nameof(RunGenerationCompleted)} event failed.");
+            }
+        }
+        #endregion
     }
 
     public abstract class GenerationRunner<TEntity, TGenerationSettings> : GenerationRunner
@@ -39,7 +80,6 @@ namespace DataGeneration.Common
 
         public ApiConnectionConfig ApiConnectionConfig { get; }
         public TGenerationSettings GenerationSettings { get; }
-        protected static ILogger Logger { get; } = LogManager.GetLogger(LogManager.LoggerNames.GenerationRunner);
         protected Bogus.Randomizer Randomizer => _randomizer ?? (_randomizer = new Bogus.Randomizer(GenerationSettings.RandomizerSettings.Seed));
 
         protected virtual void ValidateGenerationSettings()
@@ -57,6 +97,8 @@ namespace DataGeneration.Common
 
             try
             {
+                OnRunBeforeGenerationStarted(new RunBeforeGenerationStartedEventArgs(GenerationSettings));
+
                 // log only if it takes some time
                 using (StopwatchLoggerFactory.ForceLogDisposeTimeCheck(Logger, TimeSpan.FromSeconds(10),
                     "Before Generation completed. " + LogArgs.Type_Id, 
@@ -72,6 +114,7 @@ namespace DataGeneration.Common
                     return;
                 }
 
+                OnRunGenerationStarted(new RunGenerationStartedEventArgs(GenerationSettings));
                 using (StopwatchLoggerFactory.ForceLogStartDispose(Logger,
                     "Generation started. " + LogArgs.Type_Id_Count,
                     "Generation completed. " + LogArgs.Type_Id_Count,
@@ -103,6 +146,10 @@ namespace DataGeneration.Common
                 Logger.Error(e, "Generation failed. " + LogArgs.Type_Id,
                     GenerationSettings.GenerationType, GenerationSettings.Id);
                 throw GenerationException.NewFromEntityType<TEntity>(e);
+            }
+            finally
+            {
+                OnRunGenerationCompleted(new RunGenerationCompletedEventArgs(GenerationSettings));
             }
 
             Logger.Info("Generation completed successfully. " + LogArgs.Type_Id,
@@ -293,4 +340,41 @@ namespace DataGeneration.Common
                 throw new ValidationException($"Property {nameof(SearchPattern)} of {nameof(GenerationSettings)} must be not null in order to search entities in {nameof(RunBeforeGeneration)}");
         }
     }
+
+    #region Generation Runner Events
+
+    public abstract class GenerationRunnerEventArgs : EventArgs
+    {
+        public GenerationRunnerEventArgs(IGenerationSettings generationSettings, string message = null)
+        {
+            GenerationSettings = generationSettings;
+            Message = message;
+        }
+
+        public IGenerationSettings GenerationSettings { get; }
+        public string Message { get; }
+    }
+
+    public class RunBeforeGenerationStartedEventArgs : GenerationRunnerEventArgs
+    {
+        public RunBeforeGenerationStartedEventArgs(IGenerationSettings generationSettings, string message = null) : base(generationSettings, message)
+        {
+        }
+    }
+
+    public class RunGenerationStartedEventArgs : GenerationRunnerEventArgs
+    {
+        public RunGenerationStartedEventArgs(IGenerationSettings generationSettings, string message = null) : base(generationSettings, message)
+        {
+        }
+    }
+
+    public class RunGenerationCompletedEventArgs : GenerationRunnerEventArgs
+    {
+        public RunGenerationCompletedEventArgs(IGenerationSettings generationSettings, string message = null) : base(generationSettings, message)
+        {
+        }
+    }
+
+    #endregion
 }

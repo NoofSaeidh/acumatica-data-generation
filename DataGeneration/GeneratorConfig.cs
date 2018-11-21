@@ -12,7 +12,7 @@ namespace DataGeneration
 {
     public partial class GeneratorConfig : IValidatable
     {
-        #region Static fields
+        #region Fields
 
         internal static readonly JsonSerializerSettings ConfigJsonSettings = new JsonSerializerSettings
         {
@@ -27,13 +27,29 @@ namespace DataGeneration
                 new ValueTupleJsonConverter()
             }
         };
+        private GenerationSubscriptionSettings _generationSubscriptionSettings;
+        private GenerationSubscriptionManager _subscriptionManager;
 
-        #endregion Static fields
+        #endregion Fields
 
         [Required]
         public ApiConnectionConfig ApiConnectionConfig { get; set; }
-
         public ServicePointSettings ServicePointSettings { get; set; }
+        public SettingsFilesConfig SettingsFiles { get; set; }
+        public LaunchSettings NestedSettings { get; set; }
+        public GenerationSubscriptionSettings SubscriptionSettings
+        {
+            get => _generationSubscriptionSettings;
+            set
+            {
+                _generationSubscriptionSettings = value;
+                _subscriptionManager = null;
+            }
+        }
+
+        [JsonIgnore]
+        public GenerationSubscriptionManager SubscriptionManager => _subscriptionManager 
+            ?? (_subscriptionManager = SubscriptionSettings?.GetSubscriptionManager(this));
 
         public ICollection<LaunchSettings> GetAllLaunches(out int uniqueLaunchesCount)
         {
@@ -47,7 +63,7 @@ namespace DataGeneration
             }
             if (SettingsFiles != null)
             {
-                if(SettingsFiles.Multiplier.HasValue(out var multiplier))
+                if (SettingsFiles.Multiplier.HasValue(out var multiplier))
                 {
                     uniqueLaunchesCount += multiplier;
                 }
@@ -55,9 +71,6 @@ namespace DataGeneration
             }
             return result;
         }
-
-        public SettingsFilesConfig SettingsFiles { get; set; }
-        public LaunchSettings NestedSettings { get; set; }
 
         #region Common methods
 

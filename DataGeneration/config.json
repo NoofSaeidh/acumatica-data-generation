@@ -15,6 +15,9 @@
     "Expect100Continue": false,
     "DefaultConnectionLimit": 16
   },
+  "SubscriptionSettings": {
+    "AddTelemetryMarkers":  true
+  },
   "SettingsFiles": {
     "Files": [
       "configs/leads.settings.json",
