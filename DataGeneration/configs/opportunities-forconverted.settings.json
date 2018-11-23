@@ -14,6 +14,8 @@
   },
   "RandomizerSettings": {
     "UseExistingOpportunities": true,
+    "UseInventoryIdsCache": true,
+    "UseBusinessAccountsCache": true,
     "OpportunityStatusTypes": {
       "New": 0.15,
       "Prospect": 0.20,

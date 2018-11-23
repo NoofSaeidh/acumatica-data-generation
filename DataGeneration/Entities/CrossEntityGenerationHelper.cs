@@ -15,57 +15,74 @@ namespace DataGeneration.Entities
     {
         protected static NLog.ILogger Logger { get; } = LogManager.GetLogger(LogManager.LoggerNames.GenerationRunner);
 
-        internal static async Task<IDictionary<TKey, (string businessAccountId, int[] contactIds)[]>> GetBusinessAccountsWithLinkedContactsFromType<TKey>(
-            IApiClient apiClient,
-            Func<string, (TKey key, FetchOption fetch)> typeKeySelector, // select by type
-            CancellationToken cancellationToken)
+        public static string BusinessAccountsWithContactsCacheName = nameof(CrossEntityGenerationHelper) 
+            + "." + nameof(GetBusinessAccountsWithContacts);
+
+        internal static async Task<IList<BusinessAccount>> GetBusinessAccountsWithContacts(
+            bool useCache,
+            ApiConnectionConfig config, 
+            CancellationToken ct)
         {
-            var accounts = await apiClient.GetListAsync(
-                 new BusinessAccount
-                 {
-                     BusinessAccountID = new StringReturn(),
-                     Type = new StringReturn(),
-                     ReturnBehavior = ReturnBehavior.OnlySpecified
-                 },
-                 cancellationToken
-            );
+            if(useCache)
+                return await JsonFileCacheHelper
+                    .Instance
+                    .ReadFromCacheOrSave<IList<BusinessAccount>>(
+                        BusinessAccountsWithContactsCacheName,
+                        () => GetBusinessAccountsWithContacts(config, ct)
+                    );
+            return await GetBusinessAccountsWithContacts(config, ct);
+        }
 
-            var result = new Dictionary<TKey, (string, int[])[]>();
-
-            foreach (var accountGroup in accounts.GroupBy(a => typeKeySelector(a.Type.Value)))
+        private static async Task<IList<BusinessAccount>> GetBusinessAccountsWithContacts(ApiConnectionConfig config, CancellationToken ct)
+        {
+            using (var client = await GenerationRunner.ApiClientFactory(config, ct))
             {
-                switch (accountGroup.Key.fetch)
-                {
-                    case FetchOption.Include:
-                        result[accountGroup.Key.key] = accountGroup.Select(a => (a.BusinessAccountID.Value, (int[])null)).ToArray();
-                        continue;
-                    case FetchOption.IncludeInner:
-                        var contacts = await apiClient.GetListAsync(
-                            new Contact
-                            {
-                                ContactID = new IntReturn(),
-                                BusinessAccount = new StringReturn(),
-                                Active = new BooleanSearch { Value = true },
-                                ReturnBehavior = ReturnBehavior.OnlySpecified
-                            },
-                            cancellationToken
-                        );
+                var accountsTask = client.GetListAsync(
+                    new BusinessAccount
+                    {
+                        BusinessAccountID = new StringReturn(),
+                        Type = new StringReturn(),
+                        ReturnBehavior = ReturnBehavior.OnlySpecified,
+                    },
+                    ct
+                );
 
-                        result[accountGroup.Key.key] = accountGroup
-                            .Select(a => (a.BusinessAccountID.Value, contacts: contacts
-                                            .Where(c => c.BusinessAccount == a.BusinessAccountID)
-                                            .Select(c => c.ContactID.Value ?? default)
-                                            .ToArray()))
-                            .Where(a => a.contacts != null && a.contacts.Length > 0)
-                            .ToArray();
-                        continue;
-                    case FetchOption.Exlude:
-                    default:
-                        continue;
-                }
+                var contactsTask = client.GetListAsync(
+                    new Contact
+                    {
+                        ContactID = new IntReturn(),
+                        BusinessAccount = new StringReturn(),
+                        Email = new StringReturn(),
+                        Active = new BooleanSearch { Value = true },
+                        ReturnBehavior = ReturnBehavior.OnlySpecified
+                    },
+                    ct
+                );
+
+                // consuming operation. in parallel should be faster.
+                var accounts = await accountsTask;
+                var contacts = await contactsTask;
+
+                // to not to store in cache redundant values
+                return accounts
+                    .Select(a =>
+                    {
+                        return new BusinessAccount
+                        {
+                            BusinessAccountID = a.BusinessAccountID,
+                            Type = a.Type,
+                            Contacts = contacts
+                                        .Where(c => c.BusinessAccount == a.BusinessAccountID)
+                                        .Select(c => new BusinessAccountContact
+                                        {
+                                            ContactID = c.ContactID,
+                                            Email = c.Email,
+                                        })
+                                        .ToArray()
+                        };
+                    })
+                    .ToList();
             }
-
-            return result;
         }
 
         internal enum FetchOption

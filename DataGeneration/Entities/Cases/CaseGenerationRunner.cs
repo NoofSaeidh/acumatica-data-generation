@@ -19,17 +19,23 @@ namespace DataGeneration.Entities.Cases
 
         protected override async VoidTask RunBeforeGeneration(CancellationToken cancellationToken = default)
         {
-            using (var client = await GetLoginLogoutClient())
-            {
-                GenerationSettings.RandomizerSettings.BusinessAccounts = 
-                    (await CrossEntityGenerationHelper.GetBusinessAccountsWithLinkedContactsFromType(
-                        client,
-                        type => type == "Customer"
-                                    ? (type, CrossEntityGenerationHelper.FetchOption.IncludeInner)
-                                    : (null, CrossEntityGenerationHelper.FetchOption.Exlude),
-                        cancellationToken
-                    )).FirstOrDefault().Value;
-            }
+            GenerationSettings.RandomizerSettings.BusinessAccounts = await GetBusinessAccounts(cancellationToken);
+        }
+
+        private async Task<(string, int[])[]> GetBusinessAccounts(CancellationToken ct)
+        {
+            var accounts = await CrossEntityGenerationHelper
+                .GetBusinessAccountsWithContacts(
+                    GenerationSettings.RandomizerSettings.UseBusinessAccountsCache,
+                    ApiConnectionConfig,
+                    ct);
+            return accounts
+                .GroupBy(a => a.Type.Value)
+                .First(g => g.Key == "Customer")
+                .Select(g => (g.BusinessAccountID.Value,
+                              g.Contacts.Select(c => c.ContactID.Value.Value).ToArray()))
+                .Where(g => g.Item2.Length > 0)
+                .ToArray();
         }
 
         protected override async VoidTask GenerateSingle(IApiClient client, Case entity, CancellationToken cancellationToken)

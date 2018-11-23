@@ -17,6 +17,9 @@ namespace DataGeneration.Entities.Opportunities
         public ProbabilityCollection<OpportunityProductsSettings> OpportunityProductsSettings { get; set; }
         public bool UseExistingOpportunities { get; set; }
 
+        public bool UseBusinessAccountsCache { get; set; }
+        public bool UseInventoryIdsCache { get; set; }
+
         // assigned in RunBeforeGeneration
         [JsonIgnore]
         public IDictionary<OpportunityAccountType, (string businessAccountId, int[] contactIds)[]> BusinessAccounts { get; set; }
@@ -153,7 +156,9 @@ namespace DataGeneration.Entities.Opportunities
                     #region Link BAccount and Contact
 
                     var accountType = f.Random.ProbabilityRandomIfAny(OpportunityAccountTypes);
-                    if (BusinessAccounts != null && BusinessAccounts.TryGetValue(accountType, out var accounts))
+                    if (BusinessAccounts != null 
+                        && BusinessAccounts.TryGetValue(accountType, out var accounts)
+                        && accounts != null)
                     {
                         var (account, contacts) = f.PickRandom(accounts);
                         o.BusinessAccount = account;

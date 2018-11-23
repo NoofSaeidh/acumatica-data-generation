@@ -115,6 +115,12 @@ namespace DataGeneration.Common
             setter = v;
             return true;
         }
+
+        public static bool HasValue<T>(this T instance, out T value) where T : class
+        {
+            value = instance;
+            return instance != null;
+        }
     }
 
     public static class BogusExtensions
