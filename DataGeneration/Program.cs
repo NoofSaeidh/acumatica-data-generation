@@ -45,6 +45,9 @@ namespace DataGeneration
                 };
                 try
                 {
+                    ConsoleExecutor.WriteInfo("Start all generations.", ConsoleColor.Cyan);
+                    _logger.Info("Start all generations");
+
                     var result = await new GeneratorClient()
                         .GenerateAll(config, tokenSource.Token)
                         .ConfigureAwait(false);

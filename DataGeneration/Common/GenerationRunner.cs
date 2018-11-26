@@ -93,7 +93,8 @@ namespace DataGeneration.Common
         public override async Task RunGeneration(CancellationToken cancellationToken = default)
         {
             ValidateGenerationSettings();
-            Logger.Info("Generation with following settings is going to start {@settings}", GenerationSettings);
+            Logger.Info("Generation is going to start. " + LogArgs.Type_Id_Count + ", {@settings}",
+                GenerationSettings.GenerationType, GenerationSettings.Id, GenerationSettings.Count, GenerationSettings);
 
             try
             {
