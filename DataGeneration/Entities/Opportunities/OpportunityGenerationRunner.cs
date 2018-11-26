@@ -59,9 +59,9 @@ namespace DataGeneration.Entities.Opportunities
                         {
                             type = OpportunityAccountType.WithCustomerAccount;
                             accs = g.Select(g_ =>
-                                                (g_.BusinessAccountID.Value,
-                                                 g_.Contacts.Select(c => c.ContactID.Value.Value).ToArray()))
-                                    .Where(i => i.Item2.Length > 0)
+                                                (id: g_.BusinessAccountID.Value,
+                                                 contacts: g_.Contacts?.Select(c => c.ContactID.Value.Value).ToArray()))
+                                    .Where(i => i.contacts != null && i.contacts.Length > 0)
                                     .ToArray();
 
                             break;
@@ -84,6 +84,7 @@ namespace DataGeneration.Entities.Opportunities
 
                     return (type, accs);
                 })
+                .Where(t => t.type != OpportunityAccountType.WithoutAccount)
                 .ToDictionary(
                     t => t.type,
                     t => t.accs

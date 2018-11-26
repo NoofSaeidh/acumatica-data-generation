@@ -32,9 +32,9 @@ namespace DataGeneration.Entities.Cases
             return accounts
                 .GroupBy(a => a.Type.Value)
                 .First(g => g.Key == "Customer")
-                .Select(g => (g.BusinessAccountID.Value,
-                              g.Contacts.Select(c => c.ContactID.Value.Value).ToArray()))
-                .Where(g => g.Item2.Length > 0)
+                .Select(g => (id: g.BusinessAccountID.Value,
+                              contacts: g.Contacts?.Select(c => c.ContactID.Value.Value).ToArray()))
+                .Where(g => g.contacts != null && g.contacts.Length > 0)
                 .ToArray();
         }
 

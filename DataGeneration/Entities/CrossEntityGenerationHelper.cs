@@ -15,15 +15,15 @@ namespace DataGeneration.Entities
     {
         protected static NLog.ILogger Logger { get; } = LogManager.GetLogger(LogManager.LoggerNames.GenerationRunner);
 
-        public static string BusinessAccountsWithContactsCacheName = nameof(CrossEntityGenerationHelper) 
+        public static string BusinessAccountsWithContactsCacheName = nameof(CrossEntityGenerationHelper)
             + "." + nameof(GetBusinessAccountsWithContacts);
 
         internal static async Task<IList<BusinessAccount>> GetBusinessAccountsWithContacts(
             bool useCache,
-            ApiConnectionConfig config, 
+            ApiConnectionConfig config,
             CancellationToken ct)
         {
-            if(useCache)
+            if (useCache)
                 return await JsonFileCacheHelper
                     .Instance
                     .ReadFromCacheOrSave<IList<BusinessAccount>>(
@@ -35,6 +35,8 @@ namespace DataGeneration.Entities
 
         private static async Task<IList<BusinessAccount>> GetBusinessAccountsWithContacts(ApiConnectionConfig config, CancellationToken ct)
         {
+            IEnumerable<BusinessAccount> accounts;
+            IEnumerable<Contact> contacts;
             using (var client = await GenerationRunner.ApiClientFactory(config, ct))
             {
                 var accountsTask = client.GetListAsync(
@@ -58,38 +60,45 @@ namespace DataGeneration.Entities
                     },
                     ct
                 );
-
                 // consuming operation. in parallel should be faster.
-                var accounts = await accountsTask;
-                var contacts = await contactsTask;
-
-                // to not to store in cache redundant values
-                return accounts
-                    .Select(a =>
-                    {
-                        return new BusinessAccount
-                        {
-                            BusinessAccountID = a.BusinessAccountID,
-                            Type = a.Type,
-                            Contacts = contacts
-                                        .Where(c => c.BusinessAccount == a.BusinessAccountID)
-                                        .Select(c => new BusinessAccountContact
-                                        {
-                                            ContactID = c.ContactID,
-                                            Email = c.Email,
-                                        })
-                                        .ToArray()
-                        };
-                    })
-                    .ToList();
+                accounts = await accountsTask;
+                contacts = await contactsTask;
             }
-        }
 
-        internal enum FetchOption
-        {
-            Exlude,
-            Include,
-            IncludeInner,
+            var groupedContacts = contacts
+                .GroupBy(c => c.BusinessAccount?.Value)
+                .Where(c => c.Key != null)
+                .ToDictionary(g => g.Key, g => g);
+
+            // to not to store in cache redundant values
+            return accounts
+                .Select(a =>
+                {
+                    return new BusinessAccount
+                    {
+                        BusinessAccountID = a.BusinessAccountID,
+                        Type = a.Type,
+                        Contacts = groupedContacts
+                            .GetValueOrDefault(a.BusinessAccountID.Value)
+                            ?.Select(c =>
+                                new BusinessAccountContact
+                                {
+                                    ContactID = c.ContactID,
+                                    Email = c.Email
+                                }
+                            )
+                            .ToArray()
+                    };
+                })
+                .ToList();
         }
     }
+
+    internal enum FetchOption
+    {
+        Exlude,
+        Include,
+        IncludeInner,
+    }
 }
+

@@ -121,6 +121,13 @@ namespace DataGeneration.Common
             value = instance;
             return instance != null;
         }
+
+        public static TValue GetValueOrDefault<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key)
+        {
+            if (dictionary.TryGetValue(key, out var result))
+                return result;
+            return default;
+        }
     }
 
     public static class BogusExtensions
