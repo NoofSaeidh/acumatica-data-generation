@@ -121,19 +121,22 @@ namespace DataGeneration.Common
                     "Generation completed. " + LogArgs.Type_Id_Count,
                     GenerationSettings.GenerationType, GenerationSettings.Id, GenerationSettings.Count))
                 {
+                    FullGenerationResult result;
                     switch (GenerationSettings.ExecutionTypeSettings.ExecutionType)
                     {
                         case ExecutionType.Sequent:
-                            await RunGenerationSequent(GenerationSettings.Count, cancellationToken);
+                            result = new FullGenerationResult((await RunGenerationSequent(GenerationSettings.Count, 1, cancellationToken)).AsEnumerable());
                             break;
 
                         case ExecutionType.Parallel:
-                            await RunGenerationParallel(cancellationToken);
+                            result = await RunGenerationParallel(cancellationToken);
                             break;
 
                         default:
-                            break;
+                            throw new NotSupportedException();
                     }
+                    Logger.Info("Generation completed. " + LogArgs.Type_Id + ", Result =  {$result}",
+                        GenerationSettings.GenerationType, GenerationSettings.Id, result);
                 }
             }
             catch (OperationCanceledException oce)
@@ -152,9 +155,6 @@ namespace DataGeneration.Common
             {
                 OnRunGenerationCompleted(new RunGenerationCompletedEventArgs(GenerationSettings));
             }
-
-            Logger.Info("Generation completed successfully. " + LogArgs.Type_Id,
-                    GenerationSettings.GenerationType, GenerationSettings.Id);
         }
 
         protected virtual Task RunBeforeGeneration(CancellationToken cancellationToken = default)
@@ -162,12 +162,12 @@ namespace DataGeneration.Common
             return Task.CompletedTask;
         }
 
-        protected async Task RunGenerationParallel(CancellationToken cancellationToken)
+        protected async Task<FullGenerationResult> RunGenerationParallel(CancellationToken cancellationToken)
         {
             var threads = GenerationSettings.ExecutionTypeSettings.ParallelThreads;
             if (GenerationSettings.Count < threads)
                 threads = GenerationSettings.Count;
-            var tasks = new Task[threads];
+            var tasks = new Task<ThreadGenerationResult>[threads];
 
             var countPerThread = GenerationSettings.Count / threads;
             var remainUnits = GenerationSettings.Count % threads;
@@ -183,14 +183,15 @@ namespace DataGeneration.Common
                     if (i >= remainUnits) rem = 0;
 
                     var currentCount = countPerThread + rem;
-                    tasks[i] = RunGenerationSequent(currentCount, cancellationToken);
+                    tasks[i] = RunGenerationSequent(currentCount, i, cancellationToken);
                 }
 
-                await Task.WhenAll(tasks);
+                var results = await Task.WhenAll(tasks);
+                return new FullGenerationResult(results);
             }
         }
 
-        protected async Task RunGenerationSequent(int count, CancellationToken cancellationToken)
+        protected async Task<ThreadGenerationResult> RunGenerationSequent(int count, int threadIndex, CancellationToken cancellationToken)
         {
             using (StopwatchLoggerFactory.ForceLogStartDispose(Logger, LogLevel.Debug,
                 "Generation Sequent started. " + LogArgs.Type_Id_Count,
@@ -200,6 +201,9 @@ namespace DataGeneration.Common
                 var entities = GenerateRandomizedList(count);
 
                 cancellationToken.ThrowIfCancellationRequested();
+
+                var fails = new List<(object, Exception)>();
+                bool stopped = false;
 
                 using (var client = await GetLoginLogoutClient(cancellationToken))
                 {
@@ -212,20 +216,23 @@ namespace DataGeneration.Common
                             await GenerateSingle(client, entity, cancellationToken);
                         }
                         catch (OperationCanceledException) { throw; }
-                        catch (ApiException ae)
-                        {
-                            Logger.Error(ae, "Generation {$entity} failed", typeof(TEntity));
-                            if (!GenerationSettings.ExecutionTypeSettings.IgnoreProcessingErrors)
-                                throw;
-                        }
                         catch (Exception e)
                         {
-                            Logger.Error(e, "Unexpected exception has occurred while processing {entity}", typeof(TEntity));
+                            fails.Add((entity, e));
+                            var message = e is ApiException
+                                ? "Generation {$entity} failed"
+                                : "Unexpected exception has occurred while processing {entity}";
+                            Logger.Error(e, message, typeof(TEntity));
                             if (!GenerationSettings.ExecutionTypeSettings.IgnoreProcessingErrors)
-                                throw;
+                            {
+                                stopped = true;
+                                break;
+                            }
                         }
                     }
                 }
+
+                return new ThreadGenerationResult(count, threadIndex, stopped, fails);
             }
         }
 
