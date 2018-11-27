@@ -37,10 +37,10 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release-Optimized|AnyCPU'">
     <OutputPath>bin\Release-Optimized\</OutputPath>
-    <DefineConstants>DISABLE_TIMETRACKING;DISABLE_API_CANCELLATION</DefineConstants>
+    <DefineConstants>TRACE;DISABLE_TIMETRACKING;DISABLE_API_CANCELLATION</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
     <LangVersion>latest</LangVersion>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
@@ -77,6 +77,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Common\GenerationResult.cs" />
+    <Compile Include="Common\JsonFileCacheHelper.cs" />
+    <Compile Include="GenerationInfo\AllLaunchesResult.cs" />
+    <Compile Include="GenerationInfo\GenerationSubscriptionManager.cs" />
+    <Compile Include="GenerationInfo\GenerationSubscriptionSettings.cs" />
+    <Compile Include="GenerationInfo\LaunchSettings.cs" />
+    <Compile Include="GenerationInfo\JsonInjection.cs" />
+    <Compile Include="GenerationInfo\AllGenerationsResult.cs" />
     <Compile Include="Common\AcumaticaTimeHelper.cs" />
     <Compile Include="Common\Adjuster.cs" />
     <Compile Include="Common\ApiConnectionConfig.cs" />
@@ -140,6 +148,9 @@
     <Compile Include="Entities\Opportunities\OpportunityGenerationSettings.cs" />
     <Compile Include="Entities\Opportunities\OpportunityRandomizerSettings.cs" />
     <Compile Include="Examples.cs" />
+    <Compile Include="GenerationInfo\GenerationResult.cs" />
+    <Compile Include="GenerationInfo\ServicePointSettings.cs" />
+    <Compile Include="GenerationInfo\SettingsFilesConfig.cs" />
     <Compile Include="GeneratorConfig.cs" />
     <Compile Include="GeneratorClient.cs" />
     <Compile Include="Common\EndpointSettings.cs" />
@@ -174,6 +185,39 @@
     <None Include="ConfigExamples\link-emails-opportunities.settings.json" />
     <None Include="ConfigExamples\opportunities-forconverted.settings.json" />
     <None Include="ConfigExamples\opportunities.settings.json" />
+    <None Include="configs\cases.settings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="configs\leads.settings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="configs\link-emails-cases.settings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="configs\link-emails-leads.settings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="configs\link-emails-opportunities.settings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="configs\link-events-opportunities.settings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="configs\link-notes-opportunities.settings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="configs\link-phone-calls-cases.settings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="configs\link-work-items-cases.settings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="configs\opportunities-forconverted.settings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="configs\opportunities.settings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Connected Services\Soap.Maint\5.wsdl" />
     <None Include="Connected Services\Soap.Maint\DataGeneration.Soap.Maint.EndpointValidationError.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
@@ -247,6 +291,7 @@
     <Content Include="icon.ico" />
     <Content Include="endpoint-datagen.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

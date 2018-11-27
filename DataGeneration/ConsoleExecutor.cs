@@ -27,7 +27,7 @@ namespace DataGeneration
                 [PutEndpoint] = "Put endpoint to Acumatica from file. If value not specified \"datagen-endpoint.xml\" file will be used.",
                 [GetEndpoint] = "Get endpoint from Acumatica and save to the file. Values should be in following order {version} {endpoint} {filepath}",
                 [Config] = "Specify json config file. If not specified default will be used.",
-                [Settings] = "Specify json files with single Generation Settings. All values will be merged to config's GenerationSettingsCollection. Can specify multiple.",
+                //[Settings] = "Specify json files with single Generation Settings. All values will be merged to config's GenerationSettingsCollection. Can specify multiple.",
                 [Help] = "Show this help."
             };
         }
@@ -79,7 +79,7 @@ namespace DataGeneration
                 var result = new ArgsExecutor(args)
                     .Arg(Args.Help, ShowHelp, stopOnSuccess: true)
                     .Arg_ThrowNoValue(Args.Config, value => _config = new Lazy<GeneratorConfig>(() => GeneratorConfig.ReadConfig(value)))
-                    .Arg_ThrowNoValues(Args.Settings, values => Array.ForEach(values, v => Config.AddGenerationSettingsFromFile(v)))
+                    //.Arg_ThrowNoValues(Args.Settings, values => Array.ForEach(values, v => Config.AddGenerationSettingsFromFile(v)))
                     .Arg(Args.PutEndpoint, PutEndpoint, () => PutEndpoint(EndpointDatagenFileName))
                     .Arg_ThrowNoValues(Args.GetEndpoint, GetAndSaveEndpoint)
                     .Arg(Args.Start, () => { }, res => res.StartGeneration = true)

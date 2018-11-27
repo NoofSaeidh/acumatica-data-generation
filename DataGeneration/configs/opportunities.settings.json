@@ -1,0 +1,44 @@
+{
+  "$type": "DataGeneration.Entities.Opportunities.OpportunityGenerationSettings, DataGeneration",
+  "#comment": "Create opportunities. Fetches business accounts and links to it.",
+  "GenerationType": "Opportunities",
+  "RandomizerSettings": {
+    "UseInventoryIdsCache": true,
+    "UseBusinessAccountsCache": true,
+    "OpportunityAccountTypes": {
+      "WithoutAccount": 0.25,
+      "WithProspectAccount": 0.125,
+      "WithCustomerAccount": 0.625
+    },
+    "OpportunityStatusTypes": {
+      "New": 0.15,
+      "Prospect": 0.20,
+      "Nurture": 0.20,
+      "Development": 0.20,
+      "Negotiation": 0.05,
+      "Won": 0.20
+    },
+    "OpportunityClasses": {
+      "PARTNER": 0.3,
+      "PRODUCT": 0.3,
+      "SERVICE": 0.3,
+      "BIDDING": 0.1
+    },
+    "OpportunityProductsSettings": [
+      {
+        "Probability": 0.33,
+        "ManualAmount": true,
+        "Amounts": [ 1, 500000 ]
+      },
+      {
+        "Probability": 0.65,
+        "ProductsCounts": [ 1, 20 ],
+        "Quantities": [ 1, 20 ]
+      },
+      {
+        "Probability": 0.02,
+        "ProductsCounts": [ 20, 400 ]
+      }
+    ]
+  }
+}

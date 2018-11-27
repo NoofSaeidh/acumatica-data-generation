@@ -552,7 +552,7 @@ namespace DataGeneration.Soap
             {
                 if (IsEnabled)
                     _logger.Log(LogLevel, e, Text, Args);
-                return new ApiException(Text.FormatWith(Args));
+                return new ApiException(Text.FormatWith(Args), e);
             }
 
             public IDisposable StopwatchLog()

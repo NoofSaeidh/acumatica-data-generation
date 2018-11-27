@@ -1,4 +1,5 @@
 ﻿using DataGeneration.Common;
+using DataGeneration.GenerationInfo;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System;
@@ -9,11 +10,11 @@ using System.Linq;
 
 namespace DataGeneration
 {
-    public class GeneratorConfig : IValidatable
+    public partial class GeneratorConfig : IValidatable
     {
-        #region Static fields
+        #region Fields
 
-        private static readonly JsonSerializerSettings _jsonSettings = new JsonSerializerSettings
+        internal static readonly JsonSerializerSettings ConfigJsonSettings = new JsonSerializerSettings
         {
             Formatting = Formatting.Indented,
             ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
@@ -26,102 +27,72 @@ namespace DataGeneration
                 new ValueTupleJsonConverter()
             }
         };
+        private GenerationSubscriptionSettings _generationSubscriptionSettings;
+        private GenerationSubscriptionManager _subscriptionManager;
 
-        #endregion Static fields
+        #endregion Fields
 
+        [Required]
         public ApiConnectionConfig ApiConnectionConfig { get; set; }
-
-        [RequiredCollection]
-        public ICollection<IGenerationSettings> GenerationSettingsCollection { get; set; }
-
-        // provide ability to multiply GenerationSettings for each injection
-        public ICollection<Injection> GenerationSettingsInjections { get; set; }
-
-        // if true processing will be stopped if any generation option will fail
-        // ignored for validation exceptions
-        public bool StopProccesingAtExeception { get; set; }
-
-        // inject all injected props to GenerationSettingsCollection (now only InjectExecutionSettings)
-        // work only if items in GenerationSettingsCollection inherited from GenerationSettingsBase
-        public IEnumerable<IGenerationSettings> GetInjectedGenerationSettingsCollection()
+        public ServicePointSettings ServicePointSettings { get; set; }
+        public SettingsFilesConfig SettingsFiles { get; set; }
+        public LaunchSettings NestedSettings { get; set; }
+        public GenerationSubscriptionSettings SubscriptionSettings
         {
-            if (GenerationSettingsCollection.IsNullOrEmpty())
-                return GenerationSettingsCollection;
+            get => _generationSubscriptionSettings;
+            set
+            {
+                _generationSubscriptionSettings = value;
+                _subscriptionManager = null;
+            }
+        }
 
-            if (GenerationSettingsInjections.IsNullOrEmpty())
-                return GenerationSettingsCollection.ToList();
+        [JsonIgnore]
+        public GenerationSubscriptionManager SubscriptionManager => _subscriptionManager 
+            ?? (_subscriptionManager = SubscriptionSettings?.GetSubscriptionManager(this));
 
-            return GenerationSettingsCollection.SelectMany(s => Injection.Inject(GenerationSettingsInjections, s));
+        public ICollection<LaunchSettings> GetAllLaunches(out int uniqueLaunchesCount)
+        {
+            Validate();
+            uniqueLaunchesCount = 0;
+            var result = new List<LaunchSettings>();
+            if (NestedSettings != null)
+            {
+                uniqueLaunchesCount++;
+                result.Add(NestedSettings);
+            }
+            if (SettingsFiles != null)
+            {
+                if (SettingsFiles.Multiplier.HasValue(out var multiplier))
+                {
+                    uniqueLaunchesCount += multiplier;
+                }
+                result.AddRange(SettingsFiles.GetAllLaunchSettings());
+            }
+            return result;
         }
 
         #region Common methods
 
         public void SaveConfig(string path)
         {
-            File.WriteAllText(path, JsonConvert.SerializeObject(this, _jsonSettings));
-        }
-
-        public void AddGenerationSettingsFromFile(string path)
-        {
-            var settings = JsonConvert.DeserializeObject<IGenerationSettings>(File.ReadAllText(path), _jsonSettings);
-
-            if (GenerationSettingsCollection == null)
-                GenerationSettingsCollection = new List<IGenerationSettings>();
-            GenerationSettingsCollection.Add(settings);
+            File.WriteAllText(path, JsonConvert.SerializeObject(this, ConfigJsonSettings));
         }
 
         public static GeneratorConfig ReadConfig(string path)
         {
-            return JsonConvert.DeserializeObject<GeneratorConfig>(File.ReadAllText(path), _jsonSettings);
+            return JsonConvert.DeserializeObject<GeneratorConfig>(File.ReadAllText(path), ConfigJsonSettings);
         }
 
         public void Validate()
         {
             ValidateHelper.ValidateObject(this);
-        }
-
-        public class Injection
-        {
-            public ExecutionTypeSettings? ExecutionTypeSettings { get; set; }
-            public int? Count { get; set; }
-            public int? Seed { get; set; }
-
-            public static IEnumerable<IGenerationSettings> Inject(IEnumerable<Injection> injections, IGenerationSettings generationSettings)
-            {
-                if (injections == null)
-                    throw new ArgumentNullException(nameof(injections));
-                if (generationSettings == null)
-                    throw new ArgumentNullException(nameof(generationSettings));
-
-                // check if there are no injections to return single setting
-                bool empty = false;
-
-                foreach (var injection in injections)
-                {
-                    if (injection.Count == 0
-                        && injection.ExecutionTypeSettings == null
-                        && injection.Seed == null)
-                    {
-                        empty = true;
-                        continue;
-                    }
-
-                    var res = generationSettings.Copy();
-                    if (injection.Count != null)
-                        res.Count = injection.Count.Value;
-                    if (injection.ExecutionTypeSettings != null)
-                        res.ExecutionTypeSettings = injection.ExecutionTypeSettings.Value;
-                    if (injection.Seed != null)
-                        res.Seed = injection.Seed;
-
-                    yield return res;
-                }
-
-                if (empty)
-                    yield return generationSettings;
-            }
+            if (SettingsFiles == null && NestedSettings == null)
+                throw new ValidationException($"One of properties must be specified: " +
+                    $"{nameof(SettingsFiles)}, {nameof(NestedSettings)}.");
         }
 
         #endregion Common methods
+
     }
 }

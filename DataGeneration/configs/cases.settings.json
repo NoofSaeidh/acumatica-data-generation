@@ -1,0 +1,30 @@
+{
+  "$type": "DataGeneration.Entities.Cases.CaseGenerationSettings, DataGeneration",
+  "#comment": "Create cases. Fetches business accounts and links to it.",
+  "GenerationType": "Case",
+  "RandomizerSettings": {
+    "UseBusinessAccountsCache": true,
+    "CaseClasses": {
+      "OTHER": 0.2,
+      "BILLING": 0.2,
+      "HARDWARE": 0.2,
+      "PRODSUP": 0.2,
+      "SOFTWARE": 0.2
+    },
+    "CaseStatusTypes": {
+      "InProcess": 0.461,
+      "Updated": 0.308,
+      "InEscalation": 0.046,
+      "MoreInfoRequested": 0.077,
+      "WaitingConfirmation": 0.031,
+      "Resolved": 0.077
+    },
+    "PrioritiesAndSeverities": [
+      [ "Low", "Low" ],
+      [ "Medium", "Low" ],
+      [ "Medium", "Medium" ],
+      [ "High", "Medium" ],
+      [ "High", "High" ]
+    ]
+  }
+}

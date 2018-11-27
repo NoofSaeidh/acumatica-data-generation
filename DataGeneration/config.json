@@ -3,78 +3,85 @@
     "EndpointSettings": {
       "AcumaticaBaseUrl": "http://localhost:444",
       "EndpointName": "datagen",
-      "EndpointVersion": "18.200.001"
+      "EndpointVersion": "18.200.001",
+      "Timeout": "00:01:00"
     },
     "LoginInfo": {
       "Username": "admin",
       "Password": "123"
     }
   },
-  "StopProccesingAtExeception": true,
-  "GenerationSettingsCollection": [
-    {
-      "$type": "DataGeneration.Entities.Leads.LeadGenerationSettings, DataGeneration",
-      "ExecutionTypeSettings": {
-        "ExecutionType": "Parallel",
-        "ParallelThreads": 4,
-        "IgnoreProcessingErrors": true
+  "ServicePointSettings": {
+    "Expect100Continue": false,
+    "DefaultConnectionLimit": 16
+  },
+  "SubscriptionSettings": {
+    "AddTelemetryMarkers":  true
+  },
+  "SettingsFiles": {
+    "Files": [
+      "configs/leads.settings.json",
+      "configs/opportunities-forconverted.settings.json",
+      "configs/link-emails-leads.settings.json",
+      "configs/opportunities.settings.json",
+      "configs/link-emails-opportunities.settings.json",
+      "configs/link-notes-opportunities.settings.json",
+      "configs/link-events-opportunities.settings.json",
+      "configs/cases.settings.json",
+      "configs/link-emails-cases.settings.json",
+      "configs/link-phone-calls-cases.settings.json",
+      "configs/link-work-items-cases.settings.json"
+    ],
+    "Multiplier": 10,
+    "LaunchInjections": [
+      {
+        "Path": "StopProcessingAtException",
+        "Value": false
+      }
+    ],
+    "SettingsInjections": [
+      {
+        "Path": "Count",
+        "Type": "Replace", // default
+        "Value": 5
       },
-      "PxType": "PX.Object.CR.Contact",
-      "ConvertByStatuses": {
-        "New": {
-          "ToOpportunity": 0.5
-        },
-        "Open": {
-          "ToOpportunity": 0.5
+      {
+        "Path": "ExecutionTypeSettings",
+        "Type": "Replace",
+        "Value": {
+          "ExecutionType": "Parallel",
+          "IgnoreProcessingErrors": true,
+          "ParallelThreads": 8
         }
       },
-      "EmailsGenerationSettings": {
-        "EmailsForSingleLeadCounts": {
-          "0": 0.3,
-          "1": null,
-          "2": null,
-          "3": null,
-          "4": null,
-          "5": null
-        },
-        "SystemAccounts": [
-          [
-            "testadmin@acumatica.con",
-            "System Email Account"
-          ]
-        ],
-        "EmailRandomizerSettings": {
-          "DateRange": {
-            "StartDate": "2017-01-01T00:00:00",
-            "EndDate": "2018-05-01T00:00:00"
-          }
+      {
+        "Path": "RandomizerSettings",
+        "Type": "Patch",
+        "PropertyNotFound": "Ignore",
+        "Value": {
+          "BaseEntityEmbeddedImagesAttachedCount": 100,
+          "AttachmentsLocation": "\\\\attachments-path\\"
         }
       },
-      "GenerationEntity": "Lead",
-      "RandomizerSettings": {
-        "$type": "DataGeneration.Entities.Leads.LeadRandomizerSettings, DataGeneration",
-        "LeadClasses": {
-          "LEAD": 0.7,
-          "LEADBUS": 0.15,
-          "LEADBUSSVC": 0.15
-        },
-        "Statuses": {
-          "New": 0.2,
-          "Open": 0.5,
-          "Suspended": 0.1,
-          "Lost": 0.2
+      // devided for opportunities-forconverted, because there are different count
+      {
+        "Path": "SearchPattern.CreatedDate",
+        "Type": "Add",
+        "PropertyNotFound": "Ignore",
+        "Value": {
+          "Condition": "IsGreaterThan",
+          "Value": "2018-11-19"
+        }
+      },
+      {
+        "Path": "SearchPattern.LinqPattern",
+        "Type": "Add",
+        "PropertyNotFound": "Ignore",
+        "Value": {
+          "Reverse": true,
+          "Take": 1000
         }
       }
-    }
-  ],
-  "GenerationSettingsInjections": [
-    {
-      "ExecutionTypeSettings": {
-        "ExecutionType": "Parallel",
-        "ParallelThreads": 4,
-        "IgnoreProcessingErrors": false
-      },
-      "Count": 1000
-    }
-  ]
+    ]
+  }
 }

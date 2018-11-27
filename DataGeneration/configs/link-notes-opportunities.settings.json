@@ -1,0 +1,27 @@
+{
+  "$type": "DataGeneration.Entities.Activities.LinkActivitiesGenerationSettings, DataGeneration",
+  "#comment": "Create activities (notes) for opportunities",
+  "GenerationType": "Notes for Opportunities",
+  "SearchPattern": {
+    "EntityType": "Opportunity"
+  },
+  "RandomizerSettings": {
+    "PxTypeForLinkedEntity": "PX.Objects.CR.CROpportunity",
+    "ActivityType": "N",
+    "TrackTime": {
+      "true": 0.5,
+      "false": 0.5
+    },
+    "TimeSpent": {
+      "MinTime": "00:10",
+      "MaxTime": "02:00"
+    },
+    "DateRange": ["2017-01-01", "2018-05-01"],
+    "ActivityCountPerEntity": [
+      {
+        "Probability": 0.2,
+        "Value": [ 1, 1 ]
+      }
+    ]
+  }
+}

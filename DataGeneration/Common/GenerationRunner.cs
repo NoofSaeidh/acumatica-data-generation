@@ -22,7 +22,48 @@ namespace DataGeneration.Common
             set => _apiClientFactory = value;
         }
 
+        protected static ILogger Logger { get; } = LogManager.GetLogger(LogManager.LoggerNames.GenerationRunner);
+
         public abstract Task RunGeneration(CancellationToken cancellationToken = default);
+
+        #region Events
+        public event EventHandler<RunBeforeGenerationStartedEventArgs> RunBeforeGenerationStarted;
+        public event EventHandler<RunGenerationStartedEventArgs> RunGenerationStarted;
+        public event EventHandler<RunGenerationCompletedEventArgs> RunGenerationCompleted;
+        protected virtual void OnRunBeforeGenerationStarted(RunBeforeGenerationStartedEventArgs e)
+        {
+            try
+            {
+                RunBeforeGenerationStarted?.Invoke(this, e);
+            }
+            catch(Exception ex)
+            {
+                Logger.Error(ex, $"{nameof(RunBeforeGenerationStarted)} event failed.");
+            }
+        }
+        protected virtual void OnRunGenerationStarted(RunGenerationStartedEventArgs e)
+        {
+            try
+            {
+                RunGenerationStarted?.Invoke(this, e);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex, $"{nameof(RunGenerationStarted)} event failed.");
+            }
+        }
+        protected virtual void OnRunGenerationCompleted(RunGenerationCompletedEventArgs e)
+        {
+            try
+            {
+                RunGenerationCompleted?.Invoke(this, e);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex, $"{nameof(RunGenerationCompleted)} event failed.");
+            }
+        }
+        #endregion
     }
 
     public abstract class GenerationRunner<TEntity, TGenerationSettings> : GenerationRunner
@@ -39,7 +80,6 @@ namespace DataGeneration.Common
 
         public ApiConnectionConfig ApiConnectionConfig { get; }
         public TGenerationSettings GenerationSettings { get; }
-        protected static ILogger Logger { get; } = LogManager.GetLogger(LogManager.LoggerNames.GenerationRunner);
         protected Bogus.Randomizer Randomizer => _randomizer ?? (_randomizer = new Bogus.Randomizer(GenerationSettings.RandomizerSettings.Seed));
 
         protected virtual void ValidateGenerationSettings()
@@ -53,10 +93,13 @@ namespace DataGeneration.Common
         public override async Task RunGeneration(CancellationToken cancellationToken = default)
         {
             ValidateGenerationSettings();
-            Logger.Info("Generation with following settings is going to start {@settings}", GenerationSettings);
+            Logger.Info("Generation is going to start. " + LogArgs.Type_Id_Count + ", {@settings}",
+                GenerationSettings.GenerationType, GenerationSettings.Id, GenerationSettings.Count, GenerationSettings);
 
             try
             {
+                OnRunBeforeGenerationStarted(new RunBeforeGenerationStartedEventArgs(GenerationSettings));
+
                 // log only if it takes some time
                 using (StopwatchLoggerFactory.ForceLogDisposeTimeCheck(Logger, TimeSpan.FromSeconds(10),
                     "Before Generation completed. " + LogArgs.Type_Id, 
@@ -72,24 +115,28 @@ namespace DataGeneration.Common
                     return;
                 }
 
+                OnRunGenerationStarted(new RunGenerationStartedEventArgs(GenerationSettings));
                 using (StopwatchLoggerFactory.ForceLogStartDispose(Logger,
                     "Generation started. " + LogArgs.Type_Id_Count,
                     "Generation completed. " + LogArgs.Type_Id_Count,
                     GenerationSettings.GenerationType, GenerationSettings.Id, GenerationSettings.Count))
                 {
+                    FullGenerationResult result;
                     switch (GenerationSettings.ExecutionTypeSettings.ExecutionType)
                     {
                         case ExecutionType.Sequent:
-                            await RunGenerationSequent(GenerationSettings.Count, cancellationToken);
+                            result = new FullGenerationResult((await RunGenerationSequent(GenerationSettings.Count, 1, cancellationToken)).AsEnumerable());
                             break;
 
                         case ExecutionType.Parallel:
-                            await RunGenerationParallel(cancellationToken);
+                            result = await RunGenerationParallel(cancellationToken);
                             break;
 
                         default:
-                            break;
+                            throw new NotSupportedException();
                     }
+                    Logger.Info("Generation completed. " + LogArgs.Type_Id + ", Result =  {$result}",
+                        GenerationSettings.GenerationType, GenerationSettings.Id, result);
                 }
             }
             catch (OperationCanceledException oce)
@@ -104,9 +151,10 @@ namespace DataGeneration.Common
                     GenerationSettings.GenerationType, GenerationSettings.Id);
                 throw GenerationException.NewFromEntityType<TEntity>(e);
             }
-
-            Logger.Info("Generation completed successfully. " + LogArgs.Type_Id,
-                    GenerationSettings.GenerationType, GenerationSettings.Id);
+            finally
+            {
+                OnRunGenerationCompleted(new RunGenerationCompletedEventArgs(GenerationSettings));
+            }
         }
 
         protected virtual Task RunBeforeGeneration(CancellationToken cancellationToken = default)
@@ -114,12 +162,12 @@ namespace DataGeneration.Common
             return Task.CompletedTask;
         }
 
-        protected async Task RunGenerationParallel(CancellationToken cancellationToken)
+        protected async Task<FullGenerationResult> RunGenerationParallel(CancellationToken cancellationToken)
         {
             var threads = GenerationSettings.ExecutionTypeSettings.ParallelThreads;
             if (GenerationSettings.Count < threads)
                 threads = GenerationSettings.Count;
-            var tasks = new Task[threads];
+            var tasks = new Task<ThreadGenerationResult>[threads];
 
             var countPerThread = GenerationSettings.Count / threads;
             var remainUnits = GenerationSettings.Count % threads;
@@ -135,14 +183,15 @@ namespace DataGeneration.Common
                     if (i >= remainUnits) rem = 0;
 
                     var currentCount = countPerThread + rem;
-                    tasks[i] = RunGenerationSequent(currentCount, cancellationToken);
+                    tasks[i] = RunGenerationSequent(currentCount, i, cancellationToken);
                 }
 
-                await Task.WhenAll(tasks);
+                var results = await Task.WhenAll(tasks);
+                return new FullGenerationResult(results);
             }
         }
 
-        protected async Task RunGenerationSequent(int count, CancellationToken cancellationToken)
+        protected async Task<ThreadGenerationResult> RunGenerationSequent(int count, int threadIndex, CancellationToken cancellationToken)
         {
             using (StopwatchLoggerFactory.ForceLogStartDispose(Logger, LogLevel.Debug,
                 "Generation Sequent started. " + LogArgs.Type_Id_Count,
@@ -152,6 +201,9 @@ namespace DataGeneration.Common
                 var entities = GenerateRandomizedList(count);
 
                 cancellationToken.ThrowIfCancellationRequested();
+
+                var fails = new List<(object, Exception)>();
+                bool stopped = false;
 
                 using (var client = await GetLoginLogoutClient(cancellationToken))
                 {
@@ -164,19 +216,23 @@ namespace DataGeneration.Common
                             await GenerateSingle(client, entity, cancellationToken);
                         }
                         catch (OperationCanceledException) { throw; }
-                        catch (ApiException ae)
-                        {
-                            Logger.Error(ae, "Generation {$entity} failed", typeof(TEntity));
-                            if (!GenerationSettings.ExecutionTypeSettings.IgnoreProcessingErrors)
-                                throw;
-                        }
                         catch (Exception e)
                         {
-                            Logger.Fatal(e, "Unexpected exception has occurred");
-                            throw;
+                            fails.Add((entity, e));
+                            var message = e is ApiException
+                                ? "Generation {$entity} failed"
+                                : "Unexpected exception has occurred while processing {entity}";
+                            Logger.Error(e, message, typeof(TEntity));
+                            if (!GenerationSettings.ExecutionTypeSettings.IgnoreProcessingErrors)
+                            {
+                                stopped = true;
+                                break;
+                            }
                         }
                     }
                 }
+
+                return new ThreadGenerationResult(count, threadIndex, stopped, fails);
             }
         }
 
@@ -292,4 +348,41 @@ namespace DataGeneration.Common
                 throw new ValidationException($"Property {nameof(SearchPattern)} of {nameof(GenerationSettings)} must be not null in order to search entities in {nameof(RunBeforeGeneration)}");
         }
     }
+
+    #region Generation Runner Events
+
+    public abstract class GenerationRunnerEventArgs : EventArgs
+    {
+        public GenerationRunnerEventArgs(IGenerationSettings generationSettings, string message = null)
+        {
+            GenerationSettings = generationSettings;
+            Message = message;
+        }
+
+        public IGenerationSettings GenerationSettings { get; }
+        public string Message { get; }
+    }
+
+    public class RunBeforeGenerationStartedEventArgs : GenerationRunnerEventArgs
+    {
+        public RunBeforeGenerationStartedEventArgs(IGenerationSettings generationSettings, string message = null) : base(generationSettings, message)
+        {
+        }
+    }
+
+    public class RunGenerationStartedEventArgs : GenerationRunnerEventArgs
+    {
+        public RunGenerationStartedEventArgs(IGenerationSettings generationSettings, string message = null) : base(generationSettings, message)
+        {
+        }
+    }
+
+    public class RunGenerationCompletedEventArgs : GenerationRunnerEventArgs
+    {
+        public RunGenerationCompletedEventArgs(IGenerationSettings generationSettings, string message = null) : base(generationSettings, message)
+        {
+        }
+    }
+
+    #endregion
 }
