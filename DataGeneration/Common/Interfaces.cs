@@ -37,11 +37,6 @@ namespace DataGeneration.Common
         T Value { get; set; }
     }
 
-    public interface IEntity
-    {
-        Guid? Id { get; set; }
-    }
-
     public interface IGenerationSettings
     {
         int Count { get; set; }

@@ -25,11 +25,8 @@ namespace DataGeneration.Soap
 
     // just extend generated classes to be more easy to use and debug
     [DebuggerTypeProxy(typeof(EntityDebuggerProxy))]
-    public partial class Entity : IEntity
+    public partial class Entity
     {
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        Guid? IEntity.Id { get => ID; set => ID = value; }
-
         public override string ToString() => $"{GetType().Name}";
     }
 

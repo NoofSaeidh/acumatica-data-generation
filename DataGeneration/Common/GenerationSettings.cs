@@ -45,6 +45,7 @@ namespace DataGeneration.Common
         [Required]
         public TRandomizerSettings RandomizerSettings { get; set; }
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IRandomizerSettings<T> IGenerationSettings<T>.RandomizerSettings => RandomizerSettings;
 
         public virtual void Validate()
