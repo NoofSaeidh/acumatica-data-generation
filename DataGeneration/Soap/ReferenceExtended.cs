@@ -51,7 +51,7 @@ namespace DataGeneration.Soap
     #endregion
 
     #region Values Extended
-    [DebuggerDisplay("{Value}")]
+    [DebuggerDisplay("{DebbugerView()}")]
     public partial class StringValue : IValueWrapper<string>
     {
         public StringValue() { }
@@ -66,8 +66,16 @@ namespace DataGeneration.Soap
         public static bool operator !=(StringValue left, StringValue right) => !ValueComparer<string>.Equals(left, right);
         public static implicit operator string(StringValue value) => value?.Value;
         public static implicit operator StringValue(string value) => new StringValue(value);
+        protected virtual string DebbugerView()
+        {
+            var type = GetType();
+            if (type == typeof(StringValue) && Value != null)
+                return Value;
+            var val = Value == null ? "null" : $"\"{Value}\"";
+            return $"{type.Name}, Value = {val}";
+        }
     }
-    [DebuggerDisplay("{Value}")]
+    [DebuggerDisplay("{DebbugerView()}")]
     public partial class BooleanValue : IValueWrapper<Boolean?>
     {
         public BooleanValue() { }
@@ -82,8 +90,16 @@ namespace DataGeneration.Soap
         public static bool operator !=(BooleanValue left, BooleanValue right) => !ValueComparer<Boolean?>.Equals(left, right);
         public static implicit operator bool? (BooleanValue value) => value?.Value;
         public static implicit operator BooleanValue(bool? value) => new BooleanValue(value);
+        protected virtual string DebbugerView()
+        {
+            var type = GetType();
+            if (type == typeof(BooleanValue) && Value != null)
+                return Value.ToString();
+            var val = Value == null ? "null" : $"\"{Value}\"";
+            return $"{type.Name}, Value = {val}";
+        }
     }
-    [DebuggerDisplay("{Value}")]
+    [DebuggerDisplay("{DebbugerView()}")]
     public partial class DateTimeValue : IValueWrapper<DateTime?>
     {
         public DateTimeValue() { }
@@ -98,8 +114,16 @@ namespace DataGeneration.Soap
         public static bool operator !=(DateTimeValue left, DateTimeValue right) => !ValueComparer<DateTime?>.Equals(left, right);
         public static implicit operator DateTime? (DateTimeValue value) => value?.Value;
         public static implicit operator DateTimeValue(DateTime? value) => new DateTimeValue(value);
+        protected virtual string DebbugerView()
+        {
+            var type = GetType();
+            if (type == typeof(DateTimeValue) && Value != null)
+                return Value.ToString();
+            var val = Value == null ? "null" : $"\"{Value}\"";
+            return $"{type.Name}, Value = {val}";
+        }
     }
-    [DebuggerDisplay("{Value}")]
+    [DebuggerDisplay("{DebbugerView()}")]
     public partial class IntValue : IValueWrapper<int?>
     {
         public IntValue() { }
@@ -114,8 +138,16 @@ namespace DataGeneration.Soap
         public static bool operator !=(IntValue left, IntValue right) => !ValueComparer<int?>.Equals(left, right);
         public static implicit operator int? (IntValue value) => value?.Value;
         public static implicit operator IntValue(int? value) => new IntValue(value);
+        protected virtual string DebbugerView()
+        {
+            var type = GetType();
+            if (type == typeof(IntValue) && Value != null)
+                return Value.ToString();
+            var val = Value == null ? "null" : $"\"{Value}\"";
+            return $"{type.Name}, Value = {val}";
+        }
     }
-    [DebuggerDisplay("{Value}")]
+    [DebuggerDisplay("{DebbugerView()}")]
     public partial class ShortValue : IValueWrapper<short?>
     {
         public ShortValue() { }
@@ -130,8 +162,16 @@ namespace DataGeneration.Soap
         public static bool operator !=(ShortValue left, ShortValue right) => !ValueComparer<short?>.Equals(left, right);
         public static implicit operator short? (ShortValue value) => (short?)value.Value;
         public static implicit operator ShortValue(short? value) => new ShortValue(value);
+        protected virtual string DebbugerView()
+        {
+            var type = GetType();
+            if (type == typeof(ShortValue) && Value != null)
+                return Value.ToString();
+            var val = Value == null ? "null" : $"\"{Value}\"";
+            return $"{type.Name}, Value = {val}";
+        }
     }
-    [DebuggerDisplay("{Value}")]
+    [DebuggerDisplay("{DebbugerView()}")]
     public partial class ByteValue : IValueWrapper<byte?>
     {
         public ByteValue() { }
@@ -146,8 +186,16 @@ namespace DataGeneration.Soap
         public static bool operator !=(ByteValue left, ByteValue right) => !ValueComparer<Byte?>.Equals(left, right);
         public static implicit operator byte? (ByteValue value) => (byte?)value.Value;
         public static implicit operator ByteValue(byte? value) => new ByteValue(value);
+        protected virtual string DebbugerView()
+        {
+            var type = GetType();
+            if (type == typeof(ByteValue) && Value != null)
+                return Value.ToString();
+            var val = Value == null ? "null" : $"\"{Value}\"";
+            return $"{type.Name}, Value = {val}";
+        }
     }
-    [DebuggerDisplay("{Value}")]
+    [DebuggerDisplay("{DebbugerView()}")]
     public partial class LongValue : IValueWrapper<long?>
     {
         public LongValue() { }
@@ -162,8 +210,16 @@ namespace DataGeneration.Soap
         public static bool operator !=(LongValue left, LongValue right) => !ValueComparer<long?>.Equals(left, right);
         public static implicit operator long? (LongValue value) => value?.Value;
         public static implicit operator LongValue(long? value) => new LongValue(value);
+        protected virtual string DebbugerView()
+        {
+            var type = GetType();
+            if (type == typeof(LongValue) && Value != null)
+                return Value.ToString();
+            var val = Value == null ? "null" : $"\"{Value}\"";
+            return $"{type.Name}, Value = {val}";
+        }
     }
-    [DebuggerDisplay("{Value}")]
+    [DebuggerDisplay("{DebbugerView()}")]
     public partial class DoubleValue : IValueWrapper<double?>
     {
         public DoubleValue() { }
@@ -178,8 +234,16 @@ namespace DataGeneration.Soap
         public static bool operator !=(DoubleValue left, DoubleValue right) => !ValueComparer<Double?>.Equals(left, right);
         public static implicit operator double? (DoubleValue value) => value?.Value;
         public static implicit operator DoubleValue(double? value) => new DoubleValue(value);
+        protected virtual string DebbugerView()
+        {
+            var type = GetType();
+            if (type == typeof(DoubleValue) && Value != null)
+                return Value.ToString();
+            var val = Value == null ? "null" : $"\"{Value}\"";
+            return $"{type.Name}, Value = {val}";
+        }
     }
-    [DebuggerDisplay("{Value}")]
+    [DebuggerDisplay("{DebbugerView()}")]
     public partial class DecimalValue : IValueWrapper<decimal?>
     {
         public DecimalValue() { }
@@ -194,8 +258,16 @@ namespace DataGeneration.Soap
         public static bool operator !=(DecimalValue left, DecimalValue right) => !ValueComparer<Decimal?>.Equals(left, right);
         public static implicit operator decimal? (DecimalValue value) => (decimal)value.Value;
         public static implicit operator DecimalValue(decimal? value) => new DecimalValue(value);
+        protected virtual string DebbugerView()
+        {
+            var type = GetType();
+            if (type == typeof(DecimalValue) && Value != null)
+                return Value.ToString();
+            var val = Value == null ? "null" : $"\"{Value}\"";
+            return $"{type.Name}, Value = {val}";
+        }
     }
-    [DebuggerDisplay("{Value}")]
+    [DebuggerDisplay("{DebbugerView()}")]
     public partial class GuidValue : IValueWrapper<Guid?>
     {
         public GuidValue() { }
@@ -210,6 +282,14 @@ namespace DataGeneration.Soap
         public static bool operator !=(GuidValue left, GuidValue right) => !ValueComparer<Guid?>.Equals(left, right);
         public static implicit operator Guid? (GuidValue value) => value?.Value;
         public static implicit operator GuidValue(Guid? value) => new GuidValue(value);
+        protected virtual string DebbugerView()
+        {
+            var type = GetType();
+            if (type == typeof(GuidValue) && Value != null)
+                return Value.ToString();
+            var val = Value == null ? "null" : $"\"{Value}\"";
+            return $"{type.Name}, Value = {val}";
+        }
     }
 
     #endregion
@@ -283,270 +363,6 @@ namespace DataGeneration.Soap
 
     #endregion
 
-    #region CustomFields Extended
-    [DebuggerDisplay("{Value}")]
-    public partial class CustomStringField
-    {
-        public CustomStringField() { }
-        public CustomStringField(string value)
-        {
-            Value = value;
-        }
-        public override bool Equals(object obj)
-        {
-            if (obj is CustomStringField v)
-                return ValueComparer<string>.Equals(Value, v.Value);
-
-            return ValueComparer<string>.Equals(Value, obj);
-        }
-        public override int GetHashCode()
-        {
-            return ValueComparer<string>.GetHashCode(Value);
-        }
-        public override string ToString()
-        {
-            return ValueComparer<string>.ToString(Value);
-        }
-        public static implicit operator string(CustomStringField value) => value?.Value;
-        public static implicit operator CustomStringField(string value) => new CustomStringField(value);
-    }
-    [DebuggerDisplay("{Value}")]
-    public partial class CustomBooleanField
-    {
-        public CustomBooleanField() { }
-        public CustomBooleanField(bool? value)
-        {
-            Value = value;
-        }
-        public override bool Equals(object obj)
-        {
-            if (obj is CustomBooleanField v)
-                return ValueComparer<bool?>.Equals(Value, v.Value);
-
-            return ValueComparer<bool?>.Equals(Value, obj);
-        }
-        public override int GetHashCode()
-        {
-            return ValueComparer<bool?>.GetHashCode(Value);
-        }
-        public override string ToString()
-        {
-            return ValueComparer<bool?>.ToString(Value);
-        }
-        public static implicit operator bool? (CustomBooleanField value) => value?.Value;
-        public static implicit operator CustomBooleanField(bool? value) => new CustomBooleanField(value);
-    }
-    [DebuggerDisplay("{Value}")]
-    public partial class CustomDateTimeField
-    {
-        public CustomDateTimeField() { }
-        public CustomDateTimeField(DateTime? value)
-        {
-            Value = value;
-        }
-        public override bool Equals(object obj)
-        {
-            if (obj is CustomDateTimeField v)
-                return ValueComparer<DateTime?>.Equals(Value, v.Value);
-
-            return ValueComparer<DateTime?>.Equals(Value, obj);
-        }
-        public override int GetHashCode()
-        {
-            return ValueComparer<DateTime?>.GetHashCode(Value);
-        }
-        public override string ToString()
-        {
-            return ValueComparer<DateTime?>.ToString(Value);
-        }
-        public static implicit operator DateTime? (CustomDateTimeField value) => value?.Value;
-        public static implicit operator CustomDateTimeField(DateTime? value) => new CustomDateTimeField(value);
-    }
-    [DebuggerDisplay("{Value}")]
-    public partial class CustomIntField
-    {
-        public CustomIntField() { }
-        public CustomIntField(int? value)
-        {
-            Value = value;
-        }
-        public override bool Equals(object obj)
-        {
-            if (obj is CustomIntField v)
-                return ValueComparer<int?>.Equals(Value, v.Value);
-
-            return ValueComparer<int?>.Equals(Value, obj);
-        }
-        public override int GetHashCode()
-        {
-            return ValueComparer<int?>.GetHashCode(Value);
-        }
-        public override string ToString()
-        {
-            return ValueComparer<int?>.ToString(Value);
-        }
-        public static implicit operator int? (CustomIntField value) => value?.Value;
-        public static implicit operator CustomIntField(int? value) => new CustomIntField(value);
-    }
-    [DebuggerDisplay("{Value}")]
-    public partial class CustomShortField
-    {
-        public CustomShortField() { }
-        public CustomShortField(short? value)
-        {
-            Value = value;
-        }
-        public override bool Equals(object obj)
-        {
-            if (obj is CustomShortField v)
-                return ValueComparer<short?>.Equals(Value, v.Value);
-
-            return ValueComparer<short?>.Equals(Value, obj);
-        }
-        public override int GetHashCode()
-        {
-            return ValueComparer<short?>.GetHashCode(Value);
-        }
-        public override string ToString()
-        {
-            return ValueComparer<short?>.ToString(Value);
-        }
-        public static implicit operator short? (CustomShortField value) => (short?)value.Value;
-        public static implicit operator CustomShortField(short? value) => new CustomShortField(value);
-    }
-    [DebuggerDisplay("{Value}")]
-    public partial class CustomByteField
-    {
-        public CustomByteField() { }
-        public CustomByteField(byte? value)
-        {
-            Value = value;
-        }
-        public override bool Equals(object obj)
-        {
-            if (obj is CustomByteField v)
-                return ValueComparer<byte?>.Equals(Value, v.Value);
-
-            return ValueComparer<byte?>.Equals(Value, obj);
-        }
-        public override int GetHashCode()
-        {
-            return ValueComparer<byte?>.GetHashCode(Value);
-        }
-        public override string ToString()
-        {
-            return ValueComparer<byte?>.ToString(Value);
-        }
-        public static implicit operator byte? (CustomByteField value) => (byte?)value.Value;
-        public static implicit operator CustomByteField(byte? value) => new CustomByteField(value);
-    }
-    [DebuggerDisplay("{Value}")]
-    public partial class CustomLongField
-    {
-        public CustomLongField() { }
-        public CustomLongField(long? value)
-        {
-            Value = value;
-        }
-        public override bool Equals(object obj)
-        {
-            if (obj is CustomLongField v)
-                return ValueComparer<long?>.Equals(Value, v.Value);
-
-            return ValueComparer<long?>.Equals(Value, obj);
-        }
-        public override int GetHashCode()
-        {
-            return ValueComparer<long?>.GetHashCode(Value);
-        }
-        public override string ToString()
-        {
-            return ValueComparer<long?>.ToString(Value);
-        }
-        public static implicit operator long? (CustomLongField value) => value?.Value;
-        public static implicit operator CustomLongField(long? value) => new CustomLongField(value);
-    }
-    [DebuggerDisplay("{Value}")]
-    public partial class CustomDoubleField
-    {
-        public CustomDoubleField() { }
-        public CustomDoubleField(double? value)
-        {
-            Value = value;
-        }
-        public override bool Equals(object obj)
-        {
-            if (obj is CustomDoubleField v)
-                return ValueComparer<double?>.Equals(Value, v.Value);
-
-            return ValueComparer<double?>.Equals(Value, obj);
-        }
-        public override int GetHashCode()
-        {
-            return ValueComparer<double?>.GetHashCode(Value);
-        }
-        public override string ToString()
-        {
-            return ValueComparer<double?>.ToString(Value);
-        }
-        public static implicit operator double? (CustomDoubleField value) => value?.Value;
-        public static implicit operator CustomDoubleField(double? value) => new CustomDoubleField(value);
-    }
-    [DebuggerDisplay("{Value}")]
-    public partial class CustomDecimalField
-    {
-        public CustomDecimalField() { }
-        public CustomDecimalField(decimal? value)
-        {
-            Value = value;
-        }
-        public override bool Equals(object obj)
-        {
-            if (obj is CustomDecimalField v)
-                return ValueComparer<decimal?>.Equals(Value, v.Value);
-
-            return ValueComparer<decimal?>.Equals(Value, obj);
-        }
-        public override int GetHashCode()
-        {
-            return ValueComparer<decimal?>.GetHashCode(Value);
-        }
-        public override string ToString()
-        {
-            return ValueComparer<decimal?>.ToString(Value);
-        }
-        public static implicit operator decimal? (CustomDecimalField value) => (decimal)value.Value;
-        public static implicit operator CustomDecimalField(decimal? value) => new CustomDecimalField(value);
-    }
-    [DebuggerDisplay("{Value}")]
-    public partial class CustomGuidField
-    {
-        public CustomGuidField() { }
-        public CustomGuidField(Guid? value)
-        {
-            Value = value;
-        }
-        public override bool Equals(object obj)
-        {
-            if (obj is CustomGuidField v)
-                return ValueComparer<Guid?>.Equals(Value, v.Value);
-
-            return ValueComparer<Guid?>.Equals(Value, obj);
-        }
-        public override int GetHashCode()
-        {
-            return ValueComparer<Guid?>.GetHashCode(Value);
-        }
-        public override string ToString()
-        {
-            return ValueComparer<Guid?>.ToString(Value);
-        }
-        public static implicit operator Guid? (CustomGuidField value) => value?.Value;
-        public static implicit operator CustomGuidField(Guid? value) => new CustomGuidField(value);
-    }
-
-    #endregion
-
     #region Debugger display
     internal class EntityDebuggerProxy
     {
@@ -598,28 +414,7 @@ namespace DataGeneration.Soap
                     continue;
                 }
 
-                yield return new KeyValuePairs(prefix + property.Name, value, o =>
-                {
-                    if (!property.CanWrite)
-                        return false;
-                    try
-                    {
-                        property.SetValue(obj, o);
-                    }
-                    catch
-                    {
-                        try
-                        {
-                            var valueProp = property.PropertyType.GetProperty("Value");
-                            valueProp.SetValue(value, o);
-                        }
-                        catch
-                        {
-                            return false;
-                        }
-                    }
-                    return true;
-                });
+                yield return new KeyValuePairs(prefix + property.Name, value);
             }
         }
 
@@ -628,33 +423,14 @@ namespace DataGeneration.Soap
         [DebuggerDisplay("{Value}", Name = "{Key}", Type = "")]
         internal class KeyValuePairs
         {
-            [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-            private readonly Func<object, bool> _setValue;
-            [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-            private object _value;
-            public KeyValuePairs(object key, object value, Func<object, bool> setValue = null)
+            public KeyValuePairs(string key, object value)
             {
                 Key = key;
-                _value = value;
-                _setValue = setValue;
+                Value = value;
             }
 
-            public object Key { get; }
-
-
-            public object Value
-            {
-                get => _value;
-                set
-                {
-                    if (_setValue == null)
-                        throw new InvalidOperationException("Cannot set value.");
-                    var success = _setValue(value);
-                    if (!success)
-                        throw new InvalidOperationException("Cannot set value.");
-                    _value = value;
-                }
-            }
+            public string Key { get; }
+            public object Value { get; }
 
             public override string ToString() => $"{Key} = {Value}";
         }
