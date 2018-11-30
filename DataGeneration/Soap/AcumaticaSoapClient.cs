@@ -41,7 +41,7 @@ namespace DataGeneration.Soap
             _client = new DefaultSoapClient(endpointSettings.GetBinding(), endpointSettings.GetEndpointAddress());
         }
 
-        public static AcumaticaSoapClient LoginLogoutClient(ApiConnectionConfig connectionConfig)
+        public static ILoginLogoutApiClient LoginLogoutClient(ApiConnectionConfig connectionConfig)
         {
             if (connectionConfig == null)
             {
@@ -52,10 +52,10 @@ namespace DataGeneration.Soap
 
             client.Login(connectionConfig.LoginInfo);
 
-            return client;
+            return (ILoginLogoutApiClient)client;
         }
 
-        public static async Task<AcumaticaSoapClient> LoginLogoutClientAsync(ApiConnectionConfig connectionConfig, CancellationToken cancellationToken = default)
+        public static async Task<ILoginLogoutApiClient> LoginLogoutClientAsync(ApiConnectionConfig connectionConfig, CancellationToken cancellationToken = default)
         {
             if (connectionConfig == null)
             {
@@ -66,10 +66,10 @@ namespace DataGeneration.Soap
 
             await client.LoginAsync(connectionConfig.LoginInfo, cancellationToken);
 
-            return client;
+            return (ILoginLogoutApiClient)client;
         }
 
-        public static AcumaticaSoapClient LogoutClient(EndpointSettings endpointSettings)
+        public static ILogoutApiClient LogoutClient(EndpointSettings endpointSettings)
         {
             if (endpointSettings == null)
             {

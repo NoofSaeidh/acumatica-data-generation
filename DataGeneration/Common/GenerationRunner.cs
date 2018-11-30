@@ -13,14 +13,12 @@ namespace DataGeneration.Common
 {
     public abstract class GenerationRunner
     {
-        private static Func<ApiConnectionConfig, CancellationToken, Task<ILoginLogoutApiClient>> _apiClientFactory;
-
         // HACK: set this if you want use another api client
-        public static Func<ApiConnectionConfig, CancellationToken, Task<ILoginLogoutApiClient>> ApiClientFactory
-        {
-            get => _apiClientFactory ?? (_apiClientFactory = async (config, ct) => (ILoginLogoutApiClient)await Soap.AcumaticaSoapClient.LoginLogoutClientAsync(config, ct));
-            set => _apiClientFactory = value;
-        }
+        public static Lazy<Func<ApiConnectionConfig, CancellationToken, Task<ILoginLogoutApiClient>>> ApiClientFactoryInitializer =
+            new Lazy<Func<ApiConnectionConfig, CancellationToken, Task<ILoginLogoutApiClient>>>(
+                    () => async (config, ct) => await Soap.AcumaticaSoapClient.LoginLogoutClientAsync(config, ct));
+
+        public static Func<ApiConnectionConfig, CancellationToken, Task<ILoginLogoutApiClient>> ApiClientFactory => ApiClientFactoryInitializer.Value;
 
         protected static ILogger Logger { get; } = LogManager.GetLogger(LogManager.LoggerNames.GenerationRunner);
 
@@ -87,10 +85,7 @@ namespace DataGeneration.Common
             GenerationSettings.Validate();
         }
 
-        // please do not override this (it contains loggers, try catches and stopwatch)
-        // instead override RunGenerationSequentRaw (for single thread)
-        // or RunBeforeGeneration (for all threads before entire generation)
-        public override async Task RunGeneration(CancellationToken cancellationToken = default)
+        public sealed override async Task RunGeneration(CancellationToken cancellationToken = default)
         {
             ValidateGenerationSettings();
             Logger.Info("Generation is going to start. " + LogArgs.Type_Id_Count + ", {@settings}",
@@ -303,8 +298,6 @@ namespace DataGeneration.Common
             public const string Type_Id_Count = Type_Id + ", Count = {count}";
             public const string Type_Id_Count_Threads = Type_Id_Count + ", Threads = {threads}";
         }
-
-
     }
 
     // provides search in RunBeforeGeneration
