@@ -1,4 +1,7 @@
-﻿using DataGeneration.Common;
+﻿using DataGeneration.Core;
+using DataGeneration.Core.Api;
+using DataGeneration.Core.Cache;
+using DataGeneration.Core.Queueing;
 using DataGeneration.Soap;
 using System;
 using System.Collections.Concurrent;
@@ -116,7 +119,7 @@ namespace DataGeneration.Entities.Opportunities
             }
 
             if(GenerationSettings.RandomizerSettings.UseInventoryIdsCache)
-                return await JsonFileCacheHelper.Instance.ReadFromCacheOrSave<IList<string>>(
+                return await JsonFileCacheManager.Instance.ReadFromCacheOrSaveAsync<IList<string>>(
                     nameof(OpportunityGenerationRunner) + "." + nameof(GetInventoryIds),
                     () => getIds(ct)
                 );

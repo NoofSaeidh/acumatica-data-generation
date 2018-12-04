@@ -1,4 +1,7 @@
-﻿using DataGeneration.Common;
+﻿using DataGeneration.Core;
+using DataGeneration.Core.Api;
+using DataGeneration.Core.Cache;
+using DataGeneration.Core.Logging;
 using DataGeneration.Entities.Activities;
 using DataGeneration.Soap;
 using System;
@@ -13,7 +16,7 @@ namespace DataGeneration.Entities
     // !! no null checking in methods !!
     internal class CrossEntityGenerationHelper
     {
-        protected static NLog.ILogger Logger { get; } = LogManager.GetLogger(LogManager.LoggerNames.GenerationRunner);
+        protected static NLog.ILogger Logger { get; } = LogHelper.GetLogger(LogHelper.LoggerNames.GenerationRunner);
 
         public static string BusinessAccountsWithContactsCacheName = nameof(CrossEntityGenerationHelper)
             + "." + nameof(GetBusinessAccountsWithContacts);
@@ -24,9 +27,9 @@ namespace DataGeneration.Entities
             CancellationToken ct)
         {
             if (useCache)
-                return await JsonFileCacheHelper
+                return await JsonFileCacheManager
                     .Instance
-                    .ReadFromCacheOrSave<IList<BusinessAccount>>(
+                    .ReadFromCacheOrSaveAsync<IList<BusinessAccount>>(
                         BusinessAccountsWithContactsCacheName,
                         () => GetBusinessAccountsWithContacts(config, ct)
                     );

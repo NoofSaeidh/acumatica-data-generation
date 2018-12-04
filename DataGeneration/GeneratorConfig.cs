@@ -1,4 +1,7 @@
-﻿using DataGeneration.Common;
+﻿using DataGeneration.Core;
+using DataGeneration.Core.Api;
+using DataGeneration.Core.Common;
+using DataGeneration.Core.Serialization;
 using DataGeneration.GenerationInfo;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;

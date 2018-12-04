@@ -1,4 +1,5 @@
-﻿using DataGeneration.Common;
+﻿using DataGeneration.Core;
+using DataGeneration.Core.Queueing;
 using System;
 using System.Collections.Generic;
 using System.Linq;

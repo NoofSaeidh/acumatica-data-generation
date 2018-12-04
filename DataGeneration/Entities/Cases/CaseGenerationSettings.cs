@@ -1,4 +1,6 @@
-﻿using DataGeneration.Common;
+﻿using DataGeneration.Core;
+using DataGeneration.Core.Api;
+using DataGeneration.Core.Settings;
 using DataGeneration.Entities.Emails;
 using DataGeneration.Soap;
 using Newtonsoft.Json;

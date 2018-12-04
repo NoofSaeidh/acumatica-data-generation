@@ -1,4 +1,6 @@
-﻿using DataGeneration.Common;
+﻿using DataGeneration.Core;
+using DataGeneration.Core.Common;
+using DataGeneration.Core.Helpers;
 using System;
 using System.Collections;
 using System.Collections.Generic;

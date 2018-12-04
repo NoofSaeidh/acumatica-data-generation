@@ -1,4 +1,6 @@
-﻿using DataGeneration.Common;
+﻿using DataGeneration.Core;
+using DataGeneration.Core.Api;
+using DataGeneration.Core.Logging;
 using NLog;
 using System;
 using System.Collections.Generic;
@@ -14,9 +16,9 @@ namespace DataGeneration.Soap
     {
         #region Initialization
 
-        private const string _loggerName = Common.LogManager.LoggerNames.ApiClient;
+        private const string _loggerName = LogHelper.LoggerNames.ApiClient;
 
-        private static ILogger _logger { get; } = Common.LogManager.GetLogger(_loggerName);
+        private static ILogger _logger { get; } = LogHelper.GetLogger(_loggerName);
 
         private readonly DefaultSoapClient _client;
 

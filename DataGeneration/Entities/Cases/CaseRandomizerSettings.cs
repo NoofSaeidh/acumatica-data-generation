@@ -1,7 +1,10 @@
 ﻿using Bogus;
-using DataGeneration.Common;
+using DataGeneration.Core;
+using DataGeneration.Core.Common;
+using DataGeneration.Core.Settings;
 using DataGeneration.Soap;
 using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace DataGeneration.Entities.Cases
 {
