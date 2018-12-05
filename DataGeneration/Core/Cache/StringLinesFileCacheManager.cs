@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -12,10 +13,12 @@ namespace DataGeneration.Core.Cache
     public class StringLinesFileCacheManager : BaseFileCacheManager, IDisposable
     {
         private readonly ConcurrentDictionary<string, ConcurrentFileWriter> _writers;
+        private bool _disposed;
 
         public StringLinesFileCacheManager()
         {
             _writers = new ConcurrentDictionary<string, ConcurrentFileWriter>();
+            _disposed = false;
         }
 
         #region Public Api
@@ -74,15 +77,17 @@ namespace DataGeneration.Core.Cache
 
         public void Dispose()
         {
-            lock (((ICollection)_writers).SyncRoot)
+            if (!_disposed)
             {
-                _writers.ForEach(i => i.Value.Dispose());
-                _writers.Clear();
+                _disposed = true;
+                _writers.ForEach(i => { try { i.Value.Dispose(); } catch { } });
             }
         }
 
         protected override T ParseCache<T>(string cacheText)
         {
+            CheckDisposed();
+
             // save some time for common classes // interfaces
             if (typeof(T) == typeof(List<string>)
                 || typeof(T) == typeof(IEnumerable<string>)
@@ -153,6 +158,8 @@ namespace DataGeneration.Core.Cache
 
         protected override string SerializeCache(object value)
         {
+            CheckDisposed();
+
             switch (value)
             {
                 case IEnumerable<string> e:
@@ -180,7 +187,24 @@ namespace DataGeneration.Core.Cache
 
         private string SerializeToString(object value) => JsonConvert.SerializeObject(value).Replace("\r\n", "");
 
-        private ConcurrentFileWriter Writer(string path) => _writers.GetOrAdd(path, path_ => new ConcurrentFileWriter(path_));
+        private ConcurrentFileWriter Writer(string path)
+        {
+            CheckDisposed();
+
+            return _writers.GetOrAdd(path, path_ =>
+            {
+                //if (!File.Exists(path_))
+                //    File.Create(path_);
+                return new ConcurrentFileWriter(path_);
+            });
+        }
+
+        private void CheckDisposed()
+        {
+            if (_disposed)
+                throw new ObjectDisposedException(nameof(StringLinesFileCacheManager),
+                    "Write operations in the disposed manager are not allowed.");
+        }
 
         #endregion
     }

@@ -6,10 +6,10 @@ namespace DataGeneration.Core.Cache
 {
     public abstract class BaseFileCacheManager
     {
-        public const string DefaultCacheFolder = "caches";
-        public const string DefaultFileExtension = "cache";
-        public virtual string CacheFolder { get; } = DefaultCacheFolder;
-        public virtual string FileExtension { get; } = DefaultFileExtension;
+        public const string DefaultCacheFolder = ".\\caches\\";
+        public const string DefaultFileExtension = ".cache.txt";
+        public virtual string CacheFolder => DefaultCacheFolder;
+        public virtual string FileExtension => DefaultFileExtension;
 
         protected BaseFileCacheManager()
         {
@@ -29,7 +29,7 @@ namespace DataGeneration.Core.Cache
 
         public virtual string GetCachePath(string cacheName)
         {
-            return CacheFolder + '\\' + cacheName + '.' + FileExtension;
+            return CacheFolder +  cacheName + FileExtension;
         }
 
         public bool IsCacheExist(string cacheName)

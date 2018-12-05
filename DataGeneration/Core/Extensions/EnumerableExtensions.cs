@@ -79,11 +79,12 @@ namespace System.Collections.Generic
                 Array.ForEach(array, action);
                 return array;
             }
-            return source.Select(i =>
+            foreach (var item in source)
             {
-                action(i);
-                return i;
-            });
+                action(item);
+            }
+
+            return source;
         }
 
         public static TValue GetValueOrDefault<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key)
