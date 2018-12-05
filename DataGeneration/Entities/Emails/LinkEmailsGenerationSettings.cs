@@ -1,4 +1,8 @@
-﻿using DataGeneration.Common;
+﻿using DataGeneration.Core;
+using DataGeneration.Core.Api;
+using DataGeneration.Core.Common;
+using DataGeneration.Core.Queueing;
+using DataGeneration.Core.Settings;
 using DataGeneration.Soap;
 using System;
 using System.Collections.Generic;
@@ -10,8 +14,8 @@ using System.Threading.Tasks;
 namespace DataGeneration.Entities.Emails
 {
     public class LinkEmailsGenerationSettings : 
-        GenerationSettings<OneToManyRelation<LinkEntityToEmail, OneToManyRelation<Email, File>>, LinkEmailsRandomizerSettings>, 
-        IEntitiesSearchGenerationSettings
+        GenerationSettings<OneToManyRelation<LinkEntityToEmail, OneToManyRelation<Email, File>>, LinkEmailsRandomizerSettings>,
+        ISearchUtilizer
     {
         public override GenerationRunner GetGenerationRunner(ApiConnectionConfig apiConnectionConfig) => new LinkEmailsGenerationRunner(apiConnectionConfig, this);
 

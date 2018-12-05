@@ -1,4 +1,5 @@
-﻿using DataGeneration.Common;
+﻿using DataGeneration.Core;
+using DataGeneration.Core.Logging;
 using DataGeneration.GenerationInfo;
 using NLog;
 using System;
@@ -12,7 +13,7 @@ namespace DataGeneration
 {
     public class GeneratorClient
     {
-        private static ILogger _logger { get; } = Common.LogManager.GetLogger(Common.LogManager.LoggerNames.GenerationClient);
+        private static ILogger _logger { get; } = LogHelper.GetLogger(LogHelper.LoggerNames.GenerationClient);
 
         public async Task<AllLaunchesResult> GenerateAll(
             GeneratorConfig config, 

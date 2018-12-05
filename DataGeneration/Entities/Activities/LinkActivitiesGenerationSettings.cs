@@ -1,4 +1,9 @@
-﻿using DataGeneration.Common;
+﻿using DataGeneration.Core;
+using DataGeneration.Core.Api;
+using DataGeneration.Core.Cache;
+using DataGeneration.Core.Common;
+using DataGeneration.Core.Queueing;
+using DataGeneration.Core.Settings;
 using DataGeneration.Soap;
 using System;
 using System.Collections.Generic;
@@ -11,7 +16,7 @@ namespace DataGeneration.Entities.Activities
 {
     public class LinkActivitiesGenerationSettings :
         GenerationSettings<OneToManyRelation<LinkEntityToActivity, Activity>, LinkActivitiesRandomizerSettings>,
-        IEntitiesSearchGenerationSettings
+        ISearchUtilizer
     {
         public override GenerationRunner GetGenerationRunner(ApiConnectionConfig apiConnectionConfig) => new LinkActivitiesGenerationRunner(apiConnectionConfig, this);
 

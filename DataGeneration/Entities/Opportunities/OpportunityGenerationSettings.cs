@@ -1,4 +1,7 @@
-﻿using DataGeneration.Common;
+﻿using DataGeneration.Core;
+using DataGeneration.Core.Api;
+using DataGeneration.Core.Queueing;
+using DataGeneration.Core.Settings;
 using DataGeneration.Entities.Emails;
 using DataGeneration.Soap;
 using Newtonsoft.Json;
@@ -9,7 +12,7 @@ namespace DataGeneration.Entities.Opportunities
 {
     public class OpportunityGenerationSettings : 
         GenerationSettings<Opportunity, OpportunityRandomizerSettings>,
-        IEntitiesSearchGenerationSettings
+        ISearchUtilizer
     {
         public SearchPattern SearchPattern { get; set; }
 

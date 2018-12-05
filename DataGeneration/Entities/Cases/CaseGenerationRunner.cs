@@ -1,5 +1,6 @@
 ﻿using Bogus;
-using DataGeneration.Common;
+using DataGeneration.Core.Api;
+using DataGeneration.Core;
 using DataGeneration.Soap;
 using System;
 using System.Collections.Generic;

@@ -1,5 +1,5 @@
-﻿using DataGeneration.Common;
-using DataGeneration.Maint;
+﻿using DataGeneration.Core;
+using DataGeneration.Soap.Maint;
 using System;
 using System.Collections.Generic;
 using System.IO;

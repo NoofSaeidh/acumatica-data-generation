@@ -1,4 +1,6 @@
-﻿using DataGeneration.Common;
+﻿using DataGeneration.Core;
+using DataGeneration.Core.Common;
+using DataGeneration.Core.Settings;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;

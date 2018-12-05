@@ -1,4 +1,5 @@
-﻿using DataGeneration.Common;
+﻿using DataGeneration.Core;
+using DataGeneration.Core.Settings;
 using System;
 
 namespace DataGeneration.GenerationInfo

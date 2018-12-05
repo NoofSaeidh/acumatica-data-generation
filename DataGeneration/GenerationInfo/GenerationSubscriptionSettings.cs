@@ -1,4 +1,5 @@
-﻿using DataGeneration.Common;
+﻿using DataGeneration.Core;
+using DataGeneration.Core.Settings;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -47,7 +48,7 @@ namespace DataGeneration.GenerationInfo
                 ? 1 
                 : generationSettings.ExecutionTypeSettings.ParallelThreads;
             return new (string, string)[] {
-                ("EventType", "BeforeGeneration"),
+                ("EventType", eventType),
                 ("GenType", generationSettings.GenerationType),
                 ("Count", generationSettings.Count.ToString()),
                 ("Threads", threads.ToString())

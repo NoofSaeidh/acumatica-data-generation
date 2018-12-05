@@ -1,4 +1,6 @@
-﻿using DataGeneration.Common;
+﻿using DataGeneration.Core;
+using DataGeneration.Core.Api;
+using DataGeneration.Core.Logging;
 using NLog;
 using System;
 using System.Collections.Generic;
@@ -14,9 +16,9 @@ namespace DataGeneration.Soap
     {
         #region Initialization
 
-        private const string _loggerName = Common.LogManager.LoggerNames.ApiClient;
+        private const string _loggerName = LogHelper.LoggerNames.ApiClient;
 
-        private static ILogger _logger { get; } = Common.LogManager.GetLogger(_loggerName);
+        private static ILogger _logger { get; } = LogHelper.GetLogger(_loggerName);
 
         private readonly DefaultSoapClient _client;
 
@@ -41,7 +43,7 @@ namespace DataGeneration.Soap
             _client = new DefaultSoapClient(endpointSettings.GetBinding(), endpointSettings.GetEndpointAddress());
         }
 
-        public static AcumaticaSoapClient LoginLogoutClient(ApiConnectionConfig connectionConfig)
+        public static ILoginLogoutApiClient LoginLogoutClient(ApiConnectionConfig connectionConfig)
         {
             if (connectionConfig == null)
             {
@@ -52,10 +54,10 @@ namespace DataGeneration.Soap
 
             client.Login(connectionConfig.LoginInfo);
 
-            return client;
+            return (ILoginLogoutApiClient)client;
         }
 
-        public static async Task<AcumaticaSoapClient> LoginLogoutClientAsync(ApiConnectionConfig connectionConfig, CancellationToken cancellationToken = default)
+        public static async Task<ILoginLogoutApiClient> LoginLogoutClientAsync(ApiConnectionConfig connectionConfig, CancellationToken cancellationToken = default)
         {
             if (connectionConfig == null)
             {
@@ -66,10 +68,10 @@ namespace DataGeneration.Soap
 
             await client.LoginAsync(connectionConfig.LoginInfo, cancellationToken);
 
-            return client;
+            return (ILoginLogoutApiClient)client;
         }
 
-        public static AcumaticaSoapClient LogoutClient(EndpointSettings endpointSettings)
+        public static ILogoutApiClient LogoutClient(EndpointSettings endpointSettings)
         {
             if (endpointSettings == null)
             {

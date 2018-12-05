@@ -77,24 +77,54 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Common\GenerationResult.cs" />
-    <Compile Include="Common\JsonFileCacheHelper.cs" />
+    <Compile Include="Core\Cache\CacheSettingsType.cs" />
+    <Compile Include="Core\Cache\BaseFileCacheManager.cs" />
+    <Compile Include="Core\Cache\CacheAdapter.cs" />
+    <Compile Include="Core\Cache\CacheSettings.cs" />
+    <Compile Include="Core\DataGeneration\IDataGenerator.cs" />
+    <Compile Include="Core\Common\IValueWrapper.cs" />
+    <Compile Include="Core\Cache\ICacheUtilizer.cs" />
+    <Compile Include="Core\Api\IApiClient.cs" />
+    <Compile Include="Core\Cache\IHasCacheAdapter.cs" />
+    <Compile Include="Core\Common\IProbabilityObject.cs" />
+    <Compile Include="Core\Logging\IStopwatchLogger.cs" />
+    <Compile Include="Core\Common\IValidatable.cs" />
+    <Compile Include="Core\Queueing\ISearchUtilizer.cs" />
+    <Compile Include="Core\Settings\GenerationSettingsBase.cs" />
+    <Compile Include="Core\Settings\IGenerationSettings.cs" />
+    <Compile Include="Core\Settings\IRandomizerSettings.cs" />
+    <Compile Include="Core\Queueing\ComplexQuery.cs" />
+    <Compile Include="Core\Queueing\ComplexQueryResult.cs" />
+    <Compile Include="Core\Queueing\QueryRequestor.cs" />
+    <Compile Include="Core\Queueing\RequestType.cs" />
+    <Compile Include="Core\Extensions\BogusExtensions.cs" />
+    <Compile Include="Core\Extensions\EnumerableExtensions.cs" />
+    <Compile Include="Core\Extensions\NullableExtensions.cs" />
+    <Compile Include="Core\Extensions\StringExtensions.cs" />
+    <Compile Include="Core\Extensions\TaskExtensions.cs" />
+    <Compile Include="Core\DataGeneration\ConsumerCollectionDataGenerator.cs" />
+    <Compile Include="Core\DataGeneration\FakerDataGenerator.cs" />
+    <Compile Include="Core\Helpers\ConcurrentFileWriter.cs" />
+    <Compile Include="Core\GenerationResult.cs" />
+    <Compile Include="Core\Cache\JsonFileCacheManager.cs" />
+    <Compile Include="Core\Cache\StringLinesFileCacheManager.cs" />
+    <Compile Include="Core\Queueing\LinqPattern.cs" />
     <Compile Include="GenerationInfo\AllLaunchesResult.cs" />
     <Compile Include="GenerationInfo\GenerationSubscriptionManager.cs" />
     <Compile Include="GenerationInfo\GenerationSubscriptionSettings.cs" />
     <Compile Include="GenerationInfo\LaunchSettings.cs" />
     <Compile Include="GenerationInfo\JsonInjection.cs" />
     <Compile Include="GenerationInfo\AllGenerationsResult.cs" />
-    <Compile Include="Common\AcumaticaTimeHelper.cs" />
-    <Compile Include="Common\Adjuster.cs" />
-    <Compile Include="Common\ApiConnectionConfig.cs" />
-    <Compile Include="Common\ComplexQueryExecutor.cs" />
-    <Compile Include="Common\FileLoader.cs" />
-    <Compile Include="Common\SearchPattern.cs" />
-    <Compile Include="Common\EntitySearcher.cs" />
-    <Compile Include="Common\ProbabilityCollectionSerializationHelpers.cs" />
-    <Compile Include="Common\ValueTupleExtensions.cs" />
-    <Compile Include="Common\ValueTupleReflectionHelper.cs" />
+    <Compile Include="Core\Helpers\AcumaticaTimeHelper.cs" />
+    <Compile Include="Core\Queueing\Adjuster.cs" />
+    <Compile Include="Core\Api\ApiConnectionConfig.cs" />
+    <Compile Include="Core\Queueing\ComplexQueryExecutor.cs" />
+    <Compile Include="Core\Helpers\FileLoader.cs" />
+    <Compile Include="Core\Queueing\SearchPattern.cs" />
+    <Compile Include="Core\Queueing\EntitySearcher.cs" />
+    <Compile Include="Core\Serialization\ProbabilityCollectionSerializationHelpers.cs" />
+    <Compile Include="Core\Extensions\ValueTupleExtensions.cs" />
+    <Compile Include="Core\Serialization\ValueTupleReflectionHelper.cs" />
     <Compile Include="Entities\Activities\LinkActivitiesGenerationRunner.cs" />
     <Compile Include="Entities\Activities\LinkActivitiesGenerationSettings.cs" />
     <Compile Include="Entities\Activities\LinkActivitiesRandomizerSettings.cs" />
@@ -105,17 +135,15 @@
     <Compile Include="Entities\Emails\LinkEmailsGenerationRunner.cs" />
     <Compile Include="Entities\Emails\LinkEmailsGenerationSettings.cs" />
     <Compile Include="Entities\EntityHelper.cs" />
-    <Compile Include="Common\Enums.cs" />
-    <Compile Include="Common\ExecutionTypeSettings.cs" />
-    <Compile Include="Common\Extensions.cs" />
-    <Compile Include="Common\GenerationException.cs" />
-    <Compile Include="Common\GenerationSettings.cs" />
-    <Compile Include="Common\GenerationRunner.cs" />
-    <Compile Include="Common\JsonLogSerializer.cs" />
-    <Compile Include="Common\LoginInfo.cs" />
-    <Compile Include="Common\ObjectExtensions.cs" />
-    <Compile Include="Common\StopwatchLogger.cs" />
-    <Compile Include="Common\ValidateHelper.cs" />
+    <Compile Include="Core\Settings\ExecutionTypeSettings.cs" />
+    <Compile Include="Core\GenerationException.cs" />
+    <Compile Include="Core\Settings\GenerationSettings.cs" />
+    <Compile Include="Core\GenerationRunner.cs" />
+    <Compile Include="Core\Serialization\JsonLogSerializer.cs" />
+    <Compile Include="Core\Api\LoginInfo.cs" />
+    <Compile Include="Core\Extensions\CopyObjectExtensions.cs" />
+    <Compile Include="Core\Logging\StopwatchLogger.cs" />
+    <Compile Include="Core\Helpers\ValidateHelper.cs" />
     <Compile Include="Connected Services\Soap.Maint\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -132,14 +160,14 @@
     <Compile Include="Entities\Events\LinkEventsRandomizerSettings.cs" />
     <Compile Include="Entities\CrossEntityGenerationHelper.cs" />
     <Compile Include="Entities\EntityHelperExtensions.cs" />
-    <Compile Include="Common\LogManager.cs" />
-    <Compile Include="Common\ProbabilityCollection.cs" />
-    <Compile Include="Common\ProbabilityCollectionJsonConverter.cs" />
-    <Compile Include="Common\Relation.cs" />
+    <Compile Include="Core\Logging\LogHelper.cs" />
+    <Compile Include="Core\Common\ProbabilityCollection.cs" />
+    <Compile Include="Core\Serialization\ProbabilityCollectionJsonConverter.cs" />
+    <Compile Include="Core\Common\Relation.cs" />
     <Compile Include="Entities\Leads\LeadGenerationRunner.cs" />
     <Compile Include="Entities\Leads\LeadGenerationSettings.cs" />
-    <Compile Include="Common\RandomizerSettings.cs" />
-    <Compile Include="Common\ValueTupleJsonConverter.cs" />
+    <Compile Include="Core\Settings\RandomizerSettings.cs" />
+    <Compile Include="Core\Serialization\ValueTupleJsonConverter.cs" />
     <Compile Include="Entities\Emails\LinkEmailsRandomizerSettings.cs" />
     <Compile Include="Entities\Emails\Enums.cs" />
     <Compile Include="Entities\Leads\LeadWrapper.cs" />
@@ -153,38 +181,36 @@
     <Compile Include="GenerationInfo\SettingsFilesConfig.cs" />
     <Compile Include="GeneratorConfig.cs" />
     <Compile Include="GeneratorClient.cs" />
-    <Compile Include="Common\EndpointSettings.cs" />
-    <Compile Include="Maint\MaintenanceClient.cs" />
+    <Compile Include="Core\Api\EndpointSettings.cs" />
+    <Compile Include="Soap\Maint\MaintenanceClient.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Common\Interfaces.cs" />
     <Compile Include="Entities\Leads\LeadRandomizerSettings.cs" />
-    <Compile Include="Common\DataGenerator.cs" />
     <Compile Include="Rest\AcumaticaRestClient.cs" />
     <Compile Include="Soap\AcumaticaSoapClient.cs" />
-    <Compile Include="Common\ApiException.cs" />
+    <Compile Include="Core\Api\ApiException.cs" />
     <Compile Include="Soap\EntitiesInterfaces.cs" />
     <Compile Include="Soap\ReferenceExtended.cs" />
-    <Compile Include="Common\ValueComparer.cs" />
+    <Compile Include="Core\Helpers\ValueComparer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".editorconfig" />
     <None Include="App.config" />
-    <None Include="ConfigExamples\cases.settings.json" />
-    <None Include="ConfigExamples\config.example.json" />
+    <None Include="configs\extended-examples\cases.settings.json" />
+    <None Include="configs\extended-examples\config.example.json" />
     <None Include="config.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="ConfigExamples\leads.settings.json" />
-    <None Include="ConfigExamples\link-work-items-cases.settings.json" />
-    <None Include="ConfigExamples\link-phone-calls-cases.settings.json" />
-    <None Include="ConfigExamples\link-notes-opportunities.settings.json" />
-    <None Include="ConfigExamples\link-events-opportunities.settings.json" />
-    <None Include="ConfigExamples\link-emails-cases.settings.json" />
-    <None Include="ConfigExamples\link-emails-leads.settings.json" />
-    <None Include="ConfigExamples\link-emails-opportunities.settings.json" />
-    <None Include="ConfigExamples\opportunities-forconverted.settings.json" />
-    <None Include="ConfigExamples\opportunities.settings.json" />
+    <None Include="configs\extended-examples\leads.settings.json" />
+    <None Include="configs\extended-examples\link-work-items-cases.settings.json" />
+    <None Include="configs\extended-examples\link-phone-calls-cases.settings.json" />
+    <None Include="configs\extended-examples\link-notes-opportunities.settings.json" />
+    <None Include="configs\extended-examples\link-events-opportunities.settings.json" />
+    <None Include="configs\extended-examples\link-emails-cases.settings.json" />
+    <None Include="configs\extended-examples\link-emails-leads.settings.json" />
+    <None Include="configs\extended-examples\link-emails-opportunities.settings.json" />
+    <None Include="configs\extended-examples\opportunities-forconverted.settings.json" />
+    <None Include="configs\extended-examples\opportunities.settings.json" />
     <None Include="configs\cases.settings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -294,5 +320,6 @@
       <SubType>Designer</SubType>
     </Content>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

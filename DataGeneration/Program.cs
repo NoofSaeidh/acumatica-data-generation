@@ -1,4 +1,5 @@
-﻿using DataGeneration.Common;
+﻿using DataGeneration.Core;
+using DataGeneration.Core.Logging;
 using NLog;
 using System;
 using System.ComponentModel.DataAnnotations;
@@ -10,7 +11,7 @@ namespace DataGeneration
 {
     public class Program
     {
-        private static readonly ILogger _logger = Common.LogManager.DefaultLogger;
+        private static readonly ILogger _logger = LogHelper.DefaultLogger;
 
         public static void Main(string[] args)
         {
