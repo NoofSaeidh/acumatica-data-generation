@@ -16,14 +16,12 @@ namespace DataGeneration.Entities.Activities
 {
     public class LinkActivitiesGenerationSettings :
         GenerationSettings<OneToManyRelation<LinkEntityToActivity, Activity>, LinkActivitiesRandomizerSettings>,
-        ISearchUtilizer,
-        IHasCacheAdapter
+        ISearchUtilizer
     {
         public override GenerationRunner GetGenerationRunner(ApiConnectionConfig apiConnectionConfig) => new LinkActivitiesGenerationRunner(apiConnectionConfig, this);
 
         [Required]
         public SearchPattern SearchPattern { get; set; }
-        public CacheAdapter CacheAdapter => new CacheAdapter();
 
         public override void Validate()
         {

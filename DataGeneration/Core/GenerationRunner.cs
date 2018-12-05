@@ -330,23 +330,6 @@ namespace DataGeneration.Core
             if (SkipEntitiesSearch)
                 return;
 
-            if (GenerationSettings is ICacheUtilizer cu 
-                && cu.CacheSettings.HasValue(out var cs)
-                && cs.Type.HasFlag(CacheSettingsType.Read))
-            {
-                await Task.Yield();
-
-                //IList<Soap.Entity> cachedEntities;
-                //if (cachedSettings.DeleteCache
-                //    ? JsonFileCacheManager.Instance.TryReadFromCacheAndDelete(cachedSettings.CacheName, out cachedEntities)
-                //    : JsonFileCacheManager.Instance.TryReadFromCache(cachedSettings.CacheName, out cachedEntities))
-                //{
-                //    Logger.Info("Use cached entities instead of search.");
-                //    UtilizeFoundEntities(cachedEntities);
-                //    return;
-                //}
-            }
-
             var entities = await GetEntities(GenerationSettings.SearchPattern, AdjustEntitySearcher, cancellationToken);
             var complexEntities = entities.OfType<Soap.IComplexQueryEntity>();
             if (complexEntities.Any())
