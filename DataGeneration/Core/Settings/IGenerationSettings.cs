@@ -12,6 +12,8 @@ namespace DataGeneration.Core.Settings
         int? Seed { get; set; }
         int Id { get; }
 
+        bool CollectGarbageBeforeGeneration { get; }
+
         ExecutionTypeSettings ExecutionTypeSettings { get; set; }
 
         GenerationRunner GetGenerationRunner(ApiConnectionConfig apiConnectionConfig);

@@ -1,5 +1,6 @@
 ﻿using DataGeneration.Core;
 using DataGeneration.Core.Logging;
+using DataGeneration.Core.SystemManagement;
 using DataGeneration.GenerationInfo;
 using NLog;
 using System;
@@ -16,7 +17,7 @@ namespace DataGeneration
         private static ILogger _logger { get; } = LogHelper.GetLogger(LogHelper.LoggerNames.GenerationClient);
 
         public async Task<AllLaunchesResult> GenerateAll(
-            GeneratorConfig config, 
+            GeneratorConfig config,
             CancellationToken ct = default)
         {
 
@@ -54,8 +55,8 @@ namespace DataGeneration
         }
 
         protected async Task<AllGenerationsResult> Generate(
-            GeneratorConfig config, 
-            LaunchSettings launchSettings, 
+            GeneratorConfig config,
+            LaunchSettings launchSettings,
             CancellationToken ct = default)
         {
             if (config == null)
@@ -72,6 +73,33 @@ namespace DataGeneration
             {
                 _logger.Fatal(ve, "Cannot start generation, configuration is invalid");
                 throw;
+            }
+
+            if (launchSettings.RestartIisBeforeLaunch)
+            {
+                try
+                {
+                    using (StopwatchLoggerFactory.ForceLogDispose(_logger, LogLevel.Debug, "iisreset completed"))
+                    {
+                        IisManager.Instance.RestartIis();
+                    }
+                }
+                catch (Exception e)
+                {
+                    _logger.Error(e, "Cannot restart IIS. Perhaps application was launched without administrator rights");
+                }
+            }
+
+            if (launchSettings.CollectGarbageBeforeLaunch)
+            {
+                if (_logger.IsDebugEnabled)
+                {
+                    _logger.Debug("Memory before GC.Collect: {byte:N0}", GC.GetTotalMemory(false));
+                    GC.Collect();
+                    _logger.Debug("Memory after GC.Collect: {byte:N0}", GC.GetTotalMemory(true));
+                }
+                else
+                    GC.Collect();
             }
 
             var generatationResults = new List<GenerationResult>();

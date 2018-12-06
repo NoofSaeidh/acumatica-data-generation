@@ -50,6 +50,9 @@
   <PropertyGroup>
     <ApplicationIcon>icon.ico</ApplicationIcon>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Bogus, Version=24.3.1.0, Culture=neutral, PublicKeyToken=fa1bb3f3f218129a, processorArchitecture=MSIL">
       <HintPath>..\packages\Bogus.24.3.1\lib\net40\Bogus.dll</HintPath>
@@ -109,6 +112,7 @@
     <Compile Include="Core\Cache\JsonFileCacheManager.cs" />
     <Compile Include="Core\Cache\StringLinesFileCacheManager.cs" />
     <Compile Include="Core\Queueing\LinqPattern.cs" />
+    <Compile Include="Core\SystemManagement\IisManager.cs" />
     <Compile Include="GenerationInfo\AllLaunchesResult.cs" />
     <Compile Include="GenerationInfo\GenerationSubscriptionManager.cs" />
     <Compile Include="GenerationInfo\GenerationSubscriptionSettings.cs" />
@@ -196,6 +200,7 @@
   <ItemGroup>
     <None Include=".editorconfig" />
     <None Include="App.config" />
+    <None Include="app.manifest" />
     <None Include="configs\extended-examples\cases.settings.json" />
     <None Include="configs\extended-examples\config.example.json" />
     <None Include="config.json">

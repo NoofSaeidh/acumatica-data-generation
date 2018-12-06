@@ -37,6 +37,14 @@
       {
         "Path": "StopProcessingAtException",
         "Value": false
+      },
+      {
+        "Path": "CollectGarbageBeforeLaunch",
+        "Value": true
+      },
+      {
+        "Path": "RestartIisBeforeLaunch",
+        "Value": false
       }
     ],
     "SettingsInjections": [
@@ -44,6 +52,10 @@
         "Path": "Count",
         "Type": "Replace", // default
         "Value": 5
+      },
+      {
+        "Path": "CollectGarbageBeforeGeneration",
+        "Value": true
       },
       {
         "Path": "ExecutionTypeSettings",
