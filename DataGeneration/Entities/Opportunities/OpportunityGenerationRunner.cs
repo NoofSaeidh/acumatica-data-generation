@@ -34,7 +34,7 @@ namespace DataGeneration.Entities.Opportunities
                 baccountsTasks = VoidTask.FromResult<IDictionary<OpportunityAccountType, (string, int[])[]>>(null);
 
             Task<IList<string>> inventoryIdsTask;
-            if (randSet.FetchBusinessAccounts)
+            if (randSet.FetchInventoryIds)
                 inventoryIdsTask = GetInventoryIds(cancellationToken);
             else
                 inventoryIdsTask = VoidTask.FromResult<IList<string>>(null);
