@@ -194,6 +194,8 @@ namespace DataGeneration.GenerationInfo
                     $"Source = {source}, Property = {propertyName}.", e);
             }
         }
+
+        public override string ToString() => $"{Type}, {Path} = {Value}";
     }
 
     // just for obviousness

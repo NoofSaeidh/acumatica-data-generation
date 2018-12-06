@@ -28,21 +28,21 @@ namespace DataGeneration.GenerationInfo
         // if true processing will be stopped if any generation option will fail
         // ignored for validation exceptions
         public bool StopProcessingAtException { get; set; }
+        public bool RestartIisBeforeLaunch { get; set; }
+        public bool CollectGarbageBeforeLaunch { get; set; }
 
         public IEnumerable<IGenerationSettings> GetPreparedGenerationSettings()
         {
             Validate();
-            var settings = GenerationSettings.Select(g => g.Copy());
-            if (Injections != null)
+
+            foreach (var settings in GenerationSettings)
             {
-                settings = settings.ForEach(s =>
-                {
-                    JsonInjection.Inject(s, Injections);
-                    if(s is GenerationSettingsBase gs)
-                        gs.Id = GetGenerationId();
-                });
+                var s = settings.Copy();
+                JsonInjection.Inject(s, Injections);
+                if (s is GenerationSettingsBase gs)
+                    gs.Id = GetGenerationId();
+                yield return s;
             }
-            return settings;
         }
 
         public void Validate()

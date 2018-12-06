@@ -15,6 +15,8 @@ namespace DataGeneration.Core.Settings
         // so setter used in injections
         public virtual int Id { get; internal set; } = Interlocked.Increment(ref _id);
 
+        public virtual bool CollectGarbageBeforeGeneration { get; set; }
+
         public abstract GenerationRunner GetGenerationRunner(ApiConnectionConfig apiConnectionConfig);
     }
 }

@@ -98,6 +98,18 @@ namespace DataGeneration.Core
 
             try
             {
+                if (GenerationSettings.CollectGarbageBeforeGeneration)
+                {
+                    if (Logger.IsDebugEnabled)
+                    {
+                        Logger.Debug("Memory before GC.Collect: {byte:N0}", GC.GetTotalMemory(false));
+                        GC.Collect();
+                        Logger.Debug("Memory after GC.Collect: {byte:N0}", GC.GetTotalMemory(true));
+                    }
+                    else
+                        GC.Collect();
+                }
+
                 OnRunBeforeGenerationStarted(new RunBeforeGenerationStartedEventArgs(GenerationSettings));
 
                 // log only if it takes some time
