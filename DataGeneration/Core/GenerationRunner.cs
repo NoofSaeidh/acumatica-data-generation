@@ -121,22 +121,21 @@ namespace DataGeneration.Core
                     "Generation completed. " + LogArgs.Type_Id_Count,
                     GenerationSettings.GenerationType, GenerationSettings.Id, GenerationSettings.Count))
                 {
-                    FullGenerationResult result;
                     switch (GenerationSettings.ExecutionTypeSettings.ExecutionType)
                     {
                         case ExecutionType.Sequent:
-                            result = new FullGenerationResult((await RunGenerationSequent(GenerationSettings.Count, 1, cancellationToken)).AsEnumerable());
+                            await RunGenerationSequent(GenerationSettings.Count, 1, cancellationToken);
                             break;
 
                         case ExecutionType.Parallel:
-                            result = await RunGenerationParallel(cancellationToken);
+                            await RunGenerationParallel(cancellationToken);
                             break;
 
                         default:
                             throw new NotSupportedException();
                     }
-                    Logger.Info("Generation completed. " + LogArgs.Type_Id + ", Result =  {$result}",
-                        GenerationSettings.GenerationType, GenerationSettings.Id, result);
+                    Logger.Info("Generation completed. " + LogArgs.Type_Id,
+                        GenerationSettings.GenerationType, GenerationSettings.Id);
                 }
             }
             catch (OperationCanceledException oce)
@@ -162,12 +161,12 @@ namespace DataGeneration.Core
             return Task.CompletedTask;
         }
 
-        protected async Task<FullGenerationResult> RunGenerationParallel(CancellationToken cancellationToken)
+        protected async Task RunGenerationParallel(CancellationToken cancellationToken)
         {
             var threads = GenerationSettings.ExecutionTypeSettings.ParallelThreads;
             if (GenerationSettings.Count < threads)
                 threads = GenerationSettings.Count;
-            var tasks = new Task<ThreadGenerationResult>[threads];
+            var tasks = new Task[threads];
 
             var countPerThread = GenerationSettings.Count / threads;
             var remainUnits = GenerationSettings.Count % threads;
@@ -186,12 +185,11 @@ namespace DataGeneration.Core
                     tasks[i] = RunGenerationSequent(currentCount, i, cancellationToken);
                 }
 
-                var results = await Task.WhenAll(tasks);
-                return new FullGenerationResult(results);
+                await Task.WhenAll(tasks);
             }
         }
 
-        protected async Task<ThreadGenerationResult> RunGenerationSequent(int count, int threadIndex, CancellationToken cancellationToken)
+        protected async Task RunGenerationSequent(int count, int threadIndex, CancellationToken cancellationToken)
         {
             using (StopwatchLoggerFactory.ForceLogStartDispose(Logger, LogLevel.Debug,
                 "Generation Sequent started. " + LogArgs.Type_Id_Count,
@@ -201,9 +199,6 @@ namespace DataGeneration.Core
                 var entities = GenerateRandomizedList(count);
 
                 cancellationToken.ThrowIfCancellationRequested();
-
-                var fails = new List<(object, Exception)>();
-                bool stopped = false;
 
                 using (var client = await GetLoginLogoutClient(cancellationToken))
                 {
@@ -218,21 +213,17 @@ namespace DataGeneration.Core
                         catch (OperationCanceledException) { throw; }
                         catch (Exception e)
                         {
-                            fails.Add((entity, e));
                             var message = e is ApiException
                                 ? "Generation {$entity} failed"
                                 : "Unexpected exception has occurred while processing {entity}";
                             Logger.Error(e, message, typeof(TEntity));
                             if (!GenerationSettings.ExecutionTypeSettings.IgnoreProcessingErrors)
                             {
-                                stopped = true;
                                 break;
                             }
                         }
                     }
                 }
-
-                return new ThreadGenerationResult(count, threadIndex, stopped, fails);
             }
         }
 
