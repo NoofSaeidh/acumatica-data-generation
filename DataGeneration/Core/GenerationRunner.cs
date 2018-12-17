@@ -243,7 +243,9 @@ namespace DataGeneration.Core
 
         protected async Task<ILoginLogoutApiClient> GetLoginLogoutClient(CancellationToken cancellationToken = default)
         {
-            return await ApiClientFactory(ApiConnectionConfig, cancellationToken);
+            var client = await ApiClientFactory(ApiConnectionConfig, cancellationToken);
+            client.RetryCount = GenerationSettings.ExecutionTypeSettings.RetryCount;
+            return client;
         }
 
         protected virtual IList<TEntity> GenerateRandomizedList(int count) => GenerationSettings.RandomizerSettings.GetDataGenerator().GenerateList(count);

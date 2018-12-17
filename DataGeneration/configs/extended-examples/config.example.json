@@ -21,7 +21,8 @@
       "ExecutionTypeSettings": {
         "ExecutionType": "Parallel",
         "ParallelThreads": 4,
-        "IgnoreProcessingErrors": false
+        "IgnoreProcessingErrors": false,
+        "RetryCount": 0
       },
       "Seed": 123124,
       "Count": 1000,

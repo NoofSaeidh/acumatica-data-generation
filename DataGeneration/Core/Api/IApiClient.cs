@@ -10,6 +10,7 @@ namespace DataGeneration.Core.Api
 {
     public interface IApiClient
     {
+        int RetryCount { get; set; }
         void Delete<T>(T whereEntity) where T : Entity;
         VoidTask DeleteAsync<T>(T whereEntity) where T : Entity;
         VoidTask DeleteAsync<T>(T whereEntity, CancellationToken cancellationToken) where T : Entity;

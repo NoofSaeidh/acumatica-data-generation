@@ -63,7 +63,8 @@
         "Value": {
           "ExecutionType": "Parallel",
           "IgnoreProcessingErrors": true,
-          "ParallelThreads": 8
+          "ParallelThreads": 8,
+          "RetryCount": 0
         }
       },
       {
