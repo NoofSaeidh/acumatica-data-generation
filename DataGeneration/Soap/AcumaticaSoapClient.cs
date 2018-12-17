@@ -81,6 +81,8 @@ namespace DataGeneration.Soap
             return new LogoutClientImpl(endpointSettings);
         }
 
+        public int RetryCount { get; set; }
+
         #endregion
 
         #region Login Logout
@@ -331,7 +333,7 @@ namespace DataGeneration.Soap
 
         #region Try Catch
 
-        private void TryCatch(System.Action action, LogArgs logArgs)
+        private void TryCatch(System.Action action, LogArgs logArgs, int retryCounter = 0)
         {
             try
             {
@@ -346,13 +348,20 @@ namespace DataGeneration.Soap
                 logArgs.CancelInfo.Log(oce);
                 throw;
             }
+            catch (TimeoutException te)
+            {
+                throw logArgs.FailInfo.LogAndGetException(te);
+            }
             catch (Exception e)
             {
-                throw logArgs.FailInfo.LogAndGetException(e);
+                if (retryCounter >= RetryCount)
+                    throw logArgs.FailInfo.LogAndGetException(e);
+                logArgs.RetryInfo.Log();
+                TryCatch(action, logArgs, --retryCounter);
             }
         }
 
-        private T TryCatch<T>(Func<T> action, LogArgs logArgs)
+        private T TryCatch<T>(Func<T> action, LogArgs logArgs, int retryCounter = 0)
         {
             try
             {
@@ -367,13 +376,20 @@ namespace DataGeneration.Soap
                 logArgs.CancelInfo.Log(oce);
                 throw;
             }
+            catch (TimeoutException te)
+            {
+                throw logArgs.FailInfo.LogAndGetException(te);
+            }
             catch (Exception e)
             {
-                throw logArgs.FailInfo.LogAndGetException(e);
+                if (retryCounter >= RetryCount)
+                    throw logArgs.FailInfo.LogAndGetException(e);
+                logArgs.RetryInfo.Log();
+                return TryCatch(action, logArgs, --retryCounter);
             }
         }
 
-        private async VoidTask TryCatchAsync(Func<VoidTask> task, LogArgs logArgs)
+        private async VoidTask TryCatchAsync(Func<VoidTask> task, LogArgs logArgs, int retryCounter = 0)
         {
             try
             {
@@ -388,13 +404,20 @@ namespace DataGeneration.Soap
                 logArgs.CancelInfo.Log(oce);
                 throw;
             }
+            catch (TimeoutException te)
+            {
+                throw logArgs.FailInfo.LogAndGetException(te);
+            }
             catch (Exception e)
             {
-                throw logArgs.FailInfo.LogAndGetException(e);
+                if (retryCounter >= RetryCount)
+                    throw logArgs.FailInfo.LogAndGetException(e);
+                logArgs.RetryInfo.Log();
+                await TryCatchAsync(task, logArgs, --retryCounter);
             }
         }
 
-        private async Task<T> TryCatchAsync<T>(Func<Task<T>> task, LogArgs logArgs)
+        private async Task<T> TryCatchAsync<T>(Func<Task<T>> task, LogArgs logArgs, int retryCounter = 0)
         {
             try
             {
@@ -409,27 +432,34 @@ namespace DataGeneration.Soap
                 logArgs.CancelInfo.Log(oce);
                 throw;
             }
+            catch (TimeoutException te)
+            {
+                throw logArgs.FailInfo.LogAndGetException(te);
+            }
             catch (Exception e)
             {
-                throw logArgs.FailInfo.LogAndGetException(e);
+                if (retryCounter >= RetryCount)
+                    throw logArgs.FailInfo.LogAndGetException(e);
+                logArgs.RetryInfo.Log();
+                return await TryCatchAsync(task, logArgs, --retryCounter);
             }
         }
 
-        private async Task<T> TryCatchAsync<T>(Func<Task<T>> task, CancellationToken cancellationToken, LogArgs logArgs)
+        private async Task<T> TryCatchAsync<T>(Func<Task<T>> task, CancellationToken cancellationToken, LogArgs logArgs, int retryCounter = 0)
         {
 #if DISABLE_API_CANCELLATION
-            return await TryCatchAsync(task, logArgs);
+            return await TryCatchAsync(task, logArgs, retryCounter);
 #else
-            return await TryCatchPure(async () => { using (logArgs.CompleteInfo.StopwatchLog()) return await task().WithCancellation(cancellationToken); }, logArgs);
+            throw new NotImplemetedException();
 #endif
         }
 
-        private async VoidTask TryCatchAsync(Func<VoidTask> task, CancellationToken cancellationToken, LogArgs logArgs)
+        private async VoidTask TryCatchAsync(Func<VoidTask> task, CancellationToken cancellationToken, LogArgs logArgs, int retryCounter = 0)
         {
 #if DISABLE_API_CANCELLATION
-            await TryCatchAsync(task, logArgs);
+            await TryCatchAsync(task, logArgs, retryCounter);
 #else
-            await TryCatchPure(async () => { using (logArgs.CompleteInfo.StopwatchLog()) await task().WithCancellation(cancellationToken); }, logArgs);
+            throw new NotImplemetedException();
 #endif
         }
 
@@ -466,57 +496,66 @@ namespace DataGeneration.Soap
             private SingleLogArg _completeInfo;
             private SingleLogArg _failInfo;
             private SingleLogArg _cancelInfo;
+            private SingleLogArg _retryInfo;
 
             public LogLevel StartInfoLogLevel;
             public LogLevel CompleteInfoLogLevel;
             public LogLevel FailInfoLogLevel;
             public LogLevel CancelInfoLogLevel;
+            public LogLevel RetryInfoLogLevel;
 
             public LogArgs(string operation, string argsLayout, params object[] args)
             {
                 _operation = operation;
-                _argsLayout = argsLayout;
-                _args = args;
+                // disable those log temporarly
+                // todo: review and maybe clear
+                // there are no usefull info, and it not used
+                //_argsLayout = argsLayout;
+                //_args = args;
 
                 StartInfoLogLevel = LogLevel.Trace;
                 CompleteInfoLogLevel = LogLevel.Debug;
                 FailInfoLogLevel = LogLevel.Error;
                 CancelInfoLogLevel = LogLevel.Error;
+                RetryInfoLogLevel = LogLevel.Warn;
             }
 
             public LogArgs(string operation, string argsLayout, object[] args,
                 SingleLogArg startInfo = null,
                 SingleLogArg completInfo = null,
                 SingleLogArg failInfo = null,
-                SingleLogArg cancelInfo = null)
+                SingleLogArg cancelInfo = null,
+                SingleLogArg retryInfo = null)
                 : this(operation, argsLayout, args)
             {
                 _startInfo = startInfo;
                 _completeInfo = completInfo;
                 _failInfo = failInfo;
                 _cancelInfo = cancelInfo;
+                _retryInfo = retryInfo;
             }
 
             public SingleLogArg StartInfo => _startInfo
                 ?? (_startInfo = new SingleLogArg(
-                    $"Operation {_operation} started. " + _argsLayout, StartInfoLogLevel, _args)
-                );
+                    $"Operation {_operation} started. " + _argsLayout, StartInfoLogLevel, _args));
 
             // tood: perhaps need to handle log args somehow (but not force, because it will affect performance
             public SingleLogArg CompleteInfo => _completeInfo
                 ?? (_completeInfo = new SingleLogArg(
-                    $"Operation {_operation} completed.", CompleteInfoLogLevel)
-                );
+                    $"Operation {_operation} completed.", CompleteInfoLogLevel));
 
             public SingleLogArg FailInfo => _failInfo
                 ?? (_failInfo = new SingleLogArg(
-                    $"Operation {_operation} failed.", FailInfoLogLevel)
-                );
+                    $"Operation {_operation} failed.", FailInfoLogLevel));
 
             public SingleLogArg CancelInfo => _cancelInfo
                 ?? (_cancelInfo = new SingleLogArg(
-                    $"Operation {_operation} canceled.", CompleteInfoLogLevel)
-                );
+                    $"Operation {_operation} canceled.", CompleteInfoLogLevel));
+
+            public SingleLogArg RetryInfo => _retryInfo
+                ?? (_retryInfo = new SingleLogArg(
+                    $"Operation {_operation} failed. Retrying.", RetryInfoLogLevel));
+
         }
 
         private class SingleLogArg
