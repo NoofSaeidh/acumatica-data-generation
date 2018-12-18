@@ -39,7 +39,7 @@ namespace DataGeneration
         public ApiConnectionConfig ApiConnectionConfig { get; set; }
         public ServicePointSettings ServicePointSettings { get; set; }
         public SettingsFilesConfig SettingsFiles { get; set; }
-        public LaunchSettings NestedSettings { get; set; }
+        public BatchSettings NestedSettings { get; set; }
         public GenerationSubscriptionSettings SubscriptionSettings
         {
             get => _generationSubscriptionSettings;
@@ -54,23 +54,23 @@ namespace DataGeneration
         public GenerationSubscriptionManager SubscriptionManager => _subscriptionManager 
             ?? (_subscriptionManager = SubscriptionSettings?.GetSubscriptionManager(this));
 
-        public ICollection<LaunchSettings> GetAllLaunches(out int uniqueLaunchesCount)
+        public ICollection<BatchSettings> GetAllBatches(out int uniqueBatchesCount)
         {
             Validate();
-            uniqueLaunchesCount = 0;
-            var result = new List<LaunchSettings>();
+            uniqueBatchesCount = 0;
+            var result = new List<BatchSettings>();
             if (NestedSettings != null)
             {
-                uniqueLaunchesCount++;
+                uniqueBatchesCount++;
                 result.Add(NestedSettings);
             }
             if (SettingsFiles != null)
             {
                 if (SettingsFiles.Multiplier.HasValue(out var multiplier))
                 {
-                    uniqueLaunchesCount += multiplier;
+                    uniqueBatchesCount += multiplier;
                 }
-                result.AddRange(SettingsFiles.GetAllLaunchSettings());
+                result.AddRange(SettingsFiles.GetAllBatchSettings());
             }
             return result;
         }
