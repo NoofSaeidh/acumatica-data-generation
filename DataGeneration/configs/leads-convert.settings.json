@@ -1,0 +1,14 @@
+{
+  "$type": "DataGeneration.Entities.Leads.LeadConvertGenerationSettings, DataGeneration",
+  "#comment": "Convert leads to opportunities.",
+  "GenerationType": "Convert Leads",
+  "SearchPattern": {
+    "EntityType": "DataGeneration.Soap.Lead"
+  },
+  "RandomizerSettings":{
+    "ConvertProbabilitiesByStatus": {
+      "New": 0.5,
+      "Open": 0.5
+    }
+  }
+}

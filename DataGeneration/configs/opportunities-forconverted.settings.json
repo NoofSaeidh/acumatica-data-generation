@@ -3,14 +3,7 @@
   "#comment": "Fetches existing opportunities and fill it. It needed for converted opportunities from leads.",
   "GenerationType": "Opportunities for existing",
   "SearchPattern": {
-    "EntityType": "Opportunity",
-    "CreatedDate": {
-      "Condition": "Today"
-    },
-    "LinqPattern": {
-      "Reverse": true,
-      "Take":  500
-    }
+    "EntityType": "Opportunity"
   },
   "RandomizerSettings": {
     "UseExistingOpportunities": true,

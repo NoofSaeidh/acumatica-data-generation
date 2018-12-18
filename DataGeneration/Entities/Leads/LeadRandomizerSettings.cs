@@ -1,4 +1,5 @@
-﻿using Bogus;
+﻿using System;
+using Bogus;
 using DataGeneration.Core;
 using DataGeneration.Core.Common;
 using DataGeneration.Core.Settings;
@@ -6,7 +7,7 @@ using DataGeneration.Soap;
 
 namespace DataGeneration.Entities.Leads
 {
-    public class LeadRandomizerSettings : RandomizerSettings<LeadWrapper>
+    public class LeadRandomizerSettings : RandomizerSettings<Lead>
     {
         // todo: should include, instead of Bogus random country code?
         // public ProbabilityCollection<string> CountryCodes { get; set; }
@@ -14,12 +15,8 @@ namespace DataGeneration.Entities.Leads
 
         public ProbabilityCollection<string> Statuses { get; set; }
 
-        public ProbabilityCollection<string> ConvertProbabilitiesByStatus { get; set; }
-
-
-        protected override Faker<LeadWrapper> GetFaker()
-        {
-            var leadFaker = GetFaker<Lead>()
+        protected override Faker<Lead> GetFaker() => 
+            base.GetFaker()
                 .Rules((f, l) =>
                 {
                     var person = new LeadPerson(f.Random);
@@ -38,21 +35,6 @@ namespace DataGeneration.Entities.Leads
                     l.LeadClass = f.Random.ProbabilityRandomIfAny(LeadClasses);
                     l.Status = f.Random.ProbabilityRandomIfAny(Statuses);
                 });
-
-            return base.GetFaker()
-                       .CustomInstantiator(f =>
-                       {
-                           var lead = leadFaker.Generate();
-
-                           bool convert = false;
-                           if (ConvertProbabilitiesByStatus.TryGetValue(lead.Status, out var probability))
-                           {
-                               convert = f.Random.Bool((float)probability);
-                           }
-
-                           return new LeadWrapper(lead, convert);
-                       });
-        }
 
         private class LeadPerson : Person
         {
