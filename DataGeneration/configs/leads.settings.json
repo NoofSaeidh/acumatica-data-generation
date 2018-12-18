@@ -1,6 +1,6 @@
 {
   "$type": "DataGeneration.Entities.Leads.LeadGenerationSettings, DataGeneration",
-  "#comment": "Create leads and convert some to opportunities.",
+  "#comment": "Create leads.",
   "GenerationType": "Leads",
   "RandomizerSettings": {
     "LeadClasses": {
@@ -13,10 +13,6 @@
       "Open": 0.50,
       "Suspended": 0.10,
       "Lost": 0.20
-    },
-    "ConvertProbabilitiesByStatus":{
-      "New": 0.5,
-      "Open": 0.5
     }
   }
 }

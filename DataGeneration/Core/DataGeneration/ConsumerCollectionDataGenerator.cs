@@ -5,9 +5,12 @@ using System.Linq;
 
 namespace DataGeneration.Core.DataGeneration
 {
-    public class ConsumerCollectionDataGenerator<T> : IDataGenerator<T>
+    public class ConsumerCollectionDataGenerator<T> : IDataGenerator<T>, IAvailableCountLimit
     {
         private IProducerConsumerCollection<T> _items;
+
+        public int? AvailableCount => _items.Count;
+
         public ConsumerCollectionDataGenerator(IProducerConsumerCollection<T> items)
         {
             _items = items ?? throw new ArgumentNullException(nameof(items));

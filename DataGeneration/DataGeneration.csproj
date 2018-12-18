@@ -92,6 +92,7 @@
     <Compile Include="Core\Common\IProbabilityObject.cs" />
     <Compile Include="Core\Logging\IStopwatchLogger.cs" />
     <Compile Include="Core\Common\IValidatable.cs" />
+    <Compile Include="Core\DataGeneration\IAvailableCountLimit.cs" />
     <Compile Include="Core\Queueing\ISearchUtilizer.cs" />
     <Compile Include="Core\Settings\GenerationSettingsBase.cs" />
     <Compile Include="Core\Settings\IGenerationSettings.cs" />
@@ -113,6 +114,10 @@
     <Compile Include="Core\Cache\StringLinesFileCacheManager.cs" />
     <Compile Include="Core\Queueing\LinqPattern.cs" />
     <Compile Include="Core\SystemManagement\IisManager.cs" />
+    <Compile Include="Entities\EntityWrapper.cs" />
+    <Compile Include="Entities\Leads\LeadConvertGenerationRunner.cs" />
+    <Compile Include="Entities\Leads\LeadConvertGenerationSettings.cs" />
+    <Compile Include="Entities\Leads\LeadConvertRandomizerSettings.cs" />
     <Compile Include="GenerationInfo\AllLaunchesResult.cs" />
     <Compile Include="GenerationInfo\GenerationSubscriptionManager.cs" />
     <Compile Include="GenerationInfo\GenerationSubscriptionSettings.cs" />
@@ -174,7 +179,6 @@
     <Compile Include="Core\Serialization\ValueTupleJsonConverter.cs" />
     <Compile Include="Entities\Emails\LinkEmailsRandomizerSettings.cs" />
     <Compile Include="Entities\Emails\Enums.cs" />
-    <Compile Include="Entities\Leads\LeadWrapper.cs" />
     <Compile Include="Entities\Opportunities\Enums.cs" />
     <Compile Include="Entities\Opportunities\OpportunityGenerationRunner.cs" />
     <Compile Include="Entities\Opportunities\OpportunityGenerationSettings.cs" />
@@ -217,6 +221,9 @@
     <None Include="configs\extended-examples\opportunities-forconverted.settings.json" />
     <None Include="configs\extended-examples\opportunities.settings.json" />
     <None Include="configs\cases.settings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="configs\leads-convert.settings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="configs\leads.settings.json">

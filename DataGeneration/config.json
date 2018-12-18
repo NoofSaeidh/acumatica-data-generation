@@ -21,6 +21,7 @@
   "SettingsFiles": {
     "Files": [
       "configs/leads.settings.json",
+      "configs/leads-convert.settings.json",
       "configs/opportunities-forconverted.settings.json",
       "configs/link-emails-leads.settings.json",
       "configs/opportunities.settings.json",

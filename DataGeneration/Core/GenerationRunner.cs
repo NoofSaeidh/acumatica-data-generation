@@ -13,6 +13,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
+using DataGeneration.Core.DataGeneration;
 
 namespace DataGeneration.Core
 {
@@ -287,12 +288,7 @@ namespace DataGeneration.Core
                 throw new ArgumentNullException(nameof(searchPattern));
 
 
-            var searcher = GetEntitySearcher(searchPattern.EntityType)
-                .AdjustInput(adj =>
-                    adj.Adjust(e => e.ReturnBehavior = Soap.ReturnBehavior.OnlySpecified)
-                       // perhaps it is not a better design
-                       .AdjustIfIs<Soap.IAdjustReturnBehaviorEntity>(e => e.AdjustReturnBehavior()));
-
+            var searcher = GetEntitySearcher(searchPattern.EntityType);
             searchPattern.AdjustSearcher(searcher);
             searcherAdjustment?.Invoke(searcher);
 
@@ -322,10 +318,16 @@ namespace DataGeneration.Core
 
         // override to true if no need to GetEntities in RunBeforeGeneration
         protected virtual bool SkipEntitiesSearch => false;
-
+        // override if no need to execute complex query for entities marked with IComplexQueryEntity interface
+        protected virtual bool IgnoreComplexQueryEntity => false;
+        protected virtual bool IgnoreAdjustReturnBehavior => false;
         protected abstract void UtilizeFoundEntities(IList<Soap.Entity> entities);
         protected virtual void AdjustEntitySearcher(EntitySearcher searcher)
         {
+            searcher.AdjustInput(adj =>
+                        adj.Adjust(e => e.ReturnBehavior = Soap.ReturnBehavior.OnlySpecified)
+                           .AdjustIf(!IgnoreAdjustReturnBehavior, adj_ =>
+                                adj_.AdjustIfIs<Soap.IAdjustReturnBehaviorEntity>(e => e.AdjustReturnBehavior())));
         }
 
         protected override async Task RunBeforeGeneration(CancellationToken cancellationToken = default)
@@ -336,12 +338,24 @@ namespace DataGeneration.Core
                 return;
 
             var entities = await GetEntities(GenerationSettings.SearchPattern, AdjustEntitySearcher, cancellationToken);
-            var complexEntities = entities.OfType<Soap.IComplexQueryEntity>();
-            if (complexEntities.Any())
+
+            if (!IgnoreComplexQueryEntity)
             {
-                await GetComplexQueryExecutor().Execute(complexEntities, cancellationToken);
+                var complexEntities = entities.OfType<Soap.IComplexQueryEntity>();
+                if (complexEntities.Any())
+                {
+                    await GetComplexQueryExecutor().Execute(complexEntities, cancellationToken);
+                }
             }
+
             UtilizeFoundEntities(entities);
+
+            if (GenerationSettings.RandomizerSettings is IAvailableCountLimit limit
+                && limit.AvailableCount.HasValue(out var avail)
+                && avail < GenerationSettings.Count)
+            {
+                ChangeGenerationCount(avail, "Randomizer settings has count limit");
+            }
         }
 
         protected override void ValidateGenerationSettings()

@@ -468,16 +468,16 @@ namespace DataGeneration.Soap
         #region Log
 
         private LogArgs CrudLogArgs<T>(string action, T whereEntity)
-            => new LogArgs($"{action} {typeof(T)}", "{entity}", whereEntity);
+            => new LogArgs($"{action} {typeof(T).Name}", "{entity}", whereEntity);
 
         private LogArgs InvokeArgs<TEntity, TAction>(TEntity entity, TAction action)
-            => new LogArgs($"Invoke {typeof(TAction)} on {typeof(TEntity)}", "{entity}, {action}", entity, action);
+            => new LogArgs($"Invoke {typeof(TAction).Name} for {typeof(TEntity).Name}", "{entity}, {action}", entity, action);
 
         private LogArgs GetFilesArgs<T>(T entity)
-            => new LogArgs($"Get Files for {typeof(T)}", "{entity}", entity);
+            => new LogArgs($"Get Files for {typeof(T).Name}", "{entity}", entity);
 
         private LogArgs PutFilesArgs<T>(T entity, IEnumerable<File> files)
-            => new LogArgs($"Put Files for {typeof(T)}", "{entity}", entity);
+            => new LogArgs($"Put Files for {typeof(T).Name}", "{entity}", entity);
 
         private LogArgs LoginArgs()
             => new LogArgs("Login", "Url = {url}", _client.Endpoint.Address.Uri);
@@ -489,8 +489,8 @@ namespace DataGeneration.Soap
         private class LogArgs
         {
             private readonly string _operation;
-            private readonly string _argsLayout;
-            private readonly object[] _args;
+            //private readonly string _argsLayout;
+            //private readonly object[] _args;
 
             private SingleLogArg _startInfo;
             private SingleLogArg _completeInfo;
@@ -537,24 +537,24 @@ namespace DataGeneration.Soap
 
             public SingleLogArg StartInfo => _startInfo
                 ?? (_startInfo = new SingleLogArg(
-                    $"Operation {_operation} started. " + _argsLayout, StartInfoLogLevel, _args));
+                    $"Operation \"{_operation}\" started" /*+ _argsLayout*/, StartInfoLogLevel /*, _args*/));
 
             // tood: perhaps need to handle log args somehow (but not force, because it will affect performance
             public SingleLogArg CompleteInfo => _completeInfo
                 ?? (_completeInfo = new SingleLogArg(
-                    $"Operation {_operation} completed.", CompleteInfoLogLevel));
+                    $"Operation \"{_operation}\" completed", CompleteInfoLogLevel));
 
             public SingleLogArg FailInfo => _failInfo
                 ?? (_failInfo = new SingleLogArg(
-                    $"Operation {_operation} failed.", FailInfoLogLevel));
+                    $"Operation \"{_operation}\" failed", FailInfoLogLevel));
 
             public SingleLogArg CancelInfo => _cancelInfo
                 ?? (_cancelInfo = new SingleLogArg(
-                    $"Operation {_operation} canceled.", CompleteInfoLogLevel));
+                    $"Operation \"{_operation}\" canceled", CompleteInfoLogLevel));
 
             public SingleLogArg RetryInfo => _retryInfo
                 ?? (_retryInfo = new SingleLogArg(
-                    $"Operation {_operation} failed. Retrying.", RetryInfoLogLevel));
+                    $"Operation \"{_operation}\" failed, retrying", RetryInfoLogLevel));
 
         }
 
