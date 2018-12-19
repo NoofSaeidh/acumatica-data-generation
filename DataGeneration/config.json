@@ -34,17 +34,17 @@
       "configs/link-work-items-cases.settings.json"
     ],
     "Multiplier": 10,
-    "LaunchInjections": [
+    "BatchInjections": [
       {
         "Path": "StopProcessingAtException",
         "Value": false
       },
       {
-        "Path": "CollectGarbageBeforeLaunch",
+        "Path": "CollectGarbageBeforeBatch",
         "Value": true
       },
       {
-        "Path": "RestartIisBeforeLaunch",
+        "Path": "RestartIisBeforeBatch",
         "Value": false
       }
     ],
@@ -83,8 +83,7 @@
         "Type": "Add",
         "PropertyNotFound": "Ignore",
         "Value": {
-          "Condition": "IsGreaterThan",
-          "Value": "2018-11-19"
+          "Inject": true 
         }
       },
       {

@@ -9,6 +9,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using DataGeneration.Core.Settings;
 
 namespace DataGeneration
 {
@@ -16,7 +17,7 @@ namespace DataGeneration
     {
         private static ILogger _logger { get; } = LogHelper.GetLogger(LogHelper.LoggerNames.GenerationClient);
 
-        public async Task<AllLaunchesResult> GenerateAll(
+        public async Task<AllBatchesResult> GenerateAll(
             GeneratorConfig config,
             CancellationToken ct = default)
         {
@@ -36,38 +37,38 @@ namespace DataGeneration
 
             config.ServicePointSettings?.ApplySettings();
 
-            var launches = config.GetAllLaunches(out var unqiueCount).ToList();
+            var batches = config.GetAllBatches(out var unqiueCount).ToList();
 
-            var results = new List<AllGenerationsResult>(launches.Count);
+            var results = new List<AllGenerationsResult>(batches.Count);
             using (StopwatchLoggerFactory.ForceLogStartDispose(
                 _logger,
-                "Start generation all settings for all launches, " +
+                "Start generation all settings for all batches, " +
                 "Lunches count {count}, Config = {@config}",
-                "Generation for all launches completed",
-                launches.Count, config))
+                "Generation for all batches completed",
+                batches.Count, config))
             {
-                foreach (var launch in launches)
+                foreach (var batch in batches)
                 {
-                    results.Add(await Generate(config, launch, ct));
+                    results.Add(await Generate(config, batch, ct));
                 }
             }
-            return new AllLaunchesResult(results);
+            return new AllBatchesResult(results);
         }
 
         protected async Task<AllGenerationsResult> Generate(
             GeneratorConfig config,
-            LaunchSettings launchSettings,
+            BatchSettings batchSettings,
             CancellationToken ct = default)
         {
             if (config == null)
                 throw new ArgumentNullException(nameof(config));
-            if (launchSettings == null)
-                throw new ArgumentNullException(nameof(launchSettings));
+            if (batchSettings == null)
+                throw new ArgumentNullException(nameof(batchSettings));
 
             try
             {
                 config.Validate();
-                launchSettings.Validate();
+                batchSettings.Validate();
             }
             catch (ValidationException ve)
             {
@@ -75,7 +76,7 @@ namespace DataGeneration
                 throw;
             }
 
-            if (launchSettings.RestartIisBeforeLaunch)
+            if (batchSettings.RestartIisBeforeBatch)
             {
                 try
                 {
@@ -86,11 +87,11 @@ namespace DataGeneration
                 }
                 catch (Exception e)
                 {
-                    _logger.Error(e, "Cannot restart IIS. Perhaps application was launched without administrator rights");
+                    _logger.Error(e, "Cannot restart IIS. Perhaps application was batched without administrator rights");
                 }
             }
 
-            if (launchSettings.CollectGarbageBeforeLaunch)
+            if (batchSettings.CollectGarbageBeforeBatch)
             {
                 if (_logger.IsDebugEnabled)
                 {
@@ -103,23 +104,23 @@ namespace DataGeneration
             }
 
             var generatationResults = new List<GenerationResult>();
-            var settingsCollection = launchSettings.GetPreparedGenerationSettings().ToList();
+            var batch = batchSettings.CompileBatch();
 
             bool stopProcessing = false;
             using (StopwatchLoggerFactory.ForceLogStartDispose(
                 _logger,
-                "Start generation all settings for launch, " +
-                "Count = {count}, Id = {id}",
-                "Generation all settings for launch completed, " +
-                "Count = {count}, Id = {id}",
-                settingsCollection.Count, launchSettings.Id, launchSettings))
+                "Start generation all settings for batch, Settings count = {count}, Id = {id}",
+                "Generation all settings for batch completed, Settings count = {count}, Id = {id}",
+                batch.AvailableCount, batchSettings.Id, batchSettings))
             {
-                foreach (var settings in settingsCollection)
+                foreach (var settings in batch)
                 {
                     GenerationResult result;
                     try
                     {
                         ct.ThrowIfCancellationRequested();
+                        if(settings is IBatchDependent bd)
+                            bd.Inject(batch);
 
                         var runner = settings.GetGenerationRunner(config.ApiConnectionConfig);
                         config.SubscriptionManager?.SubscribeGenerationRunner(runner);
@@ -135,7 +136,7 @@ namespace DataGeneration
                     {
                         _logger.Error(ge, "Generation failed");
                         result = new GenerationResult(settings, ge);
-                        if (launchSettings.StopProcessingAtException)
+                        if (batchSettings.StopProcessingAtException)
                             stopProcessing = true;
                     }
                     catch (ValidationException ve)
@@ -148,7 +149,7 @@ namespace DataGeneration
                     {
                         _logger.Fatal(e, "Generation failed with unexpected error");
                         result = new GenerationResult(settings, e);
-                        if (launchSettings.StopProcessingAtException)
+                        if (batchSettings.StopProcessingAtException)
                             stopProcessing = true;
                     }
                     generatationResults.Add(result);

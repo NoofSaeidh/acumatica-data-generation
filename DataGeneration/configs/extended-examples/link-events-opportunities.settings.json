@@ -4,9 +4,11 @@
   "GenerationType": "Events for Opportunities",
   "SearchPattern": {
     "EntityType": "Opportunity",
-    "#comment": "todo: don't forget adjust this!",
     "CreatedDate": {
-      "Condition": "Today"
+      "Manual": {
+        "Condition": "Today",
+        "Value": "2018-10-15"
+      }
     },
     "LinqPattern": {
       "Reverse": true,

@@ -3,9 +3,9 @@ using System.Linq;
 
 namespace DataGeneration.GenerationInfo
 {
-    public class AllLaunchesResult
+    public class AllBatchesResult
     {
-        internal AllLaunchesResult(IEnumerable<AllGenerationsResult> generationResults)
+        internal AllBatchesResult(IEnumerable<AllGenerationsResult> generationResults)
         {
             GenerationResults = generationResults.ToArray();
         }

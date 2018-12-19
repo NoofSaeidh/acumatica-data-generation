@@ -31,4 +31,37 @@ namespace System.ComponentModel.DataAnnotations
             return false;
         }
     }
+
+    public class ConditionRequiredAttribute : RequiredAttribute
+    {
+        public ConditionRequiredAttribute(string boolPropertyName)
+        {
+            BoolPropertyNameToCheck = boolPropertyName ?? throw new ArgumentNullException(nameof(boolPropertyName));
+        }
+
+        public string BoolPropertyNameToCheck { get; set; }
+
+
+        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        {
+            var property = validationContext.ObjectType.GetProperty(BoolPropertyNameToCheck);
+            if (property == null)
+                return new ValidationResult($"Cannot find property: {BoolPropertyNameToCheck}", BoolPropertyNameToCheck.AsArray());
+            if (property.PropertyType != typeof(bool))
+                return new ValidationResult($"Property {BoolPropertyNameToCheck} must be of Boolean type.", BoolPropertyNameToCheck.AsArray());
+
+            try
+            {
+                var propValue = (bool)property.GetValue(validationContext.ObjectInstance, null);
+                if(propValue)
+                    return ValidationResult.Success;
+            }
+            catch
+            {
+                return new ValidationResult($"Cannot get value of property: {BoolPropertyNameToCheck}", BoolPropertyNameToCheck.AsArray());
+            }
+
+            return base.IsValid(value, validationContext);
+        }
+    }
 }

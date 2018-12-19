@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace DataGeneration.GenerationInfo
 {
-    public class LaunchSettings : IValidatable
+    public class BatchSettings : IValidatable
     {
         private static int _generationId;
         private static int GetGenerationId() => Interlocked.Increment(ref _generationId);
@@ -28,8 +28,8 @@ namespace DataGeneration.GenerationInfo
         // if true processing will be stopped if any generation option will fail
         // ignored for validation exceptions
         public bool StopProcessingAtException { get; set; }
-        public bool RestartIisBeforeLaunch { get; set; }
-        public bool CollectGarbageBeforeLaunch { get; set; }
+        public bool RestartIisBeforeBatch { get; set; }
+        public bool CollectGarbageBeforeBatch { get; set; }
 
         public IEnumerable<IGenerationSettings> GetPreparedGenerationSettings()
         {
@@ -44,6 +44,8 @@ namespace DataGeneration.GenerationInfo
                 yield return s;
             }
         }
+
+        public Batch CompileBatch() => new Batch(this);
 
         public void Validate()
         {

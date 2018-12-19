@@ -15,18 +15,8 @@ using System.Threading.Tasks;
 namespace DataGeneration.Entities.Events
 {
     public class LinkEventsGenerationSettings : 
-        GenerationSettings<OneToManyRelation<LinkEntityToEvent, Event>, LinkEventsRandomizerSettings>,
-        ISearchUtilizer
+        SearchGenerationSettings<OneToManyRelation<LinkEntityToEvent, Event>, LinkEventsRandomizerSettings>
     {
         public override GenerationRunner GetGenerationRunner(ApiConnectionConfig apiConnectionConfig) => new LinkEventsGenerationRunner(apiConnectionConfig, this);
-
-        [Required]
-        public SearchPattern SearchPattern { get; set; }
-
-        public override void Validate()
-        {
-            base.Validate();
-            ValidateHelper.ValidateObject(SearchPattern);
-        }
     }
 }

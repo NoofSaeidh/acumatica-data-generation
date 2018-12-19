@@ -14,38 +14,34 @@ namespace DataGeneration.GenerationInfo
     public class GenerationSubscriptionSettings
     {
         public bool AddTelemetryMarkers { get; set; }
+        // inject into search settings batches start time and end time
+        // GenerationSettings.StartTime -> ISearchUtilizer.SearchPattern.CreatedDate.Injected.Value
+        //public bool AddBatchTimeToSearches { get; set; }
 
         public GenerationSubscriptionManager GetSubscriptionManager(GeneratorConfig config)
         {
             if (config == null)
                 throw new ArgumentNullException(nameof(config));
 
-            if (!AddTelemetryMarkers)
-                return null;
+            var manager = new GenerationSubscriptionManager();
+            if (AddTelemetryMarkers) AddTelemetryEvents(config, manager);
+            return manager;
+        }
 
+        protected void AddTelemetryEvents(GeneratorConfig config, GenerationSubscriptionManager manager)
+        {
             var sender = new TelemetryMarkerSender(config.ApiConnectionConfig.EndpointSettings.TelemetryMarkerUrl);
-
-            return new GenerationSubscriptionManager
-            {
-                RunBeforeGenerationStarted = async (s, e) =>
-                {
-                    await sender.SendHttpMark(GetArgs("BeforeGeneration", e.GenerationSettings));
-                },
-                RunGenerationStarted = async (s, e) =>
-                {
-                    await sender.SendHttpMark(GetArgs("Generation", e.GenerationSettings));
-                },
-                RunGenerationCompleted = async (s, e) =>
-                {
-                    await sender.SendHttpMark(("EventType", "null"));
-                }
-            };
+            manager.Add(
+                async (s, e) => await sender.SendHttpMark(GetArgs("BeforeGeneration", e.GenerationSettings)),
+                async (s, e) => await sender.SendHttpMark(GetArgs("Generation", e.GenerationSettings)),
+                async (s, e) => await sender.SendHttpMark(("EventType", "null"))
+            );
         }
 
         private (string, string)[] GetArgs(string eventType, IGenerationSettings generationSettings)
         {
-            var threads = generationSettings.ExecutionTypeSettings.ExecutionType == ExecutionType.Sequent 
-                ? 1 
+            var threads = generationSettings.ExecutionTypeSettings.ExecutionType == ExecutionType.Sequent
+                ? 1
                 : generationSettings.ExecutionTypeSettings.ParallelThreads;
             return new (string, string)[] {
                 ("EventType", eventType),

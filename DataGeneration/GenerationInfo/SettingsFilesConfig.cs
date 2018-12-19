@@ -16,12 +16,12 @@ namespace DataGeneration.GenerationInfo
     {
         [Required]
         public ICollection<string> Files { get; set; }
-        public ICollection<JsonInjection<LaunchSettings>> LaunchInjections { get; set; }
+        public ICollection<JsonInjection<BatchSettings>> BatchInjections { get; set; }
         public ICollection<JsonInjection<IGenerationSettings>> SettingsInjections { get; set; }
-        // multuplies launches
+        // multuplies batches
         public int? Multiplier { get; set; }
 
-        public IEnumerable<LaunchSettings> GetAllLaunchSettings()
+        public IEnumerable<BatchSettings> GetAllBatchSettings()
         {
             Validate();
             var settings = Files
@@ -30,14 +30,14 @@ namespace DataGeneration.GenerationInfo
                                     GeneratorConfig.ConfigJsonSettings))
                 .ToList();
 
-            var launch = new LaunchSettings
+            var batch = new BatchSettings
             {
                 GenerationSettings = settings,
                 Injections = SettingsInjections
             };
 
-            if (LaunchInjections != null)
-                JsonInjection.Inject(launch, LaunchInjections);
+            if (BatchInjections != null)
+                JsonInjection.Inject(batch, BatchInjections);
 
             if (Multiplier.HasValue(out var multipl))
             {
@@ -48,13 +48,13 @@ namespace DataGeneration.GenerationInfo
                     .Range(0, multipl)
                     .Select(i =>
                     {
-                        var newLaunch = launch.Copy();
-                        newLaunch.Id = i++;
-                        return newLaunch;
+                        var newBatch = batch.Copy();
+                        newBatch.Id = i++;
+                        return newBatch;
                     });
             }
             else
-                return launch.AsArray();
+                return batch.AsArray();
         }
 
         public void Validate()

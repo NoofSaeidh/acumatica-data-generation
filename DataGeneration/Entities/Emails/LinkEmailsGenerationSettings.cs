@@ -13,19 +13,9 @@ using System.Threading.Tasks;
 
 namespace DataGeneration.Entities.Emails
 {
-    public class LinkEmailsGenerationSettings : 
-        GenerationSettings<OneToManyRelation<LinkEntityToEmail, OneToManyRelation<Email, File>>, LinkEmailsRandomizerSettings>,
-        ISearchUtilizer
+    public class LinkEmailsGenerationSettings :
+        SearchGenerationSettings<OneToManyRelation<LinkEntityToEmail, OneToManyRelation<Email, File>>, LinkEmailsRandomizerSettings>
     {
         public override GenerationRunner GetGenerationRunner(ApiConnectionConfig apiConnectionConfig) => new LinkEmailsGenerationRunner(apiConnectionConfig, this);
-
-        [Required]
-        public SearchPattern SearchPattern { get; set; }
-
-        public override void Validate()
-        {
-            base.Validate();
-            ValidateHelper.ValidateObject(SearchPattern);
-        }
     }
 }

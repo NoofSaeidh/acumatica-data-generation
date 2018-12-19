@@ -13,13 +13,8 @@ using DataGeneration.Soap;
 namespace DataGeneration.Entities.Leads
 {
     public class LeadConvertGenerationSettings :
-        GenerationSettings<EntityWrapper<int>, LeadConvertRandomizerSettings>,
-        ISearchUtilizer
+        SearchGenerationSettings<EntityWrapper<int>, LeadConvertRandomizerSettings>
     {
-
-        [Required]
-        public SearchPattern SearchPattern { get; set; }
-
         public override GenerationRunner GetGenerationRunner(ApiConnectionConfig apiConnectionConfig) => new LeadConvertGenerationRunner(apiConnectionConfig, this);
     }
 }

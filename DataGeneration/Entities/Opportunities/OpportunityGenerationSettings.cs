@@ -11,10 +11,9 @@ using System.ComponentModel.DataAnnotations;
 namespace DataGeneration.Entities.Opportunities
 {
     public class OpportunityGenerationSettings : 
-        GenerationSettings<Opportunity, OpportunityRandomizerSettings>,
-        ISearchUtilizer
+        SearchGenerationSettings<Opportunity, OpportunityRandomizerSettings>
     {
-        public SearchPattern SearchPattern { get; set; }
+        public override bool SearchPatternRequired => false;
 
         public override GenerationRunner GetGenerationRunner(ApiConnectionConfig apiConnectionConfig) => new OpportunityGenerationRunner(apiConnectionConfig, this);
     }
