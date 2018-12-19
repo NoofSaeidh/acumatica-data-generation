@@ -45,6 +45,8 @@ namespace DataGeneration.GenerationInfo
             }
         }
 
+        public Batch CompileBatch() => new Batch(this);
+
         public void Validate()
         {
             ValidateHelper.ValidateObject(this);

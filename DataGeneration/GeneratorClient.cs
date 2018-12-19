@@ -9,6 +9,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using DataGeneration.Core.Settings;
 
 namespace DataGeneration
 {
@@ -103,23 +104,23 @@ namespace DataGeneration
             }
 
             var generatationResults = new List<GenerationResult>();
-            var settingsCollection = batchSettings.GetPreparedGenerationSettings().ToList();
+            var batch = batchSettings.CompileBatch();
 
             bool stopProcessing = false;
             using (StopwatchLoggerFactory.ForceLogStartDispose(
                 _logger,
-                "Start generation all settings for batch, " +
-                "Count = {count}, Id = {id}",
-                "Generation all settings for batch completed, " +
-                "Count = {count}, Id = {id}",
-                settingsCollection.Count, batchSettings.Id, batchSettings))
+                "Start generation all settings for batch, Settings count = {count}, Id = {id}",
+                "Generation all settings for batch completed, Settings count = {count}, Id = {id}",
+                batch.AvailableCount, batchSettings.Id, batchSettings))
             {
-                foreach (var settings in settingsCollection)
+                foreach (var settings in batch)
                 {
                     GenerationResult result;
                     try
                     {
                         ct.ThrowIfCancellationRequested();
+                        if(settings is IBatchDependent bd)
+                            bd.Inject(batch);
 
                         var runner = settings.GetGenerationRunner(config.ApiConnectionConfig);
                         config.SubscriptionManager?.SubscribeGenerationRunner(runner);

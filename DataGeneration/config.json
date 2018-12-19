@@ -83,8 +83,7 @@
         "Type": "Add",
         "PropertyNotFound": "Ignore",
         "Value": {
-          "Condition": "IsGreaterThan",
-          "Value": "2018-11-19"
+          "Inject": true 
         }
       },
       {

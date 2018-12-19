@@ -6,13 +6,13 @@ namespace DataGeneration.Core.Settings
     public interface IGenerationSettings
     {
         int Count { get; set; }
-        string GenerationType { get; }
+        string GenerationType { get; set; }
 
         // get, set seed for randomizer settings
         int? Seed { get; set; }
         int Id { get; }
 
-        bool CollectGarbageBeforeGeneration { get; }
+        bool CollectGarbageBeforeGeneration { get; set; }
 
         ExecutionTypeSettings ExecutionTypeSettings { get; set; }
 

@@ -5,7 +5,10 @@
   "SearchPattern": {
     "EntityType": "Opportunity",
     "CreatedDate": {
-      "Condition": "Today"
+      "Manual": {
+        "Condition": "Today",
+        "Value": "2018-10-15"
+      }
     }
   },
   "RandomizerSettings": {

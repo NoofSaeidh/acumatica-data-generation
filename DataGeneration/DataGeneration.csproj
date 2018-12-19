@@ -93,8 +93,10 @@
     <Compile Include="Core\Logging\IStopwatchLogger.cs" />
     <Compile Include="Core\Common\IValidatable.cs" />
     <Compile Include="Core\DataGeneration\IAvailableCountLimit.cs" />
+    <Compile Include="Core\Queueing\InjectedCondition.cs" />
     <Compile Include="Core\Queueing\ISearchUtilizer.cs" />
     <Compile Include="Core\Settings\GenerationSettingsBase.cs" />
+    <Compile Include="Core\Settings\IBatchDependent.cs" />
     <Compile Include="Core\Settings\IGenerationSettings.cs" />
     <Compile Include="Core\Settings\IRandomizerSettings.cs" />
     <Compile Include="Core\Queueing\ComplexQuery.cs" />
@@ -113,12 +115,14 @@
     <Compile Include="Core\Cache\JsonFileCacheManager.cs" />
     <Compile Include="Core\Cache\StringLinesFileCacheManager.cs" />
     <Compile Include="Core\Queueing\LinqPattern.cs" />
+    <Compile Include="Core\Settings\SearchGenerationSettings.cs" />
     <Compile Include="Core\SystemManagement\IisManager.cs" />
     <Compile Include="Entities\EntityWrapper.cs" />
     <Compile Include="Entities\Leads\LeadConvertGenerationRunner.cs" />
     <Compile Include="Entities\Leads\LeadConvertGenerationSettings.cs" />
     <Compile Include="Entities\Leads\LeadConvertRandomizerSettings.cs" />
     <Compile Include="GenerationInfo\AllBatchesResult.cs" />
+    <Compile Include="GenerationInfo\Batch.cs" />
     <Compile Include="GenerationInfo\GenerationSubscriptionManager.cs" />
     <Compile Include="GenerationInfo\GenerationSubscriptionSettings.cs" />
     <Compile Include="GenerationInfo\BatchSettings.cs" />

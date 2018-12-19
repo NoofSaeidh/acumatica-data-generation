@@ -9,9 +9,9 @@ namespace DataGeneration.Core.Queueing
         [Required]
         public string EntityType { get; set; }
 
-        public DateTimeSearch CreatedDate { get; set; }
-        // public DateTimeSearch ModifiedDate { get; set; }
-        // may add many props, but need to map it in GenerationRunner
+        // specifies to inject DateTime from launches or use specified date search
+        public InjectedCondition<DateTimeSearch> CreatedDate { get; set; }
+
         public LinqPattern LinqPattern { get; set; }
 
         public void AdjustSearcher(EntitySearcher entitySearcher)
@@ -22,7 +22,7 @@ namespace DataGeneration.Core.Queueing
                 .AdjustInput(adj =>
                     adj.AdjustIf(!(CreatedDate is null), adj_ =>
                         adj_.AdjustIfIsOrThrow<ICreatedDateEntity>(e =>
-                            e.CreatedDate = CreatedDate)));
+                            e.CreatedDate = CreatedDate.Value)));
 
             if(LinqPattern != null)
                 entitySearcher

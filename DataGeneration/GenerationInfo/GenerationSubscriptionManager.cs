@@ -9,18 +9,35 @@ namespace DataGeneration.GenerationInfo
 {
     public class GenerationSubscriptionManager
     {
-        public EventHandler<RunBeforeGenerationStartedEventArgs> RunBeforeGenerationStarted { get; set; }
-        public EventHandler<RunGenerationStartedEventArgs> RunGenerationStarted { get; set; }
-        public EventHandler<RunGenerationCompletedEventArgs> RunGenerationCompleted { get; set; }
+        public GenerationSubscriptionManager()
+        {
+            RunBeforeGenerationStarted = new List<EventHandler<RunBeforeGenerationStartedEventArgs>>();
+            RunGenerationStarted = new List<EventHandler<RunGenerationStartedEventArgs>>();
+            RunGenerationCompleted = new List<EventHandler<RunGenerationCompletedEventArgs>>();
+        }
+
+        public List<EventHandler<RunBeforeGenerationStartedEventArgs>> RunBeforeGenerationStarted { get; }
+        public List<EventHandler<RunGenerationStartedEventArgs>> RunGenerationStarted { get; }
+        public List<EventHandler<RunGenerationCompletedEventArgs>> RunGenerationCompleted { get; }
 
         public void SubscribeGenerationRunner(GenerationRunner runner)
         {
             if (runner == null)
                 throw new ArgumentNullException(nameof(runner));
 
-            runner.RunBeforeGenerationStarted += RunBeforeGenerationStarted;
-            runner.RunGenerationStarted += RunGenerationStarted;
-            runner.RunGenerationCompleted += RunGenerationCompleted;
+            RunBeforeGenerationStarted.ForEach(e => runner.RunBeforeGenerationStarted += e);
+            RunGenerationStarted.ForEach(e => runner.RunGenerationStarted += e);
+            RunGenerationCompleted.ForEach(e => runner.RunGenerationCompleted += e);
+        }
+
+        public void Add(
+            EventHandler<RunBeforeGenerationStartedEventArgs> beforeStarted = null,
+            EventHandler<RunGenerationStartedEventArgs> started = null,
+            EventHandler<RunGenerationCompletedEventArgs> completed = null)
+        {
+            if (beforeStarted != null) RunBeforeGenerationStarted.Add(beforeStarted);
+            if (started != null) RunGenerationStarted.Add(started);
+            if (completed != null) RunGenerationCompleted.Add(completed);
         }
     }
 }
