@@ -356,7 +356,7 @@ namespace DataGeneration.Soap
             {
                 if (retryCounter >= RetryCount)
                     throw logArgs.FailInfo.LogAndGetException(e);
-                logArgs.RetryInfo.Log();
+                logArgs.RetryInfo.Log(e);
                 TryCatch(action, logArgs, --retryCounter);
             }
         }
@@ -384,7 +384,7 @@ namespace DataGeneration.Soap
             {
                 if (retryCounter >= RetryCount)
                     throw logArgs.FailInfo.LogAndGetException(e);
-                logArgs.RetryInfo.Log();
+                logArgs.RetryInfo.Log(e);
                 return TryCatch(action, logArgs, --retryCounter);
             }
         }
@@ -412,7 +412,7 @@ namespace DataGeneration.Soap
             {
                 if (retryCounter >= RetryCount)
                     throw logArgs.FailInfo.LogAndGetException(e);
-                logArgs.RetryInfo.Log();
+                logArgs.RetryInfo.Log(e);
                 await TryCatchAsync(task, logArgs, --retryCounter);
             }
         }
@@ -440,7 +440,7 @@ namespace DataGeneration.Soap
             {
                 if (retryCounter >= RetryCount)
                     throw logArgs.FailInfo.LogAndGetException(e);
-                logArgs.RetryInfo.Log();
+                logArgs.RetryInfo.Log(e);
                 return await TryCatchAsync(task, logArgs, --retryCounter);
             }
         }
