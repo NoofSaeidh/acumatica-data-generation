@@ -16,9 +16,7 @@ namespace DataGeneration.Soap
     {
         #region Initialization
 
-        private const string _loggerName = LogHelper.LoggerNames.ApiClient;
-
-        private static ILogger _logger { get; } = LogHelper.GetLogger(_loggerName);
+        private static readonly ILogger _logger = LogHelper.GetLogger(LogHelper.LoggerNames.ApiClient);
 
         private readonly DefaultSoapClient _client;
 
@@ -598,7 +596,7 @@ namespace DataGeneration.Soap
 
             public IDisposable StopwatchLog()
             {
-                return StopwatchLoggerFactory.LogDispose(_loggerName, Text, Args);
+                return StopwatchLoggerFactory.LogDispose(_logger, Text, Args);
             }
 
 
