@@ -12,28 +12,21 @@ namespace DataGeneration.Core.Logging
     {
         public const string AllowTimeTrackingVariableName = "allow-time-tracking";
 
-        public static readonly LogLevel TimeTrackingLogLevel = LogLevel.Trace;
-
-        private static Lazy<bool> _globalTimeTrackingAvailable =
+        private static readonly Lazy<bool> _globalTimeTrackingAvailable =
             new Lazy<bool>(() =>
             {
                 // true if not specified
-                if (NLog.LogManager.Configuration.Variables.TryGetValue(AllowTimeTrackingVariableName, out var allow)
-                    && bool.TryParse(allow.OriginalText, out var allowbool)
-                    && !allowbool)
-                {
-                    return false;
-                }
-
-                return NLog.LogManager.Configuration.LoggingRules.Any(r => r.Levels.Contains(TimeTrackingLogLevel));
+                return !NLog.LogManager.Configuration.Variables.TryGetValue(AllowTimeTrackingVariableName, out var allow)
+                    || !bool.TryParse(allow.OriginalText, out var allowbool)
+                    || allowbool;
             });
 
         private static bool GlobalTimeTrackingAvailable => _globalTimeTrackingAvailable.Value;
 
-        private static bool TimeTrackingAvailable(ILogger logger)
+        private static bool TimeTrackingAvailable(ILogger logger, LogLevel level)
         {
             return GlobalTimeTrackingAvailable
-                && logger.IsEnabled(TimeTrackingLogLevel);
+                && logger.IsEnabled(level);
         }
 
         public static IStopwatchLogger GetLogger() => GetLogger(LogHelper.DefaultLogger);
@@ -45,7 +38,7 @@ namespace DataGeneration.Core.Logging
 #if DISABLE_TIMETRACKING
             return new NullStopwatchLogger();
 #else
-            if (TimeTrackingAvailable(logger))
+            if (TimeTrackingAvailable(logger, LogLevel.Debug))
                 return new StopwatchLogger(logger, LogLevel.Debug);
 
             return new NullStopwatchLogger();
@@ -65,7 +58,7 @@ namespace DataGeneration.Core.Logging
         ///     // do something
         /// }
         /// </example>
-        public static IDisposable LogDispose(string onDisposeDescription, params object[] args) => LogDispose(LogHelper.DefaultLogger, TimeTrackingLogLevel, onDisposeDescription, args);
+        public static IDisposable LogDispose(string onDisposeDescription, params object[] args) => LogDispose(LogHelper.DefaultLogger, LogLevel.Debug, onDisposeDescription, args);
 
         // log to debug
         public static IDisposable LogDispose(ILogger logger, LogLevel level, string onDisposeDescription, params object[] args)
@@ -82,7 +75,7 @@ namespace DataGeneration.Core.Logging
 #if DISABLE_TIMETRACKING
             return DisposeHelper.NullDisposable;
 #else
-            if (!TimeTrackingAvailable(logger))
+            if (!TimeTrackingAvailable(logger, LogLevel.Debug))
                 return DisposeHelper.NullDisposable;
 
             return new StopwatchLogger.StopwatchLoggerDisposable(logger, level, onDisposeDescription, args, eventParams);

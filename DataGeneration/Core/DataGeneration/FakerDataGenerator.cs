@@ -2,6 +2,7 @@
 using DataGeneration.Core.Logging;
 using System;
 using System.Collections.Generic;
+using LogLevel = NLog.LogLevel;
 
 namespace DataGeneration.Core.DataGeneration
 {
@@ -17,8 +18,12 @@ namespace DataGeneration.Core.DataGeneration
         public virtual T Generate() => Faker.Generate();
         public virtual IList<T> GenerateList(int count)
         {
-            using (StopwatchLoggerFactory.LogDispose(nameof(FakerDataGenerator<T>),
-                "GenerateList completed, Count = {count}", count))
+            using (StopwatchLoggerFactory.LogDispose(
+                LogHelper.DefaultLogger,
+                LogLevel.Trace,
+                nameof(FakerDataGenerator<T>),
+                "GenerateList completed, Count = {count}",
+                count))
             {
                 return Faker.Generate(count);
             }
