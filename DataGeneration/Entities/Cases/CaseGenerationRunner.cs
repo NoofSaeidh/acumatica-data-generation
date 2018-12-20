@@ -39,9 +39,9 @@ namespace DataGeneration.Entities.Cases
                 .ToArray();
         }
 
-        protected override async VoidTask GenerateSingle(IApiClient client, Case entity, CancellationToken cancellationToken)
+        protected override async VoidTask GenerateSingle(IApiClient client, Case entity, CancellationToken ct)
         {
-            await client.PutAsync(entity, cancellationToken);
+            await client.PutAsync(entity, ct);
         }
     }
 }

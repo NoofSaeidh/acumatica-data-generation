@@ -13,6 +13,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
+using DataGeneration.Core.Common;
 using DataGeneration.Core.DataGeneration;
 
 namespace DataGeneration.Core
@@ -20,11 +21,23 @@ namespace DataGeneration.Core
     public abstract class GenerationRunner
     {
         // HACK: set this if you want use another api client
-        public static Lazy<Func<ApiConnectionConfig, CancellationToken, Task<ILoginLogoutApiClient>>> ApiClientFactoryInitializer =
-            new Lazy<Func<ApiConnectionConfig, CancellationToken, Task<ILoginLogoutApiClient>>>(
-                    () => async (config, ct) => await Soap.AcumaticaSoapClient.LoginLogoutClientAsync(config, ct));
+        public static Lazy<Func<EndpointSettings, ILogoutApiClient>> ApiClientFactoryInitializer =
+            new Lazy<Func<EndpointSettings, ILogoutApiClient>>(() => Soap.AcumaticaSoapClient.LogoutClient);
 
-        public static Func<ApiConnectionConfig, CancellationToken, Task<ILoginLogoutApiClient>> ApiClientFactory => ApiClientFactoryInitializer.Value;
+        public static Func<EndpointSettings, ILogoutApiClient> ApiLogoutClientFactory => ApiClientFactoryInitializer.Value;
+
+        public static Func<ApiConnectionConfig, Task<ILogoutApiClient>> ApiLoginLogoutClientFactory
+        {
+            get
+            {
+                return async config =>
+                {
+                    var client = ApiLogoutClientFactory(config.EndpointSettings);
+                    await client.LoginAsync(config.LoginInfo);
+                    return client;
+                };
+            }
+        }
 
         protected static ILogger Logger { get; } = LogHelper.GetLogger(LogHelper.LoggerNames.GenerationRunner);
 
@@ -74,6 +87,7 @@ namespace DataGeneration.Core
         where TEntity : class
         where TGenerationSettings : class, IGenerationSettings<TEntity>
     {
+        private const string ThreadIndexParam = "ThreadIndex";
         private Bogus.Randomizer _randomizer;
 
         protected GenerationRunner(ApiConnectionConfig apiConnectionConfig, TGenerationSettings generationSettings)
@@ -137,7 +151,7 @@ namespace DataGeneration.Core
                     switch (GenerationSettings.ExecutionTypeSettings.ExecutionType)
                     {
                         case ExecutionType.Sequent:
-                            await RunGenerationSequent(GenerationSettings.Count, 1, cancellationToken);
+                            await RunGenerationSequent(GenerationSettings.Count, 0, cancellationToken);
                             break;
 
                         case ExecutionType.Parallel:
@@ -195,7 +209,8 @@ namespace DataGeneration.Core
                     if (i >= remainUnits) rem = 0;
 
                     var currentCount = countPerThread + rem;
-                    tasks[i] = RunGenerationSequent(currentCount, i, cancellationToken);
+                    int threadIndex = i;
+                    tasks[i] = RunGenerationSequent(currentCount, threadIndex, cancellationToken);
                 }
 
                 await Task.WhenAll(tasks);
@@ -207,13 +222,14 @@ namespace DataGeneration.Core
             using (StopwatchLoggerFactory.ForceLogStartDispose(Logger, LogLevel.Debug,
                 "Generation Sequent started. " + LogArgs.Type_Id_Count,
                 "Generation Sequent completed. " + LogArgs.Type_Id_Count,
-                GenerationSettings.GenerationType, GenerationSettings.Id, count))
+                args: Params.ToArray<object>(GenerationSettings.GenerationType, GenerationSettings.Id, count),
+                eventParams: Params.ToArray<(object, object)>((ThreadIndexParam, threadIndex))))
             {
                 var entities = GenerateRandomizedList(count);
 
                 cancellationToken.ThrowIfCancellationRequested();
 
-                using (var client = await GetLoginLogoutClient(cancellationToken))
+                using (var client = await GetLoginLogoutClient(threadIndex, cancellationToken))
                 {
                     foreach (var entity in entities)
                     {
@@ -229,23 +245,44 @@ namespace DataGeneration.Core
                             var message = e is ApiException
                                 ? "Generation {$entity} failed"
                                 : "Unexpected exception has occurred while processing {entity}";
-                            Logger.Error(e, message, typeof(TEntity));
+
+                            LogHelper.LogWithEventParams(
+                                Logger,
+                                LogLevel.Error,
+                                message,
+                                args: Params.ToArray(typeof(TEntity)),
+                                exception: e,
+                                eventParams: Params.ToArray<(object, object)>((ThreadIndexParam, threadIndex)));
+
                             if (!GenerationSettings.ExecutionTypeSettings.IgnoreProcessingErrors)
-                            {
                                 break;
-                            }
                         }
                     }
                 }
             }
         }
 
-        protected abstract Task GenerateSingle(IApiClient client, TEntity entity, CancellationToken cancellationToken);
+        protected abstract Task GenerateSingle(IApiClient client, TEntity entity, CancellationToken ct);
 
-        protected async Task<ILoginLogoutApiClient> GetLoginLogoutClient(CancellationToken cancellationToken = default)
+        protected ILogoutApiClient GetLogoutClient()
         {
-            var client = await ApiClientFactory(ApiConnectionConfig, cancellationToken);
+            var client = ApiLogoutClientFactory(ApiConnectionConfig.EndpointSettings);
             client.RetryCount = GenerationSettings.ExecutionTypeSettings.RetryCount;
+            return client;
+        }
+
+        protected async Task<ILogoutApiClient> GetLoginLogoutClient(CancellationToken ct = default)
+        {
+            var client = GetLogoutClient();
+            await client.LoginAsync(ApiConnectionConfig.LoginInfo, ct);
+            return client;
+        }
+
+        protected async Task<ILogoutApiClient> GetLoginLogoutClient(int threadIndex, CancellationToken ct = default)
+        {
+            var client = GetLogoutClient();
+            if(client is ILoggerInjectable inj) inj.InjectEventParameters((ThreadIndexParam, threadIndex));
+            await client.LoginAsync(ApiConnectionConfig.LoginInfo, ct);
             return client;
         }
 
@@ -296,7 +333,6 @@ namespace DataGeneration.Core
         }
 
         protected ComplexQueryExecutor GetComplexQueryExecutor() => new ComplexQueryExecutor(GetListFactory);
-
 
         private static class LogArgs
         {

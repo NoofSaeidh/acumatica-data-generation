@@ -40,7 +40,7 @@ namespace DataGeneration.Entities
         {
             IEnumerable<BusinessAccount> accounts;
             IEnumerable<Contact> contacts;
-            using (var client = await GenerationRunner.ApiClientFactory(config, ct))
+            using (var client = await GenerationRunner.ApiLoginLogoutClientFactory(config))
             {
                 var accountsTask = client.GetListAsync(
                     new BusinessAccount

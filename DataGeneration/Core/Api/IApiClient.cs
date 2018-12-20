@@ -54,9 +54,4 @@ namespace DataGeneration.Core.Api
     public interface ILogoutApiClient : IApiClient, IDisposable
     {
     }
-
-    // just indicates that client will autologin in ctor and autologout in dispose
-    public interface ILoginLogoutApiClient : ILogoutApiClient, IDisposable
-    {
-    }
 }

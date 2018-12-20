@@ -26,11 +26,11 @@ namespace DataGeneration.Entities.Activities
             GenerationSettings.RandomizerSettings.LinkEntities = new ConcurrentQueue<Entity>(entities);
         }
 
-        protected override async VoidTask GenerateSingle(IApiClient client, OneToManyRelation<LinkEntityToActivity, Activity> entity, CancellationToken cancellationToken)
+        protected override async VoidTask GenerateSingle(IApiClient client, OneToManyRelation<LinkEntityToActivity, Activity> entity, CancellationToken ct)
         {
             foreach (var activity in entity.Right)
             {
-                await client.InvokeAsync(await client.PutAsync(activity, cancellationToken), entity.Left, cancellationToken);
+                await client.InvokeAsync(await client.PutAsync(activity, ct), entity.Left, ct);
             }
         }
     }

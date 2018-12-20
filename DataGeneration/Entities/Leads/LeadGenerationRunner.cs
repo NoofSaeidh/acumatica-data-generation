@@ -16,9 +16,9 @@ namespace DataGeneration.Entities.Leads
         {
         }
 
-        protected override async VoidTask GenerateSingle(IApiClient client, Lead entity, CancellationToken cancellationToken)
+        protected override async VoidTask GenerateSingle(IApiClient client, Lead entity, CancellationToken ct)
         {
-            await client.PutAsync(entity, cancellationToken);
+            await client.PutAsync(entity, ct);
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using NLog;
 using System;
 using System.Collections.Concurrent;
+using System.ComponentModel;
 
 namespace DataGeneration.Core.Logging
 {
@@ -11,6 +12,22 @@ namespace DataGeneration.Core.Logging
         public static ILogger DefaultLogger { get; } = GetLogger(LoggerNames.Default);
 
         public static ILogger GetLogger(string loggerName) => _loggers.GetOrAdd(loggerName, name => NLog.LogManager.GetLogger(name));
+
+        public static void LogWithEventParams(ILogger logger, LogLevel level, 
+            string message, object[] args = null,
+            Exception exception = null, (object name, object value)[] eventParams = null)
+        {
+            var info = LogEventInfo.Create(level, logger.Name, exception, null, message, args);
+            if (eventParams != null)
+            {
+                foreach (var (name, value) in eventParams)
+                {
+                    info.Properties[name] = value;
+                }
+            }
+
+            logger.Log(info);
+        }
 
         public static class LoggerNames
         {

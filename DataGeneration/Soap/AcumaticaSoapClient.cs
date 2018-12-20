@@ -13,12 +13,13 @@ using VoidTask = System.Threading.Tasks.Task;
 
 namespace DataGeneration.Soap
 {
-    public class AcumaticaSoapClient : IApiClient, IDisposable
+    public class AcumaticaSoapClient : IApiClient, ILoggerInjectable, IDisposable
     {
         #region Initialization
 
         private static readonly ILogger _logger = LogHelper.GetLogger(LogHelper.LoggerNames.ApiClient);
 
+        private (object, object)[] _eventParams;
         private readonly DefaultSoapClient _client;
 
         static AcumaticaSoapClient()
@@ -42,7 +43,7 @@ namespace DataGeneration.Soap
             _client = new DefaultSoapClient(endpointSettings.GetBinding(), endpointSettings.GetEndpointAddress());
         }
 
-        public static ILoginLogoutApiClient LoginLogoutClient(ApiConnectionConfig connectionConfig)
+        public static ILogoutApiClient LoginLogoutClient(ApiConnectionConfig connectionConfig)
         {
             if (connectionConfig == null)
             {
@@ -53,10 +54,10 @@ namespace DataGeneration.Soap
 
             client.Login(connectionConfig.LoginInfo);
 
-            return (ILoginLogoutApiClient)client;
+            return client;
         }
 
-        public static async Task<ILoginLogoutApiClient> LoginLogoutClientAsync(ApiConnectionConfig connectionConfig, CancellationToken cancellationToken = default)
+        public static async Task<ILogoutApiClient> LoginLogoutClientAsync(ApiConnectionConfig connectionConfig, CancellationToken cancellationToken = default)
         {
             if (connectionConfig == null)
             {
@@ -67,7 +68,7 @@ namespace DataGeneration.Soap
 
             await client.LoginAsync(connectionConfig.LoginInfo, cancellationToken);
 
-            return (ILoginLogoutApiClient)client;
+            return client;
         }
 
         public static ILogoutApiClient LogoutClient(EndpointSettings endpointSettings)
@@ -466,16 +467,17 @@ namespace DataGeneration.Soap
 
         #region Log
 
-        private LogArgs CrudLogArgs<T>(string action) => new LogArgs($"{action} {typeof(T).Name}");
-        private LogArgs InvokeArgs<TEntity, TAction>() => new LogArgs($"Invoke {typeof(TAction).Name} for {typeof(TEntity).Name}");
-        private LogArgs GetFilesArgs<T>() => new LogArgs($"Get Files for {typeof(T).Name}");
-        private LogArgs PutFilesArgs<T>() => new LogArgs($"Put Files for {typeof(T).Name}");
-        private LogArgs LoginArgs() => new LogArgs($"Login to {_client.Endpoint.Address.Uri}");
-        private LogArgs LogoutArgs() => new LogArgs($"Logout from {_client.Endpoint.Address.Uri}");
+        private LogArgs CrudLogArgs<T>(string action) => new LogArgs($"{action} {typeof(T).Name}", _eventParams);
+        private LogArgs InvokeArgs<TEntity, TAction>() => new LogArgs($"Invoke {typeof(TAction).Name} for {typeof(TEntity).Name}", _eventParams);
+        private LogArgs GetFilesArgs<T>() => new LogArgs($"Get Files for {typeof(T).Name}", _eventParams);
+        private LogArgs PutFilesArgs<T>() => new LogArgs($"Put Files for {typeof(T).Name}", _eventParams);
+        private LogArgs LoginArgs() => new LogArgs($"Login to {_client.Endpoint.Address.Uri}", _eventParams);
+        private LogArgs LogoutArgs() => new LogArgs($"Logout from {_client.Endpoint.Address.Uri}", _eventParams);
 
         private class LogArgs
         {
             public readonly string Text;
+            public readonly (object, object)[] EventParams;
 
             public const string OperationStarted = "Operation \"{0}\" started";
             public const string OperationCompleted = "Operation \"{0}\" completed";
@@ -487,39 +489,80 @@ namespace DataGeneration.Soap
 
             public void LogStart()
             {
-                _logger.Trace(OperationStarted.FormatWith(Text));
+                if (_logger.IsTraceEnabled)
+                    LogHelper.LogWithEventParams(
+                        _logger,
+                        LogLevel.Trace,
+                        OperationStarted.FormatWith(Text),
+                        eventParams: EventParams
+                    );
             }
 
             public IDisposable LogCompleted()
             {
-                return StopwatchLoggerFactory.LogDispose(_logger, OperationCompleted.FormatWith(Text));
+                if (_logger.IsDebugEnabled)
+                    return StopwatchLoggerFactory.LogDispose(
+                        _logger,
+                        LogLevel.Debug,
+                        OperationCompleted.FormatWith(Text),
+                        eventParams: EventParams);
+                return DisposeHelper.NullDisposable;
             }
 
             public void LogFailed(Exception e, int attempt = 1)
             {
-                _logger.Error(e, (OperationFailed + AttemptAddition).FormatWith(Text, attempt));
+                if (_logger.IsErrorEnabled)
+                    LogHelper.LogWithEventParams(
+                        _logger,
+                        LogLevel.Error,
+                        (OperationFailed + AttemptAddition).FormatWith(Text, attempt),
+                        exception: e,
+                        eventParams: EventParams
+                    );
             }
 
             public ApiException LogFailedAndGetException(Exception e, int attempt = 1)
             {
                 var text = (OperationFailed + AttemptAddition).FormatWith(Text, attempt);
-                _logger.Error(e, text);
+                if (_logger.IsErrorEnabled)
+                    LogHelper.LogWithEventParams(
+                        _logger,
+                        LogLevel.Error,
+                        text,
+                        exception: e,
+                        eventParams: EventParams
+                    );
                 return new ApiException(text, e);
             }
 
             public void LogCanceled(Exception e)
             {
-                _logger.Error(e, OperationFailed.FormatWith(Text));
+                if (_logger.IsErrorEnabled)
+                    LogHelper.LogWithEventParams(
+                        _logger,
+                        LogLevel.Error,
+                        OperationCanceled.FormatWith(Text),
+                        exception: e,
+                        eventParams: EventParams
+                    );
             }
 
             public void LogRetry(Exception e, int attempt = 1)
             {
-                _logger.Warn(e, (OperationFailed + AttemptAddition + RetryAddition).FormatWith(Text, attempt));
+                if (_logger.IsWarnEnabled)
+                    LogHelper.LogWithEventParams(
+                        _logger,
+                        LogLevel.Warn,
+                        (OperationFailed + AttemptAddition + RetryAddition).FormatWith(Text, attempt),
+                        exception: e,
+                        eventParams: EventParams
+                    );
             }
 
-            public LogArgs(string text)
+            public LogArgs(string text, (object, object)[] parameters)
             {
                 Text = text;
+                EventParams = parameters;
             }
         }
 
@@ -532,7 +575,12 @@ namespace DataGeneration.Soap
             _client.Close();
         }
 
-        private class LogoutClientImpl : AcumaticaSoapClient, ILoginLogoutApiClient, IDisposable
+        public void InjectEventParameters(params (object name, object value)[] events)
+        {
+            _eventParams = events ?? throw new ArgumentNullException(nameof(events));
+        }
+
+        private class LogoutClientImpl : AcumaticaSoapClient, ILogoutApiClient, IDisposable
         {
             public LogoutClientImpl(EndpointSettings endpointSettings) : base(endpointSettings)
             {
