@@ -58,8 +58,8 @@ namespace DataGeneration.Entities.Emails
                 else
                 {
                     var email = await client.PutAsync(relation.Left, ct);
-                    await client.InvokeAsync(email, entity.Left, ct);
                     await client.PutFilesAsync(email, relation.Right, ct);
+                    await client.InvokeAsync(email, entity.Left, ct);
                 }
             }
         }
