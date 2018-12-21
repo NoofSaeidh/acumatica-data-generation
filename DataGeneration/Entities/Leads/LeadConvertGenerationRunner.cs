@@ -35,7 +35,7 @@ namespace DataGeneration.Entities.Leads
                     }));
         }
 
-        protected override async VoidTask GenerateSingle(IApiClient client, EntityWrapper<int> entity, CancellationToken cancellationToken)
+        protected override async VoidTask GenerateSingle(IApiClient client, EntityWrapper<int> entity, CancellationToken ct)
         {
             await client.InvokeAsync(
                 new Lead
@@ -44,7 +44,7 @@ namespace DataGeneration.Entities.Leads
                     ReturnBehavior = ReturnBehavior.None
                 },
                 new ConvertLeadToOpportunity(),
-                cancellationToken
+                ct
             );
         }
 

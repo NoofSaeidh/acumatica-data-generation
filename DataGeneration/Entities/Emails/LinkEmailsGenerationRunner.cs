@@ -43,23 +43,23 @@ namespace DataGeneration.Entities.Emails
             GenerationSettings.RandomizerSettings.EmbeddedFilesTags = await PutEmbeddedFiles(cancellationToken);
         }
 
-        protected override async VoidTask GenerateSingle(IApiClient client, OneToManyRelation<LinkEntityToEmail, OneToManyRelation<Email, File>> entity, CancellationToken cancellationToken)
+        protected override async VoidTask GenerateSingle(IApiClient client, OneToManyRelation<LinkEntityToEmail, OneToManyRelation<Email, File>> entity, CancellationToken ct)
         {
             foreach (var relation in entity.Right)
             {
                 if (relation.Right.IsNullOrEmpty())
                 {
                     await client.InvokeAsync(
-                        await client.PutAsync(relation.Left, cancellationToken), 
+                        await client.PutAsync(relation.Left, ct), 
                         entity.Left, 
-                        cancellationToken
+                        ct
                     );
                 }
                 else
                 {
-                    var email = await client.PutAsync(relation.Left, cancellationToken);
-                    await client.InvokeAsync(email, entity.Left, cancellationToken);
-                    await client.PutFilesAsync(email, relation.Right, cancellationToken);
+                    var email = await client.PutAsync(relation.Left, ct);
+                    await client.InvokeAsync(email, entity.Left, ct);
+                    await client.PutFilesAsync(email, relation.Right, ct);
                 }
             }
         }

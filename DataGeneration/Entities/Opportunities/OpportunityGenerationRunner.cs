@@ -127,7 +127,7 @@ namespace DataGeneration.Entities.Opportunities
             return await getIds(ct);
         }
 
-        protected override async VoidTask GenerateSingle(IApiClient client, Opportunity entity, CancellationToken cancellationToken)
+        protected override async VoidTask GenerateSingle(IApiClient client, Opportunity entity, CancellationToken ct)
         {
             // AC-122395 -> 
             // if set Lost or Won status, ContactInformation becomes disabled
@@ -137,11 +137,11 @@ namespace DataGeneration.Entities.Opportunities
             {
                 var status = entity.Status;
                 entity.Status = "New";
-                entity = await client.PutAsync(entity, cancellationToken);
+                entity = await client.PutAsync(entity, ct);
                 entity.Status = status;
             }
 
-            await client.PutAsync(entity, cancellationToken);
+            await client.PutAsync(entity, ct);
         }
 
         protected override void UtilizeFoundEntities(IList<Entity> entities)

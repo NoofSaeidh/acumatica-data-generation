@@ -8,18 +8,18 @@ using System.Linq;
 using System.ServiceModel;
 using System.Threading;
 using System.Threading.Tasks;
+using DataGeneration.Core.Common;
 using VoidTask = System.Threading.Tasks.Task;
 
 namespace DataGeneration.Soap
 {
-    public class AcumaticaSoapClient : IApiClient, IDisposable
+    public class AcumaticaSoapClient : IApiClient, ILoggerInjectable, IDisposable
     {
         #region Initialization
 
-        private const string _loggerName = LogHelper.LoggerNames.ApiClient;
+        private static readonly ILogger _logger = LogHelper.GetLogger(LogHelper.LoggerNames.ApiClient);
 
-        private static ILogger _logger { get; } = LogHelper.GetLogger(_loggerName);
-
+        private (object, object)[] _eventParams;
         private readonly DefaultSoapClient _client;
 
         static AcumaticaSoapClient()
@@ -43,7 +43,7 @@ namespace DataGeneration.Soap
             _client = new DefaultSoapClient(endpointSettings.GetBinding(), endpointSettings.GetEndpointAddress());
         }
 
-        public static ILoginLogoutApiClient LoginLogoutClient(ApiConnectionConfig connectionConfig)
+        public static ILogoutApiClient LoginLogoutClient(ApiConnectionConfig connectionConfig)
         {
             if (connectionConfig == null)
             {
@@ -54,10 +54,10 @@ namespace DataGeneration.Soap
 
             client.Login(connectionConfig.LoginInfo);
 
-            return (ILoginLogoutApiClient)client;
+            return client;
         }
 
-        public static async Task<ILoginLogoutApiClient> LoginLogoutClientAsync(ApiConnectionConfig connectionConfig, CancellationToken cancellationToken = default)
+        public static async Task<ILogoutApiClient> LoginLogoutClientAsync(ApiConnectionConfig connectionConfig, CancellationToken cancellationToken = default)
         {
             if (connectionConfig == null)
             {
@@ -68,7 +68,7 @@ namespace DataGeneration.Soap
 
             await client.LoginAsync(connectionConfig.LoginInfo, cancellationToken);
 
-            return (ILoginLogoutApiClient)client;
+            return client;
         }
 
         public static ILogoutApiClient LogoutClient(EndpointSettings endpointSettings)
@@ -153,7 +153,7 @@ namespace DataGeneration.Soap
         {
             return TryCatch(
                 () => _client.Get(whereEntity),
-                CrudLogArgs("Get", whereEntity)
+                CrudLogArgs<T>("Get")
             );
         }
 
@@ -161,7 +161,7 @@ namespace DataGeneration.Soap
         {
             return await TryCatchAsync(
                () => _client.GetAsync(whereEntity),
-               CrudLogArgs("Get", whereEntity)
+               CrudLogArgs<T>("Get")
             );
         }
 
@@ -170,7 +170,7 @@ namespace DataGeneration.Soap
             return await TryCatchAsync(
                () => _client.GetAsync(whereEntity),
                cancellationToken,
-               CrudLogArgs("Get", whereEntity)
+               CrudLogArgs<T>("Get")
             );
         }
 
@@ -178,7 +178,7 @@ namespace DataGeneration.Soap
         {
             return TryCatch(
                 () => _client.GetList(whereEntity),
-                CrudLogArgs("Get List", whereEntity)
+                CrudLogArgs<T>("Get List")
             );
         }
 
@@ -186,7 +186,7 @@ namespace DataGeneration.Soap
         {
             return await TryCatchAsync(
                () => _client.GetListAsync(whereEntity),
-               CrudLogArgs("Get List", whereEntity)
+               CrudLogArgs<T>("Get List")
             );
         }
 
@@ -195,7 +195,7 @@ namespace DataGeneration.Soap
             return await TryCatchAsync(
                () => _client.GetListAsync(whereEntity),
                cancellationToken,
-               CrudLogArgs("Get List", whereEntity)
+               CrudLogArgs<T>("Get List")
             );
         }
 
@@ -203,7 +203,7 @@ namespace DataGeneration.Soap
         {
             return TryCatch(
                 () => _client.Put(entity),
-                CrudLogArgs("Put", entity)
+                CrudLogArgs<T>("Put")
             );
         }
 
@@ -211,7 +211,7 @@ namespace DataGeneration.Soap
         {
             return await TryCatchAsync(
                () => _client.PutAsync(entity),
-               CrudLogArgs("Put", entity)
+               CrudLogArgs<T>("Put")
             );
         }
 
@@ -220,7 +220,7 @@ namespace DataGeneration.Soap
             return await TryCatchAsync(
                () => _client.PutAsync(entity),
                cancellationToken,
-               CrudLogArgs("Put", entity)
+               CrudLogArgs<T>("Put")
             );
         }
 
@@ -228,7 +228,7 @@ namespace DataGeneration.Soap
         {
             TryCatch(
                 () => _client.Delete(whereEntity),
-                CrudLogArgs("Delete", whereEntity)
+                CrudLogArgs<T>("Delete")
             );
         }
 
@@ -236,7 +236,7 @@ namespace DataGeneration.Soap
         {
             await TryCatchAsync(
                () => _client.DeleteAsync(whereEntity),
-               CrudLogArgs("Delete", whereEntity)
+               CrudLogArgs<T>("Delete")
             );
         }
 
@@ -245,7 +245,7 @@ namespace DataGeneration.Soap
             await TryCatchAsync(
                () => _client.DeleteAsync(whereEntity),
                cancellationToken,
-               CrudLogArgs("Delete", whereEntity)
+               CrudLogArgs<T>("Delete")
             );
         }
 
@@ -258,7 +258,7 @@ namespace DataGeneration.Soap
         {
             TryCatch(
                 () => _client.Invoke(entity, action),
-                InvokeArgs(entity, action)
+                InvokeArgs<TEntity, TAction>()
             );
         }
 
@@ -266,7 +266,7 @@ namespace DataGeneration.Soap
         {
             await TryCatchAsync(
                 () => _client.InvokeAsync(entity, action),
-                InvokeArgs(entity, action)
+                InvokeArgs<TEntity, TAction>()
             );
         }
 
@@ -275,7 +275,7 @@ namespace DataGeneration.Soap
             await TryCatchAsync(
                 () => _client.InvokeAsync(entity, action),
                 cancellationToken,
-                InvokeArgs(entity, action)
+                InvokeArgs<TEntity, TAction>()
             );
         }
 
@@ -283,7 +283,7 @@ namespace DataGeneration.Soap
         {
             return TryCatch(
                 () => _client.GetFiles(entity),
-                GetFilesArgs(entity)
+                GetFilesArgs<T>()
             );
         }
 
@@ -291,7 +291,7 @@ namespace DataGeneration.Soap
         {
             return await TryCatchAsync(
                 () => _client.GetFilesAsync(entity),
-                GetFilesArgs(entity)
+                GetFilesArgs<T>()
             );
         }
 
@@ -300,7 +300,7 @@ namespace DataGeneration.Soap
             return await TryCatchAsync(
                 () => _client.GetFilesAsync(entity),
                 cancellationToken,
-                GetFilesArgs(entity)
+                GetFilesArgs<T>()
             );
         }
 
@@ -308,7 +308,7 @@ namespace DataGeneration.Soap
         {
             TryCatch(
                 () => _client.PutFiles(entity, files.ToArray()),
-                PutFilesArgs(entity, files)
+                PutFilesArgs<T>()
             );
         }
 
@@ -316,7 +316,7 @@ namespace DataGeneration.Soap
         {
             await TryCatchAsync(
                 () => _client.PutFilesAsync(entity, files.ToArray()),
-                PutFilesArgs(entity, files)
+                PutFilesArgs<T>()
             );
         }
 
@@ -325,7 +325,7 @@ namespace DataGeneration.Soap
             await TryCatchAsync(
                 () => _client.PutFilesAsync(entity, files.ToArray()),
                 cancellationToken,
-                PutFilesArgs(entity, files)
+                PutFilesArgs<T>()
             );
         }
 
@@ -333,131 +333,131 @@ namespace DataGeneration.Soap
 
         #region Try Catch
 
-        private void TryCatch(System.Action action, LogArgs logArgs, int retryCounter = 0)
+        private void TryCatch(System.Action action, LogArgs logArgs, int attempt = 1)
         {
             try
             {
-                logArgs.StartInfo.Log();
-                using (logArgs.CompleteInfo.StopwatchLog())
+                logArgs.LogStart();
+                using (logArgs.LogCompleted())
                 {
                     action();
                 }
             }
             catch (OperationCanceledException oce)
             {
-                logArgs.CancelInfo.Log(oce);
+                logArgs.LogCanceled(oce);
                 throw;
             }
             catch (TimeoutException te)
             {
-                throw logArgs.FailInfo.LogAndGetException(te);
+                throw logArgs.LogFailedAndGetException(te);
             }
             catch (Exception e)
             {
-                if (retryCounter >= RetryCount)
-                    throw logArgs.FailInfo.LogAndGetException(e);
-                logArgs.RetryInfo.Log(e);
-                TryCatch(action, logArgs, --retryCounter);
+                if (attempt > RetryCount)
+                    throw logArgs.LogFailedAndGetException(e, attempt);
+                logArgs.LogRetry(e, attempt);
+                TryCatch(action, logArgs, ++attempt);
             }
         }
 
-        private T TryCatch<T>(Func<T> action, LogArgs logArgs, int retryCounter = 0)
+        private T TryCatch<T>(Func<T> action, LogArgs logArgs, int attempt = 1)
         {
             try
             {
-                logArgs.StartInfo.Log();
-                using (logArgs.CompleteInfo.StopwatchLog())
+                logArgs.LogStart();
+                using (logArgs.LogCompleted())
                 {
                     return action();
                 }
             }
             catch (OperationCanceledException oce)
             {
-                logArgs.CancelInfo.Log(oce);
+                logArgs.LogCanceled(oce);
                 throw;
             }
             catch (TimeoutException te)
             {
-                throw logArgs.FailInfo.LogAndGetException(te);
+                throw logArgs.LogFailedAndGetException(te);
             }
             catch (Exception e)
             {
-                if (retryCounter >= RetryCount)
-                    throw logArgs.FailInfo.LogAndGetException(e);
-                logArgs.RetryInfo.Log(e);
-                return TryCatch(action, logArgs, --retryCounter);
+                if (attempt > RetryCount)
+                    throw logArgs.LogFailedAndGetException(e, attempt);
+                logArgs.LogRetry(e, attempt);
+                return TryCatch(action, logArgs, ++attempt);
             }
         }
 
-        private async VoidTask TryCatchAsync(Func<VoidTask> task, LogArgs logArgs, int retryCounter = 0)
+        private async VoidTask TryCatchAsync(Func<VoidTask> task, LogArgs logArgs, int attempt = 1)
         {
             try
             {
-                logArgs.StartInfo.Log();
-                using (logArgs.CompleteInfo.StopwatchLog())
+                logArgs.LogStart();
+                using (logArgs.LogCompleted())
                 {
                     await task();
                 }
             }
             catch (OperationCanceledException oce)
             {
-                logArgs.CancelInfo.Log(oce);
+                logArgs.LogCanceled(oce);
                 throw;
             }
             catch (TimeoutException te)
             {
-                throw logArgs.FailInfo.LogAndGetException(te);
+                throw logArgs.LogFailedAndGetException(te);
             }
             catch (Exception e)
             {
-                if (retryCounter >= RetryCount)
-                    throw logArgs.FailInfo.LogAndGetException(e);
-                logArgs.RetryInfo.Log(e);
-                await TryCatchAsync(task, logArgs, --retryCounter);
+                if (attempt > RetryCount)
+                    throw logArgs.LogFailedAndGetException(e, attempt);
+                logArgs.LogRetry(e, attempt);
+                await TryCatchAsync(task, logArgs, ++attempt);
             }
         }
 
-        private async Task<T> TryCatchAsync<T>(Func<Task<T>> task, LogArgs logArgs, int retryCounter = 0)
+        private async Task<T> TryCatchAsync<T>(Func<Task<T>> task, LogArgs logArgs, int attempt = 1)
         {
             try
             {
-                logArgs.StartInfo.Log();
-                using (logArgs.CompleteInfo.StopwatchLog())
+                logArgs.LogStart();
+                using (logArgs.LogCompleted())
                 {
                     return await task();
                 }
             }
             catch (OperationCanceledException oce)
             {
-                logArgs.CancelInfo.Log(oce);
+                logArgs.LogCanceled(oce);
                 throw;
             }
             catch (TimeoutException te)
             {
-                throw logArgs.FailInfo.LogAndGetException(te);
+                throw logArgs.LogFailedAndGetException(te);
             }
             catch (Exception e)
             {
-                if (retryCounter >= RetryCount)
-                    throw logArgs.FailInfo.LogAndGetException(e);
-                logArgs.RetryInfo.Log(e);
-                return await TryCatchAsync(task, logArgs, --retryCounter);
+                if (attempt > RetryCount)
+                    throw logArgs.LogFailedAndGetException(e, attempt);
+                logArgs.LogRetry(e, attempt);
+                return await TryCatchAsync(task, logArgs, ++attempt);
             }
         }
 
-        private async Task<T> TryCatchAsync<T>(Func<Task<T>> task, CancellationToken cancellationToken, LogArgs logArgs, int retryCounter = 0)
+        private async Task<T> TryCatchAsync<T>(Func<Task<T>> task, CancellationToken cancellationToken, LogArgs logArgs, int attempt = 1)
         {
 #if DISABLE_API_CANCELLATION
-            return await TryCatchAsync(task, logArgs, retryCounter);
+            return await TryCatchAsync(task, logArgs, attempt);
 #else
             throw new NotImplemetedException();
 #endif
         }
 
-        private async VoidTask TryCatchAsync(Func<VoidTask> task, CancellationToken cancellationToken, LogArgs logArgs, int retryCounter = 0)
+        private async VoidTask TryCatchAsync(Func<VoidTask> task, CancellationToken cancellationToken, LogArgs logArgs, int attempt = 1)
         {
 #if DISABLE_API_CANCELLATION
-            await TryCatchAsync(task, logArgs, retryCounter);
+            await TryCatchAsync(task, logArgs, attempt);
 #else
             throw new NotImplemetedException();
 #endif
@@ -467,147 +467,104 @@ namespace DataGeneration.Soap
 
         #region Log
 
-        private LogArgs CrudLogArgs<T>(string action, T whereEntity)
-            => new LogArgs($"{action} {typeof(T).Name}", "{entity}", whereEntity);
-
-        private LogArgs InvokeArgs<TEntity, TAction>(TEntity entity, TAction action)
-            => new LogArgs($"Invoke {typeof(TAction).Name} for {typeof(TEntity).Name}", "{entity}, {action}", entity, action);
-
-        private LogArgs GetFilesArgs<T>(T entity)
-            => new LogArgs($"Get Files for {typeof(T).Name}", "{entity}", entity);
-
-        private LogArgs PutFilesArgs<T>(T entity, IEnumerable<File> files)
-            => new LogArgs($"Put Files for {typeof(T).Name}", "{entity}", entity);
-
-        private LogArgs LoginArgs()
-            => new LogArgs("Login", "Url = {url}", _client.Endpoint.Address.Uri);
-
-        private LogArgs LogoutArgs()
-            => new LogArgs("Logout", "Url = {url}", _client.Endpoint.Address.Uri);
-
+        private LogArgs CrudLogArgs<T>(string action) => new LogArgs($"{action} {typeof(T).Name}", _eventParams);
+        private LogArgs InvokeArgs<TEntity, TAction>() => new LogArgs($"Invoke {typeof(TAction).Name} for {typeof(TEntity).Name}", _eventParams);
+        private LogArgs GetFilesArgs<T>() => new LogArgs($"Get Files for {typeof(T).Name}", _eventParams);
+        private LogArgs PutFilesArgs<T>() => new LogArgs($"Put Files for {typeof(T).Name}", _eventParams);
+        private LogArgs LoginArgs() => new LogArgs($"Login to {_client.Endpoint.Address.Uri}", _eventParams);
+        private LogArgs LogoutArgs() => new LogArgs($"Logout from {_client.Endpoint.Address.Uri}", _eventParams);
 
         private class LogArgs
         {
-            private readonly string _operation;
-            //private readonly string _argsLayout;
-            //private readonly object[] _args;
-
-            private SingleLogArg _startInfo;
-            private SingleLogArg _completeInfo;
-            private SingleLogArg _failInfo;
-            private SingleLogArg _cancelInfo;
-            private SingleLogArg _retryInfo;
-
-            public LogLevel StartInfoLogLevel;
-            public LogLevel CompleteInfoLogLevel;
-            public LogLevel FailInfoLogLevel;
-            public LogLevel CancelInfoLogLevel;
-            public LogLevel RetryInfoLogLevel;
-
-            public LogArgs(string operation, string argsLayout, params object[] args)
-            {
-                _operation = operation;
-                // disable those log temporarly
-                // todo: review and maybe clear
-                // there are no usefull info, and it not used
-                //_argsLayout = argsLayout;
-                //_args = args;
-
-                StartInfoLogLevel = LogLevel.Trace;
-                CompleteInfoLogLevel = LogLevel.Debug;
-                FailInfoLogLevel = LogLevel.Error;
-                CancelInfoLogLevel = LogLevel.Error;
-                RetryInfoLogLevel = LogLevel.Warn;
-            }
-
-            public LogArgs(string operation, string argsLayout, object[] args,
-                SingleLogArg startInfo = null,
-                SingleLogArg completInfo = null,
-                SingleLogArg failInfo = null,
-                SingleLogArg cancelInfo = null,
-                SingleLogArg retryInfo = null)
-                : this(operation, argsLayout, args)
-            {
-                _startInfo = startInfo;
-                _completeInfo = completInfo;
-                _failInfo = failInfo;
-                _cancelInfo = cancelInfo;
-                _retryInfo = retryInfo;
-            }
-
-            public SingleLogArg StartInfo => _startInfo
-                ?? (_startInfo = new SingleLogArg(
-                    $"Operation \"{_operation}\" started" /*+ _argsLayout*/, StartInfoLogLevel /*, _args*/));
-
-            // tood: perhaps need to handle log args somehow (but not force, because it will affect performance
-            public SingleLogArg CompleteInfo => _completeInfo
-                ?? (_completeInfo = new SingleLogArg(
-                    $"Operation \"{_operation}\" completed", CompleteInfoLogLevel));
-
-            public SingleLogArg FailInfo => _failInfo
-                ?? (_failInfo = new SingleLogArg(
-                    $"Operation \"{_operation}\" failed", FailInfoLogLevel));
-
-            public SingleLogArg CancelInfo => _cancelInfo
-                ?? (_cancelInfo = new SingleLogArg(
-                    $"Operation \"{_operation}\" canceled", CompleteInfoLogLevel));
-
-            public SingleLogArg RetryInfo => _retryInfo
-                ?? (_retryInfo = new SingleLogArg(
-                    $"Operation \"{_operation}\" failed, retrying", RetryInfoLogLevel));
-
-        }
-
-        private class SingleLogArg
-        {
             public readonly string Text;
-            public readonly object[] Args;
-            public readonly LogLevel LogLevel;
+            public readonly (object, object)[] EventParams;
 
-            public SingleLogArg(string text, LogLevel logLevel, params object[] args)
+            public const string OperationStarted = "Operation \"{0}\" started";
+            public const string OperationCompleted = "Operation \"{0}\" completed";
+            public const string OperationFailed = "Operation \"{0}\" failed";
+            public const string OperationCanceled = "Operation \"{0}\" canceled";
+            public const string RetryAddition = ", Retry";
+            public const string AttemptAddition = ", Attempt: {1}";
+
+
+            public void LogStart()
+            {
+                if (_logger.IsTraceEnabled)
+                    LogHelper.LogWithEventParams(
+                        _logger,
+                        LogLevel.Trace,
+                        OperationStarted.FormatWith(Text),
+                        eventParams: EventParams
+                    );
+            }
+
+            public IDisposable LogCompleted()
+            {
+                if (_logger.IsDebugEnabled)
+                    return StopwatchLoggerFactory.LogDispose(
+                        _logger,
+                        LogLevel.Debug,
+                        OperationCompleted.FormatWith(Text),
+                        eventParams: EventParams);
+                return DisposeHelper.NullDisposable;
+            }
+
+            public void LogFailed(Exception e, int attempt = 1)
+            {
+                if (_logger.IsErrorEnabled)
+                    LogHelper.LogWithEventParams(
+                        _logger,
+                        LogLevel.Error,
+                        (OperationFailed + AttemptAddition).FormatWith(Text, attempt),
+                        exception: e,
+                        eventParams: EventParams
+                    );
+            }
+
+            public ApiException LogFailedAndGetException(Exception e, int attempt = 1)
+            {
+                var text = (OperationFailed + AttemptAddition).FormatWith(Text, attempt);
+                if (_logger.IsErrorEnabled)
+                    LogHelper.LogWithEventParams(
+                        _logger,
+                        LogLevel.Error,
+                        text,
+                        exception: e,
+                        eventParams: EventParams
+                    );
+                return new ApiException(text, e);
+            }
+
+            public void LogCanceled(Exception e)
+            {
+                if (_logger.IsErrorEnabled)
+                    LogHelper.LogWithEventParams(
+                        _logger,
+                        LogLevel.Error,
+                        OperationCanceled.FormatWith(Text),
+                        exception: e,
+                        eventParams: EventParams
+                    );
+            }
+
+            public void LogRetry(Exception e, int attempt = 1)
+            {
+                if (_logger.IsWarnEnabled)
+                    LogHelper.LogWithEventParams(
+                        _logger,
+                        LogLevel.Warn,
+                        (OperationFailed + AttemptAddition + RetryAddition).FormatWith(Text, attempt),
+                        exception: e,
+                        eventParams: EventParams
+                    );
+            }
+
+            public LogArgs(string text, (object, object)[] parameters)
             {
                 Text = text;
-                Args = args;
-                LogLevel = logLevel;
+                EventParams = parameters;
             }
-
-            public SingleLogArg(string text, params object[] args) : this(text, null, args)
-            {
-            }
-
-            public bool IsEnabled => LogLevel != null;
-
-            public void Log()
-            {
-                if (IsEnabled)
-                    _logger.Log(LogLevel, Text, Args);
-            }
-
-            public void Log(Exception e)
-            {
-                if (IsEnabled)
-                    _logger.Log(LogLevel, e, Text, Args);
-            }
-
-            public ApiException LogAndGetException(Exception e)
-            {
-                if (IsEnabled)
-                    _logger.Log(LogLevel, e, Text, Args);
-                return new ApiException(Text.FormatWith(Args), e);
-            }
-
-            public IDisposable StopwatchLog()
-            {
-                return StopwatchLoggerFactory.LogDispose(_loggerName, Text, Args);
-            }
-
-
-
-            public static implicit operator SingleLogArg(string text) => new SingleLogArg(text);
-            public static implicit operator SingleLogArg((string text, object arg) log) => new SingleLogArg(log.text, log.arg);
-            public static implicit operator SingleLogArg((string text, object arg1, object arg2) log) => new SingleLogArg(log.text, log.arg1, log.arg2);
         }
-
 
         #endregion
 
@@ -618,7 +575,12 @@ namespace DataGeneration.Soap
             _client.Close();
         }
 
-        private class LogoutClientImpl : AcumaticaSoapClient, ILoginLogoutApiClient, IDisposable
+        public void InjectEventParameters(params (object name, object value)[] events)
+        {
+            _eventParams = events ?? throw new ArgumentNullException(nameof(events));
+        }
+
+        private class LogoutClientImpl : AcumaticaSoapClient, ILogoutApiClient, IDisposable
         {
             public LogoutClientImpl(EndpointSettings endpointSettings) : base(endpointSettings)
             {

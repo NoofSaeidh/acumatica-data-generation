@@ -84,12 +84,15 @@
     <Compile Include="Core\Cache\BaseFileCacheManager.cs" />
     <Compile Include="Core\Cache\CacheAdapter.cs" />
     <Compile Include="Core\Cache\CacheSettings.cs" />
+    <Compile Include="Core\Common\DisposeHelper.cs" />
+    <Compile Include="Core\Common\Params.cs" />
     <Compile Include="Core\DataGeneration\IDataGenerator.cs" />
     <Compile Include="Core\Common\IValueWrapper.cs" />
     <Compile Include="Core\Cache\ICacheUtilizer.cs" />
     <Compile Include="Core\Api\IApiClient.cs" />
     <Compile Include="Core\Cache\IHasCacheAdapter.cs" />
     <Compile Include="Core\Common\IProbabilityObject.cs" />
+    <Compile Include="Core\Logging\ILoggerInjectable.cs" />
     <Compile Include="Core\Logging\IStopwatchLogger.cs" />
     <Compile Include="Core\Common\IValidatable.cs" />
     <Compile Include="Core\DataGeneration\IAvailableCountLimit.cs" />

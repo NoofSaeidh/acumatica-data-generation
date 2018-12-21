@@ -178,7 +178,7 @@ namespace DataGeneration.Entities.Emails
             var imageFiles = fileLoader.GetAllFiles();
             if (imageFiles.Length == 0)
                 throw new InvalidOperationException($"Directory {AttachmentsLocation} doesn't contain files.");
-            Logger.Info("Files found for emails attachments: {count}", imageFiles.Length);
+            Logger.Trace("Files found for emails attachments: {count}", imageFiles.Length);
 
             IEnumerable<File> result(Faker faker)
             {
