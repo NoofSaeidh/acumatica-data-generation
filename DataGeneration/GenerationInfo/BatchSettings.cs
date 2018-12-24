@@ -27,6 +27,8 @@ namespace DataGeneration.GenerationInfo
         public bool StopProcessingAtException { get; set; }
         public bool RestartIisBeforeBatch { get; set; }
         public bool CollectGarbageBeforeBatch { get; set; }
+        // add offset to IterationEndTime
+        public TimeSpan IterationTimeBuffer { get; set; }
 
         public Batch CompileBatch()
         {

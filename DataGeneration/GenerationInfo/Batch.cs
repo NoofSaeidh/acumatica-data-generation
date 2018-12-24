@@ -81,7 +81,7 @@ namespace DataGeneration.GenerationInfo
             {
                 _iterationStartTime = DateTime.Now.AddSeconds(-0.5);
                 yield return settings;
-                _iterationEndTime = DateTime.Now.AddSeconds(+0.5);
+                _iterationEndTime = DateTime.Now.AddSeconds(+0.5).Add(Settings.IterationTimeBuffer);
                 AvailableCount--;
                 ProcessedCount++;
             }

@@ -40,7 +40,8 @@
         "Value": {
           "StopProcessingAtException": false,
           "CollectGarbageBeforeBatch": true,
-          "RestartIisBeforeBatch": false
+          "RestartIisBeforeBatch": false,
+          "IterationTimeBuffer": "00:01:00"
         }
       }
     ],
