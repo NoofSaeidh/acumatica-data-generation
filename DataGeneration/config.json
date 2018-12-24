@@ -47,22 +47,16 @@
     ],
     "SettingsInjections": [
       {
-        "Path": "Count",
-        "Type": "Replace", // default
-        "Value": 5
-      },
-      {
-        "Path": "CollectGarbageBeforeGeneration",
-        "Value": true
-      },
-      {
-        "Path": "ExecutionTypeSettings",
-        "Type": "Replace",
+        "Type": "Patch",
         "Value": {
-          "ExecutionType": "Parallel",
-          "IgnoreProcessingErrors": true,
-          "ParallelThreads": 8,
-          "RetryCount": 0
+          "Count": 1000,
+          "CollectGarbageBeforeGeneration": true,
+          "ExecutionTypeSettings": {
+            "ExecutionType": "Parallel",
+            "IgnoreProcessingErrors": true,
+            "ParallelThreads": 16,
+            "RetryCount": 3
+          }
         }
       },
       {
