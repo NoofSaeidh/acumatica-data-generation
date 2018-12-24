@@ -281,7 +281,7 @@ namespace DataGeneration.Core
         protected async Task<ILogoutApiClient> GetLoginLogoutClient(int threadIndex, CancellationToken ct = default)
         {
             var client = GetLogoutClient();
-            if(client is ILoggerInjectable inj) inj.InjectEventParameters((ThreadIndexParam, threadIndex));
+            if (client is ILoggerInjectable inj) inj.InjectEventParameters((ThreadIndexParam, threadIndex));
             await client.LoginAsync(ApiConnectionConfig.LoginInfo, ct);
             return client;
         }

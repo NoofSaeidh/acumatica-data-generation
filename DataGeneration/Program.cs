@@ -77,7 +77,7 @@ namespace DataGeneration
                             .ToList();
                         foreach (var item in errorResults)
                         {
-                            ConsoleExecutor.WriteInfo($"Generation {item.GenerationSettings.Id} - {item.GenerationSettings.GenerationType} failed.",
+                            ConsoleExecutor.WriteInfo($"Generation {item.Id} - {item.GenerationType} failed.",
                                 ConsoleColor.Red,
                                 item.Exception.Message);
                         }
