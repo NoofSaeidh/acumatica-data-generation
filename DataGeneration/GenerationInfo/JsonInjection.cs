@@ -1,5 +1,7 @@
 ﻿using DataGeneration.Core;
+using DataGeneration.Core.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -11,7 +13,19 @@ namespace DataGeneration.GenerationInfo
 {
     public class JsonInjection
     {
-        private static readonly JsonSerializer _jsonSerializer = JsonSerializer.Create(GeneratorConfig.ConfigJsonSettings);
+        private static readonly JsonSerializerSettings _jsonSettings = new JsonSerializerSettings
+        {
+            ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+            NullValueHandling = NullValueHandling.Include,
+            TypeNameAssemblyFormatHandling = TypeNameAssemblyFormatHandling.Simple,
+            TypeNameHandling = TypeNameHandling.Auto,
+            Converters = new JsonConverter[]
+            {
+                new StringEnumConverter(),
+                new ValueTupleJsonConverter()
+            }
+        };
+        private static readonly JsonSerializer _jsonSerializer = JsonSerializer.Create(_jsonSettings);
 
         public string Path { get; set; }
 
@@ -29,7 +43,7 @@ namespace DataGeneration.GenerationInfo
                 throw new ArgumentNullException(nameof(source));
 
             var originalValue = GetPropertyValueByPath(source, Path, out var propertyName, out var parent, out var notFound);
-            if(notFound)
+            if (notFound)
             {
                 if (PropertyNotFound == PropertyNotFoundAction.Throw)
                     throw new InvalidOperationException($"Cannot find property by specified path. Path = {Path}, Source = {source}.");
@@ -103,7 +117,7 @@ namespace DataGeneration.GenerationInfo
             if (value == null)
                 return;
 
-            JsonConvert.PopulateObject(value.ToString(), source, GeneratorConfig.ConfigJsonSettings);
+            JsonConvert.PopulateObject(value.ToString(), source, _jsonSettings);
         }
 
         private object GetPropertyValueByPath(object source, string path, out string propertyName, out object parent, out bool notFound)
@@ -114,7 +128,7 @@ namespace DataGeneration.GenerationInfo
             {
                 propertyName = null;
                 notFound = false;
-                return null;
+                return source;
             }
 
             var paths = Path.Split('.');

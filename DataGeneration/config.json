@@ -36,16 +36,12 @@
     "Multiplier": 10,
     "BatchInjections": [
       {
-        "Path": "StopProcessingAtException",
-        "Value": false
-      },
-      {
-        "Path": "CollectGarbageBeforeBatch",
-        "Value": true
-      },
-      {
-        "Path": "RestartIisBeforeBatch",
-        "Value": false
+        "Type": "Patch",
+        "Value": {
+          "StopProcessingAtException": false,
+          "CollectGarbageBeforeBatch": true,
+          "RestartIisBeforeBatch": false
+        }
       }
     ],
     "SettingsInjections": [
