@@ -246,8 +246,7 @@ namespace DataGeneration.Core
                                 ? "Generation {$entity} failed"
                                 : "Unexpected exception has occurred while processing {entity}";
 
-                            LogHelper.LogWithEventParams(
-                                Logger,
+                            Logger.LogWithEventParams(
                                 LogLevel.Error,
                                 message,
                                 args: Params.ToArray(typeof(TEntity)),

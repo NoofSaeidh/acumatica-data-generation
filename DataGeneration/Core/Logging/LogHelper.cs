@@ -13,7 +13,9 @@ namespace DataGeneration.Core.Logging
 
         public static ILogger GetLogger(string loggerName) => _loggers.GetOrAdd(loggerName, name => NLog.LogManager.GetLogger(name));
 
-        public static void LogWithEventParams(ILogger logger, LogLevel level, 
+        public static ILogger ResultsLogger { get; } = GetLogger(LoggerNames.Results);
+
+        public static void LogWithEventParams(this ILogger logger, LogLevel level, 
             string message, object[] args = null,
             Exception exception = null, (object name, object value)[] eventParams = null)
         {
@@ -38,6 +40,7 @@ namespace DataGeneration.Core.Logging
             public const string GenerationRunner = "Generation.Runner";
             public const string GenerationClient = "Generation.Client";
             public const string GenerationRandomizer = "Generation.Randomizer";
+            public const string Results = "Results";
         }
     }
 }

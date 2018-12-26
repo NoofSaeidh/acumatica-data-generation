@@ -6,12 +6,18 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using DataGeneration.Core.Common;
+using MailKit.Security;
+using Newtonsoft.Json;
+using NLog.Config;
+using NLog.MailKit;
 
 namespace DataGeneration
 {
     public class Program
     {
         private static readonly ILogger _logger = LogHelper.DefaultLogger;
+        private static readonly ILogger _resultLogger = LogHelper.ResultsLogger;
 
         public static void Main(string[] args)
         {
@@ -53,13 +59,17 @@ namespace DataGeneration
                         .GenerateAll(config, tokenSource.Token)
                         .ConfigureAwait(false);
 
+                    LogLevel resultLevel;
+
                     if (result.AllSucceeded)
                     {
                         ConsoleExecutor.WriteInfo("All generations completed successfully.", ConsoleColor.Green);
                         _logger.Info("All generations completed successfully.");
+                        resultLevel = LogLevel.Info;
                     }
                     else
                     {
+                        resultLevel = LogLevel.Error;
                         if (result.AllFailed)
                         {
                             ConsoleExecutor.WriteInfo("All generations completed unsuccessfully.", ConsoleColor.Red);
@@ -83,6 +93,17 @@ namespace DataGeneration
                         }
                         _logger.Warn("All results with errors: {@results}", errorResults);
                     }
+
+                    var title = resultLevel == LogLevel.Info
+                        ? "Data generation completed succesfully"
+                        : "Data generation failed";
+                    _resultLogger.LogWithEventParams(
+                        resultLevel,
+                        "Config:\r\n{config}\r\n\r\nResult:\r\n{results}",
+                        args: Params.ToArray(
+                            JsonConvert.SerializeObject(config, Formatting.Indented),
+                            JsonConvert.SerializeObject(result, Formatting.Indented)),
+                        eventParams: Params.ToArray<(object, object)>(("ResultTitle", title)));
                 }
                 catch (ValidationException ve)
                 {

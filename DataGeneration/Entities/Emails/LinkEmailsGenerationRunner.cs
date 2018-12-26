@@ -73,7 +73,16 @@ namespace DataGeneration.Entities.Emails
                 || !GenerationSettings.RandomizerSettings.BaseEntityEmbeddedImagesAttachedCount.HasValue(out var count)
                 || count <= 0)
                 return null;
-            var loader = new FileLoader(GenerationSettings.RandomizerSettings.AttachmentsLocation);
+            FileLoader loader;
+            try
+            {
+                loader = new FileLoader(GenerationSettings.RandomizerSettings.AttachmentsLocation);
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e, "Cannot load files");
+                return null;
+            }
             var randomizer = GenerationSettings.RandomizerSettings.GetRandomizer();
             var files = randomizer.Shuffle(loader.GetAllFiles("*.jpg"))
                 // exclude files with the same names
