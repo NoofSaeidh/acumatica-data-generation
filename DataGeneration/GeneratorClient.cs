@@ -10,6 +10,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using DataGeneration.Core.Settings;
+using DataGeneration.Core.Common;
 
 namespace DataGeneration
 {
@@ -45,7 +46,7 @@ namespace DataGeneration
                 "Start generation all settings for all batches, " +
                 "Lunches count {count}, Config = {@config}",
                 "Generation for all batches completed",
-                batches.Count, config))
+                Params.ToArray<object>(batches.Count, config)))
             {
                 foreach (var batch in batches)
                 {
@@ -111,7 +112,8 @@ namespace DataGeneration
                 _logger,
                 "Start generation all settings for batch, Settings count = {count}, Id = {id}",
                 "Generation all settings for batch completed, Settings count = {count}, Id = {id}",
-                batch.AvailableCount, batchSettings.Id, batchSettings))
+                Params.ToArray<object>(batch.AvailableCount, batchSettings.Id, batchSettings),
+                callback: time => LogHelper.ResultsLogger.Info("Batch, Time: {time} ({time-sec} sec)", time, time.Seconds)))
             {
                 foreach (var settings in batch)
                 {
@@ -119,7 +121,7 @@ namespace DataGeneration
                     try
                     {
                         ct.ThrowIfCancellationRequested();
-                        if(settings is IBatchDependent bd)
+                        if (settings is IBatchDependent bd)
                             bd.Inject(batch);
 
                         var runner = settings.GetGenerationRunner(config.ApiConnectionConfig);

@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -144,9 +145,11 @@ namespace DataGeneration.Core
 
                 OnRunGenerationStarted(new RunGenerationStartedEventArgs(GenerationSettings));
                 using (StopwatchLoggerFactory.ForceLogStartDispose(Logger,
+                    LogLevel.Info,
                     "Generation started. " + LogArgs.Type_Id_Count,
                     "Generation completed. " + LogArgs.Type_Id_Count,
-                    GenerationSettings.GenerationType, GenerationSettings.Id, GenerationSettings.Count))
+                    args: Params.ToArray<object>(GenerationSettings.GenerationType, GenerationSettings.Id, GenerationSettings.Count),
+                    callback: LogResults))
                 {
                     switch (GenerationSettings.ExecutionTypeSettings.ExecutionType)
                     {
@@ -201,7 +204,11 @@ namespace DataGeneration.Core
             using (StopwatchLoggerFactory.ForceLogStartDispose(Logger, LogLevel.Debug,
                 "Generation Parallel started. " + LogArgs.Type_Id_Count_Threads,
                 "Generation Parallel completed. " + LogArgs.Type_Id_Count_Threads,
-                GenerationSettings.GenerationType, GenerationSettings.Id, GenerationSettings.Count, threads))
+                args: Params.ToArray<object>(
+                    GenerationSettings.GenerationType,
+                    GenerationSettings.Id,
+                    GenerationSettings.Count,
+                    threads)))
             {
                 for (int i = 0, rem = 1; i < threads; i++)
                 {
@@ -332,6 +339,33 @@ namespace DataGeneration.Core
         }
 
         protected ComplexQueryExecutor GetComplexQueryExecutor() => new ComplexQueryExecutor(GetListFactory);
+
+        protected virtual void LogResults(TimeSpan time)
+        {
+            LogResultsArgs(out var entity, out var parentEntity, out var action);
+            LogHelper.ResultsLogger
+                .Info("Entity: {entity}, " +
+                      "Parent Entity: {parentEntity}, " +
+                      "Action: {action}, " +
+                      "Count: {count}, " +
+                      "Time: {time} ({time-sec} (sec)), " +
+                      "Count per sec: {count-per-sec}",
+                    entity,
+                    parentEntity,
+                    action,
+                    GenerationSettings.Count,
+                    time,
+                    time.Seconds,
+                    GenerationSettings.Count / time.TotalSeconds
+                );
+        }
+
+        protected virtual void LogResultsArgs(out string entity, out string parentEntity, out string action)
+        {
+            entity = typeof(TEntity).Name;
+            parentEntity = entity;
+            action = null;
+        }
 
         private static class LogArgs
         {

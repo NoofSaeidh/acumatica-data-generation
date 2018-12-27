@@ -17,7 +17,6 @@ namespace DataGeneration
     public class Program
     {
         private static readonly ILogger _logger = LogHelper.DefaultLogger;
-        private static readonly ILogger _resultLogger = LogHelper.ResultsLogger;
 
         public static void Main(string[] args)
         {
@@ -97,7 +96,7 @@ namespace DataGeneration
                     var title = resultLevel == LogLevel.Info
                         ? "Data generation completed succesfully"
                         : "Data generation failed";
-                    _resultLogger.LogWithEventParams(
+                    LogHelper.MailLogger.LogWithEventParams(
                         resultLevel,
                         "Config:\r\n{config}\r\n\r\nResult:\r\n{results}",
                         args: Params.ToArray(

@@ -175,5 +175,20 @@ namespace DataGeneration.Entities.Opportunities
                             o.OpportunityID = new StringReturn();
                         }));
         }
+
+        protected override void LogResultsArgs(out string entity, out string parentEntity, out string action)
+        {
+            entity = "Opportunity";
+            if (SkipEntitiesSearch)
+            {
+                parentEntity = "Opportunity";
+                action = "Create";
+            }
+            else
+            {
+                parentEntity = GenerationSettings.SearchPattern?.EntityType?.Split('.').Last();
+                action = "Update";
+            }
+        }
     }
 }

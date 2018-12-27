@@ -10,10 +10,12 @@ namespace DataGeneration.Core.Logging
         private static readonly ConcurrentDictionary<string, ILogger> _loggers = new ConcurrentDictionary<string, ILogger>();
 
         public static ILogger DefaultLogger { get; } = GetLogger(LoggerNames.Default);
+        public static ILogger ResultsLogger { get; } = GetLogger(LoggerNames.Results);
+        public static ILogger MailLogger { get; } = GetLogger(LoggerNames.Mail);
+
 
         public static ILogger GetLogger(string loggerName) => _loggers.GetOrAdd(loggerName, name => NLog.LogManager.GetLogger(name));
 
-        public static ILogger ResultsLogger { get; } = GetLogger(LoggerNames.Results);
 
         public static void LogWithEventParams(this ILogger logger, LogLevel level, 
             string message, object[] args = null,
@@ -41,6 +43,7 @@ namespace DataGeneration.Core.Logging
             public const string GenerationClient = "Generation.Client";
             public const string GenerationRandomizer = "Generation.Randomizer";
             public const string Results = "Results";
+            public const string Mail = "Mail";
         }
     }
 }

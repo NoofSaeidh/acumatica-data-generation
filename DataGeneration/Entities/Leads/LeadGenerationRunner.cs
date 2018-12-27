@@ -20,5 +20,12 @@ namespace DataGeneration.Entities.Leads
         {
             await client.PutAsync(entity, ct);
         }
+
+        protected override void LogResultsArgs(out string entity, out string parentEntity, out string action)
+        {
+            entity = "Lead";
+            parentEntity = "Lead";
+            action = "Create";
+        }
     }
 }

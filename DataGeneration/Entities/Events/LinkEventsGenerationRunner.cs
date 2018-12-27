@@ -6,6 +6,7 @@ using DataGeneration.Soap;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using VoidTask = System.Threading.Tasks.Task;
 
@@ -30,6 +31,13 @@ namespace DataGeneration.Entities.Events
             {
                 await client.InvokeAsync(await client.PutAsync(activity, ct), entity.Left, ct);
             }
+        }
+
+        protected override void LogResultsArgs(out string entity, out string parentEntity, out string action)
+        {
+            entity = "Event";
+            parentEntity = GenerationSettings.SearchPattern?.EntityType?.Split('.').Last();
+            action = "Create and Link";
         }
     }
 }

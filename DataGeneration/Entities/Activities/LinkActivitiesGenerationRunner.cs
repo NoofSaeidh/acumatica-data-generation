@@ -33,5 +33,12 @@ namespace DataGeneration.Entities.Activities
                 await client.InvokeAsync(await client.PutAsync(activity, ct), entity.Left, ct);
             }
         }
+
+        protected override void LogResultsArgs(out string entity, out string parentEntity, out string action)
+        {
+            entity = "Activity";
+            parentEntity = GenerationSettings.SearchPattern?.EntityType?.Split('.').Last();
+            action = "Create and Link";
+        }
     }
 }
