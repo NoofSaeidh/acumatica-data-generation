@@ -13,9 +13,6 @@ namespace DataGeneration.GenerationInfo
 {
     public class BatchSettings : IValidatable
     {
-        private static int _generationId;
-        private static int GetGenerationId() => Interlocked.Increment(ref _generationId);
-
         private static int _id;
         // copy method ignores this
         // so setter used in injections
@@ -30,22 +27,14 @@ namespace DataGeneration.GenerationInfo
         public bool StopProcessingAtException { get; set; }
         public bool RestartIisBeforeBatch { get; set; }
         public bool CollectGarbageBeforeBatch { get; set; }
+        // add offset to IterationEndTime
+        public TimeSpan IterationTimeBuffer { get; set; }
 
-        public IEnumerable<IGenerationSettings> GetPreparedGenerationSettings()
+        public Batch CompileBatch()
         {
             Validate();
-
-            foreach (var settings in GenerationSettings)
-            {
-                var s = settings.Copy();
-                JsonInjection.Inject(s, Injections);
-                if (s is GenerationSettingsBase gs)
-                    gs.Id = GetGenerationId();
-                yield return s;
-            }
+            return new Batch(this, Injections);
         }
-
-        public Batch CompileBatch() => new Batch(this);
 
         public void Validate()
         {

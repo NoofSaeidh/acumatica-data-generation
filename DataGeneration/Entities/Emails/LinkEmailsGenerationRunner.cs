@@ -43,6 +43,7 @@ namespace DataGeneration.Entities.Emails
             GenerationSettings.RandomizerSettings.EmbeddedFilesTags = await PutEmbeddedFiles(cancellationToken);
         }
 
+
         protected override async VoidTask GenerateSingle(IApiClient client, OneToManyRelation<LinkEntityToEmail, OneToManyRelation<Email, File>> entity, CancellationToken ct)
         {
             foreach (var relation in entity.Right)
@@ -58,8 +59,8 @@ namespace DataGeneration.Entities.Emails
                 else
                 {
                     var email = await client.PutAsync(relation.Left, ct);
-                    await client.InvokeAsync(email, entity.Left, ct);
                     await client.PutFilesAsync(email, relation.Right, ct);
+                    await client.InvokeAsync(email, entity.Left, ct);
                 }
             }
         }
@@ -73,7 +74,16 @@ namespace DataGeneration.Entities.Emails
                 || !GenerationSettings.RandomizerSettings.BaseEntityEmbeddedImagesAttachedCount.HasValue(out var count)
                 || count <= 0)
                 return null;
-            var loader = new FileLoader(GenerationSettings.RandomizerSettings.AttachmentsLocation);
+            FileLoader loader;
+            try
+            {
+                loader = new FileLoader(GenerationSettings.RandomizerSettings.AttachmentsLocation);
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e, "Cannot load files");
+                return null;
+            }
             var randomizer = GenerationSettings.RandomizerSettings.GetRandomizer();
             var files = randomizer.Shuffle(loader.GetAllFiles("*.jpg"))
                 // exclude files with the same names
@@ -114,5 +124,13 @@ namespace DataGeneration.Entities.Emails
         }
 
         #endregion
+
+        
+        protected override void LogResultsArgs(out string entity, out string parentEntity, out string action)
+        {
+            entity = "Email";
+            parentEntity = GenerationSettings.SearchPattern?.EntityType?.Split('.').Last();
+            action = "Create and Link";
+        }
     }
 }

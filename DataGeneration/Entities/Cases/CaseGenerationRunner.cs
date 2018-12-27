@@ -43,5 +43,13 @@ namespace DataGeneration.Entities.Cases
         {
             await client.PutAsync(entity, ct);
         }
+
+
+        protected override void LogResultsArgs(out string entity, out string parentEntity, out string action)
+        {
+            entity = "Case";
+            parentEntity = "Case";
+            action = "Create";
+        }
     }
 }

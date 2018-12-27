@@ -6,13 +6,15 @@ namespace DataGeneration.GenerationInfo
 {
     public class GenerationResult
     {
-        internal GenerationResult(IGenerationSettings generationSettings, Exception exception = null)
+        internal GenerationResult(IGenerationSettings settings, Exception exception = null)
         {
-            GenerationSettings = generationSettings;
+            Id = settings.Id;
+            GenerationType = settings.GenerationType;
             Exception = exception;
         }
 
-        public IGenerationSettings GenerationSettings { get; }
+        public int Id { get; }
+        public string GenerationType { get; }
         public Exception Exception { get; }
         public bool Success => Exception == null;
     }

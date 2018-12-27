@@ -44,7 +44,11 @@ namespace DataGeneration.Core.Serialization
                     return wrapperType.GetProperty(nameof(ProbabilityObjectCollection<IProbabilityObject>.ProbabilityCollection)).GetValue(wrapper);
                 }
             }
-            
+
+            if (token.Type == JTokenType.Null)
+            {
+                return null;
+            }
 
             //other (simple) cases
             switch (token)

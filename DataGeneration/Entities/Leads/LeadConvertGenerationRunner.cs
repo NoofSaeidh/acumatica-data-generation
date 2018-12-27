@@ -56,5 +56,12 @@ namespace DataGeneration.Entities.Leads
                     .Select(l => (l.LeadID.Value.Value, l.Status.Value))
                     .ToArray();
         }
+
+        protected override void LogResultsArgs(out string entity, out string parentEntity, out string action)
+        {
+            entity = "Lead";
+            parentEntity = "Lead";
+            action = "Convert";
+        }
     }
 }

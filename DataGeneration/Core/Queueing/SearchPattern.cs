@@ -9,7 +9,7 @@ namespace DataGeneration.Core.Queueing
         [Required]
         public string EntityType { get; set; }
 
-        // specifies to inject DateTime from launches or use specified date search
+        // specifies to inject DateTime from batches or use specified date search
         public InjectedCondition<DateTimeSearch> CreatedDate { get; set; }
 
         public LinqPattern LinqPattern { get; set; }
