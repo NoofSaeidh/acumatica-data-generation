@@ -3,8 +3,6 @@
   "#comment": "Create opportunities. Fetches business accounts and links to it.",
   "GenerationType": "Opportunities",
   "RandomizerSettings": {
-    "UseInventoryIdsCache": true,
-    "UseBusinessAccountsCache": true,
     "OpportunityAccountTypes": {
       "WithoutAccount": 0.25,
       "WithProspectAccount": 0.125,

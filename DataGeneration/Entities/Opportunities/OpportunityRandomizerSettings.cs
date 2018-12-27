@@ -19,9 +19,6 @@ namespace DataGeneration.Entities.Opportunities
         public ProbabilityCollection<OpportunityProductsSettings> OpportunityProductsSettings { get; set; }
         public bool UseExistingOpportunities { get; set; }
 
-        public bool UseBusinessAccountsCache { get; set; }
-        public bool UseInventoryIdsCache { get; set; }
-
         // assigned in RunBeforeGeneration
         [JsonIgnore]
         public IDictionary<OpportunityAccountType, (string businessAccountId, int[] contactIds)[]> BusinessAccounts { get; set; }

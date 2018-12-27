@@ -22,21 +22,24 @@ namespace DataGeneration.Entities
             + "." + nameof(GetBusinessAccountsWithContacts);
 
         internal static async Task<IList<BusinessAccount>> GetBusinessAccountsWithContacts(
-            bool useCache,
             ApiConnectionConfig config,
             CancellationToken ct)
         {
-            if (useCache)
-                return await JsonFileCacheManager
-                    .Instance
-                    .ReadFromCacheOrSaveAsync<IList<BusinessAccount>>(
-                        BusinessAccountsWithContactsCacheName,
-                        () => GetBusinessAccountsWithContacts(config, ct)
-                    );
-            return await GetBusinessAccountsWithContacts(config, ct);
+            if (JsonFileCacheManager.Instance.TryReadFromCache<BusinessAccountCacheWrapper[]>(
+                BusinessAccountsWithContactsCacheName,
+                out var cache))
+
+                return cache.Select(i => i.ToBusinessAccount()).ToArray();
+
+            var result = await GetBusinessAccountsWithContactsApi(config, ct);
+            JsonFileCacheManager.Instance.SaveCache(
+                BusinessAccountsWithContactsCacheName,
+                result.Select(i => BusinessAccountCacheWrapper.FromBusinessAccount(i)));
+
+            return result;
         }
 
-        private static async Task<IList<BusinessAccount>> GetBusinessAccountsWithContacts(ApiConnectionConfig config, CancellationToken ct)
+        private static async Task<IList<BusinessAccount>> GetBusinessAccountsWithContactsApi(ApiConnectionConfig config, CancellationToken ct)
         {
             IEnumerable<BusinessAccount> accounts;
             IEnumerable<Contact> contacts;
@@ -94,6 +97,50 @@ namespace DataGeneration.Entities
                     };
                 })
                 .ToList();
+        }
+
+        internal class BusinessAccountCacheWrapper
+        {
+            public string Id { get; set; }
+            public string Type { get; set; }
+            public ContactCacheWrapper[] Contacts { get; set; }
+
+            public BusinessAccount ToBusinessAccount() =>
+                new BusinessAccount
+                {
+                    BusinessAccountID = Id,
+                    Type = Type,
+                    Contacts = Contacts
+                        ?.Select(c =>
+                            new BusinessAccountContact
+                            {
+                                ContactID = c.Id,
+                                Email = c.Email
+                            })
+                        .ToArray()
+                };
+
+            public static BusinessAccountCacheWrapper FromBusinessAccount(BusinessAccount account) =>
+                new BusinessAccountCacheWrapper
+                {
+                    Id = account.BusinessAccountID,
+                    Type = account.Type,
+                    Contacts = account
+                        .Contacts
+                        ?.Select(c =>
+                            new ContactCacheWrapper
+                            {
+                                Id = c.ContactID,
+                                Email = c.Email
+                            })
+                        .ToArray()
+                };
+
+            public class ContactCacheWrapper
+            {
+                public int? Id { get; set; }
+                public string Email { get; set; }
+            }
         }
     }
 

@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DataGeneration.Core.Cache;
+using Newtonsoft.Json;
 
 namespace DataGeneration.Soap
 {
@@ -27,6 +29,12 @@ namespace DataGeneration.Soap
         // specify entities to return
         void AdjustComplexQuery(ComplexQuery query);
         QueryRequestor QueryRequestor { get; }
+    }
+
+    public interface IComplexQueryCachedEntity : IComplexQueryEntity
+    {
+        void SaveCache(ComplexQueryResult result);
+        bool TryReadCache(out List<Entity> result);
     }
 
     public interface INoteIdEntity
@@ -125,7 +133,7 @@ namespace DataGeneration.Soap
         }
     }
 
-    public partial class Case : INoteIdEntity, IEmailEntity, ICreatedDateEntity, IComplexQueryEntity, IAdjustReturnBehaviorEntity
+    public partial class Case : INoteIdEntity, IEmailEntity, ICreatedDateEntity, IComplexQueryCachedEntity, IAdjustReturnBehaviorEntity
     {
         // todo: need to map
         StringValue IEmailEntity.Email { get; set; }
@@ -159,6 +167,30 @@ namespace DataGeneration.Soap
 
             if (CreatedDate is null)
                 CreatedDate = new DateTimeReturn();
+        }
+        void IComplexQueryCachedEntity.SaveCache(ComplexQueryResult result)
+        {
+            JsonFileCacheManager.Instance.SaveCache(
+                nameof(Case) + '.' + nameof(IComplexQueryCachedEntity), 
+                result
+                    .OfType<Contact>()
+                    .Select(c => new {ContactID = c.ContactID.Value, Email = c.Email.Value})
+                    .Where(c => !c.Email.IsNullOrEmpty()));
+        }
+        bool IComplexQueryCachedEntity.TryReadCache(out List<Entity> result)
+        {
+            // todo: it is very ba
+            if (JsonFileCacheManager.Instance.TryReadFromCache(
+                nameof(Case) + '.' + nameof(IComplexQueryCachedEntity),
+                new { ContactID = 0, Email = "" }.AsArray(),
+                out var cache))
+            {
+                result = cache.Select(i => new Contact {ContactID = i.ContactID, Email = i.Email} as Entity).ToList();
+                return true;
+            }
+
+            result = null;
+            return false;
         }
         #endregion
     }

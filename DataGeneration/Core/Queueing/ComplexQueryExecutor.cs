@@ -21,7 +21,7 @@ namespace DataGeneration.Core.Queueing
 
         public async Task Execute(IEnumerable<IComplexQueryEntity> entities, CancellationToken ct)
         {
-            if(entities == null)
+            if (entities == null)
                 throw new ArgumentNullException(nameof(entities));
 
             var grouping = entities.Where(e => !(e is null)).ToList().GroupBy(e => e.QueryRequestor);
@@ -30,31 +30,31 @@ namespace DataGeneration.Core.Queueing
             {
                 // arrange
                 var query = new ComplexQuery(group.Key);
-
-                if(group.Key.RequestType == RequestType.PerType)
+                var result = new ComplexQueryResult(query);
+                // use cache
+                var cachedEntity = group.First() as IComplexQueryCachedEntity;
+                if (cachedEntity != null && cachedEntity.TryReadCache(out var cache))
                 {
-                    group.First().AdjustComplexQuery(query);
+                    result.AddRange(cache);
                 }
                 else
                 {
-                    foreach (var entity in group)
-                    {
-                        entity.AdjustComplexQuery(query);
-                    }
-                }
+                    if (group.Key.RequestType == RequestType.PerType)
+                        group.First().AdjustComplexQuery(query);
+                    else
+                        foreach (var entity in group)
+                            entity.AdjustComplexQuery(query);
 
-                // act
-                var result = new ComplexQueryResult(query);
-                foreach (var queryEntity in query)
-                {
-                    result.AddRange(await _getListFactory(queryEntity, ct));
+                    // fetch
+                    foreach (var queryEntity in query)
+                        result.AddRange(await _getListFactory(queryEntity, ct));
+                    // save cache
+                    cachedEntity?.SaveCache(result);
                 }
 
                 // utilize
                 foreach (var entity in group)
-                {
                     entity.UtilizeComplexQueryResult(result);
-                }
             }
         }
     }

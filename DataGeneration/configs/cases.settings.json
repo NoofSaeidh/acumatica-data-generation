@@ -3,7 +3,6 @@
   "#comment": "Create cases. Fetches business accounts and links to it.",
   "GenerationType": "Case",
   "RandomizerSettings": {
-    "UseBusinessAccountsCache": true,
     "CaseClasses": {
       "OTHER": 0.2,
       "BILLING": 0.2,

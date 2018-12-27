@@ -48,6 +48,12 @@ namespace DataGeneration.Core.Cache
             return ReadFromFileCache<T>(GetCachePath(cacheName));
         }
 
+        // anonymousTypeObject just for ability to use it with anonymous types
+        public T ReadFromCache<T>(string cacheName, T anonymousTypeObject)
+        {
+            return ReadFromCache<T>(cacheName);
+        }
+
         public T ReadFromCacheAndDelete<T>(string cacheName, bool deleteOnFailure = false)
         {
             if (cacheName == null)
@@ -130,6 +136,10 @@ namespace DataGeneration.Core.Cache
             return TryReadFromFileCache(GetCachePath(cacheName), out result);
         }
 
+        public bool TryReadFromCache<T>(string cacheName, T anonymousTypeObject, out T result)
+        {
+            return TryReadFromCache<T>(cacheName, out result);
+        }
         public bool TryReadFromCacheAndDelete<T>(string cacheName, out T result, bool deleteOnFailure = false)
         {
             if (cacheName == null)

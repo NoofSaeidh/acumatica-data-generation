@@ -46,10 +46,7 @@ namespace DataGeneration.Entities.Opportunities
         private async Task<IDictionary<OpportunityAccountType, (string, int[])[]>> GetBusinessAccounts(CancellationToken ct)
         {
             var accounts = await CrossEntityGenerationHelper
-                .GetBusinessAccountsWithContacts(
-                    GenerationSettings.RandomizerSettings.UseBusinessAccountsCache,
-                    ApiConnectionConfig,
-                    ct);
+                .GetBusinessAccountsWithContacts(ApiConnectionConfig, ct);
             return accounts
                 .GroupBy(a => a.Type.Value)
                 .Select(g =>
@@ -118,13 +115,10 @@ namespace DataGeneration.Entities.Opportunities
                 }
             }
 
-            if(GenerationSettings.RandomizerSettings.UseInventoryIdsCache)
-                return await JsonFileCacheManager.Instance.ReadFromCacheOrSaveAsync<IList<string>>(
-                    nameof(OpportunityGenerationRunner) + "." + nameof(GetInventoryIds),
-                    () => getIds(ct)
-                );
-
-            return await getIds(ct);
+            return await JsonFileCacheManager.Instance.ReadFromCacheOrSaveAsync<IList<string>>(
+                nameof(OpportunityGenerationRunner) + "." + nameof(GetInventoryIds),
+                () => getIds(ct)
+            );
         }
 
         protected override async VoidTask GenerateSingle(IApiClient client, Opportunity entity, CancellationToken ct)

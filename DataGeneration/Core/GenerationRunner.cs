@@ -305,41 +305,6 @@ namespace DataGeneration.Core
                 originCount, count, message, $"{memberName} at {sourceFilePath}:{sourceLineNumber}");
         }
 
-        private async Task<IEnumerable<Soap.Entity>> GetListFactory(Soap.Entity entity, CancellationToken ct)
-        {
-            using (var client = await GetLoginLogoutClient(ct))
-            {
-                return await client.GetListAsync(entity, ct);
-            }
-        }
-
-        protected EntitySearcher GetEntitySearcher(Func<Soap.Entity> factory)
-        {
-            return new EntitySearcher(GetListFactory, factory);
-        }
-
-        protected EntitySearcher GetEntitySearcher(string entityType) => GetEntitySearcher(() => EntityHelper.InitializeFromType(entityType));
-
-        protected Task<IList<Soap.Entity>> GetEntities(SearchPattern searchPattern, CancellationToken ct)
-        {
-            return GetEntities(searchPattern, null, ct);
-        }
-
-        protected async Task<IList<Soap.Entity>> GetEntities(SearchPattern searchPattern, Action<EntitySearcher> searcherAdjustment, CancellationToken ct)
-        {
-            if (searchPattern == null)
-                throw new ArgumentNullException(nameof(searchPattern));
-
-
-            var searcher = GetEntitySearcher(searchPattern.EntityType);
-            searchPattern.AdjustSearcher(searcher);
-            searcherAdjustment?.Invoke(searcher);
-
-            return await searcher.ExecuteSearch(ct);
-        }
-
-        protected ComplexQueryExecutor GetComplexQueryExecutor() => new ComplexQueryExecutor(GetListFactory);
-
         protected virtual void LogResults(TimeSpan time)
         {
             LogResultsArgs(out var entity, out var parentEntity, out var action);
@@ -433,6 +398,43 @@ namespace DataGeneration.Core
             if (!SkipEntitiesSearch && GenerationSettings.SearchPattern is null)
                 throw new ValidationException($"Property {nameof(SearchPattern)} of {nameof(GenerationSettings)} must be not null in order to search entities in {nameof(RunBeforeGeneration)}");
         }
+
+        protected EntitySearcher GetEntitySearcher(Func<Soap.Entity> factory)
+        {
+            return new EntitySearcher(GetListFactory, factory);
+        }
+
+        protected EntitySearcher GetEntitySearcher(string entityType) => GetEntitySearcher(() => EntityHelper.InitializeFromType(entityType));
+
+
+        protected ComplexQueryExecutor GetComplexQueryExecutor() => new ComplexQueryExecutor(GetListFactory);
+
+        protected async Task<IEnumerable<Soap.Entity>> GetListFactory(Soap.Entity entity, CancellationToken ct)
+        {
+            using (var client = await GetLoginLogoutClient(ct))
+            {
+                return await client.GetListAsync(entity, ct);
+            }
+        }
+
+        protected Task<IList<Soap.Entity>> GetEntities(SearchPattern searchPattern, CancellationToken ct)
+        {
+            return GetEntities(searchPattern, null, ct);
+        }
+
+        protected async Task<IList<Soap.Entity>> GetEntities(SearchPattern searchPattern, Action<EntitySearcher> searcherAdjustment, CancellationToken ct)
+        {
+            if (searchPattern == null)
+                throw new ArgumentNullException(nameof(searchPattern));
+
+
+            var searcher = GetEntitySearcher(searchPattern.EntityType);
+            searchPattern.AdjustSearcher(searcher);
+            searcherAdjustment?.Invoke(searcher);
+
+            return await searcher.ExecuteSearch(ct);
+        }
+
     }
 
     #region Generation Runner Events
