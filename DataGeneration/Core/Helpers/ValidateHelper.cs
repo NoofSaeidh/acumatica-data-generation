@@ -53,7 +53,7 @@ namespace System.ComponentModel.DataAnnotations
             try
             {
                 var propValue = (bool)property.GetValue(validationContext.ObjectInstance, null);
-                if(propValue)
+                if(!propValue)
                     return ValidationResult.Success;
             }
             catch
