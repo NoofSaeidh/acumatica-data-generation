@@ -31,7 +31,9 @@ namespace DataGeneration.Entities
         }
 
         // fetches only contacts with emails
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         private static async Task<IList<BusinessAccountWrapper>> GetBusinessAccountsWithContactsApi(ApiConnectionConfig config, CancellationToken ct)
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
             throw new NotSupportedException("Cannot execute optimized export for Business Accounts to get Contacts and Main Contact," +
                                             "you have to write custom sql script and put cache by yourself.");
