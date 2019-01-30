@@ -71,14 +71,13 @@ namespace DataGeneration.Entities.Opportunities
                                                 .ToArray();
                                         break;
                                     }
-                                    // todo:
-                                    //case "Prospect":
-                                    //{
-                                    //    type = OpportunityAccountType.WithProspectAccount;
-                                    //    accs = g.Select(g_ => (g_.BusinessAccountID.Value, (int[])null)).ToArray();
+                                    case "Prospect":
+                                    {
+                                        type = OpportunityAccountType.WithProspectAccount;
+                                        accs = g.ToArray();
 
-                                    //    break;
-                                    //}
+                                        break;
+                                    }
                                     default:
                                     {
                                         type = OpportunityAccountType.WithoutAccount;
