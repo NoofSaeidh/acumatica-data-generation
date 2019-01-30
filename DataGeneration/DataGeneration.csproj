@@ -133,6 +133,7 @@
     <Compile Include="Core\Queueing\LinqPattern.cs" />
     <Compile Include="Core\Settings\SearchGenerationSettings.cs" />
     <Compile Include="Core\SystemManagement\IisManager.cs" />
+    <Compile Include="Entities\BusinessAccountWrapper.cs" />
     <Compile Include="Entities\EntityWrapper.cs" />
     <Compile Include="Entities\Leads\LeadConvertGenerationRunner.cs" />
     <Compile Include="Entities\Leads\LeadConvertGenerationSettings.cs" />

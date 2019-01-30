@@ -9,13 +9,12 @@ using System.Threading;
 using System.Threading.Tasks;
 using DataGeneration.Core.Cache;
 using VoidTask = System.Threading.Tasks.Task;
-using static DataGeneration.Entities.CrossEntityGenerationHelper;
 
 namespace DataGeneration.Entities.Cases
 {
     public class CaseGenerationRunner : GenerationRunner<Case, CaseGenerationSettings>
     {
-        public const string ContactsForCasesGenerationCache = nameof(CaseGenerationRunner) + "." + nameof(GetBusinessAccounts);
+        public const string ContactsForCasesGenerationCacheName = nameof(CaseGenerationRunner) + "." + nameof(GetBusinessAccounts);
 
         public CaseGenerationRunner(ApiConnectionConfig apiConnectionConfig, CaseGenerationSettings generationSettings)
             : base(apiConnectionConfig, generationSettings)
@@ -30,21 +29,15 @@ namespace DataGeneration.Entities.Cases
         private async Task<(string, int[])[]> GetBusinessAccounts(CancellationToken ct)
         {
             var wrapper = await JsonFileCacheManager.Instance
-                .ReadFromCacheOrSaveAsync<BusinessAccountCacheWrapper[]>(
-                    ContactsForCasesGenerationCache,
+                .ReadFromCacheOrSaveAsync<BusinessAccountWrapper[]>(
+                    ContactsForCasesGenerationCacheName,
                     async () =>
                     {
-                        var accounts = await GetBusinessAccountsWithContacts(ApiConnectionConfig, ct);
+                        var accounts = await CrossEntityGenerationHelper.GetBusinessAccountsWithContacts(ApiConnectionConfig, ct);
 
                         return accounts
-                            .GroupBy(a => a.Type.Value)
+                            .GroupBy(a => a.Type)
                             .First(g => g.Key == "Customer")
-                            .Select(a =>
-                            {
-                                var res = BusinessAccountCacheWrapper.FromBusinessAccount(a);
-                                res.Contacts = res.Contacts?.Where(c => !c.Email.IsNullOrEmpty()).ToArray();
-                                return res;
-                            })
                             .Where(a => !a.Contacts.IsNullOrEmpty())
                             .ToArray();
                     });
@@ -54,10 +47,10 @@ namespace DataGeneration.Entities.Cases
                 nameof(Case) + '.' + nameof(IComplexQueryCachedEntity),
                 wrapper
                     .SelectMany(a => a.Contacts)
-                    .Select(c => new {ContactID = c.Id, Email = c.Email}));
+                    .Select(c => new {ContactID = c.ContactId, Email = c.Email}));
 
             // no nulls in THIS cache
-            return wrapper.Select(w => (w.Id, w.Contacts.Select(c => (int)c.Id).ToArray())).ToArray();
+            return wrapper.Select(w => (w.AccountId, w.Contacts.Select(c => (int)c.ContactId).ToArray())).ToArray();
         }
 
         protected override async VoidTask GenerateSingle(IApiClient client, Case entity, CancellationToken ct)

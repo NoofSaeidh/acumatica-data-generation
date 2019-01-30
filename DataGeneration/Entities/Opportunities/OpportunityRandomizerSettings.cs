@@ -8,6 +8,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using static DataGeneration.Entities.CrossEntityGenerationHelper;
 
 namespace DataGeneration.Entities.Opportunities
 {
@@ -21,7 +22,7 @@ namespace DataGeneration.Entities.Opportunities
 
         // assigned in RunBeforeGeneration
         [JsonIgnore]
-        public IDictionary<OpportunityAccountType, (string businessAccountId, int[] contactIds)[]> BusinessAccounts { get; set; }
+        public IDictionary<OpportunityAccountType, BusinessAccountWrapper[]> BusinessAccounts { get; set; }
         [JsonIgnore]
         public IList<string> InventoryIds { get; set; }
         [JsonIgnore]
@@ -159,11 +160,11 @@ namespace DataGeneration.Entities.Opportunities
                         && BusinessAccounts.TryGetValue(accountType, out var accounts)
                         && accounts != null)
                     {
-                        var (account, contacts) = f.PickRandom(accounts);
-                        o.BusinessAccount = account;
-                        if (!contacts.IsNullOrEmpty())
+                        var account = f.PickRandom(accounts);
+                        o.BusinessAccount = account.AccountId;
+                        if (!account.Contacts.IsNullOrEmpty())
                         {
-                            o.ContactID = f.PickRandom(contacts);
+                            o.ContactID = f.PickRandom(account.Contacts).ContactId;
                         }
                     }
                     else
