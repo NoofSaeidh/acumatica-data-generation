@@ -19,6 +19,18 @@ namespace DataGeneration.Soap
         public static StringSearch ToSearch(this StringValue value) => new StringSearch { Value = value?.Value };
         public static IntSearch ToSearch(this IntValue value) => new IntSearch { Value = value?.Value };
         public static GuidSearch ToSearch(this GuidValue value) => new GuidSearch { Value = value?.Value };
+
+        public static bool HasNotNullValue<T>(this IValueWrapper<T> wrapper, out T value)
+        {
+            if (wrapper == null || wrapper.Value == null)
+            {
+                value = default;
+                return false;
+            }
+
+            value = wrapper.Value;
+            return true;
+        }
     }
 
     #endregion

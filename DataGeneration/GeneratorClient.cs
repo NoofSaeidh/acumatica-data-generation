@@ -113,7 +113,7 @@ namespace DataGeneration
                 "Start generation all settings for batch, Settings count = {count}, Id = {id}",
                 "Generation all settings for batch completed, Settings count = {count}, Id = {id}",
                 Params.ToArray<object>(batch.AvailableCount, batchSettings.Id, batchSettings),
-                callback: time => LogHelper.ResultsLogger.Info("Batch, Time: {time} ({time-sec} sec)", time, time.Seconds)))
+                callback: time => LogHelper.ResultsLogger.Info("Batch, Time: {time} ({time-sec} sec)", time, time.TotalSeconds)))
             {
                 foreach (var settings in batch)
                 {

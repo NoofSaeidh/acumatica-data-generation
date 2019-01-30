@@ -15,6 +15,10 @@ namespace DataGeneration.Entities.Opportunities
 {
     public class OpportunityGenerationRunner : EntitiesSearchGenerationRunner<Opportunity, OpportunityGenerationSettings>
     {
+        public const string BusinessAccountCacheName = nameof(OpportunityGenerationRunner) + "." + nameof(GetBusinessAccounts);
+        public const string InventoriesCacheName = nameof(OpportunityGenerationRunner) + "." + nameof(GetInventoryIds);
+
+
         public OpportunityGenerationRunner(ApiConnectionConfig apiConnectionConfig, OpportunityGenerationSettings generationSettings)
             : base(apiConnectionConfig, generationSettings)
         {
@@ -27,11 +31,11 @@ namespace DataGeneration.Entities.Opportunities
             await base.RunBeforeGeneration(cancellationToken);
 
             var randSet = GenerationSettings.RandomizerSettings;
-            Task<IDictionary<OpportunityAccountType, (string, int[])[]>> baccountsTasks;
+            Task<IDictionary<OpportunityAccountType, BusinessAccountWrapper[]>> baccountsTasks;
             if (randSet.FetchBusinessAccounts)
                 baccountsTasks = GetBusinessAccounts(cancellationToken);
             else
-                baccountsTasks = VoidTask.FromResult<IDictionary<OpportunityAccountType, (string, int[])[]>>(null);
+                baccountsTasks = VoidTask.FromResult<IDictionary<OpportunityAccountType, BusinessAccountWrapper[]>>(null);
 
             Task<IList<string>> inventoryIdsTask;
             if (randSet.FetchInventoryIds)
@@ -43,52 +47,54 @@ namespace DataGeneration.Entities.Opportunities
             randSet.InventoryIds = await inventoryIdsTask;
         }
 
-        private async Task<IDictionary<OpportunityAccountType, (string, int[])[]>> GetBusinessAccounts(CancellationToken ct)
+        private async Task<IDictionary<OpportunityAccountType, BusinessAccountWrapper[]>> GetBusinessAccounts(CancellationToken ct)
         {
-            var accounts = await CrossEntityGenerationHelper
-                .GetBusinessAccountsWithContacts(ApiConnectionConfig, ct);
-            return accounts
-                .GroupBy(a => a.Type.Value)
-                .Select(g =>
-                {
-                    (string, int[])[] accs;
-                    OpportunityAccountType type;
-                    switch (g.Key)
+            return await JsonFileCacheManager.Instance
+                .ReadFromCacheOrSaveAsync<IDictionary<OpportunityAccountType, BusinessAccountWrapper[]>>(
+                    BusinessAccountCacheName,
+                    async () =>
                     {
-                        case "Customer":
-                        {
-                            type = OpportunityAccountType.WithCustomerAccount;
-                            accs = g.Select(g_ =>
-                                                (id: g_.BusinessAccountID.Value,
-                                                 contacts: g_.Contacts?.Select(c => c.ContactID.Value.Value).ToArray()))
-                                    .Where(i => i.contacts != null && i.contacts.Length > 0)
-                                    .ToArray();
+                        var accounts = await CrossEntityGenerationHelper
+                            .GetBusinessAccountsWithContacts(ApiConnectionConfig, ct);
+                        return accounts
+                            .GroupBy(a => a.Type)
+                            .Select(g =>
+                            {
+                                BusinessAccountWrapper[] accs;
+                                OpportunityAccountType type;
+                                switch (g.Key)
+                                {
+                                    case "Customer":
+                                    {
+                                        type = OpportunityAccountType.WithCustomerAccount;
+                                        accs = g.Where(a => !a.Contacts.IsNullOrEmpty())
+                                                .ToArray();
+                                        break;
+                                    }
+                                    case "Prospect":
+                                    {
+                                        type = OpportunityAccountType.WithProspectAccount;
+                                        accs = g.ToArray();
 
-                            break;
-                        }
-                        case "Prospect":
-                        {
-                            type = OpportunityAccountType.WithProspectAccount;
-                            accs = g.Select(g_ => (g_.BusinessAccountID.Value, (int[])null)).ToArray();
+                                        break;
+                                    }
+                                    default:
+                                    {
+                                        type = OpportunityAccountType.WithoutAccount;
+                                        accs = null;
 
-                            break;
-                        }
-                        default:
-                        {
-                            type = OpportunityAccountType.WithoutAccount;
-                            accs = null;
+                                        break;
+                                    }
+                                }
 
-                            break;
-                        }
-                    }
-
-                    return (type, accs);
-                })
-                .Where(t => t.type != OpportunityAccountType.WithoutAccount)
-                .ToDictionary(
-                    t => t.type,
-                    t => t.accs
-                );
+                                return (type, accs);
+                            })
+                            .Where(t => t.type != OpportunityAccountType.WithoutAccount)
+                            .ToDictionary(
+                                t => t.type,
+                                t => t.accs
+                            );
+                    });
         }
 
         private async Task<IList<string>> GetInventoryIds(CancellationToken ct)

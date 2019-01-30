@@ -320,7 +320,7 @@ namespace DataGeneration.Core
                     action,
                     GenerationSettings.Count,
                     time,
-                    time.Seconds,
+                    time.TotalSeconds,
                     GenerationSettings.Count / time.TotalSeconds
                 );
         }
