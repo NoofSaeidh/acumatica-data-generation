@@ -165,7 +165,7 @@ where   c.ContactType = 'PN'
                         .Where(c => !c.Email.IsNullOrEmpty())
                         .ToArray()
                 })
-                .Where(i => i.Type != null && !i.AccountId.Contains('+')) // exclude some generated accounts
+                .Where(i => i.Type != null && !i.AccountId.ContainsAny("+", "-", ","))// exclude some generated accounts
                 .ToArray();
 
             return result;
