@@ -46,10 +46,6 @@ namespace System.Collections.Generic
 
         public static bool ContainsOnly<T>(this IEnumerable<T> enumerable, T element)
         {
-            if(enumerable is ICollection<T> collection)
-            {
-                return collection.Count == 1 && collection.Contains(element);
-            }
             return enumerable.Count() == 1 && enumerable.Contains(element);
         }
 
@@ -61,6 +57,17 @@ namespace System.Collections.Generic
                     return false;
             }
             return true;
+        }
+
+
+        public static bool ContainsAny<T>(this IEnumerable<T> enumerable, params T[] args)
+        {
+            return args.Any(a => enumerable.Contains(a));
+        }
+
+        public static bool ContainsAll<T>(this IEnumerable<T> enumerable, params T[] args)
+        {
+            return args.All(a => enumerable.Contains(a));
         }
 
         public static T[] AsArray<T>(this T value) => new T[] { value };

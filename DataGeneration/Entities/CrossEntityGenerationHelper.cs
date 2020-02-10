@@ -9,6 +9,9 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mail;
+using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -71,7 +74,7 @@ where   c.ContactType = 'PN'
                                  + BusinessAccountsWithContactsCacheName
                                  + ".prepared"
                                  + JsonFileCacheManager.Instance.FileExtension;
-            if(!System.IO.File.Exists(prefetchedFile))
+            if (!System.IO.File.Exists(prefetchedFile))
                 throw new NotSupportedException("Cannot execute optimized export for Business Accounts to get Contacts and Main Contact," +
                                                 "you have to write custom sql script and put cache by yourself.");
 
@@ -143,14 +146,14 @@ where   c.ContactType = 'PN'
             var text = System.IO.File.ReadAllText(fileInput);
             var origin = JsonConvert.DeserializeAnonymousType(text,
                 new
-                    {
-                        BusinessAccountOriginID = "",
-                        BusinessAccountID = "",
-                        Type = "",
-                        ContactID = "",
-                        ContactEmail = "",
-                        BusinessAccountEmail = ""
-                    }
+                {
+                    BusinessAccountOriginID = "",
+                    BusinessAccountID = "",
+                    Type = "",
+                    ContactID = "",
+                    ContactEmail = "",
+                    BusinessAccountEmail = ""
+                }
                     .AsEnumerable());
 
             var result = origin
@@ -162,13 +165,21 @@ where   c.ContactType = 'PN'
                     Type = ParseType(i.Key.Type),
                     Contacts = i
                         .Select(ii => new ContactWrapper { ContactId = int.Parse(ii.ContactID), Email = ii.ContactEmail })
-                        .Where(c => !c.Email.IsNullOrEmpty())
+                        .Where(c => EmailIsValid(c.Email))
                         .ToArray()
                 })
-                .Where(i => i.Type != null && !i.AccountId.ContainsAny("+", "-", ","))// exclude some generated accounts
+                .Where(i => i.Type != null
+                            && !i.AccountId.ContainsAny("+", "-", ",")// exclude some generated accounts
+                            && EmailIsValid(i.Email))
                 .ToArray();
 
             return result;
+        }
+
+        internal static bool EmailIsValid(string email)
+        {
+            return email != null
+                   && EmailParser.TryParse(email, out _);
         }
     }
 
@@ -178,5 +189,260 @@ where   c.ContactType = 'PN'
         Include,
         IncludeInner,
     }
+    public static class EmailParser
+    {
+        //human readable format description: http://emailregex.com/email-validation-summary/
+        public static List<MailAddress> ParseAddresses(string addresses)
+        {
+            var input = (addresses ?? String.Empty).Replace("\u200B", " ").TrimEnd();
+            var result = new List<MailAddress>();
+            if (String.IsNullOrEmpty(input))
+                return result;
+
+            input = input.TrimEnd(';', ',');
+
+            MailAddress address;
+            int index = 0;
+            for (int safeguard = 0; safeguard < 1000; safeguard++)
+            {
+                address = ParseAddress(input, ref index);
+                result.Add(address);
+                SkipWhiteSpace(input, ref index);
+                if (index < input.Length && (input[index] == ',' || input[index] == ';'))
+                {
+                    index++;
+                    continue;
+                }
+                SkipWhiteSpace(input, ref index);
+                if (index < input.Length) throw new ArgumentException();
+                break;
+            }
+            return result;
+        }
+        public static bool TryParse(string email, out MailAddress address)
+        {
+            address = null;
+            try
+            {
+                var parseResult = ParseAddresses(email);
+
+                if (parseResult.Count > 0)
+                {
+                    address = parseResult.First();
+                    return true;
+                }
+                return false;
+            }
+            catch (ArgumentException)
+            {
+            }
+            return false;
+        }
+        static void SkipWhiteSpace(string input, ref int index)
+        {
+            while (index < input.Length && char.IsWhiteSpace(input[index])) index++;
+        }
+        static void SkipBackslash(string input, ref int index)
+        {
+            if (input.Length <= index + 2) throw new ArgumentException();
+            index += 2;
+        }
+        static void AssertInputLeft(string input, int index)
+        {
+            if (index >= input.Length) throw new ArgumentException();
+        }
+        static char FindChar(string input, ref int index, string findChars)
+        {
+            char c = '\0';
+            while (input.Length > index && !findChars.Contains(c = input[index])) index++;
+            AssertInputLeft(input, index);
+            return c;
+        }
+        static string ParseString(string input, ref int index)
+        {
+            int start = index;
+            index++;
+            while (input.Length > index)
+            {
+                char c = input[index];
+                if (c == '\\') SkipBackslash(input, ref index);
+                else if (c == '"') { index++; return input.Substring(start, index - start); }
+                else index++;
+            }
+            throw new ArgumentException();
+        }
+        static MailAddress ParseAddress(string input, ref int index)
+        {
+            char c = '\0';
+            var buf = new StringBuilder();
+            SkipWhiteSpace(input, ref index);
+            bool groupFound = false;
+            int start = index;
+            while (input.Length > index)
+            {
+                c = input[index];
+                //c = FindChar(input, ref index, "\"(:<@\\");
+                if (c == '"')
+                {
+                    buf.Append(ParseString(input, ref index));
+                }
+                else if (c == '(')
+                {
+                    SkipComment(input, ref index);
+                }
+                else if (c == ':' && !groupFound)//discard group
+                {
+                    groupFound = true;
+                    index++;
+                    buf.Clear();
+                }
+                else if (c == '<')
+                {
+                    var mail = ParseMail(input, ref index, true);
+                    SkipWhiteSpace(input, ref index);
+                    if (index >= input.Length || input[index] != '>') throw new ArgumentException(input.Substring(0, index));
+                    index++;
+                    var displayName = buf.ToString().Trim().Trim('"');
+                    if (displayName.Contains(',')) displayName = '"' + displayName + '"';
+                    return new MailAddress(mail, displayName);
+                }
+                else if (c == '@')
+                {
+                    index = start;
+                    var mail = ParseMail(input, ref index, false);
+                    SkipWhiteSpace(input, ref index);
+                    if (index < input.Length && input[index] == '<')
+                    {
+                        var displayName = '"' + mail + '"';
+                        mail = ParseMail(input, ref index, true);
+                        SkipWhiteSpace(input, ref index);
+                        if (index >= input.Length || input[index] != '>') throw new ArgumentException(input.Substring(0, index));
+                        index++;
+                        return new MailAddress(mail, displayName);
+                    }
+                    else
+                        return new MailAddress(mail);
+                }
+                else if (c == '\\')
+                {
+                    SkipBackslash(input, ref index);
+                }
+                else
+                {
+                    buf.Append(c);
+                    index++;
+                }
+            }
+            throw new ArgumentException("Invalid email", input);
+        }
+        static string ParseMail(string input, ref int index, bool bracket)
+        {
+            if (bracket) index++;
+            int start = index;
+            var buf = new StringBuilder();
+            while (index < input.Length)
+            {
+                char c = input[index];// FindChar(input, ref index, "(@");
+                if (c == '(')
+                {
+                    SkipComment(input, ref index);
+                }
+                else if (c == '@')
+                {
+                    //buf.Append(input.Substring(start, index - start));
+                    //int tmpIndex = index++;
+                    buf.Append('@');
+                    index++;
+                    buf.Append(ParseDomain(input, ref index));
+                    return buf.ToString();
+                }
+                else if (c == '\\')
+                {
+                    SkipBackslash(input, ref index);
+                }
+                else
+                {
+                    buf.Append(c);
+                    index++;
+                }
+            };
+            throw new ArgumentException(input.Substring(start));
+        }
+        static void SkipComment(string input, ref int index)
+        {
+            index++;
+            while (index < input.Length)
+            {
+                char c = input[index];
+                if (c == '\\')
+                {
+                    SkipBackslash(input, ref index);
+                }
+                else if (c == '(')
+                {
+                    SkipComment(input, ref index);
+                }
+                else if (c == ')')
+                {
+                    index++;
+                    return;
+                }
+                else index++;
+            }
+            throw new ArgumentException(input.Substring(0, index));
+        }
+        static bool LegitDomainChar(char c, bool bracketed)
+        {
+            return c == '-' || c == '.' || (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') || (bracketed && c == ' ');
+        }
+        static string ParseDomain(string input, ref int index)
+        {
+            //index++;
+            var buf = new StringBuilder();
+            AssertInputLeft(input, index);
+            bool bracket = false;
+            int start = index;
+            while (input.Length > index)
+            {
+                char c = input[index];
+                if (LegitDomainChar(c, bracket))
+                {
+                    buf.Append(c);
+                    index++;
+                }
+                else if (c == '(')
+                {
+                    SkipComment(input, ref index);
+                }
+                else if (c == '[' && !bracket)
+                {
+                    bracket = true;
+                    index++;
+                }
+                else if (c == ']' && bracket)
+                {
+                    bracket = false;
+                    index++;
+                }
+                else if (!bracket)
+                {
+                    return buf.ToString();
+                }
+                else
+                {
+                    throw new ArgumentException(input);
+                }
+            }
+            if (!bracket)
+            {
+                return buf.ToString();
+            }
+            else
+            {
+                throw new ArgumentException(input);
+            }
+        }
+    }
+
 }
 
