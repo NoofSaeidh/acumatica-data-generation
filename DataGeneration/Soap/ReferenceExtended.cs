@@ -16,6 +16,11 @@ namespace DataGeneration.Soap
 
     public static class SoapExtensions
     {
+        public static StringValue ToValue(this string value) => new StringValue(value);
+        public static IntValue ToValue(this int? value) => new IntValue(value);
+        public static DateTimeValue ToValue(this DateTime? value) => new DateTimeValue(value);
+        public static GuidValue ToValue(this Guid? value) => new GuidValue(value);
+
         public static StringSearch ToSearch(this StringValue value) => new StringSearch { Value = value?.Value };
         public static IntSearch ToSearch(this IntValue value) => new IntSearch { Value = value?.Value };
         public static GuidSearch ToSearch(this GuidValue value) => new GuidSearch { Value = value?.Value };

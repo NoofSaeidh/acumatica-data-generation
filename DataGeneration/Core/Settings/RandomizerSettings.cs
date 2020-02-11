@@ -1,4 +1,5 @@
 ﻿using Bogus;
+using DataGeneration.Core.Common;
 using DataGeneration.Core.DataGeneration;
 using DataGeneration.Core.Logging;
 using DataGeneration.Soap;
@@ -25,7 +26,7 @@ namespace DataGeneration.Core.Settings
             => GetRandomizer(randomizer?.Seed ?? throw new ArgumentNullException(nameof(randomizer)));
     }
 
-    public abstract class RandomizerSettings<T> : RandomizerSettingsBase, IRandomizerSettings<T> where T : class
+    public abstract class RandomizerSettings<T> : RandomizerSettingsBase, IRandomizerSettings<T>, IValidatable where T : class
     {
         protected static ILogger Logger { get; } = LogHelper.GetLogger(LogHelper.LoggerNames.GenerationRandomizer);
 

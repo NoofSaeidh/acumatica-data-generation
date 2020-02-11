@@ -54,8 +54,9 @@ namespace DataGeneration.GenerationInfo
         {
             foreach (var item in _items)
             {
-                var s = item.Copy();
-                JsonInjection.Inject(s, _injections);
+                var s = item.CanCopy ? item.Copy() : item;
+                if (_injections != null && item.CanInject)
+                    JsonInjection.Inject(s, _injections);
                 if (s is GenerationSettingsBase gs)
                     gs.Id = GetGenerationId();
                 yield return s;

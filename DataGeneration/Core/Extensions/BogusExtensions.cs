@@ -30,5 +30,17 @@ namespace Bogus
         }
 
         public static int Int(this Randomizer randomizer, (int, int) value) => randomizer.Int(value.Item1, value.Item2);
+
+        public static T WeightedRandom<T>(this Randomizer randomizer, params (T element, float weight)[] items)
+        {
+            var elements = new T[items.Length];
+            var weights = new float[items.Length];
+            for (int i = 0; i < items.Length; i++)
+            {
+                elements[i] = items[i].element;
+                weights[i] = items[i].weight;
+            }
+            return randomizer.WeightedRandom(elements, weights);
+        }
     }
 }

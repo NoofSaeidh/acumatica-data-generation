@@ -17,6 +17,9 @@ namespace DataGeneration.Core.Settings
 
         public virtual bool CollectGarbageBeforeGeneration { get; set; }
 
+        public virtual bool CanCopy => true;
+        public virtual bool CanInject => true;
+
         public abstract GenerationRunner GetGenerationRunner(ApiConnectionConfig apiConnectionConfig);
     }
 }

@@ -14,6 +14,9 @@ namespace DataGeneration.Core.Settings
 
         bool CollectGarbageBeforeGeneration { get; set; }
 
+        bool CanCopy { get; }
+        bool CanInject { get; }
+
         ExecutionTypeSettings ExecutionTypeSettings { get; set; }
 
         GenerationRunner GetGenerationRunner(ApiConnectionConfig apiConnectionConfig);
