@@ -43,6 +43,8 @@ namespace DataGeneration.Core
         public event EventHandler<RunBeforeGenerationStartedEventArgs> RunBeforeGenerationStarted;
         public event EventHandler<RunGenerationStartedEventArgs> RunGenerationStarted;
         public event EventHandler<RunGenerationCompletedEventArgs> RunGenerationCompleted;
+        public event EventHandler<RunAfterGenerationStartedEventArgs> RunAfterGenerationStarted;
+        public event EventHandler<GenerationCompletedEventArgs> GenerationCompleted;
         protected virtual void OnRunBeforeGenerationStarted(RunBeforeGenerationStartedEventArgs e)
         {
             try
@@ -74,6 +76,28 @@ namespace DataGeneration.Core
             catch (Exception ex)
             {
                 Logger.Error(ex, $"{nameof(RunGenerationCompleted)} event failed.");
+            }
+        }
+        protected virtual void OnRunAfterGenerationStarted(RunAfterGenerationStartedEventArgs e)
+        {
+            try
+            {
+                RunAfterGenerationStarted?.Invoke(this, e);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex, $"{nameof(RunAfterGenerationStarted)} event failed.");
+            }
+        }
+        protected virtual void OnGenerationCompleted(GenerationCompletedEventArgs e)
+        {
+            try
+            {
+                GenerationCompleted?.Invoke(this, e);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex, $"{nameof(GenerationCompleted)} event failed.");
             }
         }
         #endregion
@@ -162,6 +186,16 @@ namespace DataGeneration.Core
                     Logger.Info("Generation completed. " + LogArgs.Type_Id,
                         GenerationSettings.GenerationType, GenerationSettings.Id);
                 }
+
+                OnRunAfterGenerationStarted(new RunAfterGenerationStartedEventArgs(GenerationSettings));
+
+                // log only if it takes some time
+                using (StopwatchLoggerFactory.ForceLogDisposeTimeCheck(Logger, TimeSpan.FromSeconds(10),
+                    "After Generation completed. " + LogArgs.Type_Id,
+                    GenerationSettings.GenerationType, GenerationSettings.Id))
+                {
+                    await RunAfterGeneration(cancellationToken);
+                }
             }
             catch (OperationCanceledException oce)
             {
@@ -177,11 +211,16 @@ namespace DataGeneration.Core
             }
             finally
             {
-                OnRunGenerationCompleted(new RunGenerationCompletedEventArgs(GenerationSettings));
+                OnGenerationCompleted(new GenerationCompletedEventArgs(GenerationSettings));
             }
         }
 
         protected virtual Task RunBeforeGeneration(CancellationToken cancellationToken = default)
+        {
+            return Task.CompletedTask;
+        }
+
+        protected virtual Task RunAfterGeneration(CancellationToken cancellationToken = default)
         {
             return Task.CompletedTask;
         }
@@ -248,7 +287,7 @@ namespace DataGeneration.Core
                                 ? "Generation {$entity} failed"
                                 : "Unexpected exception has occurred while processing {entity}";
 
-                            Logger.LogWithEventParams(
+                            Logger.LogWithEventParams( 
                                 LogLevel.Error,
                                 message,
                                 args: Params.ToArray(typeof(TEntity)),

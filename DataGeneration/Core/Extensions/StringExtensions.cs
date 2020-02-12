@@ -25,5 +25,10 @@ namespace System
         {
             return args.All(a => value.Contains(a));
         }
+
+        public static bool IsIn(this string value, params string[] args)
+        {
+            return args.Contains(value);
+        }
     }
 }

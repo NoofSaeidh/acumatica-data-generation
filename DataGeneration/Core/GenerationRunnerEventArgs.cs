@@ -35,4 +35,18 @@ namespace DataGeneration.Core
         {
         }
     }
+
+    public class RunAfterGenerationStartedEventArgs : GenerationRunnerEventArgs
+    {
+        public RunAfterGenerationStartedEventArgs(IGenerationSettings generationSettings, string message = null) : base(generationSettings, message)
+        {
+        }
+    }
+
+    public class GenerationCompletedEventArgs : GenerationRunnerEventArgs
+    {
+        public GenerationCompletedEventArgs(IGenerationSettings generationSettings, string message = null) : base(generationSettings, message)
+        {
+        }
+    }
 }
