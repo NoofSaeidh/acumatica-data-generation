@@ -16,7 +16,9 @@ namespace DataGeneration.Core
     {
         public static DelegateGenerationSettings<TEntity> Create<TEntity>(
             Func<Faker<TEntity>, Faker<TEntity>> randomizeDelegate,
-            Func<IApiClient, TEntity, CancellationToken, Task> generateDelegate)
+            Func<IApiClient, TEntity, CancellationToken, Task> generateDelegate,
+            Func<IApiClient, CancellationToken, Task> beforeGenerateDelegate = null,
+            Func<IApiClient, CancellationToken, Task> afterGenerateDelegate = null)
             where TEntity : class
         {
             if (randomizeDelegate is null)
@@ -31,13 +33,17 @@ namespace DataGeneration.Core
                     GetFakerDelegate = randomizeDelegate,
                 },
                 GenerateSingleDelegate = generateDelegate,
+                RunBeforeGenerationDelegate = beforeGenerateDelegate,
+                RunAfterGenerationDelegate = afterGenerateDelegate,
             };
         }
 
         public static DelegateGenerationSettings<TEntity> Create<TEntity>(
             TEntity dummy,
             Func<Faker<TEntity>, Faker<TEntity>> randomizeDelegate,
-            Func<IApiClient, TEntity, CancellationToken, Task> generateDelegate)
+            Func<IApiClient, TEntity, CancellationToken, Task> generateDelegate,
+            Func<IApiClient, CancellationToken, Task> beforeGenerateDelegate = null,
+            Func<IApiClient, CancellationToken, Task> afterGenerateDelegate = null)
             where TEntity : class
         {
             if (randomizeDelegate is null)
@@ -52,6 +58,8 @@ namespace DataGeneration.Core
                     GetFakerDelegate = randomizeDelegate,
                 },
                 GenerateSingleDelegate = generateDelegate,
+                RunBeforeGenerationDelegate = beforeGenerateDelegate,
+                RunAfterGenerationDelegate = afterGenerateDelegate,
             };
         }
     }
@@ -77,6 +85,10 @@ namespace DataGeneration.Core
         [Required]
         public Func<IApiClient, TEntity, CancellationToken, Task> GenerateSingleDelegate { get; set; }
 
+        public Func<IApiClient, CancellationToken, Task> RunBeforeGenerationDelegate { get; set; }
+        public Func<IApiClient, CancellationToken, Task> RunAfterGenerationDelegate { get; set; }
+
+
         public SearchPattern SearchPattern { get; set; }
 
 
@@ -98,6 +110,30 @@ namespace DataGeneration.Core
         protected override Task GenerateSingle(IApiClient client, TEntity entity, CancellationToken ct)
         {
             return GenerationSettings.GenerateSingleDelegate(client, entity, ct);
+        }
+
+        protected override async Task RunBeforeGeneration(CancellationToken cancellationToken = default)
+        {
+            var del = GenerationSettings.RunBeforeGenerationDelegate;
+            if(del is null)
+                return;
+
+            using (var client = await GetLoginLogoutClient(cancellationToken))
+            {
+                await del(client, cancellationToken);
+            }
+        }
+
+        protected override async Task RunAfterGeneration(CancellationToken cancellationToken = default)
+        {
+            var del = GenerationSettings.RunAfterGenerationDelegate;
+            if (del is null)
+                return;
+
+            using (var client = await GetLoginLogoutClient(cancellationToken))
+            {
+                await del(client, cancellationToken);
+            }
         }
 
         protected override void UtilizeFoundEntities(IList<Soap.Entity> entities)
