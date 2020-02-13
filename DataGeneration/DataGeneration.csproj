@@ -215,6 +215,7 @@
     <Compile Include="GeneratorConfig.cs" />
     <Compile Include="GeneratorClient.cs" />
     <Compile Include="Core\Api\EndpointSettings.cs" />
+    <Compile Include="Scripts\GenerateSalesDemoScript.cs" />
     <Compile Include="Soap\Maint\MaintenanceClient.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -297,7 +298,7 @@
     <None Include="Connected Services\Soap.Maint\DataGeneration.Soap.Maint.ValidateEndpointResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
-    <None Include="Connected Services\Soap\18.wsdl" />
+    <None Include="Connected Services\Soap\181.wsdl" />
     <None Include="Connected Services\Soap\DataGeneration.Soap.Entity.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>

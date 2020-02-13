@@ -2,8 +2,8 @@
   <ExtendsEndpoint name="Default" version="18.200.001" />
   <TopLevelEntity name="Lead" screen="CR301000">
     <Fields>
-      <Field name="NoteID" type="GuidValue" />
       <Field name="CreatedDate" type="DateTimeValue" />
+      <Field name="NoteID" type="GuidValue" />
     </Fields>
     <Mappings>
       <Mapping field="NoteID">
@@ -16,8 +16,8 @@
   </TopLevelEntity>
   <TopLevelEntity name="Opportunity" screen="CR304000">
     <Fields>
-      <Field name="NoteID" type="GuidValue" />
       <Field name="CreatedDate" type="DateTimeValue" />
+      <Field name="NoteID" type="GuidValue" />
     </Fields>
     <Mappings>
       <Mapping field="NoteID">
@@ -30,8 +30,8 @@
   </TopLevelEntity>
   <TopLevelEntity name="Case" screen="CR306000">
     <Fields>
-      <Field name="NoteID" type="GuidValue" />
       <Field name="CreatedDate" type="DateTimeValue" />
+      <Field name="NoteID" type="GuidValue" />
     </Fields>
     <Mappings>
       <Mapping field="NoteID">
@@ -55,4 +55,29 @@
       </Mapping>
     </Mappings>
   </TopLevelEntity>
+  <TopLevelEntity name="Campaign" screen="CR202000">
+    <Fields>
+      <Field name="CampaignID" type="StringValue" />
+      <Field name="Members" type="CampaignMember[]" />
+    </Fields>
+    <Mappings>
+      <Mapping field="CampaignID">
+        <To object="Campaign" field="CampaignID" />
+      </Mapping>
+      <Mapping field="Members">
+        <Mapping field="ContactID">
+          <To object="Items" field="ContactID" />
+        </Mapping>
+        <Mapping field="Type">
+          <To object="Items" field="ContactType" />
+        </Mapping>
+      </Mapping>
+    </Mappings>
+  </TopLevelEntity>
+  <Detail name="CampaignMember">
+    <Fields>
+      <Field name="ContactID" type="IntValue" />
+      <Field name="Type" type="StringValue" />
+    </Fields>
+  </Detail>
 </Endpoint>
