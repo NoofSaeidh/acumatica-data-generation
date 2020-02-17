@@ -257,7 +257,7 @@ namespace DataGeneration.Soap
         public void Invoke<TEntity, TAction>(TEntity entity, TAction action) where TEntity : Entity where TAction : Action
         {
             TryCatch(
-                () => _client.Invoke(entity, action),
+                () => AwaitInvokationResult(_client.Invoke(entity, action)).GetAwaiter().GetResult(),
                 InvokeArgs<TEntity, TAction>()
             );
         }
@@ -265,7 +265,7 @@ namespace DataGeneration.Soap
         public async VoidTask InvokeAsync<TEntity, TAction>(TEntity entity, TAction action) where TEntity : Entity where TAction : Action
         {
             await TryCatchAsync(
-                () => _client.InvokeAsync(entity, action),
+                async () => await AwaitInvokationResult(await _client.InvokeAsync(entity, action)),
                 InvokeArgs<TEntity, TAction>()
             );
         }
@@ -273,10 +273,37 @@ namespace DataGeneration.Soap
         public async VoidTask InvokeAsync<TEntity, TAction>(TEntity entity, TAction action, CancellationToken cancellationToken) where TEntity : Entity where TAction : Action
         {
             await TryCatchAsync(
-                () => _client.InvokeAsync(entity, action),
+                async () => await AwaitInvokationResult(await _client.InvokeAsync(entity, action), cancellationToken),
                 cancellationToken,
                 InvokeArgs<TEntity, TAction>()
             );
+        }
+
+        private async VoidTask AwaitInvokationResult(InvokeResult invokeResult, CancellationToken cancellationToken = default)
+        {
+            while(true)
+            {
+                var status = await _client.GetProcessStatusAsync(invokeResult);
+                switch (status.Status)
+                {
+                    case ProcessStatus.NotExists:
+                    case ProcessStatus.Completed:
+                        return;
+                    case ProcessStatus.InProcess:
+                        // todo: add global timeout
+                        cancellationToken.ThrowIfCancellationRequested();
+                        await VoidTask.Delay(1000);
+                        continue;
+
+                    case ProcessStatus.Aborted:
+                        throw new SkipHandleException(
+                            new ApiInvokationException($"Invokation was aborted. Message: {status.Message}"));
+                    default:
+                        throw new SkipHandleException(
+                            new ApiInvokationException($"Invokation returned unexpected status code: {status.Status}, Message: {status.Message}"));
+                }
+            }
+
         }
 
         public IList<File> GetFiles<T>(T entity) where T : Entity
@@ -352,6 +379,10 @@ namespace DataGeneration.Soap
             {
                 throw logArgs.LogFailedAndGetException(te);
             }
+            catch (SkipHandleException she)
+            {
+                throw logArgs.LogFailedAndGetException(she.InnerException, attempt);
+            }
             catch (Exception e)
             {
                 if (attempt > RetryCount)
@@ -378,7 +409,11 @@ namespace DataGeneration.Soap
             }
             catch (TimeoutException te)
             {
-                throw logArgs.LogFailedAndGetException(te);
+                throw logArgs.LogFailedAndGetException(te, attempt);
+            }
+            catch (SkipHandleException she)
+            {
+                throw logArgs.LogFailedAndGetException(she.InnerException, attempt);
             }
             catch (Exception e)
             {
@@ -396,7 +431,7 @@ namespace DataGeneration.Soap
                 logArgs.LogStart();
                 using (logArgs.LogCompleted())
                 {
-                    await task();
+                     await task();
                 }
             }
             catch (OperationCanceledException oce)
@@ -406,7 +441,11 @@ namespace DataGeneration.Soap
             }
             catch (TimeoutException te)
             {
-                throw logArgs.LogFailedAndGetException(te);
+                throw logArgs.LogFailedAndGetException(te, attempt);
+            }
+            catch (SkipHandleException she)
+            {
+                throw logArgs.LogFailedAndGetException(she.InnerException, attempt);
             }
             catch (Exception e)
             {
@@ -434,7 +473,11 @@ namespace DataGeneration.Soap
             }
             catch (TimeoutException te)
             {
-                throw logArgs.LogFailedAndGetException(te);
+                throw logArgs.LogFailedAndGetException(te, attempt);
+            }
+            catch (SkipHandleException she)
+            {
+                throw logArgs.LogFailedAndGetException(she.InnerException, attempt);
             }
             catch (Exception e)
             {
@@ -597,6 +640,18 @@ namespace DataGeneration.Soap
                     _logger.Error(e, "Could not logout while disposing");
                 }
                 base.Dispose();
+            }
+        }
+
+        private class SkipHandleException : Exception
+        {
+            public SkipHandleException(Exception e) : base(null, e) { }
+        }
+
+        private class ApiInvokationException : ApiException
+        {
+            public ApiInvokationException(string message) : base(message)
+            {
             }
         }
 

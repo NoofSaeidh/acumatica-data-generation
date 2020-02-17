@@ -2823,6 +2823,8 @@ namespace DataGeneration.Soap {
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(ConvertLeadToBAccount))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(CloseLeadAsDuplicate))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(CheckLeadForDuplicates))]
+    [System.Xml.Serialization.XmlIncludeAttribute(typeof(ConvertToOpportunity))]
+    [System.Xml.Serialization.XmlIncludeAttribute(typeof(Disqualify))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(ReleaseVendorPriceWorksheet))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(LinkEntityToActivity))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(CompleteActivity))]
@@ -4661,6 +4663,80 @@ namespace DataGeneration.Soap {
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.acumatica.com/entity/3/datagen/18.200.001/")]
     public partial class CheckLeadForDuplicates : Action {
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3752.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.acumatica.com/entity/3/datagen/18.200.001/")]
+    public partial class ConvertToOpportunity : Action {
+        
+        private StringValue subjectField;
+        
+        private StringValue classField;
+        
+        private DateTimeValue closeDateField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=0)]
+        public StringValue Subject {
+            get {
+                return this.subjectField;
+            }
+            set {
+                this.subjectField = value;
+                this.RaisePropertyChanged("Subject");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=1)]
+        public StringValue Class {
+            get {
+                return this.classField;
+            }
+            set {
+                this.classField = value;
+                this.RaisePropertyChanged("Class");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=2)]
+        public DateTimeValue CloseDate {
+            get {
+                return this.closeDateField;
+            }
+            set {
+                this.closeDateField = value;
+                this.RaisePropertyChanged("CloseDate");
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3752.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.acumatica.com/entity/3/datagen/18.200.001/")]
+    public partial class Disqualify : Action {
+        
+        private StringValue reasonField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=0)]
+        public StringValue Reason {
+            get {
+                return this.reasonField;
+            }
+            set {
+                this.reasonField = value;
+                this.RaisePropertyChanged("Reason");
+            }
+        }
     }
     
     /// <remarks/>
@@ -25983,12 +26059,26 @@ namespace DataGeneration.Soap {
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.acumatica.com/entity/3/datagen/18.200.001/")]
     public partial class CampaignMember : Entity {
         
+        private StringValue campaignIDField;
+        
         private IntValue contactIDField;
         
         private StringValue typeField;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=0)]
+        public StringValue CampaignID {
+            get {
+                return this.campaignIDField;
+            }
+            set {
+                this.campaignIDField = value;
+                this.RaisePropertyChanged("CampaignID");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=1)]
         public IntValue ContactID {
             get {
                 return this.contactIDField;
@@ -26000,7 +26090,7 @@ namespace DataGeneration.Soap {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=1)]
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=2)]
         public StringValue Type {
             get {
                 return this.typeField;

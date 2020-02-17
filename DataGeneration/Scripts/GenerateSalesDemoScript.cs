@@ -23,6 +23,16 @@ namespace DataGeneration.Scripts
             return GetConfig(GetSettings_Stage1());
         }
 
+        public GeneratorConfig GetConfig_Stage2()
+        {
+            return GetConfig(GetSettings_Stage2());
+        }
+
+        public GeneratorConfig GetConfig_Stage3()
+        {
+            return GetConfig(GetSettings_Stage3());
+        }
+
         protected GeneratorConfig GetConfig(IGenerationSettings settings)
         {
             return new GeneratorConfig
@@ -44,11 +54,11 @@ namespace DataGeneration.Scripts
             };
         }
 
-        public IGenerationSettings GetSettings_Stage1()
+        protected IGenerationSettings GetSettings_Stage1()
         {
             var campaigns = new Dictionary<string, List<int>>();
             return DelegateGenerationSettings.Create<Soap.Lead>(
-                faker =>
+                (@this, faker) =>
                 {
                     return faker
                         .RuleFor(e => e.FirstName, (f, e) => f.Name.FirstName().ToValue())
@@ -66,34 +76,34 @@ namespace DataGeneration.Scripts
                             e.Source?.Value == "Campaign"
                                 ? f.Random.WeightedRandom(("GADS2020", 0.8f), ("HAB2020", 0.2f)).ToValue()
                                 : null)
-                        .RuleFor(e => e.LeadClass, "LEADCON".ToValue());
+                        .RuleFor(e => e.LeadClass, "LEADCON".ToValue())
+                        .RuleFor(e => e.Status, "Open".ToValue());
                 },
-                async (client, lead, ct) =>
+                async (@this, client, lead, ct) =>
                 {
                     var resultLead = await client.PutAsync(lead, ct);
-                    if(resultLead.SourceCampaign?.Value is string campaign)
+                    if (resultLead.SourceCampaign?.Value is string campaign)
                     {
                         if (!campaigns.TryGetValue(campaign, out var leads))
                             campaigns[campaign] = leads = new List<int>();
                         leads.Add(resultLead.LeadID.Value.Value);
                     }
                 },
-                afterGenerateDelegate: async (client, ct) =>
+                afterGenerateDelegate: async (@this, client, ct) =>
                 {
                     foreach (var (campaignId, leads) in campaigns)
                     {
                         var campaign = await client.GetAsync(
                             new Soap.Campaign
                             {
-                                CampaignID = campaignId
+                                CampaignID = campaignId,
+                                Members = new Soap.CampaignMember[0]
                             });
                         campaign.Members = leads
                             .Select(l =>
                                 new Soap.CampaignMember
                                 {
-                                    Type = "Lead",
                                     ContactID = l
-
                                 })
                             .ToArray();
                         await client.PutAsync(campaign);
@@ -110,7 +120,7 @@ namespace DataGeneration.Scripts
             {
                 var company = l.CompanyName.Value;
                 var match = Regex.Match(company,
-                    @"^(?:(?<word1>[\w']+)\s?,?(?<hypen>-?)(?<and1>and)?\s+(?<word2>[\w']+)\s?(?<and2>and)?\s?(?<word3>[\w']+)?)$", 
+                    @"^(?:(?<word1>[\w']+)\s?,?(?<hypen>-?)(?<and1>and)?\s+(?<word2>[\w']+)\s?(?<and2>and)?\s?(?<word3>[\w']+)?)$",
                     RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
                 string domain = null;
@@ -139,7 +149,7 @@ namespace DataGeneration.Scripts
                     {
                         domain = match.Groups["word1"].Value;
                     }
-                    else if(word2.Value.ToLower().IsIn("llc", "inc"))
+                    else if (word2.Value.ToLower().IsIn("llc", "inc"))
                     {
                         domain = word1.Value;
                     }
@@ -168,7 +178,7 @@ namespace DataGeneration.Scripts
                                 break;
                         }
                     }
-                    else if(and1.Success)
+                    else if (and1.Success)
                     {
                         int type = f.PickRandom(0, 1, 2);
                         switch (type)
@@ -184,9 +194,9 @@ namespace DataGeneration.Scripts
                                 break;
                         }
                     }
-                    else if(hypen.Success)
+                    else if (hypen.Success)
                     {
-                        if(f.PickRandom(true, false))
+                        if (f.PickRandom(true, false))
                         {
                             domain = word1.Value + word2.Value;
                         }
@@ -196,7 +206,7 @@ namespace DataGeneration.Scripts
                         }
                     }
                 }
-                if(domain == null)
+                if (domain == null)
                 {
                     System.Diagnostics.Debugger.Break();
                     domain = "domain";
@@ -204,11 +214,210 @@ namespace DataGeneration.Scripts
 
 
 
-                var result =  $"{l.FirstName}.{l.LastName}@{domain.Replace("'", "")}.example.com".ToLower().ToValue();
+                var result = $"{l.FirstName}.{l.LastName}@{domain.Replace("'", "")}.example.com".ToLower().ToValue();
                 //System.Diagnostics.Debugger.Log(0, "info", "email = " + result + "\r\n");
                 return result;
             }
 
+        }
+
+        protected IGenerationSettings GetSettings_Stage2()
+        {
+            IList<Soap.Lead> leads = null;
+            return DelegateGenerationSettings.Create(
+                new
+                {
+                    Lead = default(Soap.Lead),
+                    Activity = default(Soap.Activity),
+                },
+                (@this, faker) =>
+                {
+                    int i = 0;
+                    return faker.CustomInstantiator(f =>
+                    {
+                        return i < leads.Count
+                            ? new
+                            {
+                                Lead = leads[i++],
+                                Activity = new Soap.Activity
+                                {
+                                    Type = "P",
+                                    Summary = "Campaign response",
+                                },
+                            }
+                            : null;
+                    });
+                },
+                async (@this, client, entity, ct) =>
+                {
+                    var activity = await client.PutAsync(entity.Activity, ct);
+                    await client.InvokeAsync(
+                        activity,
+                        new Soap.LinkEntityToActivity
+                        {
+                            Type = "PX.Objects.CR.CRLead",
+                            RelatedEntity = entity.Lead.LeadDisplayName
+                        }, ct);
+                    entity.Lead.Status = "Sales-Ready";
+                    await client.PutAsync(entity.Lead);
+                },
+                beforeGenerateDelegate: async (@this, client, ct) =>
+                {
+                    var rand = @this.GenerationSettings.RandomizerSettings.GetRandomizer();
+                    var leadIds =
+                        (await client.GetAsync(
+                            new Soap.Campaign
+                            {
+                                CampaignID = new Soap.StringSearch("HAB2020"),
+                                Members = new[]
+                                {
+                                    new Soap.CampaignMember()
+                                }
+                            }, ct)
+                        ).Members
+                        .Union(
+                            (await client.GetAsync(
+                                new Soap.Campaign
+                                {
+                                    CampaignID = new Soap.StringSearch("GADS2020"),
+                                    Members = new[]
+                                    {
+                                        new Soap.CampaignMember()
+                                    }
+                                }, ct)
+                            ).Members)
+                        .Select(m => m.ContactID.Value.Value)
+                        .ToList();
+
+                    leads = (await client.GetListAsync(
+                                new Soap.Lead
+                                {
+                                    SourceCampaign = new Soap.StringSearch("HAB2020")
+                                }, ct)
+                         ).Union(
+                            (await client.GetListAsync(
+                                new Soap.Lead
+                                {
+                                    SourceCampaign = new Soap.StringSearch("GADS2020")
+                                }, ct)
+                            ))
+                        .Where(l => leadIds.Contains(l.LeadID.Value.Value))
+                        .Where(m => rand.WeightedRandom((true, 0.15f), (false, 0.85f)))
+                        .ToList();
+
+                    @this.ChangeGenerationCount(leads.Count, "To fit campaign members count");
+                }
+                //afterGenerateDelegate: async (@this, client, ct) =>
+                //{
+
+                //}
+                )
+                .ChangeSettings(s =>
+                {
+                    s.Count = 100;
+                    s.ExecutionTypeSettings = ExecutionTypeSettings.Sequent();
+                    //s.ExecutionTypeSettings = ExecutionTypeSettings.Parallel(4);
+                });
+        }
+
+        protected IGenerationSettings GetSettings_Stage3()
+        {
+            var now = DateTime.UtcNow;
+            var yesterday = now.AddDays(-1);
+            var now30 = now.AddDays(30);
+            var now90 = now.AddDays(90);
+            IList<Soap.Lead> leads = null;
+            return DelegateGenerationSettings.Create(
+                new
+                {
+                    Lead = default(Soap.Lead),
+                    Activity = default(Soap.Activity),
+                    Action = default(Soap.Action),
+                },
+                (@this, faker) =>
+                {
+                    int i = 0;
+                    return faker.CustomInstantiator(f =>
+                    {
+                        if (i < leads.Count)
+                        {
+                            var actionId = f.Random.WeightedRandom((0, 0.5f), (1, 0.05f), (2, 0.45f));
+                            Soap.Action action = actionId switch
+                            {
+                                0 => new Soap.Disqualify
+                                {
+                                    Reason = "No Interest"
+                                },
+                                1 => new Soap.Disqualify
+                                {
+                                    Reason = "Unable to Contact"
+                                },
+                                2 => new Soap.ConvertToOpportunity
+                                {
+                                    Class = "PRODUCT",
+                                    Subject = "Product Interest",
+                                    CloseDate = f.Date.Between(now30, now90),
+                                },
+                                _ => null,
+                            };
+                            return new
+                            {
+                                Lead = leads[i++],
+                                Activity = new Soap.Activity
+                                {
+                                    Type = "P",
+                                    Summary = "Qualification Call",
+                                },
+                                Action = action
+                            };
+                        }
+                        return null;
+                    });
+                },
+                async (@this, client, entity, ct) =>
+                {
+                    var activity = await client.PutAsync(entity.Activity, ct);
+                    await client.InvokeAsync(
+                        activity,
+                        new Soap.LinkEntityToActivity
+                        {
+                            Type = "PX.Objects.CR.CRLead",
+                            RelatedEntity = entity.Lead.LeadDisplayName.Value,
+                        }, ct);
+                    await client.InvokeAsync(entity.Lead, entity.Action, ct);
+                },
+                beforeGenerateDelegate: async (@this, client, ct) =>
+                {
+                    leads = await client.GetListAsync(
+                            new Soap.Lead
+                            {
+                                Workgroup = new Soap.StringSearch("Inside Sales - Qualify"),
+                                CreatedDate = new Soap.DateTimeSearch(yesterday, Soap.DateTimeCondition.IsGreaterThanOrEqualsTo)
+                            }, ct);
+
+                    @this.ChangeGenerationCount(leads.Count, "To fit campaign members count");
+                },
+                afterGenerateDelegate: async (@this, client, ct) =>
+                {
+                    var opps = await client.GetListAsync(
+                        new Soap.Opportunity
+                        {
+                            Subject = new Soap.StringSearch("Product Interest"),
+                            CreatedDate = new Soap.DateTimeSearch(yesterday, Soap.DateTimeCondition.IsGreaterThanOrEqualsTo)
+                        }, ct);
+                    foreach (var op in opps)
+                    {
+                        op.ManualAmount = true;
+                        op.Amount = 2000;
+                        await client.PutAsync(op);
+                    }
+                })
+                .ChangeSettings(s =>
+                {
+                    s.Count = 100;
+                    s.ExecutionTypeSettings = ExecutionTypeSettings.Sequent();
+                    //s.ExecutionTypeSettings = ExecutionTypeSettings.Parallel(4);
+                });
         }
     }
 }

@@ -13,6 +13,36 @@
         <To object="Lead" field="CreatedDateTime" />
       </Mapping>
     </Mappings>
+    <Actions>
+      <Action name="Disqualify" mappedTo="Disqualify">
+        <Fields>
+          <Field name="Reason" type="StringValue" />
+        </Fields>
+        <Mappings>
+          <Mapping field="Reason">
+            <To object="FilterPreview" field="Reason" />
+          </Mapping>
+        </Mappings>
+      </Action>
+      <Action name="ConvertToOpportunity" mappedTo="convertToOpportunityAll">
+        <Fields>
+          <Field name="Class" type="StringValue" />
+          <Field name="CloseDate" type="DateTimeValue" />
+          <Field name="Subject" type="StringValue" />
+        </Fields>
+        <Mappings>
+          <Mapping field="Subject">
+            <To object="OpportunityInfo" field="Subject" />
+          </Mapping>
+          <Mapping field="Class">
+            <To object="OpportunityInfo" field="OpportunityClass" />
+          </Mapping>
+          <Mapping field="CloseDate">
+            <To object="OpportunityInfo" field="CloseDate" />
+          </Mapping>
+        </Mappings>
+      </Action>
+    </Actions>
   </TopLevelEntity>
   <TopLevelEntity name="Opportunity" screen="CR304000">
     <Fields>
@@ -66,16 +96,20 @@
       </Mapping>
       <Mapping field="Members">
         <Mapping field="ContactID">
-          <To object="Items" field="ContactID" />
+          <To object="CampaignMembers" field="ContactID" />
         </Mapping>
         <Mapping field="Type">
-          <To object="Items" field="ContactType" />
+          <To object="CampaignMembers" field="Contact__ContactType" />
+        </Mapping>
+        <Mapping field="CampaignID">
+          <To object="CampaignMembers" field="CampaignID" />
         </Mapping>
       </Mapping>
     </Mappings>
   </TopLevelEntity>
   <Detail name="CampaignMember">
     <Fields>
+      <Field name="CampaignID" type="StringValue" />
       <Field name="ContactID" type="IntValue" />
       <Field name="Type" type="StringValue" />
     </Fields>
