@@ -215,7 +215,9 @@
     <Compile Include="GeneratorConfig.cs" />
     <Compile Include="GeneratorClient.cs" />
     <Compile Include="Core\Api\EndpointSettings.cs" />
-    <Compile Include="Scripts\GenerateSalesDemoScript.cs" />
+    <Compile Include="Scripts\GenerateSalesDemoScriptBase.cs" />
+    <Compile Include="Scripts\GenerateSalesDemoScript_Cases.cs" />
+    <Compile Include="Scripts\GenerateSalesDemoScript_Leads.cs" />
     <Compile Include="Soap\Maint\MaintenanceClient.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

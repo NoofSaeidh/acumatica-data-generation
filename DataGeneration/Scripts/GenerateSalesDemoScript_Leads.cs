@@ -16,7 +16,7 @@ using static DataGeneration.Soap.SoapExtensions;
 
 namespace DataGeneration.Scripts
 {
-    public class GenerateSalesDemoScript
+    public class GenerateSalesDemoScript_Leads : GenerateSalesDemoScriptBase
     {
         public GeneratorConfig GetConfig_Stage1()
         {
@@ -33,26 +33,6 @@ namespace DataGeneration.Scripts
             return GetConfig(GetSettings_Stage3());
         }
 
-        protected GeneratorConfig GetConfig(IGenerationSettings settings)
-        {
-            return new GeneratorConfig
-            {
-                ApiConnectionConfig = new ApiConnectionConfig
-                (
-                    new EndpointSettings("http://localhost:201", "datagen", "18.200.001"),
-                    new LoginInfo { Username = "admin", Password = "123" }
-                ),
-                ServicePointSettings = new ServicePointSettings
-                {
-                    DefaultConnectionLimit = 6,
-                },
-                NestedSettings = new BatchSettings
-                {
-                    StopProcessingAtException = true,
-                    GenerationSettings = new[] { settings },
-                },
-            };
-        }
 
         protected IGenerationSettings GetSettings_Stage1()
         {

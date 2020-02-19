@@ -138,6 +138,8 @@ namespace DataGeneration.Soap
         // todo: need to map
         StringValue IEmailEntity.Email { get; set; }
 
+        DateTimeValue ICreatedDateEntity.CreatedDate { get => DateReported; set => DateReported = value; }
+
         #region IComplexConstructedEntity
         QueryRequestor IComplexQueryEntity.QueryRequestor { get; } = new QueryRequestor(typeof(Case), Guid.Parse("D237AEE9-6032-4240-AA0B-A3DB0A790870"));
         void IComplexQueryEntity.AdjustComplexQuery(ComplexQuery query)
@@ -165,8 +167,8 @@ namespace DataGeneration.Soap
             if (NoteID is null)
                 NoteID = new GuidReturn();
 
-            if (CreatedDate is null)
-                CreatedDate = new DateTimeReturn();
+            if (DateReported is null)
+                DateReported = new DateTimeReturn();
         }
         void IComplexQueryCachedEntity.SaveCache(ComplexQueryResult result)
         {

@@ -60,17 +60,35 @@
   </TopLevelEntity>
   <TopLevelEntity name="Case" screen="CR306000">
     <Fields>
-      <Field name="CreatedDate" type="DateTimeValue" />
       <Field name="NoteID" type="GuidValue" />
     </Fields>
     <Mappings>
       <Mapping field="NoteID">
         <To object="Case" field="NoteID" />
       </Mapping>
-      <Mapping field="CreatedDate">
-        <To object="Case" field="CreatedDateTime" />
-      </Mapping>
     </Mappings>
+    <Actions>
+      <Action name="PendingCustomerCase" mappedTo="PendingCustomer">
+        <Fields>
+          <Field name="Reason" type="StringValue" />
+        </Fields>
+        <Mappings>
+          <Mapping field="Reason">
+            <To object="FilterPreview" field="Reason" />
+          </Mapping>
+        </Mappings>
+      </Action>
+      <Action name="CloseCase" mappedTo="Close">
+        <Fields>
+          <Field name="Reason" type="StringValue" />
+        </Fields>
+        <Mappings>
+          <Mapping field="Reason">
+            <To object="FilterPreview" field="Reason" />
+          </Mapping>
+        </Mappings>
+      </Action>
+    </Actions>
   </TopLevelEntity>
   <TopLevelEntity name="Email" screen="CR306015">
     <Fields>
@@ -104,6 +122,16 @@
         <Mapping field="CampaignID">
           <To object="CampaignMembers" field="CampaignID" />
         </Mapping>
+      </Mapping>
+    </Mappings>
+  </TopLevelEntity>
+  <TopLevelEntity name="BusinessAccount" screen="CR303000">
+    <Fields>
+      <Field name="Email" type="StringValue" />
+    </Fields>
+    <Mappings>
+      <Mapping field="Email">
+        <To object="CurrentBAccount" field="Contact__EMail" />
       </Mapping>
     </Mappings>
   </TopLevelEntity>

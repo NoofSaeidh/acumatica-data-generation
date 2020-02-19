@@ -2764,6 +2764,8 @@ namespace DataGeneration.Soap {
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(AssignCase))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(TakeCase))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(ReleaseCase))]
+    [System.Xml.Serialization.XmlIncludeAttribute(typeof(CloseCase))]
+    [System.Xml.Serialization.XmlIncludeAttribute(typeof(PendingCustomerCase))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(CreateOpportunitySalesOrder))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(CreateOpportunityInvoice))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(CreateContactFromOpportunity))]
@@ -3779,6 +3781,52 @@ namespace DataGeneration.Soap {
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.acumatica.com/entity/3/datagen/18.200.001/")]
+    public partial class CloseCase : Action {
+        
+        private StringValue reasonField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=0)]
+        public StringValue Reason {
+            get {
+                return this.reasonField;
+            }
+            set {
+                this.reasonField = value;
+                this.RaisePropertyChanged("Reason");
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3752.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.acumatica.com/entity/3/datagen/18.200.001/")]
+    public partial class PendingCustomerCase : Action {
+        
+        private StringValue reasonField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=0)]
+        public StringValue Reason {
+            get {
+                return this.reasonField;
+            }
+            set {
+                this.reasonField = value;
+                this.RaisePropertyChanged("Reason");
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.8.3752.0")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.acumatica.com/entity/3/datagen/18.200.001/")]
     public partial class CreateOpportunitySalesOrder : Action {
         
         private StringValue orderTypeField;
@@ -4673,26 +4721,14 @@ namespace DataGeneration.Soap {
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://www.acumatica.com/entity/3/datagen/18.200.001/")]
     public partial class ConvertToOpportunity : Action {
         
-        private StringValue subjectField;
-        
         private StringValue classField;
         
         private DateTimeValue closeDateField;
         
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=0)]
-        public StringValue Subject {
-            get {
-                return this.subjectField;
-            }
-            set {
-                this.subjectField = value;
-                this.RaisePropertyChanged("Subject");
-            }
-        }
+        private StringValue subjectField;
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=1)]
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=0)]
         public StringValue Class {
             get {
                 return this.classField;
@@ -4704,7 +4740,7 @@ namespace DataGeneration.Soap {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=2)]
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=1)]
         public DateTimeValue CloseDate {
             get {
                 return this.closeDateField;
@@ -4712,6 +4748,18 @@ namespace DataGeneration.Soap {
             set {
                 this.closeDateField = value;
                 this.RaisePropertyChanged("CloseDate");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=2)]
+        public StringValue Subject {
+            get {
+                return this.subjectField;
+            }
+            set {
+                this.subjectField = value;
+                this.RaisePropertyChanged("Subject");
             }
         }
     }
@@ -39889,8 +39937,6 @@ namespace DataGeneration.Soap {
         
         private StringValue contractField;
         
-        private DateTimeValue createdDateField;
-        
         private DateTimeValue dateReportedField;
         
         private StringValue descriptionField;
@@ -40097,18 +40143,6 @@ namespace DataGeneration.Soap {
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=13)]
-        public DateTimeValue CreatedDate {
-            get {
-                return this.createdDateField;
-            }
-            set {
-                this.createdDateField = value;
-                this.RaisePropertyChanged("CreatedDate");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=14)]
         public DateTimeValue DateReported {
             get {
                 return this.dateReportedField;
@@ -40120,7 +40154,7 @@ namespace DataGeneration.Soap {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=15)]
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=14)]
         public StringValue Description {
             get {
                 return this.descriptionField;
@@ -40132,7 +40166,7 @@ namespace DataGeneration.Soap {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=16)]
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=15)]
         public StringValue InitialResponse {
             get {
                 return this.initialResponseField;
@@ -40144,7 +40178,7 @@ namespace DataGeneration.Soap {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=17)]
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=16)]
         public DateTimeValue LastActivityDate {
             get {
                 return this.lastActivityDateField;
@@ -40156,7 +40190,7 @@ namespace DataGeneration.Soap {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=18)]
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=17)]
         public DateTimeValue LastIncomingActivity {
             get {
                 return this.lastIncomingActivityField;
@@ -40168,7 +40202,7 @@ namespace DataGeneration.Soap {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=19)]
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=18)]
         public DateTimeValue LastOutgoingActivity {
             get {
                 return this.lastOutgoingActivityField;
@@ -40180,7 +40214,7 @@ namespace DataGeneration.Soap {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=20)]
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=19)]
         public StringValue Location {
             get {
                 return this.locationField;
@@ -40192,7 +40226,7 @@ namespace DataGeneration.Soap {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=21)]
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=20)]
         public BooleanValue ManualOverride {
             get {
                 return this.manualOverrideField;
@@ -40204,7 +40238,7 @@ namespace DataGeneration.Soap {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=22)]
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=21)]
         public GuidValue NoteID {
             get {
                 return this.noteIDField;
@@ -40216,7 +40250,7 @@ namespace DataGeneration.Soap {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=23)]
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=22)]
         public StringValue OvertimeSpent {
             get {
                 return this.overtimeSpentField;
@@ -40228,7 +40262,7 @@ namespace DataGeneration.Soap {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=24)]
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=23)]
         public StringValue Owner {
             get {
                 return this.ownerField;
@@ -40240,7 +40274,7 @@ namespace DataGeneration.Soap {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=25)]
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=24)]
         public StringValue OwnerEmployeeName {
             get {
                 return this.ownerEmployeeNameField;
@@ -40252,7 +40286,7 @@ namespace DataGeneration.Soap {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=26)]
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=25)]
         public StringValue Priority {
             get {
                 return this.priorityField;
@@ -40264,7 +40298,7 @@ namespace DataGeneration.Soap {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=27)]
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=26)]
         public StringValue Reason {
             get {
                 return this.reasonField;
@@ -40276,7 +40310,7 @@ namespace DataGeneration.Soap {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlArrayAttribute(IsNullable=true, Order=28)]
+        [System.Xml.Serialization.XmlArrayAttribute(IsNullable=true, Order=27)]
         public CaseRelatedCase[] RelatedCases {
             get {
                 return this.relatedCasesField;
@@ -40288,7 +40322,7 @@ namespace DataGeneration.Soap {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlArrayAttribute(IsNullable=true, Order=29)]
+        [System.Xml.Serialization.XmlArrayAttribute(IsNullable=true, Order=28)]
         public RelationDetail[] Relations {
             get {
                 return this.relationsField;
@@ -40300,7 +40334,7 @@ namespace DataGeneration.Soap {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=30)]
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=29)]
         public StringValue ResolutionTime {
             get {
                 return this.resolutionTimeField;
@@ -40312,7 +40346,7 @@ namespace DataGeneration.Soap {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=31)]
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=30)]
         public StringValue Severity {
             get {
                 return this.severityField;
@@ -40324,7 +40358,7 @@ namespace DataGeneration.Soap {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=32)]
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=31)]
         public DateTimeValue SLA {
             get {
                 return this.sLAField;
@@ -40336,7 +40370,7 @@ namespace DataGeneration.Soap {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=33)]
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=32)]
         public StringValue Status {
             get {
                 return this.statusField;
@@ -40348,7 +40382,7 @@ namespace DataGeneration.Soap {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=34)]
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=33)]
         public StringValue Subject {
             get {
                 return this.subjectField;
@@ -40360,7 +40394,7 @@ namespace DataGeneration.Soap {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=35)]
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=34)]
         public StringValue TimeSpent {
             get {
                 return this.timeSpentField;
@@ -40372,7 +40406,7 @@ namespace DataGeneration.Soap {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=36)]
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=35)]
         public StringValue Workgroup {
             get {
                 return this.workgroupField;
@@ -40384,7 +40418,7 @@ namespace DataGeneration.Soap {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=37)]
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=36)]
         public StringValue WorkgroupDescription {
             get {
                 return this.workgroupDescriptionField;
@@ -50166,6 +50200,8 @@ namespace DataGeneration.Soap {
         
         private DuplicateDetail[] duplicatesField;
         
+        private StringValue emailField;
+        
         private DateTimeValue lastIncomingActivityField;
         
         private DateTimeValue lastModifiedDateTimeField;
@@ -50360,6 +50396,18 @@ namespace DataGeneration.Soap {
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=12)]
+        public StringValue Email {
+            get {
+                return this.emailField;
+            }
+            set {
+                this.emailField = value;
+                this.RaisePropertyChanged("Email");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=13)]
         public DateTimeValue LastIncomingActivity {
             get {
                 return this.lastIncomingActivityField;
@@ -50371,7 +50419,7 @@ namespace DataGeneration.Soap {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=13)]
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=14)]
         public DateTimeValue LastModifiedDateTime {
             get {
                 return this.lastModifiedDateTimeField;
@@ -50383,7 +50431,7 @@ namespace DataGeneration.Soap {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=14)]
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=15)]
         public DateTimeValue LastOutgoingActivity {
             get {
                 return this.lastOutgoingActivityField;
@@ -50395,7 +50443,7 @@ namespace DataGeneration.Soap {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlArrayAttribute(IsNullable=true, Order=15)]
+        [System.Xml.Serialization.XmlArrayAttribute(IsNullable=true, Order=16)]
         public BusinessAccountLocation[] Locations {
             get {
                 return this.locationsField;
@@ -50407,7 +50455,7 @@ namespace DataGeneration.Soap {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=16)]
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=17)]
         public Address MainAddress {
             get {
                 return this.mainAddressField;
@@ -50419,7 +50467,7 @@ namespace DataGeneration.Soap {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=17)]
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=18)]
         public BooleanValue MainAddressValidated {
             get {
                 return this.mainAddressValidatedField;
@@ -50431,7 +50479,7 @@ namespace DataGeneration.Soap {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=18)]
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=19)]
         public BusinessAccountMainContact MainContact {
             get {
                 return this.mainContactField;
@@ -50443,7 +50491,7 @@ namespace DataGeneration.Soap {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlArrayAttribute(IsNullable=true, Order=19)]
+        [System.Xml.Serialization.XmlArrayAttribute(IsNullable=true, Order=20)]
         public BusinessAccountMarketingListDetail[] MarketingLists {
             get {
                 return this.marketingListsField;
@@ -50455,7 +50503,7 @@ namespace DataGeneration.Soap {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=20)]
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=21)]
         public StringValue Name {
             get {
                 return this.nameField;
@@ -50467,7 +50515,7 @@ namespace DataGeneration.Soap {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlArrayAttribute(IsNullable=true, Order=21)]
+        [System.Xml.Serialization.XmlArrayAttribute(IsNullable=true, Order=22)]
         public BusinessAccountOpportunityDetail[] Opportunities {
             get {
                 return this.opportunitiesField;
@@ -50479,7 +50527,7 @@ namespace DataGeneration.Soap {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlArrayAttribute(IsNullable=true, Order=22)]
+        [System.Xml.Serialization.XmlArrayAttribute(IsNullable=true, Order=23)]
         public BusinessAccountOrder[] Orders {
             get {
                 return this.ordersField;
@@ -50491,7 +50539,7 @@ namespace DataGeneration.Soap {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=23)]
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=24)]
         public StringValue Owner {
             get {
                 return this.ownerField;
@@ -50503,7 +50551,7 @@ namespace DataGeneration.Soap {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=24)]
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=25)]
         public StringValue OwnerEmployeeName {
             get {
                 return this.ownerEmployeeNameField;
@@ -50515,7 +50563,7 @@ namespace DataGeneration.Soap {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=25)]
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=26)]
         public StringValue ParentAccount {
             get {
                 return this.parentAccountField;
@@ -50527,7 +50575,7 @@ namespace DataGeneration.Soap {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlArrayAttribute(IsNullable=true, Order=26)]
+        [System.Xml.Serialization.XmlArrayAttribute(IsNullable=true, Order=27)]
         public RelationDetail[] Relations {
             get {
                 return this.relationsField;
@@ -50539,7 +50587,7 @@ namespace DataGeneration.Soap {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=27)]
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=28)]
         public Address ShippingAddress {
             get {
                 return this.shippingAddressField;
@@ -50551,7 +50599,7 @@ namespace DataGeneration.Soap {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=28)]
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=29)]
         public BooleanValue ShippingAddressSameAsMain {
             get {
                 return this.shippingAddressSameAsMainField;
@@ -50563,7 +50611,7 @@ namespace DataGeneration.Soap {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=29)]
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=30)]
         public BooleanValue ShippingAddressValidated {
             get {
                 return this.shippingAddressValidatedField;
@@ -50575,7 +50623,7 @@ namespace DataGeneration.Soap {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=30)]
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=31)]
         public BusinessAccountShippingContact ShippingContact {
             get {
                 return this.shippingContactField;
@@ -50587,7 +50635,7 @@ namespace DataGeneration.Soap {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=31)]
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=32)]
         public StringValue SourceCampaign {
             get {
                 return this.sourceCampaignField;
@@ -50599,7 +50647,7 @@ namespace DataGeneration.Soap {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=32)]
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=33)]
         public StringValue Status {
             get {
                 return this.statusField;
@@ -50611,7 +50659,7 @@ namespace DataGeneration.Soap {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=33)]
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=34)]
         public StringValue Type {
             get {
                 return this.typeField;
@@ -50623,7 +50671,7 @@ namespace DataGeneration.Soap {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=34)]
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=35)]
         public StringValue Workgroup {
             get {
                 return this.workgroupField;
@@ -50635,7 +50683,7 @@ namespace DataGeneration.Soap {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=35)]
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true, Order=36)]
         public StringValue WorkgroupDescription {
             get {
                 return this.workgroupDescriptionField;

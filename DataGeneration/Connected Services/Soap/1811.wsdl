@@ -3473,6 +3473,7 @@
                   </s:sequence>
                 </s:complexType>
               </s:element>
+              <s:element minOccurs="0" maxOccurs="1" name="Email" nillable="true" type="q141:StringValue" />
               <s:element minOccurs="0" maxOccurs="1" name="LastIncomingActivity" nillable="true" type="q141:DateTimeValue" />
               <s:element minOccurs="0" maxOccurs="1" name="LastModifiedDateTime" nillable="true" type="q141:DateTimeValue" />
               <s:element minOccurs="0" maxOccurs="1" name="LastOutgoingActivity" nillable="true" type="q141:DateTimeValue" />
@@ -5847,7 +5848,6 @@
               <s:element minOccurs="0" maxOccurs="1" name="ContactDisplayName" nillable="true" type="q236:StringValue" />
               <s:element minOccurs="0" maxOccurs="1" name="ContactID" nillable="true" type="q236:IntValue" />
               <s:element minOccurs="0" maxOccurs="1" name="Contract" nillable="true" type="q236:StringValue" />
-              <s:element minOccurs="0" maxOccurs="1" name="CreatedDate" nillable="true" type="q236:DateTimeValue" />
               <s:element minOccurs="0" maxOccurs="1" name="DateReported" nillable="true" type="q236:DateTimeValue" />
               <s:element minOccurs="0" maxOccurs="1" name="Description" nillable="true" type="q236:StringValue" />
               <s:element minOccurs="0" maxOccurs="1" name="InitialResponse" nillable="true" type="q236:StringValue" />
@@ -8715,9 +8715,9 @@
         <s:complexContent mixed="false">
           <s:extension xmlns:q409="http://www.acumatica.com/entity/3/datagen/18.200.001/" base="q409:Action">
             <s:sequence>
-              <s:element minOccurs="0" maxOccurs="1" name="Subject" nillable="true" type="q409:StringValue" />
               <s:element minOccurs="0" maxOccurs="1" name="Class" nillable="true" type="q409:StringValue" />
               <s:element minOccurs="0" maxOccurs="1" name="CloseDate" nillable="true" type="q409:DateTimeValue" />
+              <s:element minOccurs="0" maxOccurs="1" name="Subject" nillable="true" type="q409:StringValue" />
             </s:sequence>
           </s:extension>
         </s:complexContent>
@@ -9162,236 +9162,254 @@
           </s:extension>
         </s:complexContent>
       </s:complexType>
-      <s:complexType name="ReleaseCase">
+      <s:complexType name="PendingCustomerCase">
         <s:complexContent mixed="false">
           <s:extension xmlns:q469="http://www.acumatica.com/entity/3/datagen/18.200.001/" base="q469:Action">
-            <s:sequence />
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="Reason" nillable="true" type="q469:StringValue" />
+            </s:sequence>
           </s:extension>
         </s:complexContent>
       </s:complexType>
-      <s:complexType name="TakeCase">
+      <s:complexType name="CloseCase">
         <s:complexContent mixed="false">
           <s:extension xmlns:q470="http://www.acumatica.com/entity/3/datagen/18.200.001/" base="q470:Action">
-            <s:sequence />
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="Reason" nillable="true" type="q470:StringValue" />
+            </s:sequence>
           </s:extension>
         </s:complexContent>
       </s:complexType>
-      <s:complexType name="AssignCase">
+      <s:complexType name="ReleaseCase">
         <s:complexContent mixed="false">
           <s:extension xmlns:q471="http://www.acumatica.com/entity/3/datagen/18.200.001/" base="q471:Action">
             <s:sequence />
           </s:extension>
         </s:complexContent>
       </s:complexType>
-      <s:complexType name="CaptureCreditCardPayment">
+      <s:complexType name="TakeCase">
         <s:complexContent mixed="false">
           <s:extension xmlns:q472="http://www.acumatica.com/entity/3/datagen/18.200.001/" base="q472:Action">
             <s:sequence />
           </s:extension>
         </s:complexContent>
       </s:complexType>
-      <s:complexType name="ReleasePayment">
+      <s:complexType name="AssignCase">
         <s:complexContent mixed="false">
           <s:extension xmlns:q473="http://www.acumatica.com/entity/3/datagen/18.200.001/" base="q473:Action">
             <s:sequence />
           </s:extension>
         </s:complexContent>
       </s:complexType>
-      <s:complexType name="VoidPayment">
+      <s:complexType name="CaptureCreditCardPayment">
         <s:complexContent mixed="false">
           <s:extension xmlns:q474="http://www.acumatica.com/entity/3/datagen/18.200.001/" base="q474:Action">
             <s:sequence />
           </s:extension>
         </s:complexContent>
       </s:complexType>
-      <s:complexType name="PaymentLoadDocuments">
+      <s:complexType name="ReleasePayment">
         <s:complexContent mixed="false">
           <s:extension xmlns:q475="http://www.acumatica.com/entity/3/datagen/18.200.001/" base="q475:Action">
+            <s:sequence />
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="VoidPayment">
+        <s:complexContent mixed="false">
+          <s:extension xmlns:q476="http://www.acumatica.com/entity/3/datagen/18.200.001/" base="q476:Action">
+            <s:sequence />
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="PaymentLoadDocuments">
+        <s:complexContent mixed="false">
+          <s:extension xmlns:q477="http://www.acumatica.com/entity/3/datagen/18.200.001/" base="q477:Action">
             <s:sequence>
-              <s:element minOccurs="0" maxOccurs="1" name="EndRefNbr" nillable="true" type="q475:StringValue" />
-              <s:element minOccurs="0" maxOccurs="1" name="FromDate" nillable="true" type="q475:DateTimeValue" />
-              <s:element minOccurs="0" maxOccurs="1" name="LoadChildDocuments" nillable="true" type="q475:StringValue" />
-              <s:element minOccurs="0" maxOccurs="1" name="MaxDocs" nillable="true" type="q475:IntValue" />
-              <s:element minOccurs="0" maxOccurs="1" name="OrderBy" nillable="true" type="q475:StringValue" />
-              <s:element minOccurs="0" maxOccurs="1" name="StartRefNbr" nillable="true" type="q475:StringValue" />
-              <s:element minOccurs="0" maxOccurs="1" name="TillDate" nillable="true" type="q475:DateTimeValue" />
+              <s:element minOccurs="0" maxOccurs="1" name="EndRefNbr" nillable="true" type="q477:StringValue" />
+              <s:element minOccurs="0" maxOccurs="1" name="FromDate" nillable="true" type="q477:DateTimeValue" />
+              <s:element minOccurs="0" maxOccurs="1" name="LoadChildDocuments" nillable="true" type="q477:StringValue" />
+              <s:element minOccurs="0" maxOccurs="1" name="MaxDocs" nillable="true" type="q477:IntValue" />
+              <s:element minOccurs="0" maxOccurs="1" name="OrderBy" nillable="true" type="q477:StringValue" />
+              <s:element minOccurs="0" maxOccurs="1" name="StartRefNbr" nillable="true" type="q477:StringValue" />
+              <s:element minOccurs="0" maxOccurs="1" name="TillDate" nillable="true" type="q477:DateTimeValue" />
             </s:sequence>
           </s:extension>
         </s:complexContent>
       </s:complexType>
       <s:complexType name="PaymentLoadOrders">
         <s:complexContent mixed="false">
-          <s:extension xmlns:q476="http://www.acumatica.com/entity/3/datagen/18.200.001/" base="q476:Action">
+          <s:extension xmlns:q478="http://www.acumatica.com/entity/3/datagen/18.200.001/" base="q478:Action">
             <s:sequence>
-              <s:element minOccurs="0" maxOccurs="1" name="EndOrderNbr" nillable="true" type="q476:StringValue" />
-              <s:element minOccurs="0" maxOccurs="1" name="FromDate" nillable="true" type="q476:DateTimeValue" />
-              <s:element minOccurs="0" maxOccurs="1" name="MaxDocs" nillable="true" type="q476:IntValue" />
-              <s:element minOccurs="0" maxOccurs="1" name="SOOrderBy" nillable="true" type="q476:StringValue" />
-              <s:element minOccurs="0" maxOccurs="1" name="StartOrderNbr" nillable="true" type="q476:StringValue" />
-              <s:element minOccurs="0" maxOccurs="1" name="TillDate" nillable="true" type="q476:DateTimeValue" />
+              <s:element minOccurs="0" maxOccurs="1" name="EndOrderNbr" nillable="true" type="q478:StringValue" />
+              <s:element minOccurs="0" maxOccurs="1" name="FromDate" nillable="true" type="q478:DateTimeValue" />
+              <s:element minOccurs="0" maxOccurs="1" name="MaxDocs" nillable="true" type="q478:IntValue" />
+              <s:element minOccurs="0" maxOccurs="1" name="SOOrderBy" nillable="true" type="q478:StringValue" />
+              <s:element minOccurs="0" maxOccurs="1" name="StartOrderNbr" nillable="true" type="q478:StringValue" />
+              <s:element minOccurs="0" maxOccurs="1" name="TillDate" nillable="true" type="q478:DateTimeValue" />
             </s:sequence>
           </s:extension>
         </s:complexContent>
       </s:complexType>
       <s:complexType name="CompleteTimeEntry">
         <s:complexContent mixed="false">
-          <s:extension xmlns:q477="http://www.acumatica.com/entity/3/datagen/18.200.001/" base="q477:Action">
+          <s:extension xmlns:q479="http://www.acumatica.com/entity/3/datagen/18.200.001/" base="q479:Action">
             <s:sequence />
           </s:extension>
         </s:complexContent>
       </s:complexType>
       <s:complexType name="OpenTimeEntry">
         <s:complexContent mixed="false">
-          <s:extension xmlns:q478="http://www.acumatica.com/entity/3/datagen/18.200.001/" base="q478:Action">
+          <s:extension xmlns:q480="http://www.acumatica.com/entity/3/datagen/18.200.001/" base="q480:Action">
             <s:sequence />
           </s:extension>
         </s:complexContent>
       </s:complexType>
       <s:complexType name="ReleaseInventoryReceipt">
         <s:complexContent mixed="false">
-          <s:extension xmlns:q479="http://www.acumatica.com/entity/3/datagen/18.200.001/" base="q479:Action">
+          <s:extension xmlns:q481="http://www.acumatica.com/entity/3/datagen/18.200.001/" base="q481:Action">
             <s:sequence />
           </s:extension>
         </s:complexContent>
       </s:complexType>
       <s:complexType name="ReleaseTransactions">
         <s:complexContent mixed="false">
-          <s:extension xmlns:q480="http://www.acumatica.com/entity/3/datagen/18.200.001/" base="q480:Action">
+          <s:extension xmlns:q482="http://www.acumatica.com/entity/3/datagen/18.200.001/" base="q482:Action">
             <s:sequence />
           </s:extension>
         </s:complexContent>
       </s:complexType>
       <s:complexType name="ChangeCostCodeID">
         <s:complexContent mixed="false">
-          <s:extension xmlns:q481="http://www.acumatica.com/entity/3/datagen/18.200.001/" base="q481:Action">
+          <s:extension xmlns:q483="http://www.acumatica.com/entity/3/datagen/18.200.001/" base="q483:Action">
             <s:sequence>
-              <s:element minOccurs="0" maxOccurs="1" name="CostCodeID" nillable="true" type="q481:StringValue" />
+              <s:element minOccurs="0" maxOccurs="1" name="CostCodeID" nillable="true" type="q483:StringValue" />
             </s:sequence>
           </s:extension>
         </s:complexContent>
       </s:complexType>
       <s:complexType name="ReleaseCheck">
         <s:complexContent mixed="false">
-          <s:extension xmlns:q482="http://www.acumatica.com/entity/3/datagen/18.200.001/" base="q482:Action">
+          <s:extension xmlns:q484="http://www.acumatica.com/entity/3/datagen/18.200.001/" base="q484:Action">
             <s:sequence />
           </s:extension>
         </s:complexContent>
       </s:complexType>
       <s:complexType name="ReleaseKitAssembly">
         <s:complexContent mixed="false">
-          <s:extension xmlns:q483="http://www.acumatica.com/entity/3/datagen/18.200.001/" base="q483:Action">
+          <s:extension xmlns:q485="http://www.acumatica.com/entity/3/datagen/18.200.001/" base="q485:Action">
             <s:sequence />
           </s:extension>
         </s:complexContent>
       </s:complexType>
       <s:complexType name="ProjectBillingProcess">
         <s:complexContent mixed="false">
-          <s:extension xmlns:q484="http://www.acumatica.com/entity/3/datagen/18.200.001/" base="q484:Action">
+          <s:extension xmlns:q486="http://www.acumatica.com/entity/3/datagen/18.200.001/" base="q486:Action">
             <s:sequence />
           </s:extension>
         </s:complexContent>
       </s:complexType>
       <s:complexType name="ProjectBillingProcessAll">
         <s:complexContent mixed="false">
-          <s:extension xmlns:q485="http://www.acumatica.com/entity/3/datagen/18.200.001/" base="q485:Action">
+          <s:extension xmlns:q487="http://www.acumatica.com/entity/3/datagen/18.200.001/" base="q487:Action">
             <s:sequence />
           </s:extension>
         </s:complexContent>
       </s:complexType>
       <s:complexType name="ApproveExpenseClaim">
         <s:complexContent mixed="false">
-          <s:extension xmlns:q486="http://www.acumatica.com/entity/3/datagen/18.200.001/" base="q486:Action">
+          <s:extension xmlns:q488="http://www.acumatica.com/entity/3/datagen/18.200.001/" base="q488:Action">
             <s:sequence />
           </s:extension>
         </s:complexContent>
       </s:complexType>
       <s:complexType name="RejectExpenseClaim">
         <s:complexContent mixed="false">
-          <s:extension xmlns:q487="http://www.acumatica.com/entity/3/datagen/18.200.001/" base="q487:Action">
+          <s:extension xmlns:q489="http://www.acumatica.com/entity/3/datagen/18.200.001/" base="q489:Action">
             <s:sequence />
           </s:extension>
         </s:complexContent>
       </s:complexType>
       <s:complexType name="SubmitExpenseClaim">
         <s:complexContent mixed="false">
-          <s:extension xmlns:q488="http://www.acumatica.com/entity/3/datagen/18.200.001/" base="q488:Action">
+          <s:extension xmlns:q490="http://www.acumatica.com/entity/3/datagen/18.200.001/" base="q490:Action">
             <s:sequence />
           </s:extension>
         </s:complexContent>
       </s:complexType>
       <s:complexType name="ReleaseExpenseClaim">
         <s:complexContent mixed="false">
-          <s:extension xmlns:q489="http://www.acumatica.com/entity/3/datagen/18.200.001/" base="q489:Action">
+          <s:extension xmlns:q491="http://www.acumatica.com/entity/3/datagen/18.200.001/" base="q491:Action">
             <s:sequence />
           </s:extension>
         </s:complexContent>
       </s:complexType>
       <s:complexType name="PutOnHoldExpenseClaim">
         <s:complexContent mixed="false">
-          <s:extension xmlns:q490="http://www.acumatica.com/entity/3/datagen/18.200.001/" base="q490:Action">
+          <s:extension xmlns:q492="http://www.acumatica.com/entity/3/datagen/18.200.001/" base="q492:Action">
             <s:sequence />
           </s:extension>
         </s:complexContent>
       </s:complexType>
       <s:complexType name="ReleaseTransferOrder">
         <s:complexContent mixed="false">
-          <s:extension xmlns:q491="http://www.acumatica.com/entity/3/datagen/18.200.001/" base="q491:Action">
+          <s:extension xmlns:q493="http://www.acumatica.com/entity/3/datagen/18.200.001/" base="q493:Action">
             <s:sequence />
           </s:extension>
         </s:complexContent>
       </s:complexType>
       <s:complexType name="ReleaseInvoice">
         <s:complexContent mixed="false">
-          <s:extension xmlns:q492="http://www.acumatica.com/entity/3/datagen/18.200.001/" base="q492:Action">
+          <s:extension xmlns:q494="http://www.acumatica.com/entity/3/datagen/18.200.001/" base="q494:Action">
             <s:sequence />
           </s:extension>
         </s:complexContent>
       </s:complexType>
       <s:complexType name="ReverseInvoice">
         <s:complexContent mixed="false">
-          <s:extension xmlns:q493="http://www.acumatica.com/entity/3/datagen/18.200.001/" base="q493:Action">
+          <s:extension xmlns:q495="http://www.acumatica.com/entity/3/datagen/18.200.001/" base="q495:Action">
             <s:sequence />
           </s:extension>
         </s:complexContent>
       </s:complexType>
       <s:complexType name="ConfirmShipment">
         <s:complexContent mixed="false">
-          <s:extension xmlns:q494="http://www.acumatica.com/entity/3/datagen/18.200.001/" base="q494:Action">
+          <s:extension xmlns:q496="http://www.acumatica.com/entity/3/datagen/18.200.001/" base="q496:Action">
             <s:sequence />
           </s:extension>
         </s:complexContent>
       </s:complexType>
       <s:complexType name="CorrectShipment">
         <s:complexContent mixed="false">
-          <s:extension xmlns:q495="http://www.acumatica.com/entity/3/datagen/18.200.001/" base="q495:Action">
+          <s:extension xmlns:q497="http://www.acumatica.com/entity/3/datagen/18.200.001/" base="q497:Action">
             <s:sequence />
           </s:extension>
         </s:complexContent>
       </s:complexType>
       <s:complexType name="UpdateIN">
         <s:complexContent mixed="false">
-          <s:extension xmlns:q496="http://www.acumatica.com/entity/3/datagen/18.200.001/" base="q496:Action">
+          <s:extension xmlns:q498="http://www.acumatica.com/entity/3/datagen/18.200.001/" base="q498:Action">
             <s:sequence />
           </s:extension>
         </s:complexContent>
       </s:complexType>
       <s:complexType name="PrepareInvoice">
         <s:complexContent mixed="false">
-          <s:extension xmlns:q497="http://www.acumatica.com/entity/3/datagen/18.200.001/" base="q497:Action">
+          <s:extension xmlns:q499="http://www.acumatica.com/entity/3/datagen/18.200.001/" base="q499:Action">
             <s:sequence />
           </s:extension>
         </s:complexContent>
       </s:complexType>
       <s:complexType name="ReleasePurchaseReceipt">
         <s:complexContent mixed="false">
-          <s:extension xmlns:q498="http://www.acumatica.com/entity/3/datagen/18.200.001/" base="q498:Action">
+          <s:extension xmlns:q500="http://www.acumatica.com/entity/3/datagen/18.200.001/" base="q500:Action">
             <s:sequence />
           </s:extension>
         </s:complexContent>
       </s:complexType>
       <s:complexType name="CreateAPBill">
         <s:complexContent mixed="false">
-          <s:extension xmlns:q499="http://www.acumatica.com/entity/3/datagen/18.200.001/" base="q499:Action">
+          <s:extension xmlns:q501="http://www.acumatica.com/entity/3/datagen/18.200.001/" base="q501:Action">
             <s:sequence />
           </s:extension>
         </s:complexContent>

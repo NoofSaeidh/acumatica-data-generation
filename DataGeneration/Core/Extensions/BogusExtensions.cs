@@ -42,5 +42,26 @@ namespace Bogus
             }
             return randomizer.WeightedRandom(elements, weights);
         }
+
+        public static IEnumerator<T> GuaranteedRandomEnumerator<T>(this Randomizer randomizer, params (T element, int count)[] items)
+        {
+            var picked = new int[items.Length];
+
+            var options = Enumerable.Range(0, items.Length).ToList();
+
+            while(options.Count > 0)
+            {
+                var i = randomizer.CollectionItem(options);
+                var (element, count) = items[i];
+
+                yield return element;
+
+                // zero or below traited like endless options
+                if(count > 0 && count == ++picked[i]) 
+                {
+                    options.Remove(i);
+                }
+            }
+        }
     }
 }

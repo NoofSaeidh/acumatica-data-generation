@@ -10,6 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using DataGeneration.Core.Common;
 using VoidTask = System.Threading.Tasks.Task;
+using Newtonsoft.Json;
 
 namespace DataGeneration.Soap
 {
@@ -153,7 +154,7 @@ namespace DataGeneration.Soap
         {
             return TryCatch(
                 () => _client.Get(whereEntity),
-                CrudLogArgs<T>("Get")
+                CrudLogArgs<T>("Get", whereEntity)
             );
         }
 
@@ -161,7 +162,7 @@ namespace DataGeneration.Soap
         {
             return await TryCatchAsync(
                () => _client.GetAsync(whereEntity),
-               CrudLogArgs<T>("Get")
+               CrudLogArgs<T>("Get", whereEntity)
             );
         }
 
@@ -170,7 +171,7 @@ namespace DataGeneration.Soap
             return await TryCatchAsync(
                () => _client.GetAsync(whereEntity),
                cancellationToken,
-               CrudLogArgs<T>("Get")
+               CrudLogArgs<T>("Get", whereEntity)
             );
         }
 
@@ -178,7 +179,7 @@ namespace DataGeneration.Soap
         {
             return TryCatch(
                 () => _client.GetList(whereEntity),
-                CrudLogArgs<T>("Get List")
+                CrudLogArgs<T>("Get List", whereEntity)
             );
         }
 
@@ -186,7 +187,7 @@ namespace DataGeneration.Soap
         {
             return await TryCatchAsync(
                () => _client.GetListAsync(whereEntity),
-               CrudLogArgs<T>("Get List")
+               CrudLogArgs<T>("Get List", whereEntity)
             );
         }
 
@@ -195,7 +196,7 @@ namespace DataGeneration.Soap
             return await TryCatchAsync(
                () => _client.GetListAsync(whereEntity),
                cancellationToken,
-               CrudLogArgs<T>("Get List")
+               CrudLogArgs<T>("Get List", whereEntity)
             );
         }
 
@@ -203,7 +204,7 @@ namespace DataGeneration.Soap
         {
             return TryCatch(
                 () => _client.Put(entity),
-                CrudLogArgs<T>("Put")
+                CrudLogArgs<T>("Put", entity)
             );
         }
 
@@ -211,7 +212,7 @@ namespace DataGeneration.Soap
         {
             return await TryCatchAsync(
                () => _client.PutAsync(entity),
-               CrudLogArgs<T>("Put")
+               CrudLogArgs<T>("Put", entity)
             );
         }
 
@@ -220,7 +221,7 @@ namespace DataGeneration.Soap
             return await TryCatchAsync(
                () => _client.PutAsync(entity),
                cancellationToken,
-               CrudLogArgs<T>("Put")
+               CrudLogArgs<T>("Put", entity)
             );
         }
 
@@ -228,7 +229,7 @@ namespace DataGeneration.Soap
         {
             TryCatch(
                 () => _client.Delete(whereEntity),
-                CrudLogArgs<T>("Delete")
+                CrudLogArgs<T>("Delete", whereEntity)
             );
         }
 
@@ -236,7 +237,7 @@ namespace DataGeneration.Soap
         {
             await TryCatchAsync(
                () => _client.DeleteAsync(whereEntity),
-               CrudLogArgs<T>("Delete")
+               CrudLogArgs<T>("Delete", whereEntity)
             );
         }
 
@@ -245,7 +246,7 @@ namespace DataGeneration.Soap
             await TryCatchAsync(
                () => _client.DeleteAsync(whereEntity),
                cancellationToken,
-               CrudLogArgs<T>("Delete")
+               CrudLogArgs<T>("Delete", whereEntity)
             );
         }
 
@@ -258,7 +259,7 @@ namespace DataGeneration.Soap
         {
             TryCatch(
                 () => AwaitInvokationResult(_client.Invoke(entity, action)).GetAwaiter().GetResult(),
-                InvokeArgs<TEntity, TAction>()
+                InvokeArgs<TEntity, TAction>(entity, action)
             );
         }
 
@@ -266,7 +267,7 @@ namespace DataGeneration.Soap
         {
             await TryCatchAsync(
                 async () => await AwaitInvokationResult(await _client.InvokeAsync(entity, action)),
-                InvokeArgs<TEntity, TAction>()
+                InvokeArgs<TEntity, TAction>(entity, action)
             );
         }
 
@@ -275,7 +276,7 @@ namespace DataGeneration.Soap
             await TryCatchAsync(
                 async () => await AwaitInvokationResult(await _client.InvokeAsync(entity, action), cancellationToken),
                 cancellationToken,
-                InvokeArgs<TEntity, TAction>()
+                InvokeArgs<TEntity, TAction>(entity, action)
             );
         }
 
@@ -310,7 +311,7 @@ namespace DataGeneration.Soap
         {
             return TryCatch(
                 () => _client.GetFiles(entity),
-                GetFilesArgs<T>()
+                GetFilesArgs<T>(entity)
             );
         }
 
@@ -318,7 +319,7 @@ namespace DataGeneration.Soap
         {
             return await TryCatchAsync(
                 () => _client.GetFilesAsync(entity),
-                GetFilesArgs<T>()
+                GetFilesArgs<T>(entity)
             );
         }
 
@@ -327,7 +328,7 @@ namespace DataGeneration.Soap
             return await TryCatchAsync(
                 () => _client.GetFilesAsync(entity),
                 cancellationToken,
-                GetFilesArgs<T>()
+                GetFilesArgs<T>(entity)
             );
         }
 
@@ -335,7 +336,7 @@ namespace DataGeneration.Soap
         {
             TryCatch(
                 () => _client.PutFiles(entity, files.ToArray()),
-                PutFilesArgs<T>()
+                PutFilesArgs<T>(entity)
             );
         }
 
@@ -343,7 +344,7 @@ namespace DataGeneration.Soap
         {
             await TryCatchAsync(
                 () => _client.PutFilesAsync(entity, files.ToArray()),
-                PutFilesArgs<T>()
+                PutFilesArgs<T>(entity)
             );
         }
 
@@ -352,7 +353,7 @@ namespace DataGeneration.Soap
             await TryCatchAsync(
                 () => _client.PutFilesAsync(entity, files.ToArray()),
                 cancellationToken,
-                PutFilesArgs<T>()
+                PutFilesArgs<T>(entity)
             );
         }
 
@@ -510,10 +511,11 @@ namespace DataGeneration.Soap
 
         #region Log
 
-        private LogArgs CrudLogArgs<T>(string action) => new LogArgs($"{action} {typeof(T).Name}", _eventParams);
-        private LogArgs InvokeArgs<TEntity, TAction>() => new LogArgs($"Invoke {typeof(TAction).Name} for {typeof(TEntity).Name}", _eventParams);
-        private LogArgs GetFilesArgs<T>() => new LogArgs($"Get Files for {typeof(T).Name}", _eventParams);
-        private LogArgs PutFilesArgs<T>() => new LogArgs($"Put Files for {typeof(T).Name}", _eventParams);
+        private LogArgs CrudLogArgs<T>(string action, T entity) => new LogArgs($"{action} {typeof(T).Name}", _eventParams, entity);
+        private LogArgs InvokeArgs<TEntity, TAction>(TEntity entity, TAction action) 
+            => new LogArgs($"Invoke {typeof(TAction).Name} for {typeof(TEntity).Name}", _eventParams, _logger.IsTraceEnabled ? new { entity, action } : null);
+        private LogArgs GetFilesArgs<T>(T entity) => new LogArgs($"Get Files for {typeof(T).Name}", _eventParams, entity);
+        private LogArgs PutFilesArgs<T>(T entity) => new LogArgs($"Put Files for {typeof(T).Name}", _eventParams, entity);
         private LogArgs LoginArgs() => new LogArgs($"Login to {_client.Endpoint.Address.Uri}", _eventParams);
         private LogArgs LogoutArgs() => new LogArgs($"Logout from {_client.Endpoint.Address.Uri}", _eventParams);
 
@@ -602,10 +604,28 @@ namespace DataGeneration.Soap
                     );
             }
 
-            public LogArgs(string text, (object, object)[] parameters)
+            public LogArgs(string text, (object, object)[] parameters, object entity = null)
             {
                 Text = text;
-                EventParams = parameters;
+
+                if (_logger.IsTraceEnabled)
+                {
+                    (object, object) entityParam = ("entity", JsonConvert.SerializeObject(entity));
+                    if (parameters == null)
+                    {
+                        EventParams = new[] { entityParam };
+                    }
+                    else
+                    {
+                        EventParams = new (object, object)[parameters.Length + 1];
+                        parameters.CopyTo(EventParams, 0);
+                        EventParams[parameters.Length] = entityParam;
+                    }
+                }
+                else
+                {
+                    EventParams = parameters;
+                }
             }
         }
 
