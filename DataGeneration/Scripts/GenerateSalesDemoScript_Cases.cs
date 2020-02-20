@@ -55,10 +55,13 @@ namespace DataGeneration.Scripts
                             ((classId: "OTHER", status: "Open", useCustomer: false, subjectId: 1), 5),
                             ((classId: "PRODSUPINC", status: null, useCustomer: true, subjectId: 2), 0));
 
+                    var currentDate = (date: GetDateTime(1), count: 0);
+
                     return faker.CustomInstantiator(f =>
                     {
                         generator.MoveNext();
                         var (classId, status, useCustomer, subjectId) = generator.Current;
+
 
                         var (baccount, contacts) = useCustomer switch
                         {
@@ -80,6 +83,16 @@ namespace DataGeneration.Scripts
                             _ => null
                         };
 
+                        var (date, count) = currentDate;
+                        if (count == 0)
+                        {
+                            currentDate.count++;
+                        }
+                        else if (count >= 2 || f.Random.Bool())
+                        {
+                            currentDate = (GetDateTime(date.Day + 1), 0);
+                        }
+
                         return new Soap.Case
                         {
                             ClassID = classId,
@@ -87,6 +100,8 @@ namespace DataGeneration.Scripts
                             BusinessAccount = baccount.BusinessAccountID,
                             ContactID = contact?.ContactID,
                             Status = status,
+                            DateReported = date,
+                            LastModifiedDate = date + TimeSpan.FromMinutes(f.Random.Int(0, 120))
                         };
                     });
                 },
@@ -99,7 +114,12 @@ namespace DataGeneration.Scripts
                     var inventories_ = client.GetListAsync(new Soap.StockItem(), ct);
                     var customers_ = client.GetListAsync(new Soap.BusinessAccount { Type = new Soap.StringSearch("Customer") }, ct);
                     var prospects_ = client.GetListAsync(new Soap.BusinessAccount { Type = new Soap.StringSearch("Prospect") }, ct);
-                    var contacts = await client.GetListAsync(new Soap.Contact { BusinessAccount = new Soap.StringSearch { Condition = Soap.StringCondition.IsNotNull } }, ct);
+                    var contacts = await client.GetListAsync(
+                        new Soap.Contact
+                        {
+                            BusinessAccount = new Soap.StringSearch { Condition = Soap.StringCondition.IsNotNull },
+                            Active = new Soap.BooleanSearch { Value = true},
+                        }, ct);
                     accounts = (await customers_)
                         .Union(await prospects_)
                         .Select(a => (a, contacts: contacts.Where(c => c.BusinessAccount == a.BusinessAccountID).ToList() as IList<Soap.Contact>))
@@ -132,18 +152,21 @@ namespace DataGeneration.Scripts
 
                         var (email, activity, action) = item.@case.ClassID.Value switch
                         {
-                            "BILLING" =>
+                            "PRODSUPINC" =>
                                 (
                                     new Soap.Email
                                     {
                                         Subject = $"[Case #{item.@case.CaseID.Value}] {item.@case.Subject.Value}", //"Model and Serial number",
                                         To = item.email,
                                         MailStatus = "Processed",
+                                        Body = "Model and Serial number",
+                                        CreatedDate = item.@case.DateReported,
+                                        LastModifiedDate = item.@case.LastModifiedDate,
                                     },
                                     default(ICollection<Soap.Activity>),
                                     (Soap.Action)new Soap.PendingCustomerCase { Reason = "More info Requested" }
                                 ),
-                            "PRODSUPINC" =>
+                            "BILLING" =>
                                 (
                                     default(Soap.Email),
                                     twoActivitiesList.TryTake(out bool twoActivities)
@@ -154,11 +177,15 @@ namespace DataGeneration.Scripts
                                                 Type = "P",
                                                 Summary = "Called the customer",
                                                 Status = "Completed",
+                                                CreatedDate = item.@case.DateReported,
+                                                LastModifiedDate = item.@case.LastModifiedDate,
                                             },
                                             new Soap.Activity
                                             {
                                                 Type = "ES",
                                                 Summary = "Escalated to AR team",
+                                                CreatedDate = item.@case.DateReported,
+                                                LastModifiedDate = item.@case.LastModifiedDate,
                                             },
                                         } : new[] {
                                             new Soap.Activity
@@ -166,16 +193,16 @@ namespace DataGeneration.Scripts
                                                 Type = "P",
                                                 Summary = "Called the customer",
                                                 Status = "Completed",
+                                                CreatedDate = item.@case.DateReported,
+                                                LastModifiedDate = item.@case.LastModifiedDate,
                                             },
                                         },
-                                    twoActivities 
+                                    twoActivities
                                         ? null
                                         : new Soap.CloseCase { Reason = "Resolved" }
                                 ),
                             _ => default
                         };
-
-
 
                         return new
                         {
@@ -188,7 +215,7 @@ namespace DataGeneration.Scripts
                 },
                 async (@this, client, entity, ct) =>
                 {
-                    if(entity.Email != null)
+                    if (entity.Email != null)
                     {
                         var email = await client.PutAsync(entity.Email, ct);
                         await client.InvokeAsync(
@@ -199,7 +226,7 @@ namespace DataGeneration.Scripts
                                 RelatedEntity = entity.Case.CaseID.Value,
                             }, ct);
                     }
-                    if(entity.Activities != null)
+                    if (entity.Activities != null)
                     {
                         foreach (var activity in entity.Activities)
                         {
@@ -213,8 +240,8 @@ namespace DataGeneration.Scripts
                                 }, ct);
                         }
                     }
-                    if(entity.Action != null)
-                        await client.InvokeAsync(entity.Case, entity.Action, ct);
+                    if (entity.Action != null)
+                        await client.InvokeAsync(new Soap.Case { CaseID = entity.Case.CaseID.ToSearch() }, entity.Action, ct);
                 },
                 beforeGenerateDelegate: async (@this, client, ct) =>
                 {
@@ -239,10 +266,10 @@ namespace DataGeneration.Scripts
 
 
 
-        private void ChangeMachineDate(int day)
+        private DateTime GetDateTime(int day)
         {
+            var now = DateTime.Now;
+            return new DateTime(2020, 1, day, now.Hour, now.Minute, now.Second, DateTimeKind.Local);
         }
-
-
     }
 }

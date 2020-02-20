@@ -61,10 +61,14 @@
   <TopLevelEntity name="Case" screen="CR306000">
     <Fields>
       <Field name="NoteID" type="GuidValue" />
+      <Field name="LastModifiedDate" type="DateTimeValue" />
     </Fields>
     <Mappings>
       <Mapping field="NoteID">
         <To object="Case" field="NoteID" />
+      </Mapping>
+      <Mapping field="LastModifiedDate">
+        <To object="Case" field="LastModifiedDateTime" />
       </Mapping>
     </Mappings>
     <Actions>
@@ -93,6 +97,8 @@
   <TopLevelEntity name="Email" screen="CR306015">
     <Fields>
       <Field name="NoteID" type="GuidValue" />
+      <Field name="LastModifiedDate" type="DateTimeValue" />
+      <Field name="CreatedDate" type="DateTimeValue" />
     </Fields>
     <Mappings>
       <Mapping field="NoteID">
@@ -100,6 +106,26 @@
       </Mapping>
       <Mapping field="Date">
         <To object="CurrentMessage: 1" field="StartDate" />
+      </Mapping>
+      <Mapping field="LastModifiedDate">
+        <To object="CurrentMessage" field="LastModifiedDateTime" />
+      </Mapping>
+      <Mapping field="CreatedDate">
+        <To object="CurrentMessage" field="CreatedDateTime" />
+      </Mapping>
+    </Mappings>
+  </TopLevelEntity>
+  <TopLevelEntity name="Activity" screen="CR306010">
+    <Fields>
+      <Field name="LastModifiedDate" type="DateTimeValue" />
+      <Field name="CreatedDate" type="DateTimeValue" />
+    </Fields>
+    <Mappings>
+      <Mapping field="LastModifiedDate">
+        <To object="CurrentActivity" field="LastModifiedDateTime" />
+      </Mapping>
+      <Mapping field="CreatedDate">
+        <To object="CurrentActivity" field="CreatedDateTime" />
       </Mapping>
     </Mappings>
   </TopLevelEntity>

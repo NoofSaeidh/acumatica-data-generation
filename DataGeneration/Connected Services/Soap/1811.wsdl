@@ -1703,6 +1703,7 @@
               <s:element minOccurs="0" maxOccurs="1" name="Bcc" nillable="true" type="q74:StringValue" />
               <s:element minOccurs="0" maxOccurs="1" name="Body" nillable="true" type="q74:StringValue" />
               <s:element minOccurs="0" maxOccurs="1" name="Cc" nillable="true" type="q74:StringValue" />
+              <s:element minOccurs="0" maxOccurs="1" name="CreatedDate" nillable="true" type="q74:DateTimeValue" />
               <s:element minOccurs="0" maxOccurs="1" name="Date" nillable="true" type="q74:DateTimeValue" />
               <s:element minOccurs="0" maxOccurs="1" name="Description" nillable="true" type="q74:StringValue" />
               <s:element minOccurs="0" maxOccurs="1" name="From" nillable="true" type="q74:StringValue" />
@@ -1710,6 +1711,7 @@
               <s:element minOccurs="0" maxOccurs="1" name="FromEmailAccountID" nillable="true" type="q74:IntValue" />
               <s:element minOccurs="0" maxOccurs="1" name="Incoming" nillable="true" type="q74:BooleanValue" />
               <s:element minOccurs="0" maxOccurs="1" name="Internal" nillable="true" type="q74:BooleanValue" />
+              <s:element minOccurs="0" maxOccurs="1" name="LastModifiedDate" nillable="true" type="q74:DateTimeValue" />
               <s:element minOccurs="0" maxOccurs="1" name="MailStatus" nillable="true" type="q74:StringValue" />
               <s:element minOccurs="0" maxOccurs="1" name="NoteID" nillable="true" type="q74:GuidValue" />
               <s:element minOccurs="0" maxOccurs="1" name="Owner" nillable="true" type="q74:StringValue" />
@@ -2688,8 +2690,10 @@
           <s:extension xmlns:q110="http://www.acumatica.com/entity/3/datagen/18.200.001/" base="q110:Entity">
             <s:sequence>
               <s:element minOccurs="0" maxOccurs="1" name="Body" nillable="true" type="q110:StringValue" />
+              <s:element minOccurs="0" maxOccurs="1" name="CreatedDate" nillable="true" type="q110:DateTimeValue" />
               <s:element minOccurs="0" maxOccurs="1" name="Date" nillable="true" type="q110:DateTimeValue" />
               <s:element minOccurs="0" maxOccurs="1" name="Internal" nillable="true" type="q110:BooleanValue" />
+              <s:element minOccurs="0" maxOccurs="1" name="LastModifiedDate" nillable="true" type="q110:DateTimeValue" />
               <s:element minOccurs="0" maxOccurs="1" name="NoteID" nillable="true" type="q110:GuidValue" />
               <s:element minOccurs="0" maxOccurs="1" name="Owner" nillable="true" type="q110:StringValue" />
               <s:element minOccurs="0" maxOccurs="1" name="RelatedEntityDescription" nillable="true" type="q110:StringValue" />
@@ -5853,6 +5857,7 @@
               <s:element minOccurs="0" maxOccurs="1" name="InitialResponse" nillable="true" type="q236:StringValue" />
               <s:element minOccurs="0" maxOccurs="1" name="LastActivityDate" nillable="true" type="q236:DateTimeValue" />
               <s:element minOccurs="0" maxOccurs="1" name="LastIncomingActivity" nillable="true" type="q236:DateTimeValue" />
+              <s:element minOccurs="0" maxOccurs="1" name="LastModifiedDate" nillable="true" type="q236:DateTimeValue" />
               <s:element minOccurs="0" maxOccurs="1" name="LastOutgoingActivity" nillable="true" type="q236:DateTimeValue" />
               <s:element minOccurs="0" maxOccurs="1" name="Location" nillable="true" type="q236:StringValue" />
               <s:element minOccurs="0" maxOccurs="1" name="ManualOverride" nillable="true" type="q236:BooleanValue" />

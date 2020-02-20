@@ -9,6 +9,7 @@ namespace DataGeneration.Core.Queueing
         {
             Type = type ?? throw new ArgumentNullException(nameof(type));
             Guid = guid;
+            RequestType = requestType;
         }
 
         public Type Type { get; }
