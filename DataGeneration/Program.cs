@@ -11,6 +11,9 @@ using MailKit.Security;
 using Newtonsoft.Json;
 using NLog.Config;
 using NLog.MailKit;
+using DataGeneration.Core.Api;
+using DataGeneration.GenerationInfo;
+using DataGeneration.Scripts;
 
 namespace DataGeneration
 {
@@ -21,15 +24,18 @@ namespace DataGeneration
         public static void Main(string[] args)
         {
             Console.Title = "Data Generation";
-            var executor = new ConsoleExecutor();
             try
             {
-                if (!executor.ExecuteArgs(args))
-                    return;
-
-                Generate(executor.Config).Wait();
+                //new ConsoleExecutor().PutEndpoint(".\\endpoint-datagen.xml");
+                //new ConsoleExecutor().GetAndSaveEndpoint("18.200.001", "datagen", ".\\endpoint.xml");
+                //Generate(new GenerateSalesDemoScript().GetConfig_Stage1()).GetAwaiter().GetResult();
+                //Generate(new GenerateSalesDemoScript().GetConfig_Stage2()).GetAwaiter().GetResult();
+                //Generate(new GenerateSalesDemoScriptBase().GetConfig_Stage3()).GetAwaiter().GetResult();
+                Generate(new GenerateSalesDemoScript_Cases().GetConfig_Stage1()).GetAwaiter().GetResult();
+                Generate(new GenerateSalesDemoScript_Cases().GetConfig_Stage2()).GetAwaiter().GetResult();
+                //Generate(new GenerateSalesDemoScript_Cases().GetDebugConfig()).GetAwaiter().GetResult();
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 _logger.Fatal(e, "Unexpected exception has occurred");
                 ConsoleExecutor.WriteInfo("Unexpected exception has occurred.", ConsoleColor.DarkRed, e);
